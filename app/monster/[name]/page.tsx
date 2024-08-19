@@ -17,6 +17,9 @@ export default async function Page({ params }: { params: { name: string } }) {
   const { name } = params
   const species = await getSpecies(name)
   const pokemon = await getPokemon(species.varieties[0].pokemon.name)
+  const types = await Promise.all(
+    pokemon.types.map((type) => fetch(type.type.url).then((res) => res.json()))
+  )
 
   return (
     <main className="flex min-h-screen flex-col items-start justify-between gap-4 p-24">
@@ -27,6 +30,7 @@ export default async function Page({ params }: { params: { name: string } }) {
         alt={pokemon.name}
         width={128}
         height={128}
+        priority
         className="border"
         style={{ imageRendering: 'pixelated' }}
       />
@@ -36,6 +40,30 @@ export default async function Page({ params }: { params: { name: string } }) {
         <ul className="list-disc pl-5">
           {pokemon.types.map((type) => (
             <li key={type.type.name}>{type.type.name}</li>
+          ))}
+        </ul>
+      </section>
+      
+      {/* Weaknesses and resistances */}
+      <section>
+        <h2 className="text-2xl font-semibold">Type effectiveness</h2>
+        <ul className="list-disc pl-5">
+          {types.map((type) => (
+            <li key={type.name}>
+              <h3>{type.name}</h3>
+              <ul className="list-disc pl-5">
+                {type.damage_relations.double_damage_from.map((from) => (
+                  <li key={from.name}>
+                    <p>Weak to {from.name}</p>
+                  </li>
+                ))}
+                {type.damage_relations.half_damage_from.map((from) => (
+                  <li key={from.name}>
+                    <p>Resistant to {from.name}</p>
+                  </li>
+                ))}
+              </ul>
+            </li>
           ))}
         </ul>
       </section>
