@@ -44,22 +44,22 @@ export default async function Page({ params }: { params: { name: string } }) {
         </ul>
       </section>
       
-      {/* Weaknesses and resistances */}
+      {/* Calculate weaknesses and resistances based on the combination of types of the pokemon */}
       <section>
-        <h2 className="text-2xl font-semibold">Type effectiveness</h2>
+        <h2 className="text-2xl font-semibold">Weaknesses and Resistances</h2>
         <ul className="list-disc pl-5">
           {types.map((type) => (
             <li key={type.name}>
               <h3>{type.name}</h3>
               <ul className="list-disc pl-5">
-                {type.damage_relations.double_damage_from.map((from) => (
+                {type.damage_relations.double_damage_from.map((from: PokeAPI.Type) => (
                   <li key={from.name}>
-                    <p>Weak to {from.name}</p>
+                    <p>Weakness: {from.name}</p>
                   </li>
                 ))}
-                {type.damage_relations.half_damage_from.map((from) => (
+                {type.damage_relations.half_damage_from.map((from: PokeAPI.Type) => (
                   <li key={from.name}>
-                    <p>Resistant to {from.name}</p>
+                    <p>Resistance: {from.name}</p>
                   </li>
                 ))}
               </ul>
