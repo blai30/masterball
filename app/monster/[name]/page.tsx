@@ -1,19 +1,6 @@
 import Image from 'next/image'
 import { PokeAPI } from 'pokeapi-types'
-
-async function getSpecies(name: string) {
-  const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${name}`
-  )
-  const data: PokeAPI.PokemonSpecies = await response.json()
-  return data
-}
-
-async function getPokemon(name: string) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`)
-  const data: PokeAPI.Pokemon = await response.json()
-  return data
-}
+import { getSpecies, getPokemon } from '@/lib/pokeapi'
 
 export async function generateStaticParams() {
   const response = await fetch(

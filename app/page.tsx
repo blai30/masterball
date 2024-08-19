@@ -1,25 +1,11 @@
 import Link from 'next/link'
-import { PokeAPI } from 'pokeapi-types'
-
-async function getSpeciesList() {
-  const response = await fetch(
-    'https://pokeapi.co/api/v2/pokemon-species?limit=2000'
-  )
-  const data: PokeAPI.NamedAPIResourceList = await response.json()
-  return data
-}
-
-async function getSpecies(resource: PokeAPI.NamedAPIResource) {
-  const response = await fetch(resource.url)
-  const data: PokeAPI.PokemonSpecies = await response.json()
-  return data
-}
+import { getSpeciesList, getSpecies } from '@/lib/pokeapi'
 
 export default async function Home() {
   const language = 'en'
   const speciesList = await getSpeciesList()
   const species = await Promise.all(
-    speciesList.results.map((result) => getSpecies(result))
+    speciesList.results.map((result) => getSpecies(result.name))
   )
 
   return (
