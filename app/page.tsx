@@ -28,9 +28,15 @@ export default async function Home() {
       <ul className="flex flex-col gap-2">
         {species.map((result) => (
           <li key={result.name}>
-            <Link href={`monster/${result.name}`} className="flex flex-row gap-2">
+            <Link
+              href={`monster/${result.name}`}
+              className="flex flex-row gap-2 rounded-lg bg-zinc-900 px-4 py-2 hover:bg-zinc-800"
+            >
               <p className="w-12">{result.id}</p>
-              <p>{result.names.find((name) => name.language.name === language)?.name}</p>
+              <p>
+                {result.names.find((name) => name.language.name === language)
+                  ?.name ?? 'Unknown'}
+              </p>
             </Link>
           </li>
         ))}

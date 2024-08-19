@@ -2,7 +2,9 @@ import Image from 'next/image'
 import { PokeAPI } from 'pokeapi-types'
 
 async function getSpecies(name: string) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${name}`)
+  const response = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${name}`
+  )
   const data: PokeAPI.PokemonSpecies = await response.json()
   return data
 }
@@ -38,6 +40,7 @@ export default async function Page({ params }: { params: { name: string } }) {
         alt={pokemon.name}
         width={128}
         height={128}
+        className="border"
         style={{ imageRendering: 'pixelated' }}
       />
 
@@ -45,9 +48,7 @@ export default async function Page({ params }: { params: { name: string } }) {
         <h2 className="text-2xl font-semibold">Types</h2>
         <ul className="list-disc pl-5">
           {pokemon.types.map((type) => (
-            <li key={type.type.name}>
-              {type.type.name}
-            </li>
+            <li key={type.type.name}>{type.type.name}</li>
           ))}
         </ul>
       </section>
@@ -68,7 +69,9 @@ export default async function Page({ params }: { params: { name: string } }) {
         <ul className="list-disc pl-5">
           {pokemon.stats.map((stat) => (
             <li key={stat.stat.name}>
-              <p>{stat.stat.name}: {stat.base_stat}</p>
+              <p>
+                {stat.stat.name}: {stat.base_stat}
+              </p>
               <meter value={stat.base_stat} min={0} max={255} />
             </li>
           ))}
@@ -81,12 +84,13 @@ export default async function Page({ params }: { params: { name: string } }) {
           {pokemon.moves.map((move) => (
             <li key={move.move.name}>
               {move.move.name} ({move.version_group_details.length} versions)
-              
               <ul className="list-disc pl-5">
                 {move.version_group_details.map((version) => (
-                  <li key={version.version_group.name}>
-                    {version.version_group.name} ({version.move_learn_method.name})
-
+                  <li
+                    key={`${version.version_group.name}_${version.move_learn_method.name}_${version.level_learned_at ?? 0}`}
+                  >
+                    {version.version_group.name} (
+                    {version.move_learn_method.name})
                     {version.move_learn_method.name === 'level-up' && (
                       <p>Learned at level {version.level_learned_at}</p>
                     )}
