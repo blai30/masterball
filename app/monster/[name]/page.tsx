@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import { PokeAPI } from 'pokeapi-types'
-import { getSpecies, getPokemon } from '@/lib/pokeapi'
 
 export async function generateStaticParams() {
   const response = await fetch(
@@ -15,18 +14,23 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }: { params: { name: string } }) {
   const { name } = params
-  const species = await getSpecies(name)
-  const pokemon = await getPokemon(species.varieties[0].pokemon.name)
+  const species = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${name}`
+  ).then((res) => res.json() as Promise<PokeAPI.PokemonSpecies>)
+  const pokemon = await fetch(species.varieties[0].pokemon.url).then(
+    (res) => res.json() as Promise<PokeAPI.Pokemon>
+  )
   const types = await Promise.all(
     pokemon.types.map((type) => fetch(type.type.url).then((res) => res.json()))
   )
+  const imageId = pokemon.id.toString().padStart(4, '0')
 
   return (
     <main className="flex min-h-screen flex-col items-start justify-between gap-4 p-24">
       <h1 className="text-4xl font-bold">{pokemon.name}</h1>
 
       <Image
-        src={pokemon.sprites.front_default}
+        src={`https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`}
         alt={pokemon.name}
         width={128}
         height={128}
@@ -43,7 +47,7 @@ export default async function Page({ params }: { params: { name: string } }) {
           ))}
         </ul>
       </section>
-      
+
       {/* Calculate weaknesses and resistances based on the combination of types of the pokemon */}
       <section>
         <h2 className="text-2xl font-semibold">Weaknesses and Resistances</h2>
@@ -52,16 +56,20 @@ export default async function Page({ params }: { params: { name: string } }) {
             <li key={type.name}>
               <h3>{type.name}</h3>
               <ul className="list-disc pl-5">
-                {type.damage_relations.double_damage_from.map((from: PokeAPI.Type) => (
-                  <li key={from.name}>
-                    <p>Weakness: {from.name}</p>
-                  </li>
-                ))}
-                {type.damage_relations.half_damage_from.map((from: PokeAPI.Type) => (
-                  <li key={from.name}>
-                    <p>Resistance: {from.name}</p>
-                  </li>
-                ))}
+                {type.damage_relations.double_damage_from.map(
+                  (from: PokeAPI.Type) => (
+                    <li key={from.name}>
+                      <p>Weakness: {from.name}</p>
+                    </li>
+                  )
+                )}
+                {type.damage_relations.half_damage_from.map(
+                  (from: PokeAPI.Type) => (
+                    <li key={from.name}>
+                      <p>Resistance: {from.name}</p>
+                    </li>
+                  )
+                )}
               </ul>
             </li>
           ))}
