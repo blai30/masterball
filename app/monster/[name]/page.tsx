@@ -20,9 +20,6 @@ export default async function Page({ params }: { params: { name: string } }) {
   const pokemon = await fetch(species.varieties[0].pokemon.url).then(
     (res) => res.json() as Promise<PokeAPI.Pokemon>
   )
-  const types = await Promise.all(
-    pokemon.types.map((type) => fetch(type.type.url).then((res) => res.json()))
-  )
   const imageId = pokemon.id.toString().padStart(4, '0')
 
   return (
@@ -44,34 +41,6 @@ export default async function Page({ params }: { params: { name: string } }) {
         <ul className="list-disc pl-5">
           {pokemon.types.map((type) => (
             <li key={type.type.name}>{type.type.name}</li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Calculate weaknesses and resistances based on the combination of types of the pokemon */}
-      <section>
-        <h2 className="text-2xl font-semibold">Weaknesses and Resistances</h2>
-        <ul className="list-disc pl-5">
-          {types.map((type) => (
-            <li key={type.name}>
-              <h3>{type.name}</h3>
-              <ul className="list-disc pl-5">
-                {type.damage_relations.double_damage_from.map(
-                  (from: PokeAPI.Type) => (
-                    <li key={from.name}>
-                      <p>Weakness: {from.name}</p>
-                    </li>
-                  )
-                )}
-                {type.damage_relations.half_damage_from.map(
-                  (from: PokeAPI.Type) => (
-                    <li key={from.name}>
-                      <p>Resistance: {from.name}</p>
-                    </li>
-                  )
-                )}
-              </ul>
-            </li>
           ))}
         </ul>
       </section>
