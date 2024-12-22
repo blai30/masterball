@@ -1,5 +1,4 @@
 import MonsterCard from '@/components/MonsterCard'
-import Link from 'next/link'
 import { PokeAPI } from 'pokeapi-types'
 
 export default async function Home() {
