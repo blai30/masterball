@@ -3,7 +3,7 @@ import { PokeAPI } from 'pokeapi-types'
 
 export async function generateStaticParams() {
   const response = await fetch(
-    'https://pokeapi.co/api/v2/pokemon-species?limit=2000'
+    'https://pokeapi.co/api/v2/pokemon-species?limit=386',
   )
   const data: PokeAPI.NamedAPIResourceList = await response.json()
 
@@ -12,13 +12,17 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function Page({ params }: { params: Promise<{ name: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ name: string }>
+}) {
   const { name } = await params
   const species = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${name}`
+    `https://pokeapi.co/api/v2/pokemon-species/${name}`,
   ).then((res) => res.json() as Promise<PokeAPI.PokemonSpecies>)
   const pokemon = await fetch(species.varieties[0].pokemon.url).then(
-    (res) => res.json() as Promise<PokeAPI.Pokemon>
+    (res) => res.json() as Promise<PokeAPI.Pokemon>,
   )
   const imageId = pokemon.id.toString().padStart(4, '0')
 
