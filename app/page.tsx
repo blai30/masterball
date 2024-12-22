@@ -4,7 +4,7 @@ import { PokeAPI } from 'pokeapi-types'
 export default async function Home() {
   const language = 'en'
   const speciesList = await fetch(
-    'https://pokeapi.co/api/v2/pokemon-species?limit=20'
+    'https://pokeapi.co/api/v2/pokemon-species?limit=200'
   ).then((res) => res.json() as Promise<PokeAPI.NamedAPIResourceList>)
   const species = (await Promise.all(
     speciesList.results.map((result) =>
@@ -17,11 +17,11 @@ export default async function Home() {
   return (
     <div className="container mx-auto">
       {/* <input type="search" name="search" placeholder="Search..." /> */}
-      <ul className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <ul className="grid grid-cols-1 2xs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 gap-4">
         {species.map((result) => (
           <li
             key={result.name}
-            className="group relative h-96 rounded-lg bg-white shadow-xl sm:aspect-[4/5] sm:h-auto"
+            className="group relative rounded-lg shadow-xl aspect-[3/2] 2xs:aspect-[4/5]"
           >
             <MonsterCard species={result} language={language} />
           </li>
