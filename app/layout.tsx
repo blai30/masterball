@@ -51,9 +51,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-white antialiased dark:bg-black`}
       >
-        {children}
+        <div className="flex min-h-screen flex-col gap-6 px-4 py-6 print:mx-0 print:max-w-none print:p-0">
+          {/* <Header /> */}
+          <main className="flex flex-grow flex-col items-center">
+            {children}
+          </main>
+          {/* <Footer /> */}
+        </div>
       </body>
     </html>
   )

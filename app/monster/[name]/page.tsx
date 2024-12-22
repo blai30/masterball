@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 }
 
 export default async function Page({ params }: { params: { name: string } }) {
-  const { name } = params
+  const { name } = await params
   const species = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${name}`
   ).then((res) => res.json() as Promise<PokeAPI.PokemonSpecies>)
