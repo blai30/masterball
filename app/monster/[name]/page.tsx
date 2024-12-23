@@ -10,16 +10,15 @@ export async function generateStaticParams() {
 
   return data.results.map((result) => ({
     name: result.name,
-    language: 'en',
   }))
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ name: string; language: string }>
+  params: Promise<{ name: string }>
 }): Promise<Metadata> {
-  const { name, language } = await params
+  const { name } = await params
   const species = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${name}`,
   ).then((res) => res.json() as Promise<PokeAPI.PokemonSpecies>)
@@ -29,9 +28,7 @@ export async function generateMetadata({
   const imageId = pokemon.id.toString().padStart(4, '0')
 
   return {
-    title:
-      species.names.find((name) => name.language.name === language)?.name ??
-      'Unknown',
+    title: pokemon.name,
     openGraph: {
       images: [
         `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
