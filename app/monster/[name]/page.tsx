@@ -1,14 +1,12 @@
 import { Metadata } from 'next'
 import Image from 'next/image'
-import { PokeAPI } from 'pokeapi-types'
+import Pokedex from 'pokedex-promise-v2'
 
 export async function generateStaticParams() {
-  const response = await fetch(
-    'https://pokeapi.co/api/v2/pokemon-species?limit=20',
-  )
-  const data: PokeAPI.NamedAPIResourceList = await response.json()
+  const pokeapi = new Pokedex()
+  const speciesList = await pokeapi.getPokemonSpeciesList({ limit: 20 })
 
-  return data.results.map((result) => ({
+  return speciesList.results.map((result) => ({
     name: result.name,
   }))
 }
@@ -19,12 +17,9 @@ export async function generateMetadata({
   params: Promise<{ name: string }>
 }): Promise<Metadata> {
   const { name } = await params
-  const species = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${name}`,
-  ).then((res) => res.json() as Promise<PokeAPI.PokemonSpecies>)
-  const pokemon = await fetch(species.varieties[0].pokemon.url).then(
-    (res) => res.json() as Promise<PokeAPI.Pokemon>,
-  )
+  const pokeapi = new Pokedex()
+  const species = await pokeapi.getPokemonSpeciesByName(name)
+  const pokemon = await pokeapi.getPokemonByName(species.varieties[0].pokemon.name)
   const imageId = pokemon.id.toString().padStart(4, '0')
 
   return {
@@ -43,12 +38,9 @@ export default async function Page({
   params: Promise<{ name: string }>
 }) {
   const { name } = await params
-  const species = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${name}`,
-  ).then((res) => res.json() as Promise<PokeAPI.PokemonSpecies>)
-  const pokemon = await fetch(species.varieties[0].pokemon.url).then(
-    (res) => res.json() as Promise<PokeAPI.Pokemon>,
-  )
+  const pokeapi = new Pokedex()
+  const species = await pokeapi.getPokemonSpeciesByName(name)
+  const pokemon = await pokeapi.getPokemonByName(species.varieties[0].pokemon.name)
   const imageId = pokemon.id.toString().padStart(4, '0')
 
   return (

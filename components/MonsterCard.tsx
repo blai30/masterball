@@ -2,17 +2,19 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { PokeAPI } from 'pokeapi-types'
+import { PokemonSpecies } from 'pokedex-promise-v2'
 
 export default function MonsterCard({
   species,
   language,
 }: {
-  species: PokeAPI.PokemonSpecies
+  // species: PokeAPI.PokemonSpecies
+  species: PokemonSpecies
   language: string
 }) {
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+
   return (
     // <Link
     //   href={`monster/${species.name}`}

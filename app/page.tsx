@@ -1,18 +1,13 @@
 import MonsterCard from '@/components/MonsterCard'
-import { PokeAPI } from 'pokeapi-types'
+import Pokedex from 'pokedex-promise-v2'
 
 export default async function Home() {
   const language = 'en'
-  const speciesList = await fetch(
-    'https://pokeapi.co/api/v2/pokemon-species?limit=20',
-  ).then((res) => res.json() as Promise<PokeAPI.NamedAPIResourceList>)
-  const species = (await Promise.all(
-    speciesList.results.map((result) =>
-      fetch(result.url).then(
-        (res) => res.json() as Promise<PokeAPI.PokemonSpecies>,
-      ),
-    ),
-  )) as PokeAPI.PokemonSpecies[]
+  const pokeapi = new Pokedex()
+  const speciesList = await pokeapi.getPokemonSpeciesList({ limit: 20 })
+  const species = await pokeapi.getPokemonSpeciesByName(
+    speciesList.results.map((result) => result.name),
+  )
 
   return (
     <div className="container mx-auto">
