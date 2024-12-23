@@ -1,17 +1,30 @@
 'use client'
 
-import { Monster } from '@/models'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
 
 export default function MonsterCard({
-  monster,
+  id,
+  species,
+  pokemon,
+  types,
   language,
 }: {
-  monster: Monster
+  id: number
+  species: PokemonSpecies
+  pokemon: Pokemon
+  types: Type[]
   language: string
 }) {
-  const { species, types } = monster
+  if (!pokemon) {
+    return <div className="">n/a</div>
+  }
+
+  const typeNames = types.map(
+    (type) =>
+      type.names.find((value) => value.language.name === 'en')?.name ?? '',
+  )
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
@@ -35,11 +48,11 @@ export default function MonsterCard({
       </div>
       <div className="absolute inset-0 flex flex-col items-start justify-between rounded-lg p-4 overflow-hidden">
         <p aria-hidden="true" className="text-sm text-zinc-300 font-mono">
-          {species.id}
+          {id}
         </p>
         <div className="flex flex-col gap-1">
           <p aria-hidden="true" className="text-sm text-white">
-            {types.join(' ')}
+            {typeNames.join(' ')}
           </p>
           <h3 className="font-medium text-white">
             <Link href={`monster/${species.name}`}>
