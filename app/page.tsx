@@ -4,7 +4,7 @@ import { PokeAPI } from 'pokeapi-types'
 export default async function Home() {
   const language = 'en'
   const speciesList = await fetch(
-    'https://pokeapi.co/api/v2/pokemon-species?limit=386',
+    'https://pokeapi.co/api/v2/pokemon-species?limit=20',
   ).then((res) => res.json() as Promise<PokeAPI.NamedAPIResourceList>)
   const species = (await Promise.all(
     speciesList.results.map((result) =>

@@ -24,7 +24,14 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://blai30.github.io/masterball/',
-    images: ['favicon.png'],
+    images: [
+      {
+        url: 'https://blai30.github.io/masterball/favicon.png',
+        width: 128,
+        height: 128,
+        alt: 'Masterball',
+      },
+    ],
   },
   twitter: {
     card: 'summary',

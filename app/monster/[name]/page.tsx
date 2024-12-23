@@ -1,15 +1,43 @@
+import { Metadata } from 'next'
 import Image from 'next/image'
 import { PokeAPI } from 'pokeapi-types'
 
 export async function generateStaticParams() {
   const response = await fetch(
-    'https://pokeapi.co/api/v2/pokemon-species?limit=386',
+    'https://pokeapi.co/api/v2/pokemon-species?limit=20',
   )
   const data: PokeAPI.NamedAPIResourceList = await response.json()
 
   return data.results.map((result) => ({
     name: result.name,
+    language: 'en',
   }))
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ name: string; language: string }>
+}): Promise<Metadata> {
+  const { name, language } = await params
+  const species = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${name}`,
+  ).then((res) => res.json() as Promise<PokeAPI.PokemonSpecies>)
+  const pokemon = await fetch(species.varieties[0].pokemon.url).then(
+    (res) => res.json() as Promise<PokeAPI.Pokemon>,
+  )
+  const imageId = pokemon.id.toString().padStart(4, '0')
+
+  return {
+    title:
+      species.names.find((name) => name.language.name === language)?.name ??
+      'Unknown',
+    openGraph: {
+      images: [
+        `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
+      ],
+    },
+  }
 }
 
 export default async function Page({
