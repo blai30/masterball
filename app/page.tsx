@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import Pokedex, { NamedAPIResource } from 'pokedex-promise-v2'
 import LoadingCard from '@/components/LoadingCard'
-import MonsterCardSlot from '@/components/MonsterCardSlot'
+import MonsterCard from '@/components/MonsterCard'
 // import { Monster } from '@/models'
 
 export default async function Home() {
@@ -47,7 +47,7 @@ export default async function Home() {
               className="group relative rounded-lg shadow-xl aspect-[4/5]"
             >
               <Suspense fallback={<LoadingCard />}>
-                <MonsterCardSlot
+                <MonsterCard
                   key={speciesResource.id}
                   speciesResource={speciesResource}
                   language={language}

@@ -1,29 +1,26 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
-import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
+import Pokedex, { NamedAPIResource } from 'pokedex-promise-v2'
 
 const typeIconUrl = (type: string) =>
   `https://raw.githubusercontent.com/partywhale/pokemon-type-icons/refs/heads/main/icons/${type}.svg`
 
-export default function MonsterCard({
-  id,
-  species,
-  pokemon,
-  types,
+export default async function MonsterCard({
+  speciesResource,
   language,
 }: {
-  id: number
-  species: PokemonSpecies
-  pokemon: Pokemon
-  types: Type[]
+  speciesResource: NamedAPIResource
   language: string
 }) {
-  const typeNames = types.map(
-    (type) =>
-      type.names.find((value) => value.language.name === language)?.name ?? '',
+  const pokeapi = new Pokedex()
+  const species = await pokeapi.getPokemonSpeciesByName(speciesResource.name)
+  const pokemon = await pokeapi.getPokemonByName(
+    species.varieties[0].pokemon.name,
   )
+  const types = await pokeapi.getTypeByName(
+    pokemon.types.map((type) => type.type.name),
+  )
+
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
@@ -47,7 +44,7 @@ export default function MonsterCard({
       </div>
       <div className="absolute inset-0 flex flex-col items-start justify-between rounded-lg p-4 overflow-hidden">
         <p aria-hidden="true" className="text-sm text-zinc-300 font-mono">
-          {id}
+          {species.id}
         </p>
         <div className="flex flex-col gap-1">
           <div className="flex flex-row gap-1">
