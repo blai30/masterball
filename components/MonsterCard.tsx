@@ -4,6 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
 
+const typeIconUrl = (type: string) =>
+  `https://raw.githubusercontent.com/partywhale/pokemon-type-icons/refs/heads/main/icons/${type}.svg`
+
 export default function MonsterCard({
   id,
   species,
@@ -17,13 +20,9 @@ export default function MonsterCard({
   types: Type[]
   language: string
 }) {
-  if (!pokemon) {
-    return <div className="">n/a</div>
-  }
-
   const typeNames = types.map(
     (type) =>
-      type.names.find((value) => value.language.name === 'en')?.name ?? '',
+      type.names.find((value) => value.language.name === language)?.name ?? '',
   )
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
@@ -51,14 +50,25 @@ export default function MonsterCard({
           {id}
         </p>
         <div className="flex flex-col gap-1">
-          <p aria-hidden="true" className="text-sm text-white">
-            {typeNames.join(' ')}
-          </p>
+          <div className="flex flex-row gap-1">
+            {types.map((typeResource) => (
+              <Image
+                key={typeResource.id}
+                src={typeIconUrl(typeResource.name)}
+                alt={typeResource.name}
+                width={16}
+                height={16}
+              />
+            ))}
+          </div>
           <h3 className="font-medium text-white">
             <Link href={`monster/${species.name}`}>
               <span className="absolute inset-0" />
-              {species.names.find((name) => name.language.name === language)
-                ?.name ?? 'Unknown'}
+              {
+                species.names.filter(
+                  (nameResource) => nameResource.language.name === language,
+                )[0].name
+              }
             </Link>
           </h3>
         </div>

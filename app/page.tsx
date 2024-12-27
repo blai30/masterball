@@ -1,8 +1,8 @@
+import { Suspense } from 'react'
+import Pokedex, { NamedAPIResource } from 'pokedex-promise-v2'
 import LoadingCard from '@/components/LoadingCard'
 import MonsterCardSlot from '@/components/MonsterCardSlot'
 // import { Monster } from '@/models'
-import Pokedex, { NamedAPIResource } from 'pokedex-promise-v2'
-import { Suspense } from 'react'
 
 export default async function Home() {
   const language = 'en'
