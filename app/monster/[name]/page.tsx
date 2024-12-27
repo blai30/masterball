@@ -1,9 +1,8 @@
 import { Metadata } from 'next'
 import Image from 'next/image'
-import Pokedex from 'pokedex-promise-v2'
+import { pokeapi } from '@/lib/providers'
 
 export async function generateStaticParams() {
-  const pokeapi = new Pokedex()
   const speciesList = await pokeapi.getPokemonSpeciesList({ limit: 20 })
 
   return speciesList.results.map((result) => ({
@@ -17,7 +16,6 @@ export async function generateMetadata({
   params: Promise<{ name: string }>
 }): Promise<Metadata> {
   const { name } = await params
-  const pokeapi = new Pokedex()
   const species = await pokeapi.getPokemonSpeciesByName(name)
   const pokemon = await pokeapi.getPokemonByName(species.varieties[0].pokemon.name)
   const imageId = pokemon.id.toString().padStart(4, '0')
@@ -38,7 +36,6 @@ export default async function Page({
   params: Promise<{ name: string }>
 }) {
   const { name } = await params
-  const pokeapi = new Pokedex()
   const species = await pokeapi.getPokemonSpeciesByName(name)
   const pokemon = await pokeapi.getPokemonByName(species.varieties[0].pokemon.name)
   const imageId = pokemon.id.toString().padStart(4, '0')

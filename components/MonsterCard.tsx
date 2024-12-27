@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Pokedex, { NamedAPIResource } from 'pokedex-promise-v2'
+import { NamedAPIResource } from 'pokedex-promise-v2'
+import { pokeapi } from '@/lib/providers'
 
 const typeIconUrl = (type: string) =>
   `https://raw.githubusercontent.com/partywhale/pokemon-type-icons/refs/heads/main/icons/${type}.svg`
@@ -12,7 +13,6 @@ export default async function MonsterCard({
   speciesResource: NamedAPIResource
   language: string
 }) {
-  const pokeapi = new Pokedex()
   const species = await pokeapi.getPokemonSpeciesByName(speciesResource.name)
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties[0].pokemon.name,

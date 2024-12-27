@@ -1,12 +1,12 @@
 import { Suspense } from 'react'
-import Pokedex, { NamedAPIResource } from 'pokedex-promise-v2'
+import { NamedAPIResource } from 'pokedex-promise-v2'
 import LoadingCard from '@/components/LoadingCard'
 import MonsterCard from '@/components/MonsterCard'
+import { pokeapi } from '@/lib/providers'
 // import { Monster } from '@/models'
 
 export default async function Home() {
   const language = 'en'
-  const pokeapi = new Pokedex()
   const speciesResourceList = await pokeapi.getPokemonSpeciesList({ limit: 20 })
   // const species = await pokeapi.getPokemonSpeciesByName(
   //   speciesList.results.map((result) => result.name),
