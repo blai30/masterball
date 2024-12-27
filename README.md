@@ -1,3 +1,3 @@
 Use Static Site Generation (SSG) instead of Client Side Rendering (CSR) as it gets better SEO, load times, and less stress on the browser/client. Therefore, favor using server components (without 'use client') as this way, data fetching happen at build time and can use async-await pages. We need `output: 'export'` in next.config.mjs. Data fetching with CSR will happen on the browser at page load which is not ideal as data does not change often.
 
-Removing client component and using only server components improved load time and resources by 3x (or 1/3 of original). 077dee92f8247f4f6a8b23858aae312ba61e5ddd
+Removing client component and using only server components improved load time and resources by 3x (or 1/3 of original). [077dee9](https://github.com/blai30/masterball/commit/077dee92f8247f4f6a8b23858aae312ba61e5ddd)
