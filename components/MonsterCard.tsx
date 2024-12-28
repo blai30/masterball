@@ -37,13 +37,13 @@ export default async function MonsterCard({
             width={128}
             height={128}
             priority
-            className="size-full object-contain p-6"
+            className="size-full object-scale-down p-2"
           />
         </div>
         {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" /> */}
       </div>
       <div className="absolute inset-0 flex flex-col items-start justify-between rounded-lg p-4 overflow-hidden">
-        <p aria-hidden="true" className="text-sm text-zinc-300 font-mono">
+        <p aria-hidden="true" className="text-sm text-zinc-600 dark:text-zinc-400 font-mono">
           {species.id}
         </p>
         <div className="flex flex-col gap-1">

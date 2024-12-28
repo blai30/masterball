@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Inter } from 'next/font/google'
 import './globals.css'
+import Header from '@/components/shared/Header'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -61,7 +62,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-white antialiased dark:bg-black`}
       >
         <div className="flex min-h-screen flex-col gap-6 px-4 py-6 print:mx-0 print:max-w-none print:p-0">
-          {/* <Header /> */}
+          <Header />
           <main className="flex flex-grow flex-col items-center">
             {children}
           </main>
