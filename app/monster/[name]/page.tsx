@@ -17,7 +17,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
-  const pokemon = await pokeapi.getPokemonByName(species.varieties[0].pokemon.name)
+  const pokemon = await pokeapi.getPokemonByName(
+    species.varieties[0].pokemon.name,
+  )
   const imageId = pokemon.id.toString().padStart(4, '0')
 
   return {
@@ -35,23 +37,36 @@ export default async function Page({
 }: {
   params: Promise<{ name: string }>
 }) {
+  const language = 'en'
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
-  const pokemon = await pokeapi.getPokemonByName(species.varieties[0].pokemon.name)
-  const imageId = pokemon.id.toString().padStart(4, '0')
+  const pokemon = await pokeapi.getPokemonByName(
+    species.varieties[0].pokemon.name,
+  )
+  const types = await pokeapi.getTypeByName(
+    pokemon.types.map((type) => type.type.name),
+  )
+
+  const imageId = species.id.toString().padStart(4, '0')
+  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <main className="flex min-h-screen flex-col items-start justify-between gap-4 p-24">
-      <h1 className="text-4xl font-bold">{pokemon.name}</h1>
+    <div className="container mx-auto">
+      <h1 className="text-4xl font-bold">
+        {
+          species.names.filter(
+            (nameResource) => nameResource.language.name === language,
+          )[0].name
+        }
+      </h1>
 
       <Image
-        src={`https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`}
+        src={imageUrl}
         alt={pokemon.name}
         width={128}
         height={128}
         priority
         className="border"
-        style={{ imageRendering: 'pixelated' }}
       />
 
       <section>
@@ -93,8 +108,8 @@ export default async function Page({
         <ul className="list-disc pl-5">
           {pokemon.moves.map((move) => (
             <li key={move.move.name}>
-              {move.move.name} ({move.version_group_details.length} versions)
-              <ul className="list-disc pl-5">
+              {move.move.name}
+              {/* <ul className="list-disc pl-5">
                 {move.version_group_details.map((version) => (
                   <li
                     key={`${version.version_group.name}_${version.move_learn_method.name}_${version.level_learned_at ?? 0}`}
@@ -106,11 +121,11 @@ export default async function Page({
                     )}
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </li>
           ))}
         </ul>
       </section>
-    </main>
+    </div>
   )
 }
