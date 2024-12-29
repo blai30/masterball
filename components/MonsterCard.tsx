@@ -3,8 +3,28 @@ import Link from 'next/link'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 
-const typeIconUrl = (type: string) =>
-  `https://raw.githubusercontent.com/partywhale/pokemon-type-icons/refs/heads/main/icons/${type}.svg`
+const typeIconUrl = (type: string) => `/${type}.png`
+
+const typeClasses: { [key: string]: string } = {
+  ['normal']: 'bg-[#999999]',
+  ['fighting']: 'bg-[#ffa202]',
+  ['flying']: 'bg-[#95c9ff]',
+  ['poison']: 'bg-[#994dcf]',
+  ['ground']: 'bg-[#ab7939]',
+  ['rock']: 'bg-[#bcb889]',
+  ['bug']: 'bg-[#9fa424]',
+  ['ghost']: 'bg-[#6e4570]',
+  ['steel']: 'bg-[#6aaed3]',
+  ['fire']: 'bg-[#ff612c]',
+  ['water']: 'bg-[#2992ff]',
+  ['grass']: 'bg-[#42bf24]',
+  ['electric']: 'bg-[#ffdb00]',
+  ['psychic']: 'bg-[#ff637f]',
+  ['ice']: 'bg-[#42d8ff]',
+  ['dragon']: 'bg-[#5462d6]',
+  ['dark']: 'bg-[#4f4747]',
+  ['fairy']: 'bg-[#ffb1ff]',
+}
 
 export default async function MonsterCard({
   speciesResource,
@@ -43,7 +63,10 @@ export default async function MonsterCard({
         {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" /> */}
       </div>
       <div className="absolute inset-0 flex flex-col items-start justify-between rounded-lg p-4 overflow-hidden">
-        <p aria-hidden="true" className="text-sm text-zinc-600 dark:text-zinc-400 font-mono">
+        <p
+          aria-hidden="true"
+          className="text-sm text-zinc-600 dark:text-zinc-400 font-mono"
+        >
           {species.id}
         </p>
         <div className="flex flex-col gap-1">
@@ -53,8 +76,12 @@ export default async function MonsterCard({
                 key={typeResource.id}
                 src={typeIconUrl(typeResource.name)}
                 alt={typeResource.name}
-                width={16}
-                height={16}
+                width={20}
+                height={20}
+                className={[
+                  'object-contain rounded-sm',
+                  typeClasses[typeResource.name],
+                ].join(' ')}
               />
             ))}
           </div>

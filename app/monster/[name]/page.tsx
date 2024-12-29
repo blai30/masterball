@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { pokeapi } from '@/lib/providers'
 
 export async function generateStaticParams() {
-  const speciesList = await pokeapi.getPokemonSpeciesList({ limit: 20 })
+  const speciesList = await pokeapi.getPokemonSpeciesList({ limit: 30 })
 
   return speciesList.results.map((result) => ({
     name: result.name,
