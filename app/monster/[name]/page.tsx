@@ -18,18 +18,35 @@ export async function generateMetadata({
 }: {
   params: Promise<{ name: string }>
 }): Promise<Metadata> {
+  const language = 'en'
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties[0].pokemon.name
   )
+  const types = await pokeapi.getTypeByName(
+    pokemon.types.map((type) => type.type.name)
+  )
+  const typeNames = types.map((t) => {
+    const filtered = t.names.filter((n) => n.language.name === language)
+    return filtered.map((v) => v.name)
+  })
+
   const imageId = pokemon.id.toString().padStart(4, '0')
 
   return {
-    title: pokemon.name,
+    title: species.names.filter(
+      (nameResource) => nameResource.language.name === language
+    )[0].name,
+    description: `${typeNames.join(' ')}`,
     openGraph: {
       images: [
-        `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
+        {
+          url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
+          width: 128,
+          height: 128,
+          alt: species.name,
+        },
       ],
     },
   }
