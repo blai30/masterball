@@ -7,7 +7,10 @@ import { pokeapi } from '@/lib/providers'
 
 export default async function Home() {
   const language = 'en'
-  const speciesResourceList = await pokeapi.getPokemonSpeciesList({ limit: 50, offset: 251 })
+  const speciesResourceList = await pokeapi.getPokemonSpeciesList({
+    limit: 50,
+    offset: 251,
+  })
   // const species = await pokeapi.getPokemonSpeciesByName(
   //   speciesList.results.map((result) => result.name),
   // )
@@ -39,13 +42,13 @@ export default async function Home() {
   return (
     <div className="container mx-auto">
       {/* <input type="search" name="search" placeholder="Search..." /> */}
-      <ul className="grid grid-cols-1 2xs:grid-cols-2 gap-4 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
-      {/* <ul className="flex flex-row flex-wrap gap-4"> */}
+      <ul className="grid grid-cols-1 gap-4 2xs:grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
+        {/* <ul className="flex flex-row flex-wrap gap-4"> */}
         {speciesResourceList.results.map(
           (speciesResource: NamedAPIResource) => (
             <li
               key={speciesResource.name}
-              className="group relative rounded-lg col-span-1"
+              className="group relative col-span-1 rounded-lg"
             >
               <Suspense fallback={<LoadingCard />}>
                 <MonsterCard
@@ -55,7 +58,7 @@ export default async function Home() {
                 />
               </Suspense>
             </li>
-          ),
+          )
         )}
       </ul>
     </div>

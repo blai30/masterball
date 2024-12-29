@@ -32,7 +32,7 @@ export default function LoadingCard() {
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-row justify-between p-2">
+        <div className="flex w-full flex-row justify-between px-2 pt-2">
           <div className="h-4 w-12 animate-pulse bg-zinc-300 dark:bg-zinc-700"></div>
         </div>
       </div>

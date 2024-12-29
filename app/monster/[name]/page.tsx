@@ -3,7 +3,10 @@ import Image from 'next/image'
 import { pokeapi } from '@/lib/providers'
 
 export async function generateStaticParams() {
-  const speciesList = await pokeapi.getPokemonSpeciesList({ limit: 50, offset: 251 })
+  const speciesList = await pokeapi.getPokemonSpeciesList({
+    limit: 50,
+    offset: 251,
+  })
 
   return speciesList.results.map((result) => ({
     name: result.name,
@@ -18,7 +21,7 @@ export async function generateMetadata({
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties[0].pokemon.name,
+    species.varieties[0].pokemon.name
   )
   const imageId = pokemon.id.toString().padStart(4, '0')
 
@@ -41,10 +44,10 @@ export default async function Page({
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties[0].pokemon.name,
+    species.varieties[0].pokemon.name
   )
   const types = await pokeapi.getTypeByName(
-    pokemon.types.map((type) => type.type.name),
+    pokemon.types.map((type) => type.type.name)
   )
 
   const imageId = species.id.toString().padStart(4, '0')
@@ -55,7 +58,7 @@ export default async function Page({
       <h1 className="text-4xl font-bold">
         {
           species.names.filter(
-            (nameResource) => nameResource.language.name === language,
+            (nameResource) => nameResource.language.name === language
           )[0].name
         }
       </h1>
