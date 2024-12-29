@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 
-const typeIconUrl = (type: string) => `/${type}.png`
+const typeIconUrl = (type: string) => `${type}.png`
 
 const typeClasses: { [key: string]: string } = {
   ['normal']: 'bg-[#999999]',
