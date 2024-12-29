@@ -39,13 +39,13 @@ export default async function Home() {
   return (
     <div className="container mx-auto">
       {/* <input type="search" name="search" placeholder="Search..." /> */}
-      <ul className="grid grid-cols-1 2xs:grid-cols-2 gap-4 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
+      <ul className="grid grid-cols-1 2xs:grid-cols-2 gap-4 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
       {/* <ul className="flex flex-row flex-wrap gap-4"> */}
         {speciesResourceList.results.map(
           (speciesResource: NamedAPIResource) => (
             <li
               key={speciesResource.name}
-              className="group relative rounded-lg shadow-xl aspect-[4/5] col-span-1"
+              className="group relative rounded-lg col-span-1"
             >
               <Suspense fallback={<LoadingCard />}>
                 <MonsterCard

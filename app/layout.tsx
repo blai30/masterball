@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/shared/Header'
+import { ThemeProvider } from 'next-themes'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -57,17 +58,24 @@ export default function RootLayout({
 }>) {
   // Font applied in globals.css.
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-white antialiased dark:bg-black`}
       >
-        <div className="flex min-h-screen flex-col gap-6 px-4 py-6 print:mx-0 print:max-w-none print:p-0">
-          <Header />
-          <main className="flex flex-grow flex-col items-center">
-            {children}
-          </main>
-          {/* <Footer /> */}
-        </div>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="flex min-h-screen flex-col gap-6 px-4 py-6 print:mx-0 print:max-w-none print:p-0">
+            <Header />
+            <main className="flex flex-grow flex-col items-center">
+              {children}
+            </main>
+            {/* <Footer /> */}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   )

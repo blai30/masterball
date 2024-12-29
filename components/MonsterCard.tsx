@@ -35,68 +35,61 @@ export default async function MonsterCard({
 }) {
   const species = await pokeapi.getPokemonSpeciesByName(speciesResource.name)
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties[0].pokemon.name,
+    species.varieties[0].pokemon.name
   )
   const types = await pokeapi.getTypeByName(
-    pokemon.types.map((type) => type.type.name),
+    pokemon.types.map((type) => type.type.name)
   )
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900"
-      >
-        <div className="absolute inset-0 overflow-hidden group-hover:opacity-75">
+    <Link href={`monster/${species.name}`}>
+      <div className="flex flex-col items-center justify-between overflow-hidden rounded-lg p-2 group-hover:bg-zinc-300 group-hover:dark:bg-zinc-700">
+        <div className="relative flex w-full flex-col items-center rounded-md p-4 bg-zinc-100 dark:bg-zinc-900">
           <Image
             src={imageUrl}
             alt={species.name}
-            width={128}
-            height={128}
+            width={96}
+            height={96}
             priority
-            className="size-full object-scale-down p-2"
+            className="h-full object-scale-down"
           />
-        </div>
-        {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" /> */}
-      </div>
-      <div className="absolute inset-0 flex flex-col items-start justify-between rounded-lg p-4 overflow-hidden">
-        <p
-          aria-hidden="true"
-          className="text-sm text-zinc-600 dark:text-zinc-400 font-mono"
-        >
-          {species.id}
-        </p>
-        <div className="flex flex-col gap-1">
-          <div className="flex flex-row gap-1">
-            {types.map((typeResource) => (
-              <Image
-                key={typeResource.id}
-                src={typeIconUrl(typeResource.name)}
-                alt={typeResource.name}
-                width={20}
-                height={20}
-                className={[
-                  'object-contain rounded-sm',
-                  typeClasses[typeResource.name],
-                ].join(' ')}
-              />
-            ))}
+          <div className="absolute inset-x-0 top-0 flex flex-col h-full items-start justify-between rounded-lg p-2">
+            <p
+              aria-hidden="true"
+              className="text-sm text-zinc-400 dark:text-zinc-500 font-mono"
+            >
+              {species.id}
+            </p>
+            <div className="flex flex-row gap-2">
+              {types.map((typeResource) => (
+                <Image
+                  key={typeResource.id}
+                  src={typeIconUrl(typeResource.name)}
+                  alt={typeResource.name}
+                  width={20}
+                  height={20}
+                  className={[
+                    'rounded-sm object-contain',
+                    typeClasses[typeResource.name],
+                  ].join(' ')}
+                />
+              ))}
+            </div>
           </div>
-          <h3 className="font-medium text-white">
-            <Link href={`monster/${species.name}`}>
-              <span className="absolute inset-0" />
-              {
-                species.names.filter(
-                  (nameResource) => nameResource.language.name === language,
-                )[0].name
-              }
-            </Link>
+        </div>
+        <div className="flex w-full flex-row justify-between p-2">
+          <h3 className="font-light text-black dark:text-white">
+            {
+              species.names.filter(
+                (nameResource) => nameResource.language.name === language
+              )[0].name
+            }
           </h3>
         </div>
       </div>
-    </>
+    </Link>
   )
 }
