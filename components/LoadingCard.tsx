@@ -8,32 +8,34 @@ export default function LoadingCard() {
     'https://resource.pokemon-home.com/battledata/img/pokei128/icon0000_f00_s0.png'
 
   return (
-    <>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900"
-      >
-        <div className="absolute inset-0 overflow-hidden group-hover:opacity-75">
+    <div>
+      <div className="flex flex-col items-center justify-between overflow-hidden rounded-lg p-2 group-hover:bg-zinc-300 group-hover:dark:bg-zinc-700">
+        <div className="relative flex w-full flex-col items-center rounded-md bg-zinc-100 p-4 dark:bg-zinc-900">
           <Image
             src={imageUrl}
             alt="Loading card image"
-            width={128}
-            height={128}
+            width={96}
+            height={96}
             priority
-            className="size-full object-contain p-6"
+            className="h-full object-scale-down"
           />
+          <div className="absolute inset-x-0 top-0 flex h-full flex-col items-start justify-between rounded-lg p-2">
+            <p
+              aria-hidden="true"
+              className="font-mono text-sm text-zinc-400 dark:text-zinc-500"
+            >
+              {id}
+            </p>
+            <div className="flex flex-row gap-2">
+              <div className="size-5 animate-pulse rounded-sm bg-zinc-300 dark:bg-zinc-700"></div>
+              <div className="size-5 animate-pulse rounded-sm bg-zinc-300 dark:bg-zinc-700"></div>
+            </div>
+          </div>
         </div>
-        {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" /> */}
-      </div>
-      <div className="absolute inset-0 flex flex-col items-start justify-between rounded-lg p-4 overflow-hidden">
-        <p aria-hidden="true" className="text-sm text-zinc-300 font-mono">
-          {id}
-        </p>
-        <div className="flex flex-col gap-1 animate-pulse">
-          <div className="h-2 w-12 m-1 bg-zinc-700/60 rounded-sm"></div>
-          <div className="h-4 w-20 m-1 bg-zinc-700/60 rounded-sm"></div>
+        <div className="flex w-full flex-row justify-between p-2">
+          <div className="h-4 w-12 animate-pulse bg-zinc-300 dark:bg-zinc-700"></div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
