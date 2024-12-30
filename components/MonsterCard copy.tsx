@@ -35,10 +35,10 @@ export default async function MonsterCard({
 }) {
   const species = await pokeapi.getPokemonSpeciesByName(speciesResource.name)
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties[0].pokemon.name,
+    species.varieties[0].pokemon.name
   )
   const types = await pokeapi.getTypeByName(
-    pokemon.types.map((type) => type.type.name),
+    pokemon.types.map((type) => type.type.name)
   )
 
   const imageId = species.id.toString().padStart(4, '0')
@@ -46,17 +46,17 @@ export default async function MonsterCard({
 
   return (
     <>
-      <div className="flex flex-col items-center rounded-2xl overflow-hidden bg-zinc-900">
-        <div className="flex flex-col items-center w-full">
-          <div className="bg-zinc-900 w-full">
+      <div className="flex flex-col items-center overflow-hidden rounded-2xl bg-zinc-900">
+        <div className="flex w-full flex-col items-center">
+          <div className="w-full bg-zinc-900">
             <p
               aria-hidden="true"
-              className="text-sm text-zinc-600 dark:text-zinc-400 font-mono text-center"
+              className="text-center font-mono text-sm text-zinc-600 dark:text-zinc-400"
             >
               {species.id}
             </p>
           </div>
-          <div className="bg-zinc-800 w-full">
+          <div className="w-full bg-zinc-800">
             <Image
               src={imageUrl}
               alt={species.name}
@@ -66,8 +66,8 @@ export default async function MonsterCard({
               className="w-full object-scale-down"
             />
           </div>
-          <div className="bg-zinc-900 w-full">
-            <div className="flex flex-col gap-2 items-center p-2">
+          <div className="w-full bg-zinc-900">
+            <div className="flex flex-col items-center gap-2 p-2">
               <div className="flex flex-row gap-2">
                 {types.map((typeResource) => (
                   <Image
@@ -77,7 +77,7 @@ export default async function MonsterCard({
                     width={20}
                     height={20}
                     className={[
-                      'object-contain rounded-sm',
+                      'rounded-xs object-contain',
                       typeClasses[typeResource.name],
                     ].join(' ')}
                   />
@@ -88,7 +88,7 @@ export default async function MonsterCard({
                   <span className="absolute inset-0" />
                   {
                     species.names.filter(
-                      (nameResource) => nameResource.language.name === language,
+                      (nameResource) => nameResource.language.name === language
                     )[0].name
                   }
                 </Link>

@@ -42,7 +42,7 @@ export default async function Home() {
   return (
     <div className="container mx-auto">
       {/* <input type="search" name="search" placeholder="Search..." /> */}
-      <ul className="grid grid-cols-1 gap-4 2xs:grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
+      <ul className="grid grid-cols-1 gap-2 2xs:grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
         {/* <ul className="flex flex-row flex-wrap gap-4"> */}
         {speciesResourceList.results.map(
           (speciesResource: NamedAPIResource) => (

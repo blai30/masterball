@@ -70,9 +70,7 @@ export default function RootLayout({
         >
           <div className="flex min-h-screen flex-col gap-6 px-4 py-6 print:mx-0 print:max-w-none print:p-0">
             <Header />
-            <main className="flex flex-grow flex-col items-center">
-              {children}
-            </main>
+            <main className="flex grow flex-col items-center">{children}</main>
             {/* <Footer /> */}
           </div>
         </ThemeProvider>

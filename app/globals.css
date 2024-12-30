@@ -1,22 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@variant dark (&:where(.dark, .dark *));
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --foreground: #ededed;
-  }
+@theme {
+  --breakpoint-3xs: 160px;
+  --breakpoint-2xs: 350px;
+  --breakpoint-xs: 500px;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   /* font-family: var(--font-inter), Arial, Helvetica, sans-serif; */
 }

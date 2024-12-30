@@ -18,7 +18,8 @@ const ThemeSwitch = () => {
   return (
     <select
       id="theme-switch"
-      name="theme-switch"
+      name="Theme switch"
+      title="Theme switch"
       value={theme}
       onChange={(e) => setTheme(e.target.value)}
       className="bg-zinc-200 text-black dark:bg-zinc-800 dark:text-white"

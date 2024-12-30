@@ -1,6 +1,6 @@
 'use client'
 
-import ThemeSwitch from '@/components/ThemeSwitch'
+import ThemeSwitch from '@/components/shared/ThemeSwitch'
 
 export default function Header() {
   return (
