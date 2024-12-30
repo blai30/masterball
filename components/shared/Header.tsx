@@ -1,10 +1,14 @@
 'use client'
 
+import Link from 'next/link'
 import ThemeSwitch from '@/components/shared/ThemeSwitch'
 
 export default function Header() {
   return (
     <header className="flex flex-row gap-4">
+      <Link href="/" className="text-blue-700 underline dark:text-blue-300">
+        <p>Home</p>
+      </Link>
       <div className="flex flex-col gap-2">
         <select
           id="language"

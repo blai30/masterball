@@ -46,13 +46,13 @@ export default async function MonsterCard({
 
   return (
     <Link href={`monster/${species.name}`}>
-      <div className="flex flex-col items-center justify-between overflow-hidden rounded-lg p-2 group-hover:bg-zinc-300 dark:group-hover:bg-zinc-700">
+      <div className="flex flex-col items-center justify-between overflow-hidden rounded-xl p-2 group-hover:bg-zinc-300 dark:group-hover:bg-zinc-700">
         <div className="relative flex w-full flex-col items-center rounded-md bg-zinc-100 p-4 dark:bg-zinc-900">
           <Image
             src={imageUrl}
             alt={species.name}
-            width={96}
-            height={96}
+            width={128}
+            height={128}
             priority
             className="h-full object-scale-down"
           />
@@ -81,7 +81,7 @@ export default async function MonsterCard({
           </div>
         </div>
         <div className="flex w-full flex-row justify-between px-2 pt-2">
-          <h3 className="font-light text-black dark:text-white">
+          <h3 className="rounded-xs font-light text-black dark:text-white">
             {
               species.names.filter(
                 (nameResource) => nameResource.language.name === language

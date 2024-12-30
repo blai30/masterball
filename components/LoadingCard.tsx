@@ -9,13 +9,13 @@ export default function LoadingCard() {
 
   return (
     <div>
-      <div className="flex flex-col items-center justify-between overflow-hidden rounded-lg p-2 group-hover:bg-zinc-300 dark:group-hover:bg-zinc-700">
+      <div className="flex flex-col items-center justify-between overflow-hidden rounded-xl p-2 group-hover:bg-zinc-300 dark:group-hover:bg-zinc-700">
         <div className="relative flex w-full flex-col items-center rounded-md bg-zinc-100 p-4 dark:bg-zinc-900">
           <Image
             src={imageUrl}
             alt="Loading card image"
-            width={96}
-            height={96}
+            width={128}
+            height={128}
             priority
             className="h-full object-scale-down"
           />
@@ -33,7 +33,9 @@ export default function LoadingCard() {
           </div>
         </div>
         <div className="flex w-full flex-row justify-between px-2 pt-2">
-          <div className="h-4 w-12 animate-pulse bg-zinc-300 dark:bg-zinc-700"></div>
+          <div className="animate-pulse rounded-xs bg-zinc-300 font-light text-transparent dark:bg-zinc-700">
+            Loading...
+          </div>
         </div>
       </div>
     </div>

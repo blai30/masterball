@@ -38,7 +38,7 @@ export async function generateMetadata({
     title: species.names.filter(
       (nameResource) => nameResource.language.name === language
     )[0].name,
-    description: `${typeNames.join(' ')}`,
+    description: `#${species.id.toString()}\n${typeNames.join(' ')}`,
     openGraph: {
       images: [
         {
@@ -70,14 +70,22 @@ export default async function Page({
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
+  const leadingZeros = imageId.match(/^0+/)?.[0] || ''
+  const significantDigits = imageId.slice(leadingZeros.length)
+
   return (
     <div className="container mx-auto flex flex-col gap-8">
       <div className="flex flex-row items-end justify-between">
-        <div className="flex flex-col gap-4 items-start">
-          <h2 className="text-base/7 font-semibold text-indigo-400">
-            {species.id}
+        <div className="flex flex-col items-start gap-4">
+          <h2 className="relative font-mono text-3xl">
+            <span className="text-gray-400 dark:text-zinc-600">
+              {leadingZeros}
+            </span>
+            <span className="text-black dark:text-white">
+              {significantDigits}
+            </span>
           </h2>
-          <h1 className="text-4xl font-semibold tracking-tight dark:text-white sm:text-5xl">
+          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl dark:text-white">
             {
               species.names.filter(
                 (nameResource) => nameResource.language.name === language
@@ -97,7 +105,7 @@ export default async function Page({
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-6 lg:grid-rows-2">
         <div className="flex lg:col-span-4">
           <div className="overflow-hidden rounded-lg bg-zinc-900 max-lg:rounded-t-[2rem] lg:rounded-tl-[2rem]">
-            <div className="p-10 gap-2 flex flex-col">
+            <div className="flex flex-col gap-2 p-10">
               <h3 className="text-sm/4 font-semibold text-gray-400">
                 Releases
               </h3>
@@ -114,7 +122,7 @@ export default async function Page({
         </div>
         <div className="flex lg:col-span-2">
           <div className="overflow-hidden rounded-lg bg-zinc-900 lg:rounded-tr-[2rem]">
-            <div className="p-10 gap-2 flex flex-col">
+            <div className="flex flex-col gap-2 p-10">
               <h3 className="text-sm/4 font-semibold text-gray-400">
                 Integrations
               </h3>
@@ -130,7 +138,7 @@ export default async function Page({
         </div>
         <div className="flex lg:col-span-2">
           <div className="overflow-hidden rounded-lg bg-zinc-900 lg:rounded-bl-[2rem]">
-            <div className="p-10 gap-2 flex flex-col">
+            <div className="flex flex-col gap-2 p-10">
               <h3 className="text-sm/4 font-semibold text-gray-400">
                 Security
               </h3>
@@ -146,7 +154,7 @@ export default async function Page({
         </div>
         <div className="flex lg:col-span-4">
           <div className="overflow-hidden rounded-lg bg-zinc-900 max-lg:rounded-b-[2rem] lg:rounded-br-[2rem]">
-            <div className="p-10 gap-2 flex flex-col">
+            <div className="flex flex-col gap-2 p-10">
               <h3 className="text-sm/4 font-semibold text-gray-400">
                 Performance
               </h3>
