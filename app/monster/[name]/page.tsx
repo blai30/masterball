@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { pokeapi } from '@/lib/providers'
+import MonsterMetadata from '@/components/MonsterMetadata'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -102,167 +103,40 @@ export default async function Page({
             }
           </h1>
         </div>
+        {types.map((typeResource) => {
+          return <p key={typeResource.id}>{typeResource.names[0].name}</p>
+        })}
       </section>
 
       {/* Metadata */}
-      <section className="grid grid-cols-2 gap-x-4 gap-y-6 px-4 sm:grid-cols-4">
-        <div className="flex flex-col gap-2">
-          <p className="text-sm/6 text-zinc-400">Gender ratio</p>
-          <div className="flex flex-col">
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                69.5%
-              </span>
-              <span className="text-base text-zinc-400">♂️</span>
-            </p>
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                30.5%
-              </span>
-              <span className="text-base text-zinc-400">♀️</span>
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm/6 text-zinc-400">Catch rate</p>
-          <div className="flex flex-col">
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                45
-              </span>
-              <span className="text-base text-zinc-400">/ 255</span>
-            </p>
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                {((45 / 255) * 100).toFixed(2)}
-              </span>
-              <span className="text-base text-zinc-400">%</span>
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm/6 text-zinc-400">Height</p>
-          <div className="flex flex-col">
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                {'4 ft 11 in'}
-              </span>
-            </p>
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                1.5
-              </span>
-              <span className="text-base text-zinc-400">meters</span>
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm/6 text-zinc-400">Weight</p>
-          <div className="flex flex-col">
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                180.6
-              </span>
-              <span className="text-base text-zinc-400">lbs</span>
-            </p>
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                81.9
-              </span>
-              <span className="text-base text-zinc-400">kg</span>
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm/6 text-zinc-400">Egg steps</p>
-          <div className="flex flex-col">
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                {(2560).toLocaleString()}
-              </span>
-              <span className="text-base text-zinc-400">steps</span>
-            </p>
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                {(20).toLocaleString()}
-              </span>
-              <span className="text-base text-zinc-400">cycles</span>
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm/6 text-zinc-400">Egg group</p>
-          <div className="flex flex-col">
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                Monster
-              </span>
-            </p>
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                Water 1
-              </span>
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm/6 text-zinc-400">Experience Growth</p>
-          <div className="flex flex-col">
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                {(1059862).toLocaleString()}
-              </span>
-              <span className="text-base text-zinc-400">points</span>
-            </p>
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                Medium Slow
-              </span>
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm/6 text-zinc-400">Effort Value yield</p>
-          <div className="flex flex-col">
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                {(3).toLocaleString()}
-              </span>
-              <span className="text-base text-zinc-400">Attack</span>
-            </p>
-            <p className="flex items-baseline gap-x-2">
-              <span className="text-base font-light text-white">
-                {'that\'s it'}
-              </span>
-            </p>
-          </div>
-        </div>
-      </section>
+      <MonsterMetadata />
 
       {/* Main details */}
       <div className="">
         <dl className="">
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-lg font-medium text-white">Weaknesses</dt>
+            <dt className="text-lg font-medium text-white">Stats</dt>
             <dd className="text-lg text-zinc-400 sm:col-span-2">
-              Margot Foster
+              For Individuals Started Out With Design Freatures
             </dd>
+          </section>
+          <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-lg font-medium text-white">
+              Type Effectiveness
+            </dt>
+            <dd className="text-lg text-zinc-400 sm:col-span-2">Enterpise</dd>
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-lg font-medium text-white">Abilities</dt>
             <dd className="text-lg text-zinc-400 sm:col-span-2">
-              Backend Developer
-            </dd>
-          </section>
-          <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-lg font-medium text-white">Stats</dt>
-            <dd className="text-lg text-zinc-400 sm:col-span-2">
-              margotfoster@example.com
+              Current Plans
             </dd>
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-lg font-medium text-white">Evolution</dt>
-            <dd className="text-lg text-zinc-400 sm:col-span-2">$120,000</dd>
+            <dd className="text-lg text-zinc-400 sm:col-span-2">
+              Freatures Like A Free
+            </dd>
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-lg font-medium text-white">About</dt>
@@ -276,6 +150,7 @@ export default async function Page({
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
             <dt className="text-lg font-medium text-white">Moves</dt>
+            <dd className="text-lg text-zinc-400 sm:col-span-2">jagger</dd>
           </section>
         </dl>
       </div>
