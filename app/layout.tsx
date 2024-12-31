@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono, Inter } from 'next/font/google'
+import { Geist, Geist_Mono, Inter, Source_Serif_4 } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/shared/Header'
 import { ThemeProvider } from 'next-themes'
@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 
 const inter = Inter({
   variable: '--font-inter',
+  subsets: ['latin'],
+})
+
+const sourceSerif4 = Source_Serif_4({
+  variable: '--font-source-serif-4',
   subsets: ['latin'],
 })
 
@@ -60,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} bg-white text-black antialiased dark:bg-black dark:text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${sourceSerif4.variable} bg-white text-black antialiased dark:bg-black dark:text-white`}
       >
         <ThemeProvider
           attribute="class"

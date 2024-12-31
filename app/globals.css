@@ -3,12 +3,13 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --breakpoint-3xs: 160px;
+  /* --breakpoint-3xs: 160px;
   --breakpoint-2xs: 350px;
-  --breakpoint-xs: 500px;
+  --breakpoint-xs: 500px; */
 }
 
 body {
+  /* font-family: var(--font-source-serif-4), Arial, Helvetica, sans-serif; */
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   /* font-family: var(--font-inter), Arial, Helvetica, sans-serif; */
 }
