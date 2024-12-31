@@ -35,12 +35,13 @@ export async function generateMetadata({
   })
 
   const imageId = pokemon.id.toString().padStart(4, '0')
+  const translatedName = species.names.filter(
+    (nameResource) => nameResource.language.name === language
+  )[0].name
 
   return {
-    title: species.names.filter(
-      (nameResource) => nameResource.language.name === language
-    )[0].name,
-    description: `#${species.id.toString()}\n${typeNames.join(' ')}`,
+    title: `${imageId} - ${translatedName}`,
+    description: `${typeNames.join(' ')}`,
     openGraph: {
       images: [
         {
