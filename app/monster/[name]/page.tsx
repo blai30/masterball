@@ -1,8 +1,7 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
 import { pokeapi } from '@/lib/providers'
-import { typeIconUrl, typeClasses } from '@/lib/utils'
 import MonsterMetadata from '@/components/MonsterMetadata'
+import MonsterHero from '@/components/MonsterHero'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -63,7 +62,6 @@ export default async function Page({
 }: {
   params: Promise<{ name: string }>
 }) {
-  const language = 'en'
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
   const pokemon = await pokeapi.getPokemonByName(
@@ -72,111 +70,77 @@ export default async function Page({
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
-  const types = typeResources.map((resource) => {
-    const typeName = resource.names.find((n) => n.language.name === language)!
-    return {
-      id: resource.id,
-      key: resource.name,
-      name: typeName.name,
-    }
-  })
-
-  const imageId = species.id.toString().padStart(4, '0')
-  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
-
-  const leadingZeros = imageId.match(/^0+/)?.[0] || ''
-  const significantDigits = imageId.slice(leadingZeros.length)
+  const eggGroups = await pokeapi.getEggGroupByName(
+    species.egg_groups.map((group) => group.name)
+  )
+  const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
+  const evYield = await pokeapi.getStatByName(
+    pokemon.stats
+      .filter((stat) => stat.effort !== 0)
+      .map((stat) => stat.stat.name)
+  )
 
   return (
     <div className="container mx-auto flex flex-col gap-8">
       {/* Hero section */}
-      <section className="flex flex-row items-end gap-4 sm:p-4 md:gap-8 md:p-12">
-        <Image
-          src={imageUrl}
-          alt={species.name}
-          width={128}
-          height={128}
-          priority
-          className="h-full object-scale-down"
-        />
-        <div className="flex flex-col items-start gap-4">
-          <h2 className="relative font-mono text-3xl">
-            <span className="text-zinc-400 dark:text-zinc-600">
-              {leadingZeros}
-            </span>
-            <span className="text-black dark:text-white">
-              {significantDigits}
-            </span>
-          </h2>
-          <div className="flex flex-row items-baseline gap-4">
-            <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl dark:text-white">
-              {
-                species.names.filter(
-                  (nameResource) => nameResource.language.name === language
-                )[0].name
-              }
-            </h1>
-            <ul className="flex flex-row gap-2">
-              {types.map((type) => (
-                <li
-                  key={type.id}
-                  className={[
-                    'flex w-28 flex-row items-center gap-1 rounded-full px-1',
-                    typeClasses[type.key],
-                  ].join(' ')}
-                >
-                  <Image
-                    key={type.id}
-                    src={typeIconUrl(type.key)}
-                    alt={type.key}
-                    width={20}
-                    height={20}
-                    className={[
-                      'aspect-square object-contain',
-                      'bg-transparent',
-                    ].join(' ')}
-                  />
-                  <p className="font-medium uppercase">{type.name}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+      <MonsterHero
+        species={species}
+        pokemon={pokemon}
+        typeResources={typeResources}
+      />
 
       {/* Metadata */}
-      <MonsterMetadata />
+      <MonsterMetadata
+        genderRate={species.gender_rate}
+        captureRate={species.capture_rate}
+        height={pokemon.height}
+        weight={pokemon.weight}
+        hatchCounter={species.hatch_counter!}
+        eggGroups={eggGroups}
+        growthRate={growthRate}
+        effortValueYield={evYield}
+      />
 
       {/* Main details */}
       <div className="">
         <dl className="">
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-lg font-medium text-white">Stats</dt>
-            <dd className="text-lg text-zinc-400 sm:col-span-2">
+            <dt className="text-lg font-medium text-black dark:text-white">
+              Stats
+            </dt>
+            <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
               For Individuals Started Out With Design Freatures
             </dd>
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-lg font-medium text-white">
+            <dt className="text-lg font-medium text-black dark:text-white">
               Type Effectiveness
             </dt>
-            <dd className="text-lg text-zinc-400 sm:col-span-2">Enterpise</dd>
+            <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
+              Enterpise
+            </dd>
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-lg font-medium text-white">Abilities</dt>
-            <dd className="text-lg text-zinc-400 sm:col-span-2">
+            <dt className="text-lg font-medium text-black dark:text-white">
+              Abilities
+            </dt>
+            <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
               Current Plans
             </dd>
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-lg font-medium text-white">Evolution</dt>
-            <dd className="text-lg text-zinc-400 sm:col-span-2">
+            <dt className="text-lg font-medium text-black dark:text-white">
+              Evolution
+            </dt>
+            <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
               Freatures Like A Free
             </dd>
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-lg font-medium text-white">About</dt>
-            <dd className="text-lg text-zinc-400 sm:col-span-2">
+            <dt className="text-lg font-medium text-black dark:text-white">
+              About
+            </dt>
+            <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
               Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
               incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
               consequat sint. Sit id mollit nulla mollit nostrud in ea officia
@@ -185,8 +149,12 @@ export default async function Page({
             </dd>
           </section>
           <section className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4">
-            <dt className="text-lg font-medium text-white">Moves</dt>
-            <dd className="text-lg text-zinc-400 sm:col-span-2">jagger</dd>
+            <dt className="text-lg font-medium text-black dark:text-white">
+              Moves
+            </dt>
+            <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
+              jagger
+            </dd>
           </section>
         </dl>
       </div>
