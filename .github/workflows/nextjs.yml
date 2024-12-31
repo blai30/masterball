@@ -62,6 +62,8 @@ jobs:
         run: pnpm install
       - name: Build with Next.js
         run: pnpm next build
+        env:
+            NEXT_PUBLIC_BASEPATH: ${{ env.NEXT_PUBLIC_BASEPATH }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
