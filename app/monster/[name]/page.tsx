@@ -26,12 +26,15 @@ export async function generateMetadata({
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties[0].pokemon.name
   )
-  const types = await pokeapi.getTypeByName(
+  const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
-  const typeNames = types.map((t) => {
-    const filtered = t.names.filter((n) => n.language.name === language)
-    return filtered.map((v) => v.name)
+  const types = typeResources.map((resource) => {
+    const typeName = resource.names.find((n) => n.language.name === language)!
+    return {
+      id: resource.id,
+      typeName,
+    }
   })
 
   const imageId = pokemon.id.toString().padStart(4, '0')
@@ -41,7 +44,7 @@ export async function generateMetadata({
 
   return {
     title: `${imageId} - ${translatedName}`,
-    description: `${typeNames.join(' ')}`,
+    description: `${types.map((t) => t.typeName.name).join(' ')}`,
     openGraph: {
       images: [
         {
@@ -66,9 +69,17 @@ export default async function Page({
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties[0].pokemon.name
   )
-  const types = await pokeapi.getTypeByName(
+  const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
+  const types = typeResources.map((resource) => {
+    const typeName = resource.names.find((n) => n.language.name === language)!
+    return {
+      id: resource.id,
+      name: resource.name,
+      typeName,
+    }
+  })
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
@@ -106,33 +117,28 @@ export default async function Page({
               }
             </h1>
             <ul className="flex flex-row gap-2">
-              {types.map((typeResource) => {
-                const typeNames = typeResource.names.filter(
-                  (name) => name.language.name === language
-                )
-                return typeNames.map((name) => (
-                  <li
-                    key={typeResource.id}
+              {types.map((type) => (
+                <li
+                  key={type.id}
+                  className={[
+                    'flex w-28 flex-row items-center gap-1 rounded-full px-1',
+                    typeClasses[type.name],
+                  ].join(' ')}
+                >
+                  <Image
+                    key={type.id}
+                    src={typeIconUrl(type.name)}
+                    alt={type.name}
+                    width={20}
+                    height={20}
                     className={[
-                      'flex w-28 flex-row items-center gap-1 rounded-full px-1',
-                      typeClasses[typeResource.name],
+                      'aspect-square object-contain',
+                      'bg-transparent',
                     ].join(' ')}
-                  >
-                    <Image
-                      key={typeResource.id}
-                      src={typeIconUrl(typeResource.name)}
-                      alt={typeResource.name}
-                      width={20}
-                      height={20}
-                      className={[
-                        'aspect-square object-contain',
-                        'bg-transparent',
-                      ].join(' ')}
-                    />
-                    <p className="">{name.name}</p>
-                  </li>
-                ))
-              })}
+                  />
+                  <p className="font-medium uppercase">{type.typeName.name}</p>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
