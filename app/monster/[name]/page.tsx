@@ -6,8 +6,8 @@ import MonsterMetadata from '@/components/MonsterMetadata'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
-    limit: 50,
-    offset: 251,
+    limit: 30,
+    offset: 730,
   })
 
   return speciesList.results.map((result) => ({
@@ -96,37 +96,45 @@ export default async function Page({
               {significantDigits}
             </span>
           </h2>
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl dark:text-white">
-            {
-              species.names.filter(
-                (nameResource) => nameResource.language.name === language
-              )[0].name
-            }
-          </h1>
+          <div className="flex flex-row items-baseline gap-4">
+            <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl dark:text-white">
+              {
+                species.names.filter(
+                  (nameResource) => nameResource.language.name === language
+                )[0].name
+              }
+            </h1>
+            <ul className="flex flex-row gap-2">
+              {types.map((typeResource) => {
+                const typeNames = typeResource.names.filter(
+                  (name) => name.language.name === language
+                )
+                return typeNames.map((name) => (
+                  <li
+                    key={typeResource.id}
+                    className={[
+                      'flex w-28 flex-row items-center gap-1 rounded-full px-1',
+                      typeClasses[typeResource.name],
+                    ].join(' ')}
+                  >
+                    <Image
+                      key={typeResource.id}
+                      src={typeIconUrl(typeResource.name)}
+                      alt={typeResource.name}
+                      width={20}
+                      height={20}
+                      className={[
+                        'aspect-square object-contain',
+                        'bg-transparent',
+                      ].join(' ')}
+                    />
+                    <p className="">{name.name}</p>
+                  </li>
+                ))
+              })}
+            </ul>
+          </div>
         </div>
-        <ul className="flex flex-row gap-2">
-          {types.map((typeResource) => {
-            const typeNames = typeResource.names.filter(
-              (name) => name.language.name === language
-            )
-            return typeNames.map((name) => (
-              <li key={typeResource.id} className="flex flex-row gap-2 rounded-sm w-28 bg-zinc-800 p-1">
-                <Image
-                  key={typeResource.id}
-                  src={typeIconUrl(typeResource.name)}
-                  alt={typeResource.name}
-                  width={20}
-                  height={20}
-                  className={[
-                    'rounded-xs object-contain',
-                    typeClasses[typeResource.name],
-                  ].join(' ')}
-                />
-                <p className="">{name.name}</p>
-              </li>
-            ))
-          })}
-        </ul>
       </section>
 
       {/* Metadata */}

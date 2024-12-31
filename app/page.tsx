@@ -8,8 +8,8 @@ import { pokeapi } from '@/lib/providers'
 export default async function Home() {
   const language = 'en'
   const speciesResourceList = await pokeapi.getPokemonSpeciesList({
-    limit: 50,
-    offset: 251,
+    limit: 30,
+    offset: 730,
   })
   // const species = await pokeapi.getPokemonSpeciesByName(
   //   speciesList.results.map((result) => result.name),
