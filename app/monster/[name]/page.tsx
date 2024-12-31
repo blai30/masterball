@@ -76,8 +76,8 @@ export default async function Page({
     const typeName = resource.names.find((n) => n.language.name === language)!
     return {
       id: resource.id,
-      name: resource.name,
-      typeName,
+      key: resource.name,
+      name: typeName.name,
     }
   })
 
@@ -122,13 +122,13 @@ export default async function Page({
                   key={type.id}
                   className={[
                     'flex w-28 flex-row items-center gap-1 rounded-full px-1',
-                    typeClasses[type.name],
+                    typeClasses[type.key],
                   ].join(' ')}
                 >
                   <Image
                     key={type.id}
-                    src={typeIconUrl(type.name)}
-                    alt={type.name}
+                    src={typeIconUrl(type.key)}
+                    alt={type.key}
                     width={20}
                     height={20}
                     className={[
@@ -136,7 +136,7 @@ export default async function Page({
                       'bg-transparent',
                     ].join(' ')}
                   />
-                  <p className="font-medium uppercase">{type.typeName.name}</p>
+                  <p className="font-medium uppercase">{type.name}</p>
                 </li>
               ))}
             </ul>
