@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { pokeapi } from '@/lib/providers'
+import { typeIconUrl, typeClasses } from '@/lib/utils'
 import MonsterMetadata from '@/components/MonsterMetadata'
 
 export async function generateStaticParams() {
@@ -103,9 +104,29 @@ export default async function Page({
             }
           </h1>
         </div>
-        {types.map((typeResource) => {
-          return <p key={typeResource.id}>{typeResource.names[0].name}</p>
-        })}
+        <ul className="flex flex-row gap-2">
+          {types.map((typeResource) => {
+            const typeNames = typeResource.names.filter(
+              (name) => name.language.name === language
+            )
+            return typeNames.map((name) => (
+              <li key={typeResource.id} className="flex flex-row gap-2 rounded-sm w-28 bg-zinc-800 p-1">
+                <Image
+                  key={typeResource.id}
+                  src={typeIconUrl(typeResource.name)}
+                  alt={typeResource.name}
+                  width={20}
+                  height={20}
+                  className={[
+                    'rounded-xs object-contain',
+                    typeClasses[typeResource.name],
+                  ].join(' ')}
+                />
+                <p className="">{name.name}</p>
+              </li>
+            ))
+          })}
+        </ul>
       </section>
 
       {/* Metadata */}
