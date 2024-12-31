@@ -3,8 +3,7 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   output: 'export',
   reactStrictMode: true,
-  basePath: process.env.NODE_ENV === 'development' ? undefined : '/masterball',
-  assetPrefix: process.env.NODE_ENV === 'development' ? undefined : '/masterball/',
+  basePath: process.env.NEXT_PUBLIC_BASEPATH ?? undefined,
   images: {
     unoptimized: true,
   },
