@@ -8,7 +8,7 @@ export default function NotFound() {
       </h1>
       <p className="px-8 text-center text-xl leading-12 font-light text-pretty">
         OOPSIE WOOPSIE!! Uwu We made a f*cky wucky!! A wittle f*cko boingo! The
-        code moneys at our headquarters are working VEWY HAWD to fix this!
+        code monkeys at our headquarters are working VEWY HAWD to fix this!
       </p>
     </div>
   )

@@ -6,6 +6,25 @@
   /* --breakpoint-3xs: 160px;
   --breakpoint-2xs: 350px;
   --breakpoint-xs: 500px; */
+
+  --color-normal: #999999;
+  --color-fighting: #ffa202;
+  --color-flying: #95c9ff;
+  --color-poison: #994dcf;
+  --color-ground: #ab7939;
+  --color-rock: #bcb889;
+  --color-bug: #9fa424;
+  --color-ghost: #6e4570;
+  --color-steel: #6aaed3;
+  --color-fire: #ff612c;
+  --color-water: #2992ff;
+  --color-grass: #42bf24;
+  --color-electric: #ffdb00;
+  --color-psychic: #ff637f;
+  --color-ice: #42d8ff;
+  --color-dragon: #5462d6;
+  --color-dark: #4f4747;
+  --color-fairy: #ffb1ff;
 }
 
 body {
