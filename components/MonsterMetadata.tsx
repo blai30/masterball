@@ -75,7 +75,7 @@ export default function MonsterMetadata({
     <section className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8">
       <MetadataEntry title={'Gender ratio'}>
         <div className="flex flex-col">
-          <p className="flex gap-x-1">
+          <div className="flex gap-x-1">
             <span className="flex flex-row items-center gap-x-2 text-base font-light text-blue-800 dark:text-blue-200">
               <svg fill="currentColor" className="size-4">
                 <path d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8" />
@@ -85,8 +85,8 @@ export default function MonsterMetadata({
             <span className="text-base text-zinc-600 dark:text-zinc-400">
               %
             </span>
-          </p>
-          <p className="flex gap-x-1">
+          </div>
+          <div className="flex gap-x-1">
             <span className="flex flex-row items-center gap-x-2 text-base font-light text-pink-800 dark:text-pink-200">
               <svg fill="currentColor" className="size-4">
                 <path d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8M3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5" />
@@ -96,7 +96,7 @@ export default function MonsterMetadata({
             <span className="text-base text-zinc-600 dark:text-zinc-400">
               %
             </span>
-          </p>
+          </div>
         </div>
       </MetadataEntry>
 
