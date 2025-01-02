@@ -8,29 +8,56 @@ import Link from 'next/link'
 const calculateEffectiveness = (
   typeResources: Type[]
 ): Record<string, number> => {
-  // Initialize empty effectiveness object
+  // Initialize empty effectiveness object.
   const effectiveness: Record<string, number> = {}
+  const allTypes = [
+    'normal',
+    'fighting',
+    'flying',
+    'poison',
+    'ground',
+    'rock',
+    'bug',
+    'ghost',
+    'steel',
+    'fire',
+    'water',
+    'grass',
+    'electric',
+    'psychic',
+    'ice',
+    'dragon',
+    'dark',
+    'fairy',
+  ]
 
-  // Process each defending type's relations
+  // Process each defending type's relations.
   typeResources.forEach((type) => {
-    // Handle immunities first (these override everything)
+    // Handle immunities first (these override everything).
     type.damage_relations.no_damage_from.forEach((t) => {
       effectiveness[t.name] = 0
     })
 
-    // Process resistances
+    // Process resistances.
     type.damage_relations.half_damage_from.forEach((t) => {
       if (effectiveness[t.name] !== 0) {
-        // Skip if immune
+        // Skip if immune.
         effectiveness[t.name] = (effectiveness[t.name] || 1) * 0.5
       }
     })
 
-    // Process weaknesses
+    // Process weaknesses.
     type.damage_relations.double_damage_from.forEach((t) => {
       if (effectiveness[t.name] !== 0) {
-        // Skip if immune
+        // Skip if immune.
         effectiveness[t.name] = (effectiveness[t.name] || 1) * 2
+      }
+    })
+
+    // Include the rest of the types.
+    allTypes.forEach((t) => {
+      if (effectiveness[t] === undefined) {
+        effectiveness[t] = 1
       }
     })
   })
