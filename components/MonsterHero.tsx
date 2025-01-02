@@ -34,20 +34,18 @@ export default function MonsterHero({
   const significantDigits = imageId.slice(leadingZeros.length)
 
   return (
-    <section className="flex flex-col items-center justify-between gap-4 p-4 lg:flex-row lg:items-end lg:gap-8 lg:p-12">
-      <div className="flex flex-col items-center gap-4 lg:items-start">
-        <div className="flex flex-row gap-6 lg:items-baseline">
-          <h2 className="relative font-mono text-2xl sm:text-3xl">
-            <span className="text-zinc-400 dark:text-zinc-600">
-              {leadingZeros}
-            </span>
-            <span className="text-black dark:text-white">
-              {significantDigits}
-            </span>
-          </h2>
-        </div>
-        <div className="flex flex-col items-center gap-8 lg:items-start">
-          <h1 className="text-5xl font-semibold tracking-tight md:text-6xl dark:text-white">
+    <section className="flex flex-col items-start lg:gap-8 p-4 lg:flex-row lg:items-end">
+      <div className="flex flex-col items-start gap-4">
+        <h2 className="relative font-mono text-2xl sm:text-3xl">
+          <span className="text-zinc-400 dark:text-zinc-600">
+            {leadingZeros}
+          </span>
+          <span className="text-black dark:text-white">
+            {significantDigits}
+          </span>
+        </h2>
+        <div className="flex flex-col items-start gap-6">
+          <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight md:text-6xl dark:text-white">
             {name}
           </h1>
           <ul className="flex flex-row gap-2">
@@ -55,7 +53,7 @@ export default function MonsterHero({
               <li
                 key={type.id}
                 className={[
-                  'flex w-28 flex-row items-center gap-1 rounded-full px-1',
+                  'flex w-28 flex-row gap-1 rounded-full px-1',
                   typeClasses[type.key],
                 ].join(' ')}
               >
@@ -76,7 +74,7 @@ export default function MonsterHero({
           </ul>
         </div>
       </div>
-      <div className="flex flex-row items-baseline gap-6">
+      <div className="flex flex-row gap-6">
         <Image
           src={pokemon.sprites.other.home.front_default!}
           alt={species.name}
