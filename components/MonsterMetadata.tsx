@@ -123,6 +123,12 @@ export default function MonsterMetadata({
 
       <MetadataEntry title={'Gender ratio'}>
         <div className="flex flex-col">
+          <div className="mb-2 max-w-36 overflow-hidden bg-pink-300">
+            <div
+              style={{ width: `${maleRate}%` }}
+              className="h-2 bg-blue-300 outline-2 outline-white dark:outline-black"
+            />
+          </div>
           <div className="flex gap-x-1">
             <span className="flex flex-row items-center gap-x-2 text-base font-light text-blue-800 dark:text-blue-200">
               <svg fill="currentColor" className="size-4">

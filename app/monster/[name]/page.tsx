@@ -3,6 +3,7 @@ import { pokeapi } from '@/lib/providers'
 import MonsterMetadata from '@/components/MonsterMetadata'
 import MonsterHero from '@/components/MonsterHero'
 import { EvolutionChain, Type } from 'pokedex-promise-v2'
+import Link from 'next/link'
 
 const calculateEffectiveness = (
   typeResources: Type[]
@@ -141,7 +142,12 @@ export default async function Page({
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
                   {pokemon.stats.map((stat) => (
                     <p key={stat.stat.name}>
-                      {stat.stat.name}: {stat.base_stat.toLocaleString()}
+                      <Link href={stat.stat.url}>
+                        <span className="text-blue-700 underline dark:text-blue-300">
+                          {stat.stat.name}
+                        </span>
+                      </Link>
+                      <span>: {stat.base_stat.toLocaleString()}</span>
                     </p>
                   ))}
                 </dd>
@@ -153,7 +159,6 @@ export default async function Page({
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
                   <ul>
                     {Object.entries(typeEffectiveness)
-                      .filter(([_, value]) => value !== 1)
                       .sort((a, b) => b[1] - a[1])
                       .map(([type, multiplier]) => (
                         <li
@@ -165,9 +170,11 @@ export default async function Page({
                             className={`font-mono ${
                               multiplier > 1
                                 ? 'text-green-800 dark:text-green-200'
-                                : multiplier === 0
-                                  ? 'text-purple-800 dark:text-purple-200'
-                                  : 'text-red-800 dark:text-red-200'
+                                : multiplier === 1
+                                  ? 'text-black dark:text-white'
+                                  : multiplier === 0
+                                    ? 'text-purple-800 dark:text-purple-200'
+                                    : 'text-red-800 dark:text-red-200'
                             }`}
                           >
                             {`${multiplier.toFixed(1)}×`}
@@ -183,7 +190,13 @@ export default async function Page({
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
                   {pokemon.abilities.map((ability) => (
-                    <p key={ability.slot}>{ability.ability.name}</p>
+                    <p key={ability.slot}>
+                      <Link href={ability.ability.url}>
+                        <span className="text-blue-700 underline dark:text-blue-300">
+                          {ability.ability.name}
+                        </span>
+                      </Link>
+                    </p>
                   ))}
                 </dd>
               </section>
@@ -192,7 +205,11 @@ export default async function Page({
                   Evolution
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  {evolutionChain.chain.species.name}
+                  <Link href={`/monster/${evolutionChain.chain.species.name}`}>
+                    <span className="text-blue-700 underline dark:text-blue-300">
+                      {evolutionChain.chain.species.name}
+                    </span>
+                  </Link>
                 </dd>
               </section>
               <section className="px-4 py-6 sm:gap-4">
