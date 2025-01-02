@@ -2,7 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
-import { typeIconUrl, typeClasses } from '@/lib/utils'
 
 export default async function MonsterCard({
   speciesResource,
@@ -45,13 +44,13 @@ export default async function MonsterCard({
               {types.map((typeResource) => (
                 <Image
                   key={typeResource.id}
-                  src={typeIconUrl(typeResource.name)}
+                  src={`${process.env.NEXT_PUBLIC_BASEPATH}/${typeResource.name}.png`}
                   alt={typeResource.name}
                   width={20}
                   height={20}
                   className={[
                     'rounded-xs object-contain',
-                    typeClasses[typeResource.name],
+                    `bg-${typeResource.name}`,
                   ].join(' ')}
                 />
               ))}

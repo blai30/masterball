@@ -2,6 +2,40 @@ import { Metadata } from 'next'
 import { pokeapi } from '@/lib/providers'
 import MonsterMetadata from '@/components/MonsterMetadata'
 import MonsterHero from '@/components/MonsterHero'
+import { EvolutionChain, Type } from 'pokedex-promise-v2'
+
+export function calculateEffectiveness(
+  typeResources: Type[]
+): Record<string, number> {
+  // Initialize empty effectiveness object
+  const effectiveness: Record<string, number> = {}
+
+  // Process each defending type's relations
+  typeResources.forEach((type) => {
+    // Handle immunities first (these override everything)
+    type.damage_relations.no_damage_from.forEach((t) => {
+      effectiveness[t.name] = 0
+    })
+
+    // Process resistances
+    type.damage_relations.half_damage_from.forEach((t) => {
+      if (effectiveness[t.name] !== 0) {
+        // Skip if immune
+        effectiveness[t.name] = (effectiveness[t.name] || 1) * 0.5
+      }
+    })
+
+    // Process weaknesses
+    type.damage_relations.double_damage_from.forEach((t) => {
+      if (effectiveness[t.name] !== 0) {
+        // Skip if immune
+        effectiveness[t.name] = (effectiveness[t.name] || 1) * 2
+      }
+    })
+  })
+
+  return effectiveness
+}
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -64,6 +98,9 @@ export default async function Page({
 }) {
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
+  const evolutionChain: EvolutionChain = await pokeapi.getResource(
+    species.evolution_chain.url
+  )
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties[0].pokemon.name
   )
@@ -80,8 +117,10 @@ export default async function Page({
       .map((stat) => stat.stat.name)
   )
 
+  const typeEffectiveness = calculateEffectiveness(typeResources)
+
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto flex flex-col gap-4 xl:gap-8">
       <div className="w-full">
         {/* Hero section */}
         <MonsterHero
@@ -90,7 +129,7 @@ export default async function Page({
           typeResources={typeResources}
         />
       </div>
-      <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3 xl:gap-8">
         <div className="xl:col-span-2">
           {/* Main details */}
           <div className="">
@@ -100,7 +139,11 @@ export default async function Page({
                   Stats
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  For Individuals Started Out With Design Freatures
+                  {pokemon.stats.map((stat) => (
+                    <p key={stat.stat.name}>
+                      {stat.stat.name}: {stat.base_stat.toLocaleString()}
+                    </p>
+                  ))}
                 </dd>
               </section>
               <section className="px-4 py-6 sm:gap-4">
@@ -108,7 +151,30 @@ export default async function Page({
                   Type Effectiveness
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  Enterpise
+                  <ul>
+                    {Object.entries(typeEffectiveness)
+                      .filter(([_, value]) => value !== 1)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([type, multiplier]) => (
+                        <li
+                          key={type}
+                          className="flex items-center justify-between"
+                        >
+                          <span>{type}</span>
+                          <span
+                            className={`font-mono ${
+                              multiplier > 1
+                                ? 'text-green-800 dark:text-green-200'
+                                : multiplier === 0
+                                  ? 'text-purple-800 dark:text-purple-200'
+                                  : 'text-red-800 dark:text-red-200'
+                            }`}
+                          >
+                            {`${multiplier.toFixed(1)}×`}
+                          </span>
+                        </li>
+                      ))}
+                  </ul>
                 </dd>
               </section>
               <section className="px-4 py-6 sm:gap-4">
@@ -116,7 +182,9 @@ export default async function Page({
                   Abilities
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  Current Plans
+                  {pokemon.abilities.map((ability) => (
+                    <p key={ability.slot}>{ability.ability.name}</p>
+                  ))}
                 </dd>
               </section>
               <section className="px-4 py-6 sm:gap-4">
@@ -124,7 +192,7 @@ export default async function Page({
                   Evolution
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  Freatures Like A Free
+                  {evolutionChain.chain.species.name}
                 </dd>
               </section>
               <section className="px-4 py-6 sm:gap-4">
@@ -132,11 +200,11 @@ export default async function Page({
                   About
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
-                  incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
-                  consequat sint. Sit id mollit nulla mollit nostrud in ea
-                  officia proident. Irure nostrud pariatur mollit ad adipisicing
-                  reprehenderit deserunt qui eu.
+                  {
+                    species.flavor_text_entries.find(
+                      (e) => e.language.name === 'en'
+                    )!.flavor_text
+                  }
                 </dd>
               </section>
               <section className="px-4 py-6 sm:gap-4">
@@ -144,7 +212,7 @@ export default async function Page({
                   Moves
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  jagger
+                  {pokemon.moves.map((move) => move.move.name).join(', ')}
                 </dd>
               </section>
             </dl>

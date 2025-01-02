@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
-import { typeIconUrl, typeClasses } from '@/lib/utils'
 import TypePill from './TypePill'
 
 export default function MonsterHero({
