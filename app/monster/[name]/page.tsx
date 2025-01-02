@@ -5,8 +5,8 @@ import MonsterHero from '@/components/MonsterHero'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
-    limit: 30,
-    offset: 730,
+    limit: 20,
+    offset: 721,
   })
 
   return speciesList.results.map((result) => ({
