@@ -90,8 +90,8 @@ export default async function Page({
           typeResources={typeResources}
         />
       </div>
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 gap-8 xl:grid-cols-3">
+        <div className="xl:col-span-2">
           {/* Main details */}
           <div className="">
             <dl className="">
@@ -151,7 +151,7 @@ export default async function Page({
           </div>
         </div>
 
-        <div className="order-first flex flex-col gap-8 lg:order-last lg:col-span-1">
+        <div className="order-first flex flex-col gap-8 xl:order-last xl:col-span-1">
           {/* Metadata */}
           <MonsterMetadata
             height={pokemon.height}

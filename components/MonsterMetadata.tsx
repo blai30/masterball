@@ -72,7 +72,7 @@ export default function MonsterMetadata({
   const hatchSteps = (hatchCounter * 128).toLocaleString()
 
   return (
-    <section className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-2">
+    <section className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2">
       <MetadataEntry title={'Height'}>
         <div className="flex flex-col">
           <p className="flex gap-x-1">
