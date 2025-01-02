@@ -3,9 +3,9 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* --breakpoint-3xs: 160px;
-  --breakpoint-2xs: 350px;
-  --breakpoint-xs: 500px; */
+  /* --breakpoint-3xs: 160px; */
+  /* --breakpoint-2xs: 350px; */
+  /* --breakpoint-xs: 500px; */
 
   --color-normal: #999999;
   --color-fighting: #ffa202;

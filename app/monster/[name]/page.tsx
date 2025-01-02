@@ -91,10 +91,10 @@ export default async function Page({
 
       {/* Metadata */}
       <MonsterMetadata
-        genderRate={species.gender_rate}
-        captureRate={species.capture_rate}
         height={pokemon.height}
         weight={pokemon.weight}
+        genderRate={species.gender_rate}
+        captureRate={species.capture_rate}
         hatchCounter={species.hatch_counter!}
         eggGroups={eggGroups}
         growthRate={growthRate}

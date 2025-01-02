@@ -5,19 +5,19 @@ import { EggGroup, GrowthRate, Stat } from 'pokedex-promise-v2'
 import MetadataEntry from './MetadataEntry'
 
 export default function MonsterMetadata({
-  genderRate,
-  captureRate,
   height,
   weight,
+  genderRate,
+  captureRate,
   hatchCounter,
   eggGroups,
   growthRate,
   effortValueYield,
 }: {
-  genderRate: number
-  captureRate: number
   height: number
   weight: number
+  genderRate: number
+  captureRate: number
   hatchCounter: number
   eggGroups: EggGroup[]
   growthRate: GrowthRate
@@ -55,10 +55,6 @@ export default function MonsterMetadata({
       (description) => description.language.name === 'en'
     )!
 
-  // Gender ratio is presented as a multiple of 8.
-  const maleRate = Math.fround((1 - genderRate / 8) * 100).toFixed(1)
-  const femaleRate = Math.fround((genderRate / 8) * 100).toFixed(1)
-
   // Convert from decimeters to feet (floor) + inches (remainder) and meters.
   const heightFeet = Math.round(height / 3.048).toFixed(0)
   const heightInches = (Math.round(height * 3.937) % 12).toFixed(0)
@@ -68,59 +64,15 @@ export default function MonsterMetadata({
   const weightPounds = Math.fround(weight / 4.536).toFixed(1)
   const weightKilograms = (weight / 10).toFixed(1)
 
+  // Gender ratio is presented as a multiple of 8.
+  const maleRate = Math.fround((1 - genderRate / 8) * 100).toFixed(1)
+  const femaleRate = Math.fround((genderRate / 8) * 100).toFixed(1)
+
   // Multiply hatch cycles by number of steps in a cycle.
   const hatchSteps = (hatchCounter * 128).toLocaleString()
 
   return (
     <section className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8">
-      <MetadataEntry title={'Gender ratio'}>
-        <div className="flex flex-col">
-          <div className="flex gap-x-1">
-            <span className="flex flex-row items-center gap-x-2 text-base font-light text-blue-800 dark:text-blue-200">
-              <svg fill="currentColor" className="size-4">
-                <path d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8" />
-              </svg>
-              <p>{maleRate}</p>
-            </span>
-            <span className="text-base text-zinc-600 dark:text-zinc-400">
-              %
-            </span>
-          </div>
-          <div className="flex gap-x-1">
-            <span className="flex flex-row items-center gap-x-2 text-base font-light text-pink-800 dark:text-pink-200">
-              <svg fill="currentColor" className="size-4">
-                <path d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8M3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5" />
-              </svg>
-              <p>{femaleRate}</p>
-            </span>
-            <span className="text-base text-zinc-600 dark:text-zinc-400">
-              %
-            </span>
-          </div>
-        </div>
-      </MetadataEntry>
-
-      <MetadataEntry title={'Capture rate'}>
-        <div className="flex flex-col">
-          <p className="flex gap-x-1">
-            <span className="text-base font-light text-black dark:text-white">
-              {captureRate}
-            </span>
-            <span className="text-base text-zinc-600 dark:text-zinc-400">
-              / 255
-            </span>
-          </p>
-          <p className="flex gap-x-1">
-            <span className="text-base font-light text-black dark:text-white">
-              {captureProbability(captureRate).toFixed(2)}
-            </span>
-            <span className="text-base text-zinc-600 dark:text-zinc-400">
-              %
-            </span>
-          </p>
-        </div>
-      </MetadataEntry>
-
       <MetadataEntry title={'Height'}>
         <div className="flex flex-col">
           <p className="flex gap-x-1">
@@ -164,6 +116,54 @@ export default function MonsterMetadata({
             </span>
             <span className="text-base text-zinc-600 dark:text-zinc-400">
               kg
+            </span>
+          </p>
+        </div>
+      </MetadataEntry>
+
+      <MetadataEntry title={'Gender ratio'}>
+        <div className="flex flex-col">
+          <div className="flex gap-x-1">
+            <span className="flex flex-row items-center gap-x-2 text-base font-light text-blue-800 dark:text-blue-200">
+              <svg fill="currentColor" className="size-4">
+                <path d="M9.5 2a.5.5 0 0 1 0-1h5a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-1 0V2.707L9.871 6.836a5 5 0 1 1-.707-.707L13.293 2zM6 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8" />
+              </svg>
+              <p>{maleRate}</p>
+            </span>
+            <span className="text-base text-zinc-600 dark:text-zinc-400">
+              %
+            </span>
+          </div>
+          <div className="flex gap-x-1">
+            <span className="flex flex-row items-center gap-x-2 text-base font-light text-pink-800 dark:text-pink-200">
+              <svg fill="currentColor" className="size-4">
+                <path d="M8 1a4 4 0 1 0 0 8 4 4 0 0 0 0-8M3 5a5 5 0 1 1 5.5 4.975V12h2a.5.5 0 0 1 0 1h-2v2.5a.5.5 0 0 1-1 0V13h-2a.5.5 0 0 1 0-1h2V9.975A5 5 0 0 1 3 5" />
+              </svg>
+              <p>{femaleRate}</p>
+            </span>
+            <span className="text-base text-zinc-600 dark:text-zinc-400">
+              %
+            </span>
+          </div>
+        </div>
+      </MetadataEntry>
+
+      <MetadataEntry title={'Capture rate'}>
+        <div className="flex flex-col">
+          <p className="flex gap-x-1">
+            <span className="text-base font-light text-black dark:text-white">
+              {captureRate}
+            </span>
+            <span className="text-base text-zinc-600 dark:text-zinc-400">
+              / 255
+            </span>
+          </p>
+          <p className="flex gap-x-1">
+            <span className="text-base font-light text-black dark:text-white">
+              {captureProbability(captureRate).toFixed(2)}
+            </span>
+            <span className="text-base text-zinc-600 dark:text-zinc-400">
+              %
             </span>
           </p>
         </div>
