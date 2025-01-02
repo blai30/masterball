@@ -4,9 +4,9 @@ import MonsterMetadata from '@/components/MonsterMetadata'
 import MonsterHero from '@/components/MonsterHero'
 import { EvolutionChain, Type } from 'pokedex-promise-v2'
 
-export function calculateEffectiveness(
+const calculateEffectiveness = (
   typeResources: Type[]
-): Record<string, number> {
+): Record<string, number> => {
   // Initialize empty effectiveness object
   const effectiveness: Record<string, number> = {}
 
