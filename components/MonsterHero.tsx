@@ -36,6 +36,7 @@ export default function MonsterHero({
   return (
     <section className="flex flex-col items-start p-4 lg:flex-row lg:items-end lg:gap-12">
       <div className="flex flex-col items-start gap-4">
+        {/* <div className="flex flex-row items-center gap-4"> */}
         <h2 className="relative font-mono text-2xl sm:text-3xl">
           <span className="text-zinc-400 dark:text-zinc-600">
             {leadingZeros}
@@ -44,6 +45,7 @@ export default function MonsterHero({
             {significantDigits}
           </span>
         </h2>
+        {/* </div> */}
         <div className="flex flex-col items-start gap-6">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl dark:text-white">
             {name}
@@ -60,7 +62,7 @@ export default function MonsterHero({
       <div className="flex flex-row gap-6">
         <Image
           src={pokemon.sprites.other.home.front_default!}
-          alt={species.name}
+          alt={`${species.name} front default`}
           width={200}
           height={200}
           priority
@@ -68,7 +70,7 @@ export default function MonsterHero({
         />
         <Image
           src={pokemon.sprites.other.home.front_shiny!}
-          alt={species.name}
+          alt={`${species.name} front shiny`}
           width={200}
           height={200}
           priority

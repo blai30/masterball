@@ -204,7 +204,7 @@ export default async function Page({
                                     : 'text-red-800 dark:text-red-200'
                             }`}
                           >
-                            {`${multiplier.toFixed(1)}×`}
+                            {`${multiplier.toFixed(2)}×`}
                           </span>
                         </li>
                       ))}

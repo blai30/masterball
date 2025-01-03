@@ -123,11 +123,10 @@ export default function MonsterMetadata({
 
       <MetadataEntry title={'Gender ratio'}>
         <div className="flex flex-col">
-          <div className="mb-2 max-w-36 overflow-hidden bg-pink-300">
-            <div
-              style={{ width: `${maleRate}%` }}
-              className="h-2 bg-blue-300 outline-2 outline-white dark:outline-black"
-            />
+          {/* Progress bar visualization */}
+          <div className="flex flex-row h-2 gap-x-[2px] max-w-36 overflow-hidden items-center mb-2">
+            <div className="bg-blue-300 h-full" style={{ width: `${maleRate}%` }}></div>
+            <div className="bg-pink-300 h-full" style={{ width: `${femaleRate}%` }}></div>
           </div>
           <div className="flex gap-x-1">
             <span className="flex flex-row items-center gap-x-2 text-base font-light text-blue-800 dark:text-blue-200">
