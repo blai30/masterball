@@ -1,9 +1,15 @@
 import { Metadata } from 'next'
-import { pokeapi } from '@/lib/providers'
-import MonsterMetadata from '@/components/MonsterMetadata'
-import MonsterHero from '@/components/MonsterHero'
-import { EvolutionChain, Type } from 'pokedex-promise-v2'
 import Link from 'next/link'
+import { EvolutionChain, Type } from 'pokedex-promise-v2'
+import { pokeapi } from '@/lib/providers'
+import MonsterHero from '@/components/MonsterHero'
+import HeightMetadata from '@/components/metadata/HeightMetadata'
+import WeightMetadata from '@/components/metadata/WeightMetadata'
+import GenderRatioMetadata from '@/components/metadata/GenderRatioMetadata'
+import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
+import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
+import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
+import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 
 const calculateEffectiveness = (
   typeResources: Type[]
@@ -139,11 +145,6 @@ export default async function Page({
     species.egg_groups.map((group) => group.name)
   )
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
-  const evYield = await pokeapi.getStatByName(
-    pokemon.stats
-      .filter((stat) => stat.effort !== 0)
-      .map((stat) => stat.stat.name)
-  )
 
   const typeEffectiveness = calculateEffectiveness(typeResources)
 
@@ -263,19 +264,40 @@ export default async function Page({
           </div>
         </div>
 
-        <div className="order-first flex flex-col gap-8 xl:order-last xl:col-span-1">
-          {/* Metadata */}
-          <MonsterMetadata
-            height={pokemon.height}
-            weight={pokemon.weight}
-            genderRate={species.gender_rate}
-            captureRate={species.capture_rate}
-            hatchCounter={species.hatch_counter!}
-            eggGroups={eggGroups}
-            growthRate={growthRate}
-            effortValueYield={evYield}
-          />
-        </div>
+        {/* Metadata section */}
+        <section className="order-first flex flex-col gap-8 xl:order-last xl:col-span-1">
+          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2">
+            <HeightMetadata height={pokemon.height} />
+            <WeightMetadata weight={pokemon.weight} />
+            <GenderRatioMetadata genderRate={species.gender_rate} />
+            <CaptureRateMetadata captureRate={species.capture_rate} />
+            <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
+            <EggGroupMetadata eggGroups={eggGroups} />
+            <GrowthRateMetadata growthRate={growthRate} />
+
+            {/* Placeholder EV yield metadata */}
+            <div className="flex flex-col gap-2 rounded-lg p-4">
+              <p className="text-sm/6 text-zinc-600 dark:text-zinc-400">
+                {'Effort Value yield'}
+              </p>
+              <div className="flex flex-col">
+                <p className="flex gap-x-1">
+                  <span className="text-base font-light text-black dark:text-white">
+                    {(3).toLocaleString()}
+                  </span>
+                  <span className="text-base text-zinc-600 dark:text-zinc-400">
+                    Attack
+                  </span>
+                </p>
+                <p className="flex gap-x-1">
+                  <span className="text-base font-light text-black dark:text-white">
+                    {"that's it"}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   )
