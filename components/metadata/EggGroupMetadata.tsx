@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { EggGroup } from 'pokedex-promise-v2'
+import { useLanguage } from '@/components/LanguageContext'
 
 export default function EggGroupMetadata({
   eggGroups,
 }: {
   eggGroups: EggGroup[]
 }) {
-  const language = 'en'
+  const { language } = useLanguage()
   const title = 'Egg group'
 
   const eggGroupObjects = eggGroups.map((group) => {

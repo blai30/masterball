@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Inter, Source_Serif_4 } from 'next/font/google'
 import './globals.css'
-import Header from '@/components/shared/Header'
 import { ThemeProvider } from 'next-themes'
+import Header from '@/components/shared/Header'
+import { LanguageProvider } from '@/components/LanguageContext'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -73,11 +74,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col gap-6 px-4 py-6 print:mx-0 print:max-w-none print:p-0">
-            <Header />
-            <main className="flex grow flex-col items-center">{children}</main>
-            {/* <Footer /> */}
-          </div>
+          <LanguageProvider>
+            <div className="flex min-h-screen flex-col gap-6 px-4 py-6 print:mx-0 print:max-w-none print:p-0">
+              <Header />
+              <main className="flex grow flex-col items-center">
+                {children}
+              </main>
+              {/* <Footer /> */}
+            </div>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

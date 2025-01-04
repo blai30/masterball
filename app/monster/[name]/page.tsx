@@ -110,7 +110,7 @@ export async function generateMetadata({
   )[0].name
 
   return {
-    title: `${imageId} - ${translatedName}`,
+    title: `${translatedName} - ${imageId}`,
     description: `${types.map((t) => t.typeName.name).join(' ')}`,
     openGraph: {
       images: [

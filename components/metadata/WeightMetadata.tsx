@@ -1,7 +1,9 @@
 'use client'
 
+import { useLanguage } from '@/components/LanguageContext'
+
 export default function WeightMetadata({ weight }: { weight: number }) {
-  const language = 'en'
+  const { language } = useLanguage()
   const title = 'Weight'
 
   // Convert from hectograms to pounds and kilograms.

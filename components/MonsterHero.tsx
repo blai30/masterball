@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
 import TypePill from './TypePill'
+import { useLanguage } from './LanguageContext'
 
 export default function MonsterHero({
   species,
@@ -13,7 +14,7 @@ export default function MonsterHero({
   pokemon: Pokemon
   typeResources: Type[]
 }) {
-  const language = 'en'
+  const { language } = useLanguage()
   const name = species.names.filter(
     (nameResource) => nameResource.language.name === language
   )[0].name

@@ -1,12 +1,19 @@
 'use client'
 
+import { useLanguage } from '@/components/LanguageContext'
+
+const translatedTitle: Record<string, string> = {
+  ['en']: 'Capture rate',
+  ['ja']: 'Kapuchaa reito',
+}
+
 export default function CaptureRateMetadata({
   captureRate,
 }: {
   captureRate: number
 }) {
-  const language = 'en'
-  const title = 'Capture rate'
+  const { language } = useLanguage()
+  const title = translatedTitle[language]
 
   const captureProbability = (captureRate: number) => {
     const a = captureRate / 3

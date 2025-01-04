@@ -1,13 +1,14 @@
 'use client'
 
 import { GrowthRate } from 'pokedex-promise-v2'
+import { useLanguage } from '@/components/LanguageContext'
 
 export default function GrowthRateMetadata({
   growthRate,
 }: {
   growthRate: GrowthRate
 }) {
-  const language = 'en'
+  const { language } = useLanguage()
   const title = 'Growth rate'
 
   const maxExperience = growthRate.levels.find(

@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Type } from 'pokedex-promise-v2'
+import { useLanguage } from '@/components/LanguageContext'
 
 const typeClasses: Record<string, string> = {
   ['normal']: 'bg-normal',
@@ -26,7 +27,7 @@ const typeClasses: Record<string, string> = {
 }
 
 export default function TypePill({ type }: { type: Type }) {
-  const language = 'en'
+  const { language } = useLanguage()
   const name =
     type.names.find((typeName) => typeName.language.name === language) ??
     type.names.find((typeName) => typeName.language.name === 'en')!
