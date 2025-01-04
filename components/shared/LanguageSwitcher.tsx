@@ -1,19 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useLanguage } from '@/lib/LanguageContext'
 
 export default function LanguageSwitcher() {
-  const [mounted, setMounted] = useState(false)
   const { language, setLanguage } = useLanguage()
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
 
   return (
     <select
@@ -24,8 +14,17 @@ export default function LanguageSwitcher() {
       onChange={(e) => setLanguage(e.target.value)}
       className="bg-zinc-200 text-black dark:bg-zinc-800 dark:text-white"
     >
-      <option value="en">English</option>
-      <option value="ja">Japanese</option>
+      <option value="en">en</option>
+      <option value="ja-Hrkt">ja-Hrkt</option>
+      <option value="ja">ja</option>
+      <option value="ko">ko</option>
+      <option value="zh-Hant">zh-Hant</option>
+      <option value="fr">fr</option>
+      <option value="de">de</option>
+      <option value="es">es</option>
+      <option value="it">it</option>
+      <option value="zh-Hans">zh-Hans</option>
+      <option value="pt-BR">pt-BR</option>
     </select>
   )
 }

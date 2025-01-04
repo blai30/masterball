@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono, Inter, Source_Serif_4 } from 'next/font/google'
+import {
+  Geist,
+  Geist_Mono,
+  Inter,
+  JetBrains_Mono,
+  Source_Serif_4,
+} from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from 'next-themes'
 import Header from '@/components/shared/Header'
@@ -8,21 +14,31 @@ import { LanguageProvider } from '@/lib/LanguageContext'
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
+  display: 'swap',
 })
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  display: 'swap',
 })
 
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
+  display: 'swap',
+})
+
+const jetBrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains-mono',
+  subsets: ['latin'],
+  display: 'swap',
 })
 
 const sourceSerif4 = Source_Serif_4({
   variable: '--font-source-serif-4',
   subsets: ['latin'],
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -64,10 +80,18 @@ export default function RootLayout({
 }>) {
   // Font applied in globals.css.
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${sourceSerif4.variable} bg-white text-black antialiased dark:bg-black dark:text-white`}
-      >
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={[
+        geistSans.variable,
+        geistMono.variable,
+        inter.variable,
+        jetBrainsMono.variable,
+        sourceSerif4.variable,
+      ].join(' ')}
+    >
+      <body className="bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

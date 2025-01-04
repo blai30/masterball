@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { EvolutionChain, Type } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import MonsterHero from '@/components/MonsterHero'
+import FlavorText from '@/components/details/FlavorText'
 import HeightMetadata from '@/components/metadata/HeightMetadata'
 import WeightMetadata from '@/components/metadata/WeightMetadata'
 import GenderRatioMetadata from '@/components/metadata/GenderRatioMetadata'
@@ -240,18 +241,7 @@ export default async function Page({
                   </Link>
                 </dd>
               </section>
-              <section className="px-4 py-6 sm:gap-4">
-                <dt className="text-lg font-medium text-black dark:text-white">
-                  About
-                </dt>
-                <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  {
-                    species.flavor_text_entries.find(
-                      (e) => e.language.name === 'en'
-                    )!.flavor_text
-                  }
-                </dd>
-              </section>
+              <FlavorText species={species} />
               <section className="px-4 py-6 sm:gap-4">
                 <dt className="text-lg font-medium text-black dark:text-white">
                   Moves

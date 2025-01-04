@@ -1,8 +1,15 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import LanguageSwitcher from '@/components/shared/LanguageSwitcher'
-import ThemeSwitch from '@/components/shared/ThemeSwitch'
+
+const LanguageSwitcher = dynamic(
+  () => import('@/components/shared/LanguageSwitcher'),
+  { ssr: false }
+)
+const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
+  ssr: false,
+})
 
 export default function Header() {
   return (

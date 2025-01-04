@@ -19,13 +19,7 @@ const getLanguage = (storageKey: string) => {
     return undefined
   }
 
-  let initialLanguage
-  try {
-    initialLanguage = localStorage.getItem(storageKey) || undefined
-  } catch (e) {
-    // Server cannot access localStorage, only need it on client.
-  }
-
+  const initialLanguage = localStorage.getItem(storageKey) || undefined
   return initialLanguage
 }
 
@@ -50,11 +44,7 @@ export function LanguageProvider({
   const setLanguage = useCallback(
     (value: string) => {
       setLanguageState(value)
-      try {
-        localStorage.setItem(storageKey, value)
-      } catch (e) {
-        // Server cannot access localStorage, only need it on client.
-      }
+      localStorage.setItem(storageKey, value)
     },
     [storageKey]
   )

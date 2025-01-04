@@ -7,6 +7,10 @@
   /* --breakpoint-2xs: 350px; */
   /* --breakpoint-xs: 500px; */
 
+  --font-sans: 'Inter', Arial, Helvetica, sans-serif;
+  --font-serif: 'Source Serif Pro';
+  --font-mono: 'JetBrains Mono', monospace;
+
   --color-normal: #999999;
   --color-fighting: #ffa202;
   --color-flying: #95c9ff;
@@ -25,10 +29,4 @@
   --color-dragon: #5462d6;
   --color-dark: #4f4747;
   --color-fairy: #ffb1ff;
-}
-
-body {
-  /* font-family: var(--font-source-serif-4), Arial, Helvetica, sans-serif; */
-  /* font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif; */
-  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
 }
