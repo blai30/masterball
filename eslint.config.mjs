@@ -7,7 +7,12 @@ const compat = new FlatCompat({
 const eslintConfig = [
   // ...compat.extends('next/core-web-vitals', 'next/typescript'),
   ...compat.config({
-    extends: ['next/core-web-vitals', 'next/typescript', 'prettier'],
+    extends: [
+      'next/core-web-vitals',
+      'next/typescript',
+      'plugin:react-hooks/recommended',
+      'prettier',
+    ],
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
     },

@@ -1,6 +1,6 @@
 'use client'
 
-import { useLanguage } from '@/components/LanguageContext'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function GenderRatioMetadata({ genderRate }: { genderRate: number }) {
   const { language } = useLanguage()

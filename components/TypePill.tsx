@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Type } from 'pokedex-promise-v2'
-import { useLanguage } from '@/components/LanguageContext'
+import { useLanguage } from '@/lib/LanguageContext'
 
 const typeClasses: Record<string, string> = {
   ['normal']: 'bg-normal',
@@ -38,7 +38,7 @@ export default function TypePill({ type }: { type: Type }) {
     <Link
       href={`/type/${type.name}`}
       className={[
-        'flex w-32 flex-row items-center rounded-lg bg-gradient-to-br to-black/40 px-2 py-1.5 transition hover:scale-105',
+        'flex w-36 flex-row items-center rounded-lg bg-gradient-to-br to-black/40 px-2 py-1.5 transition hover:scale-105',
         typeClasses[type.name],
       ].join(' ')}
     >
@@ -47,12 +47,14 @@ export default function TypePill({ type }: { type: Type }) {
         alt={type.name}
         width={24}
         height={24}
+        priority
+        loading="eager"
         className={[
           'aspect-square rounded-md object-contain',
           `bg-transparent`,
         ].join(' ')}
       />
-      <p className="w-full rounded-r-md px-2 font-medium text-white uppercase dark:text-white">
+      <p className="w-full rounded-r-md px-2 font-semibold text-white uppercase dark:text-white">
         {name.name}
       </p>
     </Link>

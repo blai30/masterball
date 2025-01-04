@@ -1,6 +1,6 @@
 'use client'
 
-import { useLanguage } from '@/components/LanguageContext'
+import { useLanguage } from '@/lib/LanguageContext'
 
 const translatedTitle: Record<string, string> = {
   ['en']: 'Capture rate',

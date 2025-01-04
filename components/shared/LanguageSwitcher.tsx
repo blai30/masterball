@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useLanguage } from '@/components/LanguageContext'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function LanguageSwitcher() {
   const [mounted, setMounted] = useState(false)
@@ -16,17 +16,16 @@ export default function LanguageSwitcher() {
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <select
-        id="language"
-        name="language"
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        className="bg-zinc-200 text-black dark:bg-zinc-800 dark:text-white"
-      >
-        <option value="en">English</option>
-        <option value="ja">Japanese</option>
-      </select>
-    </div>
+    <select
+      id="language"
+      name="Language switcher"
+      title="Language switcher"
+      value={language}
+      onChange={(e) => setLanguage(e.target.value)}
+      className="bg-zinc-200 text-black dark:bg-zinc-800 dark:text-white"
+    >
+      <option value="en">English</option>
+      <option value="ja">Japanese</option>
+    </select>
   )
 }

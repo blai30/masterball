@@ -1,7 +1,7 @@
 'use client'
 
 import { GrowthRate } from 'pokedex-promise-v2'
-import { useLanguage } from '@/components/LanguageContext'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function GrowthRateMetadata({
   growthRate,

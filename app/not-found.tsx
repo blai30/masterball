@@ -1,6 +1,6 @@
 'use client'
 
-import { useLanguage } from '@/components/LanguageContext'
+import { useLanguage } from '@/lib/LanguageContext'
 
 const translatedHeading: Record<string, string> = {
   ['en']: '404 Page Not Found',

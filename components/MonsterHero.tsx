@@ -2,8 +2,8 @@
 
 import Image from 'next/image'
 import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
-import TypePill from './TypePill'
-import { useLanguage } from './LanguageContext'
+import TypePill from '@/components/TypePill'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function MonsterHero({
   species,
@@ -67,7 +67,8 @@ export default function MonsterHero({
           width={200}
           height={200}
           priority
-          className="h-32 object-scale-down sm:h-40 md:h-52"
+          loading="eager"
+          className="h-32 w-auto object-scale-down sm:h-40 md:h-52"
         />
         <Image
           src={pokemon.sprites.other.home.front_shiny!}
@@ -75,7 +76,8 @@ export default function MonsterHero({
           width={200}
           height={200}
           priority
-          className="h-32 object-scale-down sm:h-40 md:h-52"
+          loading="eager"
+          className="h-32 w-auto object-scale-down sm:h-40 md:h-52"
         />
       </div>
     </section>

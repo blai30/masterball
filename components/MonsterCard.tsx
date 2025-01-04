@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
+import MonsterTranslatedName from './MonsterTranslatedName'
 
 const typeClasses: Record<string, string> = {
   ['normal']: 'bg-normal',
@@ -26,10 +27,8 @@ const typeClasses: Record<string, string> = {
 
 export default async function MonsterCard({
   speciesResource,
-  language,
 }: {
   speciesResource: NamedAPIResource
-  language: string
 }) {
   const species = await pokeapi.getPokemonSpeciesByName(speciesResource.name)
   const pokemon = await pokeapi.getPokemonByName(
@@ -80,11 +79,7 @@ export default async function MonsterCard({
         </div>
         <div className="flex w-full flex-row justify-between px-2 pt-2">
           <h3 className="rounded-xs font-light text-black dark:text-white">
-            {
-              species.names.filter(
-                (nameResource) => nameResource.language.name === language
-              )[0].name
-            }
+            <MonsterTranslatedName names={species.names} />
           </h3>
         </div>
       </div>

@@ -1,11 +1,10 @@
 import { Suspense } from 'react'
 import { NamedAPIResource } from 'pokedex-promise-v2'
+import { pokeapi } from '@/lib/providers'
 import LoadingCard from '@/components/LoadingCard'
 import MonsterCard from '@/components/MonsterCard'
-import { pokeapi } from '@/lib/providers'
 
 export default async function Home() {
-  const language = 'en'
   const speciesResourceList = await pokeapi.getPokemonSpeciesList({
     limit: 20,
     offset: 721,
@@ -26,7 +25,6 @@ export default async function Home() {
                 <MonsterCard
                   key={speciesResource.id}
                   speciesResource={speciesResource}
-                  language={language}
                 />
               </Suspense>
             </li>

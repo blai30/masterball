@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { EggGroup } from 'pokedex-promise-v2'
-import { useLanguage } from '@/components/LanguageContext'
+import { useLanguage } from '@/lib/LanguageContext'
 
 export default function EggGroupMetadata({
   eggGroups,

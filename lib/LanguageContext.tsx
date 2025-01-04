@@ -13,6 +13,22 @@ const LanguageContext = createContext({
   setLanguage: (language: string) => {},
 })
 
+// Helper function for useState default value.
+const getLanguage = (storageKey: string) => {
+  if (typeof window === 'undefined') {
+    return undefined
+  }
+
+  let initialLanguage
+  try {
+    initialLanguage = localStorage.getItem(storageKey) || undefined
+  } catch (e) {
+    // Server cannot access localStorage, only need it on client.
+  }
+
+  return initialLanguage
+}
+
 // React hook, import this in your components to use.
 export function useLanguage() {
   return useContext(LanguageContext)
@@ -21,7 +37,7 @@ export function useLanguage() {
 // Context provider, import this in layout.tsx and wrap your app in it.
 export function LanguageProvider({
   defaultLanguage = 'en',
-  storageKey = 'lang',
+  storageKey = 'language',
   children,
 }: Readonly<{
   defaultLanguage?: string
@@ -55,20 +71,4 @@ export function LanguageProvider({
       {children}
     </LanguageContext.Provider>
   )
-}
-
-// Helper function for useState default value.
-const getLanguage = (storageKey: string) => {
-  if (typeof window === 'undefined') {
-    return undefined
-  }
-
-  let initialLanguage
-  try {
-    initialLanguage = localStorage.getItem(storageKey) || undefined
-  } catch (e) {
-    // Server cannot access localStorage, only need it on client.
-  }
-
-  return initialLanguage
 }
