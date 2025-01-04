@@ -78,7 +78,7 @@ export default async function MonsterCard({
           </div>
         </div>
         <div className="flex w-full flex-row justify-between px-2 pt-2">
-          <h3 className="rounded-xs font-light text-black dark:text-white">
+          <h3 className="rounded-xs font-normal text-black dark:text-white">
             <MonsterTranslatedName names={species.names} />
           </h3>
         </div>

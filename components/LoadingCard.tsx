@@ -1,24 +1,25 @@
 'use client'
 
-import Image from 'next/image'
-
 export default function LoadingCard() {
   const id = 0
-  const imageUrl =
-    'https://resource.pokemon-home.com/battledata/img/pokei128/icon0000_f00_s0.png'
 
   return (
     <div>
       <div className="flex flex-col items-center justify-between overflow-hidden rounded-xl bg-white p-2 group-hover:bg-zinc-300 dark:bg-black dark:group-hover:bg-zinc-700">
         <div className="relative flex w-full flex-col items-center rounded-md bg-zinc-100 p-4 dark:bg-zinc-900">
-          <Image
-            src={imageUrl}
-            alt="Loading card image"
+          <svg
             width={128}
             height={128}
-            priority
-            className="h-full object-scale-down"
-          />
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-full animate-spin object-scale-down text-zinc-300 dark:text-zinc-700"
+          >
+            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+          </svg>
           <div className="absolute inset-x-0 top-0 flex h-full flex-col items-start justify-between rounded-lg p-2">
             <p
               aria-hidden="true"
