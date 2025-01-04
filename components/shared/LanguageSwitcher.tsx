@@ -24,7 +24,6 @@ export default function LanguageSwitcher() {
       <option value="es">es</option>
       <option value="it">it</option>
       <option value="zh-Hans">zh-Hans</option>
-      <option value="pt-BR">pt-BR</option>
     </select>
   )
 }
