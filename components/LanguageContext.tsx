@@ -30,25 +30,9 @@ export function LanguageProvider({
 }>) {
   const [language, setLanguageState] = useState(defaultLanguage)
 
-  // const router = useRouter()
-  // const pathname = usePathname()
-  // const searchParams = useSearchParams()
-  // const language = searchParams.get(storageKey) ?? defaultLanguage
-
-  // const createQueryString = useCallback(
-  //   (name: string, value: string) => {
-  //     const params = new URLSearchParams(searchParams.toString())
-  //     params.set(name, value)
-  //     return params.toString()
-  //   },
-  //   [searchParams]
-  // )
-
   // Custom setter for state.
   const setLanguage = useCallback(
     (value: string) => {
-      // const query = createQueryString(storageKey, value)
-      // router.push([pathname, query].join('?'))
       setLanguageState(value)
       try {
         localStorage.setItem(storageKey, value)
