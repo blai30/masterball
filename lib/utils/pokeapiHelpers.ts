@@ -19,7 +19,7 @@ export function getTranslation<T extends BaseTranslatable, K extends keyof T>(
   return String(resource[field])
 }
 
-export const ALL_TYPES = [
+export const ALL_TYPES: string[] = [
   'normal',
   'fighting',
   'flying',
@@ -40,8 +40,7 @@ export const ALL_TYPES = [
   'fairy',
 ] as const
 
-export type PokemonType = (typeof ALL_TYPES)[number]
-export type TypeEffectiveness = Record<PokemonType, number>
+export type TypeEffectiveness = Record<string, number>
 
 export function calculateTypeEffectiveness(
   typeResources: Type[]
@@ -54,12 +53,12 @@ export function calculateTypeEffectiveness(
   typeResources.forEach((type) => {
     // Process immunities first.
     type.damage_relations.no_damage_from.forEach((t) => {
-      effectiveness[t.name as PokemonType] = 0
+      effectiveness[t.name] = 0
     })
 
     // Process resistances (if not immune).
     type.damage_relations.half_damage_from.forEach((t) => {
-      const typeName = t.name as PokemonType
+      const typeName = t.name
       if (effectiveness[typeName] !== 0) {
         effectiveness[typeName] *= 0.5
       }
@@ -67,7 +66,7 @@ export function calculateTypeEffectiveness(
 
     // Process weaknesses (if not immune).
     type.damage_relations.double_damage_from.forEach((t) => {
-      const typeName = t.name as PokemonType
+      const typeName = t.name
       if (effectiveness[typeName] !== 0) {
         effectiveness[typeName] *= 2
       }

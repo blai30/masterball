@@ -11,7 +11,11 @@ import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
 import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
-import { calculateTypeEffectiveness } from '@/lib/utils/pokeapiHelpers'
+import {
+  ALL_TYPES,
+  calculateTypeEffectiveness,
+} from '@/lib/utils/pokeapiHelpers'
+import TranslatedText from '@/components/TranslatedText'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -87,7 +91,7 @@ export default async function Page({
     species.egg_groups.map((group) => group.name)
   )
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
-
+  const allTypeResources = await pokeapi.getTypeByName(ALL_TYPES.map((t) => t))
   const typeEffectiveness = calculateTypeEffectiveness(typeResources)
 
   return (
@@ -128,26 +132,35 @@ export default async function Page({
                 </dt>
                 <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
                   <ul>
-                    {Object.entries(typeEffectiveness)
-                      .sort((a, b) => b[1] - a[1])
-                      .map(([type, multiplier]) => (
+                    {allTypeResources
+                      .map((typeResource) => ({
+                        type: typeResource,
+                        effectiveness: typeEffectiveness[typeResource.name],
+                      }))
+                      .sort((a, b) => b.effectiveness - a.effectiveness)
+                      .map(({ type, effectiveness }) => (
                         <li
-                          key={type}
+                          key={type.name}
                           className="flex items-center justify-between"
                         >
-                          <span>{type}</span>
+                          <TranslatedText resources={type.names} field="name" />
                           <span
-                            className={`font-mono ${
-                              multiplier > 1
-                                ? 'text-green-800 dark:text-green-200'
-                                : multiplier === 1
-                                  ? 'text-black dark:text-white'
-                                  : multiplier === 0
-                                    ? 'text-purple-800 dark:text-purple-200'
-                                    : 'text-red-800 dark:text-red-200'
-                            }`}
+                            className={[
+                              'font-mono font-medium',
+                              effectiveness > 1 &&
+                                'text-green-600 dark:text-green-400',
+                              effectiveness === 1 &&
+                                'text-zinc-600 dark:text-zinc-400',
+                              effectiveness === 0 &&
+                                'text-purple-600 dark:text-purple-400',
+                              effectiveness < 1 &&
+                                effectiveness > 0 &&
+                                'text-red-600 dark:text-red-400',
+                            ].join(' ')}
                           >
-                            {`${multiplier.toFixed(2)}×`}
+                            {effectiveness === 0
+                              ? '0×'
+                              : `${effectiveness.toFixed(2)}×`}
                           </span>
                         </li>
                       ))}
