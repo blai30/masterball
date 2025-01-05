@@ -34,7 +34,7 @@ export default function TypePill({ type }: { type: Type }) {
     <Link
       href={`/type/${type.name}`}
       className={[
-        'flex w-36 flex-row items-center rounded-lg bg-gradient-to-br to-black/40 px-2 py-1.5 transition hover:scale-105',
+        'flex w-32 flex-row items-center rounded-full px-2 py-1.5 transition hover:scale-105',
         typeClasses[type.name],
       ].join(' ')}
     >
@@ -50,7 +50,7 @@ export default function TypePill({ type }: { type: Type }) {
           `bg-transparent`,
         ].join(' ')}
       />
-      <p className="w-full rounded-r-md px-2 font-semibold text-white uppercase dark:text-white">
+      <p className="w-full rounded-r-md px-2 text-xs font-medium tracking-wide text-white uppercase dark:text-white">
         {name}
       </p>
     </Link>

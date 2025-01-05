@@ -115,35 +115,31 @@ export default async function Page({
         <div className="xl:col-span-2">
           {/* Main details */}
           <div className="">
-            <dl className="">
-              <Stats pokemon={pokemon} stats={stats} />
-              <TypeEffectiveness
-                monsterTypes={typeResources}
-                allTypes={allTypeResources}
-              />
-              <Abilities pokemon={pokemon} abilities={abilities} />
-              <section className="px-4 py-6 sm:gap-4">
-                <dt className="text-lg font-medium text-black dark:text-white">
-                  Evolution
-                </dt>
-                <dd className="text-lg text-zinc-600 dark:text-zinc-400">
-                  <Link href={`/monster/${evolutionChain.chain.species.name}`}>
-                    <span className="text-blue-700 underline dark:text-blue-300">
-                      {evolutionChain.chain.species.name}
-                    </span>
-                  </Link>
-                </dd>
-              </section>
-              <FlavorText species={species} />
-              <section className="px-4 py-6 sm:gap-4">
-                <dt className="text-lg font-medium text-black dark:text-white">
-                  Moves
-                </dt>
-                <dd className="text-lg text-zinc-600 dark:text-zinc-400">
-                  {pokemon.moves.map((move) => move.move.name).join(', ')}
-                </dd>
-              </section>
-            </dl>
+            <Stats pokemon={pokemon} stats={stats} />
+            <TypeEffectiveness
+              monsterTypes={typeResources}
+              allTypes={allTypeResources}
+            />
+            <Abilities pokemon={pokemon} abilities={abilities} />
+            <section className="flex flex-col gap-4 px-4 py-6">
+              <h2 className="text-lg font-medium text-black dark:text-white">
+                Evolution
+              </h2>
+              <Link href={`/monster/${evolutionChain.chain.species.name}`}>
+                <span className="text-blue-700 underline dark:text-blue-300">
+                  {evolutionChain.chain.species.name}
+                </span>
+              </Link>
+            </section>
+            <FlavorText species={species} />
+            <section className="flex flex-col gap-4 px-4 py-6">
+              <h2 className="text-lg font-medium text-black dark:text-white">
+                Moves
+              </h2>
+              <p className="text-lg text-zinc-600 dark:text-zinc-400">
+                {pokemon.moves.map((move) => move.move.name).join(', ')}
+              </p>
+            </section>
           </div>
         </div>
 

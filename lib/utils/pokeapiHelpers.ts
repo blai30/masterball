@@ -1,6 +1,6 @@
 import { Type } from 'pokedex-promise-v2'
 
-interface BaseTranslatable {
+type BaseTranslatable = {
   language: {
     name: string
   }

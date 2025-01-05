@@ -13,7 +13,7 @@ export default function GenderRatioMetadata({
 
   return (
     <div className="flex flex-col gap-2 rounded-lg p-4">
-      <p className="text-sm/6 text-zinc-600 dark:text-zinc-400">{title}</p>
+      <h2 className="text-sm/6 text-zinc-600 dark:text-zinc-400">{title}</h2>
       <div className="flex flex-col">
         {/* Progress bar visualization */}
         <div className="mb-2 flex h-2 max-w-36 flex-row items-center gap-x-[2px] overflow-hidden">

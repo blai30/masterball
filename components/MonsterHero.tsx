@@ -26,14 +26,14 @@ export default function MonsterHero({
     <section className="flex flex-col items-start px-4 lg:flex-row lg:items-end lg:gap-12">
       <div className="flex flex-col items-start gap-4">
         {/* <div className="flex flex-row items-center gap-4"> */}
-        <h2 className="relative font-num text-2xl sm:text-3xl">
+        <p className="relative font-num text-2xl sm:text-3xl">
           <span className="text-zinc-400 dark:text-zinc-600">
             {leadingZeros}
           </span>
           <span className="text-black dark:text-white">
             {significantDigits}
           </span>
-        </h2>
+        </p>
         {/* </div> */}
         <div className="flex flex-col items-start gap-6">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl dark:text-white">
