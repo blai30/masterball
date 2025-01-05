@@ -1,26 +1,8 @@
 import type { Metadata, Viewport } from 'next'
-import {
-  Geist,
-  Geist_Mono,
-  Inter,
-  JetBrains_Mono,
-  Source_Serif_4,
-} from 'next/font/google'
+import { Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from 'next-themes'
 import Header from '@/components/shared/Header'
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-  display: 'swap',
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-  display: 'swap',
-})
 
 const inter = Inter({
   variable: '--font-inter',
@@ -34,8 +16,8 @@ const jetBrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
-const sourceSerif4 = Source_Serif_4({
-  variable: '--font-source-serif-4',
+const sofiaSans = Sofia_Sans({
+  variable: '--font-sofia-sans',
   subsets: ['latin'],
   display: 'swap',
 })
@@ -83,11 +65,10 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={[
-        geistSans.variable,
-        geistMono.variable,
+        'scheme-light dark:scheme-dark',
         inter.variable,
         jetBrainsMono.variable,
-        sourceSerif4.variable,
+        sofiaSans.variable,
       ].join(' ')}
     >
       <body className="bg-white text-black antialiased dark:bg-black dark:text-white">

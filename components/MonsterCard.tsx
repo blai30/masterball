@@ -57,7 +57,7 @@ export default async function MonsterCard({
           <div className="absolute inset-x-0 top-0 flex h-full flex-col items-start justify-between rounded-lg p-2">
             <p
               aria-hidden="true"
-              className="font-mono text-sm text-zinc-400 dark:text-zinc-500"
+              className="font-num text-sm text-zinc-400 dark:text-zinc-500"
             >
               {species.id}
             </p>

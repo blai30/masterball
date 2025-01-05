@@ -8,25 +8,25 @@
   /* --breakpoint-xs: 500px; */
 
   --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
-  --font-serif: var(--font-source-serif-4);
   --font-mono: var(--font-jetbrains-mono), monospace;
+  --font-num: var(--font-sofia-sans);
 
-  --color-normal: #999999;
-  --color-fighting: #ffa202;
-  --color-flying: #95c9ff;
-  --color-poison: #994dcf;
-  --color-ground: #ab7939;
-  --color-rock: #bcb889;
-  --color-bug: #9fa424;
-  --color-ghost: #6e4570;
-  --color-steel: #6aaed3;
-  --color-fire: #ff612c;
-  --color-water: #2992ff;
-  --color-grass: #42bf24;
-  --color-electric: #ffdb00;
-  --color-psychic: #ff637f;
-  --color-ice: #42d8ff;
-  --color-dragon: #5462d6;
-  --color-dark: #4f4747;
-  --color-fairy: #ffb1ff;
+  --color-normal: #9fa19f;
+  --color-fighting: #ff8000;
+  --color-flying: #81b9ef;
+  --color-poison: #9141cb;
+  --color-ground: #915121;
+  --color-rock: #afa981;
+  --color-bug: #91a119;
+  --color-ghost: #704170;
+  --color-steel: #60a1b8;
+  --color-fire: #e62829;
+  --color-water: #2980ef;
+  --color-grass: #3fa129;
+  --color-electric: #fac000;
+  --color-psychic: #ef4179;
+  --color-ice: #3dcef3;
+  --color-dragon: #5060e1;
+  --color-dark: #624d4e;
+  --color-fairy: #ef70ef;
 }
