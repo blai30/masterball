@@ -1,5 +1,5 @@
 import { Pokemon, Stat } from 'pokedex-promise-v2'
-import TranslatedText from '@/components/TranslatedText'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function Stats({
   pokemon,
@@ -19,7 +19,7 @@ export default function Stats({
           return (
             <p key={stat.name}>
               <span className="font-semibold">
-                <TranslatedText resources={stat.names} field="name" />
+                {getTranslation(stat.names, 'name')}
               </span>
               <span>: {pokemonStat.base_stat.toLocaleString()}</span>
             </p>

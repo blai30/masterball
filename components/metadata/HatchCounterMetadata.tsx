@@ -1,13 +1,10 @@
 'use client'
 
-import { useLanguage } from '@/lib/LanguageContext'
-
 export default function HatchCounterMetadata({
   hatchCounter,
 }: {
   hatchCounter: number
 }) {
-  const { language } = useLanguage()
   const title = 'Hatch counter'
 
   // Multiply hatch cycles by number of steps in a cycle.

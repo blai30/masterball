@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
-import TranslatedText from './TranslatedText'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 const typeClasses: Record<string, string> = {
   ['normal']: 'bg-normal',
@@ -38,6 +38,7 @@ export default async function MonsterCard({
     pokemon.types.map((type) => type.type.name)
   )
 
+  const name = getTranslation(species.names, 'name')
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
@@ -79,7 +80,7 @@ export default async function MonsterCard({
         </div>
         <div className="flex w-full flex-row justify-between px-2 pt-2">
           <h3 className="rounded-xs font-normal text-black dark:text-white">
-            <TranslatedText resources={species.names} field="name" />
+            {name}
           </h3>
         </div>
       </div>

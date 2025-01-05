@@ -1,25 +1,22 @@
 'use client'
 
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import Link from 'next/link'
 import { EggGroup } from 'pokedex-promise-v2'
-import { useLanguage } from '@/lib/LanguageContext'
 
 export default function EggGroupMetadata({
   eggGroups,
 }: {
   eggGroups: EggGroup[]
 }) {
-  const { language } = useLanguage()
   const title = 'Egg group'
 
   const eggGroupObjects = eggGroups.map((group) => {
-    const groupName =
-      group.names.find((name) => name.language.name === language) ??
-      group.names.find((name) => name.language.name === 'en')!
+    const groupName = getTranslation(group.names, 'name')
     return {
       id: group.id,
       key: group.name,
-      name: groupName.name,
+      name: groupName,
     }
   })
 

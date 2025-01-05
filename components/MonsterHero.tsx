@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
 import TypePill from '@/components/TypePill'
-import { useLanguage } from '@/lib/LanguageContext'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function MonsterHero({
   species,
@@ -14,19 +14,7 @@ export default function MonsterHero({
   pokemon: Pokemon
   typeResources: Type[]
 }) {
-  const { language } = useLanguage()
-  const name = species.names.filter(
-    (nameResource) => nameResource.language.name === language
-  )[0].name
-
-  // const types = typeResources.map((resource) => {
-  //   const typeName = resource.names.find((n) => n.language.name === language)!
-  //   return {
-  //     id: resource.id,
-  //     key: resource.name,
-  //     name: typeName.name,
-  //   }
-  // })
+  const name = getTranslation(species.names, 'name')
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`

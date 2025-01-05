@@ -1,6 +1,6 @@
-import { Ability, Pokemon } from 'pokedex-promise-v2'
-import TranslatedText from '@/components/TranslatedText'
 import Link from 'next/link'
+import { Ability, Pokemon } from 'pokedex-promise-v2'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function Abilities({
   pokemon,
@@ -30,14 +30,11 @@ export default function Abilities({
           <p key={a.id}>
             <Link href={`/ability/${a.name}`}>
               <span className="text-blue-700 underline dark:text-blue-300">
-                <TranslatedText resources={a.resource.names} field="name" />
+                {getTranslation(a.resource.names, 'name')}
               </span>
             </Link>
             <span className="">
-              <TranslatedText
-                resources={a.resource.effect_entries}
-                field="effect"
-              />
+              : {getTranslation(a.resource.effect_entries, 'effect')}
             </span>
           </p>
         ))}

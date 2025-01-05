@@ -1,27 +1,19 @@
 'use client'
 
 import { GrowthRate } from 'pokedex-promise-v2'
-import { useLanguage } from '@/lib/LanguageContext'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function GrowthRateMetadata({
   growthRate,
 }: {
   growthRate: GrowthRate
 }) {
-  const { language } = useLanguage()
   const title = 'Growth rate'
+  const description = getTranslation(growthRate.descriptions, 'description')
 
   const maxExperience = growthRate.levels.find(
     (level) => level.level === 100
   )!.experience
-
-  const growthRateName =
-    growthRate.descriptions.find(
-      (description) => description.language.name === language
-    ) ??
-    growthRate.descriptions.find(
-      (description) => description.language.name === 'en'
-    )!
 
   return (
     <div className="flex flex-col gap-2 rounded-lg p-4">
@@ -37,7 +29,7 @@ export default function GrowthRateMetadata({
         </p>
         <p className="flex gap-x-1">
           <span className="text-base font-light text-black dark:text-white">
-            {growthRateName.description}
+            {description}
           </span>
         </p>
       </div>

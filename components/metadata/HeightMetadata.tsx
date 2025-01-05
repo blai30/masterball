@@ -1,9 +1,6 @@
 'use client'
 
-import { useLanguage } from '@/lib/LanguageContext'
-
 export default function HeightMetadata({ height }: { height: number }) {
-  const { language } = useLanguage()
   const title = 'Height'
 
   // Convert from decimeters to feet (floor) + inches (remainder) and meters.

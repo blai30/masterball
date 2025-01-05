@@ -1,13 +1,10 @@
 'use client'
 
-import { useLanguage } from '@/lib/LanguageContext'
-
 export default function CaptureRateMetadata({
   captureRate,
 }: {
   captureRate: number
 }) {
-  const { language } = useLanguage()
   const title = 'Capture rate'
 
   const captureProbability = (captureRate: number) => {

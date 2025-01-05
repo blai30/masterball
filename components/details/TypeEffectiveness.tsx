@@ -1,6 +1,5 @@
 import { Type } from 'pokedex-promise-v2'
-import { calculateTypeEffectiveness } from '@/lib/utils/pokeapiHelpers'
-import TranslatedText from '@/components/TranslatedText'
+import { getEffectiveness, getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function TypeEffectiveness({
   monsterTypes,
@@ -9,7 +8,7 @@ export default function TypeEffectiveness({
   monsterTypes: Type[]
   allTypes: Type[]
 }) {
-  const typeEffectiveness = calculateTypeEffectiveness(monsterTypes)
+  const typeEffectiveness = getEffectiveness(monsterTypes)
   const allTypeRelations = allTypes
     .map((typeResource) => ({
       type: typeResource,
@@ -26,7 +25,7 @@ export default function TypeEffectiveness({
         <ul>
           {allTypeRelations.map(({ type, effectiveness }) => (
             <li key={type.name} className="flex items-center justify-between">
-              <TranslatedText resources={type.names} field="name" />
+              {getTranslation(type.names, 'name')}
               <span
                 className={[
                   'font-mono font-medium',

@@ -9,12 +9,11 @@ interface BaseTranslatable {
 export function getTranslation<T extends BaseTranslatable, K extends keyof T>(
   resources: T[],
   field: K,
-  language: string,
-  fallbackLanguage: string = 'en'
+  language: string = 'en'
 ): string {
   const resource =
     resources.find((r) => r.language.name === language) ??
-    resources.find((r) => r.language.name === fallbackLanguage)!
+    resources.find((r) => r.language.name === 'en')!
 
   return String(resource[field])
 }
@@ -42,9 +41,7 @@ export const ALL_TYPES: string[] = [
 
 export type TypeEffectiveness = Record<string, number>
 
-export function calculateTypeEffectiveness(
-  typeResources: Type[]
-): TypeEffectiveness {
+export function getEffectiveness(typeResources: Type[]): TypeEffectiveness {
   // Initialize all types with neutral effectiveness.
   const effectiveness = Object.fromEntries(
     ALL_TYPES.map((type) => [type, 1])

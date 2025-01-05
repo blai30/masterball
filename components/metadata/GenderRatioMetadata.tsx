@@ -1,9 +1,10 @@
 'use client'
 
-import { useLanguage } from '@/lib/LanguageContext'
-
-export default function GenderRatioMetadata({ genderRate }: { genderRate: number }) {
-  const { language } = useLanguage()
+export default function GenderRatioMetadata({
+  genderRate,
+}: {
+  genderRate: number
+}) {
   const title = 'Gender ratio'
 
   // Gender ratio is presented as a multiple of 8.

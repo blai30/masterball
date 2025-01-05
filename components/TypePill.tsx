@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Type } from 'pokedex-promise-v2'
-import { useLanguage } from '@/lib/LanguageContext'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 const typeClasses: Record<string, string> = {
   ['normal']: 'bg-normal',
@@ -27,11 +27,7 @@ const typeClasses: Record<string, string> = {
 }
 
 export default function TypePill({ type }: { type: Type }) {
-  const { language } = useLanguage()
-  const name =
-    type.names.find((typeName) => typeName.language.name === language) ??
-    type.names.find((typeName) => typeName.language.name === 'en')!
-
+  const name = getTranslation(type.names, 'name')
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${type.name}.png`
 
   return (
@@ -55,7 +51,7 @@ export default function TypePill({ type }: { type: Type }) {
         ].join(' ')}
       />
       <p className="w-full rounded-r-md px-2 font-semibold text-white uppercase dark:text-white">
-        {name.name}
+        {name}
       </p>
     </Link>
   )
