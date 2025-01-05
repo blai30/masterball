@@ -21,7 +21,7 @@ export default function Abilities({
   })
 
   return (
-    <section className="px-4 py-6 sm:gap-4">
+    <section className="flex flex-col px-4 py-6 gap-4">
       <dt className="text-lg font-medium text-black dark:text-white">
         Abilities
       </dt>
