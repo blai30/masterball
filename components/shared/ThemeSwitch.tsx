@@ -2,6 +2,21 @@
 
 import { useTheme } from 'next-themes'
 
+const options = [
+  {
+    value: 'system',
+    label: 'System',
+  },
+  {
+    value: 'dark',
+    label: 'Dark',
+  },
+  {
+    value: 'light',
+    label: 'Light',
+  },
+]
+
 export default function ThemeSwitch() {
   const { theme, setTheme } = useTheme()
 
@@ -14,9 +29,11 @@ export default function ThemeSwitch() {
       onChange={(e) => setTheme(e.target.value)}
       className="bg-zinc-200 text-black dark:bg-zinc-800 dark:text-white"
     >
-      <option value="system">System</option>
-      <option value="dark">Dark</option>
-      <option value="light">Light</option>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
     </select>
   )
 }

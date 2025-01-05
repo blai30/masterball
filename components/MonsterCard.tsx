@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
-import MonsterTranslatedName from './MonsterTranslatedName'
+import TranslatedText from './TranslatedText'
 
 const typeClasses: Record<string, string> = {
   ['normal']: 'bg-normal',
@@ -79,7 +79,7 @@ export default async function MonsterCard({
         </div>
         <div className="flex w-full flex-row justify-between px-2 pt-2">
           <h3 className="rounded-xs font-normal text-black dark:text-white">
-            <MonsterTranslatedName names={species.names} />
+            <TranslatedText resources={species.names} field="name" />
           </h3>
         </div>
       </div>

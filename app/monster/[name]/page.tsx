@@ -11,66 +11,7 @@ import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
 import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
-
-const calculateEffectiveness = (
-  typeResources: Type[]
-): Record<string, number> => {
-  // Initialize empty effectiveness object.
-  const effectiveness: Record<string, number> = {}
-  const allTypes = [
-    'normal',
-    'fighting',
-    'flying',
-    'poison',
-    'ground',
-    'rock',
-    'bug',
-    'ghost',
-    'steel',
-    'fire',
-    'water',
-    'grass',
-    'electric',
-    'psychic',
-    'ice',
-    'dragon',
-    'dark',
-    'fairy',
-  ]
-
-  // Process each defending type's relations.
-  typeResources.forEach((type) => {
-    // Handle immunities first (these override everything).
-    type.damage_relations.no_damage_from.forEach((t) => {
-      effectiveness[t.name] = 0
-    })
-
-    // Process resistances.
-    type.damage_relations.half_damage_from.forEach((t) => {
-      if (effectiveness[t.name] !== 0) {
-        // Skip if immune.
-        effectiveness[t.name] = (effectiveness[t.name] || 1) * 0.5
-      }
-    })
-
-    // Process weaknesses.
-    type.damage_relations.double_damage_from.forEach((t) => {
-      if (effectiveness[t.name] !== 0) {
-        // Skip if immune.
-        effectiveness[t.name] = (effectiveness[t.name] || 1) * 2
-      }
-    })
-
-    // Include the rest of the types.
-    allTypes.forEach((t) => {
-      if (effectiveness[t] === undefined) {
-        effectiveness[t] = 1
-      }
-    })
-  })
-
-  return effectiveness
-}
+import { calculateTypeEffectiveness } from '@/lib/utils/pokeapiHelpers'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -147,7 +88,7 @@ export default async function Page({
   )
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
 
-  const typeEffectiveness = calculateEffectiveness(typeResources)
+  const typeEffectiveness = calculateTypeEffectiveness(typeResources)
 
   return (
     <div className="container mx-auto flex flex-col gap-4 xl:gap-8">
