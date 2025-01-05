@@ -11,11 +11,10 @@ import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
 import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
-import {
-  ALL_TYPES,
-  calculateTypeEffectiveness,
-} from '@/lib/utils/pokeapiHelpers'
-import TranslatedText from '@/components/TranslatedText'
+import { ALL_TYPES } from '@/lib/utils/pokeapiHelpers'
+import TypeEffectiveness from '@/components/details/TypeEffectiveness'
+import Stats from '@/components/details/Stats'
+import Abilities from '@/components/details/Abilities'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -84,15 +83,23 @@ export default async function Page({
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties[0].pokemon.name
   )
+  const stats = await pokeapi.getStatByName(
+    pokemon.stats.map((stat) => stat.stat.name)
+  )
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
+  const allTypeResources = await pokeapi.getTypeByName(ALL_TYPES.map((t) => t))
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
   )
+  const abilities = await pokeapi.getAbilityByName(
+    pokemon.abilities.map((ability) => ability.ability.name)
+  )
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
-  const allTypeResources = await pokeapi.getTypeByName(ALL_TYPES.map((t) => t))
-  const typeEffectiveness = calculateTypeEffectiveness(typeResources)
+  const moves = await pokeapi.getMoveByName(
+    pokemon.moves.map((move) => move.move.name)
+  )
 
   return (
     <div className="container mx-auto flex flex-col gap-4 xl:gap-8">
@@ -109,85 +116,17 @@ export default async function Page({
           {/* Main details */}
           <div className="">
             <dl className="">
-              <section className="px-4 py-6 sm:gap-4">
-                <dt className="text-lg font-medium text-black dark:text-white">
-                  Stats
-                </dt>
-                <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  {pokemon.stats.map((stat) => (
-                    <p key={stat.stat.name}>
-                      <Link href={stat.stat.url}>
-                        <span className="text-blue-700 underline dark:text-blue-300">
-                          {stat.stat.name}
-                        </span>
-                      </Link>
-                      <span>: {stat.base_stat.toLocaleString()}</span>
-                    </p>
-                  ))}
-                </dd>
-              </section>
-              <section className="px-4 py-6 sm:gap-4">
-                <dt className="text-lg font-medium text-black dark:text-white">
-                  Type Effectiveness
-                </dt>
-                <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  <ul>
-                    {allTypeResources
-                      .map((typeResource) => ({
-                        type: typeResource,
-                        effectiveness: typeEffectiveness[typeResource.name],
-                      }))
-                      .sort((a, b) => b.effectiveness - a.effectiveness)
-                      .map(({ type, effectiveness }) => (
-                        <li
-                          key={type.name}
-                          className="flex items-center justify-between"
-                        >
-                          <TranslatedText resources={type.names} field="name" />
-                          <span
-                            className={[
-                              'font-mono font-medium',
-                              effectiveness > 1 &&
-                                'text-green-600 dark:text-green-400',
-                              effectiveness === 1 &&
-                                'text-zinc-600 dark:text-zinc-400',
-                              effectiveness === 0 &&
-                                'text-purple-600 dark:text-purple-400',
-                              effectiveness < 1 &&
-                                effectiveness > 0 &&
-                                'text-red-600 dark:text-red-400',
-                            ].join(' ')}
-                          >
-                            {effectiveness === 0
-                              ? '0×'
-                              : `${effectiveness.toFixed(2)}×`}
-                          </span>
-                        </li>
-                      ))}
-                  </ul>
-                </dd>
-              </section>
-              <section className="px-4 py-6 sm:gap-4">
-                <dt className="text-lg font-medium text-black dark:text-white">
-                  Abilities
-                </dt>
-                <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
-                  {pokemon.abilities.map((ability) => (
-                    <p key={ability.slot}>
-                      <Link href={ability.ability.url}>
-                        <span className="text-blue-700 underline dark:text-blue-300">
-                          {ability.ability.name}
-                        </span>
-                      </Link>
-                    </p>
-                  ))}
-                </dd>
-              </section>
+              <Stats pokemon={pokemon} stats={stats} />
+              <TypeEffectiveness
+                monsterTypes={typeResources}
+                allTypes={allTypeResources}
+              />
+              <Abilities pokemon={pokemon} abilities={abilities} />
               <section className="px-4 py-6 sm:gap-4">
                 <dt className="text-lg font-medium text-black dark:text-white">
                   Evolution
                 </dt>
-                <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
+                <dd className="text-lg text-zinc-600 dark:text-zinc-400">
                   <Link href={`/monster/${evolutionChain.chain.species.name}`}>
                     <span className="text-blue-700 underline dark:text-blue-300">
                       {evolutionChain.chain.species.name}
@@ -200,7 +139,7 @@ export default async function Page({
                 <dt className="text-lg font-medium text-black dark:text-white">
                   Moves
                 </dt>
-                <dd className="text-lg text-zinc-600 sm:col-span-2 dark:text-zinc-400">
+                <dd className="text-lg text-zinc-600 dark:text-zinc-400">
                   {pokemon.moves.map((move) => move.move.name).join(', ')}
                 </dd>
               </section>
