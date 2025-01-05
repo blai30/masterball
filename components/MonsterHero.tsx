@@ -23,10 +23,10 @@ export default function MonsterHero({
   const significantDigits = imageId.slice(leadingZeros.length)
 
   return (
-    <section className="flex flex-col items-start p-4 lg:flex-row lg:items-end lg:gap-12">
+    <section className="flex flex-col items-start px-4 lg:flex-row lg:items-end lg:gap-12">
       <div className="flex flex-col items-start gap-4">
         {/* <div className="flex flex-row items-center gap-4"> */}
-        <h2 className="relative font-mono text-2xl sm:text-3xl">
+        <h2 className="relative font-num text-2xl sm:text-3xl">
           <span className="text-zinc-400 dark:text-zinc-600">
             {leadingZeros}
           </span>
