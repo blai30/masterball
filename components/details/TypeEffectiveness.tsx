@@ -12,8 +12,8 @@ type EffectivenessCategories = {
   quarter: TypeRelation[]
   half: TypeRelation[]
   neutral: TypeRelation[]
-  super: TypeRelation[]
-  ultra: TypeRelation[]
+  double: TypeRelation[]
+  quadruple: TypeRelation[]
 }
 
 export default function TypeEffectiveness({
@@ -46,10 +46,10 @@ export default function TypeEffectiveness({
           acc.neutral.push(relation)
           break
         case 2:
-          acc.super.push(relation)
+          acc.double.push(relation)
           break
         case 4:
-          acc.ultra.push(relation)
+          acc.quadruple.push(relation)
           break
       }
       return acc
@@ -59,8 +59,8 @@ export default function TypeEffectiveness({
       quarter: [],
       half: [],
       neutral: [],
-      super: [],
-      ultra: [],
+      double: [],
+      quadruple: [],
     }
   )
 
@@ -69,48 +69,30 @@ export default function TypeEffectiveness({
       <h2 className="text-lg font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex flex-col justify-between gap-6 pr-8 lg:flex-row">
-        <div className="flex flex-row gap-y-4 lg:flex-col">
-          <h4 className="min-w-36 text-purple-800 dark:text-purple-200">
-            Immune (0×)
-          </h4>
-          <ul className="flex flex-wrap gap-2 lg:flex-col">
-            {categorizedTypes.immune.map(({ type }) => (
+      <div className="flex flex-wrap gap-8 pr-8">
+        <div className="flex flex-col gap-y-6">
+          <h4 className="text-green-800 dark:text-green-200">Weakness</h4>
+          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+            <h5>4×</h5>
+            {categorizedTypes.quadruple.map(({ type }) => (
+              <li key={type.name}>
+                <TypePill type={type} />
+              </li>
+            ))}
+          </ul>
+          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+            <h5>2×</h5>
+            {categorizedTypes.double.map(({ type }) => (
               <li key={type.name}>
                 <TypePill type={type} />
               </li>
             ))}
           </ul>
         </div>
-        <div className="flex flex-row gap-y-4 lg:flex-col">
-          <h4 className="min-w-36 text-red-800 dark:text-red-200">
-            Quarter (0.25×)
-          </h4>
-          <ul className="flex flex-wrap gap-2 lg:flex-col">
-            {categorizedTypes.quarter.map(({ type }) => (
-              <li key={type.name}>
-                <TypePill type={type} />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex flex-row gap-y-4 lg:flex-col">
-          <h4 className="min-w-36 text-orange-800 dark:text-orange-200">
-            Half (0.5×)
-          </h4>
-          <ul className="flex flex-wrap gap-2 lg:flex-col">
-            {categorizedTypes.half.map(({ type }) => (
-              <li key={type.name}>
-                <TypePill type={type} />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex flex-row gap-y-4 lg:flex-col">
-          <h4 className="min-w-36 text-yellow-800 dark:text-yellow-200">
-            Neutral (1×)
-          </h4>
-          <ul className="flex flex-wrap gap-2 lg:flex-col">
+        <div className="flex flex-col gap-y-6">
+          <h4 className="text-yellow-800 dark:text-yellow-200">Neutral</h4>
+          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+            <h5>1×</h5>
             {categorizedTypes.neutral.map(({ type }) => (
               <li key={type.name}>
                 <TypePill type={type} />
@@ -118,24 +100,30 @@ export default function TypeEffectiveness({
             ))}
           </ul>
         </div>
-        <div className="flex flex-row gap-y-4 lg:flex-col">
-          <h4 className="min-w-36 text-green-800 dark:text-green-200">
-            Super (2×)
-          </h4>
-          <ul className="flex flex-wrap gap-2 lg:flex-col">
-            {categorizedTypes.super.map(({ type }) => (
+        <div className="flex flex-col gap-y-6">
+          <h4 className="text-red-800 dark:text-red-200">Resistant</h4>
+          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+            <h5>0.5×</h5>
+            {categorizedTypes.half.map(({ type }) => (
+              <li key={type.name}>
+                <TypePill type={type} />
+              </li>
+            ))}
+          </ul>
+          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+            <h5>0.25×</h5>
+            {categorizedTypes.quarter.map(({ type }) => (
               <li key={type.name}>
                 <TypePill type={type} />
               </li>
             ))}
           </ul>
         </div>
-        <div className="flex flex-row gap-y-4 lg:flex-col">
-          <h4 className="min-w-36 text-teal-800 dark:text-teal-200">
-            Ultra (4×)
-          </h4>
-          <ul className="flex flex-wrap gap-2 lg:flex-col">
-            {categorizedTypes.ultra.map(({ type }) => (
+        <div className="flex flex-col gap-y-6">
+          <h4 className="text-purple-800 dark:text-purple-200">Immune</h4>
+          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+            <h5>0×</h5>
+            {categorizedTypes.immune.map(({ type }) => (
               <li key={type.name}>
                 <TypePill type={type} />
               </li>

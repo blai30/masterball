@@ -34,7 +34,7 @@ export default function TypePill({ type }: { type: Type }) {
     <Link
       href={`/type/${type.name}`}
       className={[
-        'flex w-32 flex-row items-center rounded-full px-2 py-1.5 transition hover:scale-105',
+        'flex w-32 flex-row items-center rounded-full px-2 py-1.5',
         typeClasses[type.name],
       ].join(' ')}
     >
