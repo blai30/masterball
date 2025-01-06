@@ -29,7 +29,14 @@ export default function Abilities({
       {abilitiesMap.map((a) => (
         <p key={a.id}>
           <Link href={`/ability/${a.name}`}>
-            <span className="text-blue-700 underline dark:text-blue-300">
+            <span
+              className={[
+                'underline',
+                a.hidden
+                  ? 'text-blue-600 dark:text-blue-400'
+                  : 'text-blue-700 underline dark:text-blue-300',
+              ].join(' ')}
+            >
               {getTranslation(a.resource.names, 'name')}
             </span>
           </Link>

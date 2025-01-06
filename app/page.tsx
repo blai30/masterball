@@ -6,7 +6,7 @@ import MonsterCard from '@/components/MonsterCard'
 
 export default async function Home() {
   const speciesResourceList = await pokeapi.getPokemonSpeciesList({
-    limit: 25,
+    limit: 23,
     offset: 718,
   })
 
