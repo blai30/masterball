@@ -124,7 +124,7 @@ export default async function Page({
             />
             <Abilities pokemon={pokemon} abilities={abilities} />
             <section className="flex flex-col gap-4 px-4 py-6">
-              <h2 className="text-lg font-medium text-black dark:text-white">
+              <h2 className="text-xl font-medium text-black dark:text-white">
                 Evolution
               </h2>
               <Link href={`/monster/${evolutionChain.chain.species.name}`}>
@@ -135,7 +135,7 @@ export default async function Page({
             </section>
             <FlavorText species={species} />
             <section className="flex flex-col gap-4 px-4 py-6">
-              <h2 className="text-lg font-medium text-black dark:text-white">
+              <h2 className="text-xl font-medium text-black dark:text-white">
                 Moves
               </h2>
               <p className="text-lg text-zinc-600 dark:text-zinc-400">

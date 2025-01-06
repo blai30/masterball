@@ -24,7 +24,7 @@ export default function Abilities({
 
   return (
     <section className="flex flex-col gap-4 px-4 py-6">
-      <h2 className="text-lg font-medium text-black dark:text-white">
+      <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
       {abilitiesMap.map((a) => {

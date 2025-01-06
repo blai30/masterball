@@ -22,7 +22,7 @@ export default function Stats({
 
   return (
     <section className="flex flex-col gap-4 px-4 py-6">
-      <h2 className="text-lg font-medium text-black dark:text-white">
+      <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
       <ul className="flex flex-col">
@@ -43,15 +43,15 @@ export default function Stats({
               >
                 {labelMap[stat.name]}
               </abbr>
-              <p className="min-w-12 text-right text-black tabular-nums dark:text-white">
+              <p className="font-num min-w-12 text-right text-black tabular-nums dark:text-white">
                 {pokemonStat.base_stat.toLocaleString()}
               </p>
 
               {/* Progress bar visualization */}
               <div className="flex h-5 w-72 flex-row items-center">
-                <div className="h-full max-w-full flex-grow rounded-br-md rounded-l-xs rounded-tr-xs bg-zinc-200 dark:bg-zinc-900">
+                <div className="h-full max-w-full flex-grow rounded-l-xs rounded-tr-xs rounded-br-md bg-zinc-200 dark:bg-zinc-900">
                   <div
-                    className="h-full bg-black dark:bg-white rounded-l-xs"
+                    className="h-full rounded-l-xs bg-black dark:bg-white"
                     style={{
                       width: `${fillPercentage}%`,
                     }}
@@ -70,7 +70,7 @@ export default function Stats({
           >
             Total
           </abbr>
-          <p className="min-w-12 text-right text-black tabular-nums dark:text-white">
+          <p className="font-num min-w-12 text-right text-black tabular-nums dark:text-white">
             {statTotal.toLocaleString()}
           </p>
         </li>
