@@ -15,7 +15,8 @@ export default function Abilities({
 
     return {
       id: resource.id,
-      name: ability.name,
+      name: ability.ability.name,
+      slot: ability.slot,
       hidden: ability.is_hidden,
       resource,
     }
@@ -26,25 +27,27 @@ export default function Abilities({
       <h2 className="text-lg font-medium text-black dark:text-white">
         {title}
       </h2>
-      {abilitiesMap.map((a) => (
-        <p key={a.id}>
-          <Link href={`/ability/${a.name}`}>
-            <span
-              className={[
-                'underline',
-                a.hidden
-                  ? 'text-blue-600 dark:text-blue-400'
-                  : 'text-blue-700 underline dark:text-blue-300',
-              ].join(' ')}
-            >
-              {getTranslation(a.resource.names, 'name')}
-            </span>
-          </Link>
-          <span className="text-lg text-zinc-600 dark:text-zinc-400">
-            : {getTranslation(a.resource.effect_entries, 'effect')}
-          </span>
-        </p>
-      ))}
+      {abilitiesMap.map((a) => {
+        const name = getTranslation(a.resource.names, 'name')
+        return (
+          <div key={a.id}>
+            <Link href={`/ability/${a.name}`}>
+              <h3
+                title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
+                className={[
+                  'text-blue-700 underline underline-offset-4 dark:text-blue-300',
+                  a.hidden && 'decoration-dotted',
+                ].join(' ')}
+              >
+                {name}
+              </h3>
+            </Link>
+            <p className="text-lg text-zinc-600 dark:text-zinc-400">
+              {getTranslation(a.resource.effect_entries, 'effect')}
+            </p>
+          </div>
+        )
+      })}
     </section>
   )
 }
