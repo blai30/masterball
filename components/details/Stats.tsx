@@ -35,13 +35,14 @@ export default function Stats({
 
               {/* Progress bar visualization */}
               <div className="flex h-5 w-72 flex-row items-center">
-                <div
-                  className="h-full bg-black pl-2 dark:bg-white"
-                  style={{
-                    width: `${fillPercentage}%`,
-                  }}
-                ></div>
-                <div className="h-full w-full rounded-br-md bg-zinc-200 dark:bg-zinc-900"></div>
+                <div className="h-full w-full rounded-br-md bg-zinc-200 dark:bg-zinc-900">
+                  <div
+                    className="h-full bg-black pl-2 dark:bg-white"
+                    style={{
+                      width: `${fillPercentage}%`,
+                    }}
+                  ></div>
+                </div>
               </div>
             </li>
           )

@@ -1,8 +1,12 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { EvolutionChain, Type } from 'pokedex-promise-v2'
+import { EvolutionChain } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
+import { ALL_TYPES } from '@/lib/utils/pokeapiHelpers'
 import MonsterHero from '@/components/MonsterHero'
+import Stats from '@/components/details/Stats'
+import TypeEffectiveness from '@/components/details/TypeEffectiveness'
+import Abilities from '@/components/details/Abilities'
 import FlavorText from '@/components/details/FlavorText'
 import HeightMetadata from '@/components/metadata/HeightMetadata'
 import WeightMetadata from '@/components/metadata/WeightMetadata'
@@ -11,15 +15,11 @@ import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
 import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
-import { ALL_TYPES } from '@/lib/utils/pokeapiHelpers'
-import TypeEffectiveness from '@/components/details/TypeEffectiveness'
-import Stats from '@/components/details/Stats'
-import Abilities from '@/components/details/Abilities'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
-    limit: 20,
-    offset: 721,
+    limit: 25,
+    offset: 718,
   })
 
   return speciesList.results.map((result) => ({
