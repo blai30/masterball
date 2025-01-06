@@ -1,5 +1,3 @@
-'use client'
-
 export default function LoadingCard() {
   const id = 0
 

@@ -1,5 +1,3 @@
-'use client'
-
 import { PokemonSpecies } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 

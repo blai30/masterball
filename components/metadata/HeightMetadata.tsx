@@ -1,5 +1,3 @@
-'use client'
-
 export default function HeightMetadata({ height }: { height: number }) {
   const title = 'Height'
 

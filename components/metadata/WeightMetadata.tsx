@@ -1,5 +1,3 @@
-'use client'
-
 export default function WeightMetadata({ weight }: { weight: number }) {
   const title = 'Weight'
 

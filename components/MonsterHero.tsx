@@ -1,5 +1,3 @@
-'use client'
-
 import Image from 'next/image'
 import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
 import TypePill from '@/components/TypePill'

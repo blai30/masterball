@@ -1,5 +1,3 @@
-'use client'
-
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import Link from 'next/link'
 import { EggGroup } from 'pokedex-promise-v2'
