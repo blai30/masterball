@@ -21,7 +21,9 @@ export default function Stats({
           const pokemonStat = pokemon.stats.find(
             (s) => s.stat.name === stat.name
           )!
-          const fillAmount = ((pokemonStat.base_stat / 255) * 100).toFixed(1)
+          const fillPercentage = ((pokemonStat.base_stat / 255) * 100).toFixed(
+            4
+          )
           return (
             <li key={stat.id} className="flex flex-row items-center gap-4">
               <h3 className="w-36 font-normal text-black dark:text-white">
@@ -32,14 +34,14 @@ export default function Stats({
               </p>
 
               {/* Progress bar visualization */}
-              <div className="flex h-6 w-72 flex-row items-center">
+              <div className="flex h-5 w-72 flex-row items-center">
                 <div
-                  className="h-4 bg-black pl-2 dark:bg-white"
+                  className="h-full bg-black pl-2 dark:bg-white"
                   style={{
-                    width: `${fillAmount}%`,
+                    width: `${fillPercentage}%`,
                   }}
                 ></div>
-                <div className="h-4 w-full bg-zinc-200 dark:bg-zinc-900"></div>
+                <div className="h-full w-full rounded-br-md bg-zinc-200 dark:bg-zinc-900"></div>
               </div>
             </li>
           )

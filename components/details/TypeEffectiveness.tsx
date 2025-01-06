@@ -69,8 +69,8 @@ export default function TypeEffectiveness({
       <h2 className="text-lg font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex flex-wrap gap-8 pr-8">
-        <div className="flex flex-col gap-y-4">
+      <div className="flex flex-wrap gap-8">
+        <div className="flex min-w-32 flex-col gap-y-4">
           <h4 className="text-green-800 dark:text-green-200">Weakness</h4>
           {categorizedTypes.quadruple.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -93,7 +93,7 @@ export default function TypeEffectiveness({
             </ul>
           )}
         </div>
-        <div className="flex flex-col gap-y-4">
+        <div className="flex min-w-32 flex-col gap-y-4">
           <h4 className="text-yellow-800 dark:text-yellow-200">Neutral</h4>
           {categorizedTypes.neutral.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -106,7 +106,7 @@ export default function TypeEffectiveness({
             </ul>
           )}
         </div>
-        <div className="flex flex-col gap-y-4">
+        <div className="flex min-w-32 flex-col gap-y-4">
           <h4 className="text-red-800 dark:text-red-200">Resistant</h4>
           {categorizedTypes.half.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -129,7 +129,7 @@ export default function TypeEffectiveness({
             </ul>
           )}
         </div>
-        <div className="flex flex-col gap-y-4">
+        <div className="flex min-w-32 flex-col gap-y-4">
           <h4 className="text-purple-800 dark:text-purple-200">Immune</h4>
           {categorizedTypes.immune.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
