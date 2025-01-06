@@ -70,65 +70,77 @@ export default function TypeEffectiveness({
         {title}
       </h2>
       <div className="flex flex-wrap gap-8 pr-8">
-        <div className="flex flex-col gap-y-6">
+        <div className="flex flex-col gap-y-4">
           <h4 className="text-green-800 dark:text-green-200">Weakness</h4>
-          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-            <h5>4×</h5>
-            {categorizedTypes.quadruple.map(({ type }) => (
-              <li key={type.name}>
-                <TypePill type={type} />
-              </li>
-            ))}
-          </ul>
-          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-            <h5>2×</h5>
-            {categorizedTypes.double.map(({ type }) => (
-              <li key={type.name}>
-                <TypePill type={type} />
-              </li>
-            ))}
-          </ul>
+          {categorizedTypes.quadruple.length > 0 && (
+            <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+              <h5>4×</h5>
+              {categorizedTypes.quadruple.map(({ type }) => (
+                <li key={type.name}>
+                  <TypePill type={type} />
+                </li>
+              ))}
+            </ul>
+          )}
+          {categorizedTypes.double.length > 0 && (
+            <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+              <h5>2×</h5>
+              {categorizedTypes.double.map(({ type }) => (
+                <li key={type.name}>
+                  <TypePill type={type} />
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div className="flex flex-col gap-y-6">
+        <div className="flex flex-col gap-y-4">
           <h4 className="text-yellow-800 dark:text-yellow-200">Neutral</h4>
-          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-            <h5>1×</h5>
-            {categorizedTypes.neutral.map(({ type }) => (
-              <li key={type.name}>
-                <TypePill type={type} />
-              </li>
-            ))}
-          </ul>
+          {categorizedTypes.neutral.length > 0 && (
+            <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+              <h5>1×</h5>
+              {categorizedTypes.neutral.map(({ type }) => (
+                <li key={type.name}>
+                  <TypePill type={type} />
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div className="flex flex-col gap-y-6">
+        <div className="flex flex-col gap-y-4">
           <h4 className="text-red-800 dark:text-red-200">Resistant</h4>
-          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-            <h5>0.5×</h5>
-            {categorizedTypes.half.map(({ type }) => (
-              <li key={type.name}>
-                <TypePill type={type} />
-              </li>
-            ))}
-          </ul>
-          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-            <h5>0.25×</h5>
-            {categorizedTypes.quarter.map(({ type }) => (
-              <li key={type.name}>
-                <TypePill type={type} />
-              </li>
-            ))}
-          </ul>
+          {categorizedTypes.half.length > 0 && (
+            <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+              <h5>0.5×</h5>
+              {categorizedTypes.half.map(({ type }) => (
+                <li key={type.name}>
+                  <TypePill type={type} />
+                </li>
+              ))}
+            </ul>
+          )}
+          {categorizedTypes.quarter.length > 0 && (
+            <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+              <h5>0.25×</h5>
+              {categorizedTypes.quarter.map(({ type }) => (
+                <li key={type.name}>
+                  <TypePill type={type} />
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-        <div className="flex flex-col gap-y-6">
+        <div className="flex flex-col gap-y-4">
           <h4 className="text-purple-800 dark:text-purple-200">Immune</h4>
-          <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-            <h5>0×</h5>
-            {categorizedTypes.immune.map(({ type }) => (
-              <li key={type.name}>
-                <TypePill type={type} />
-              </li>
-            ))}
-          </ul>
+          {categorizedTypes.immune.length > 0 && (
+            <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
+              <h5>0×</h5>
+              {categorizedTypes.immune.map(({ type }) => (
+                <li key={type.name}>
+                  <TypePill type={type} />
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </section>
