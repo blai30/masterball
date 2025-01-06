@@ -1,5 +1,3 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
 import { Type } from 'pokedex-promise-v2'
@@ -26,7 +24,25 @@ const typeClasses: Record<string, string> = {
   ['fairy']: 'bg-fairy',
 }
 
-export default function TypePill({ type }: { type: Type }) {
+const sizeContainerClasses: Record<string, string> = {
+  ['sm']: 'h-4 w-20 rounded-br-md rounded-l-xs rounded-tr-xs px-0.5',
+  ['md']: 'h-6 w-28 rounded-br-md rounded-l-xs rounded-tr-xs px-1',
+  ['lg']: 'h-8 w-32 rounded-full px-2',
+}
+
+const sizeTextClasses: Record<string, string> = {
+  ['sm']: 'px-2 text-xs font-light tracking-tight',
+  ['md']: 'px-2 text-xs font-normal tracking-normal',
+  ['lg']: 'px-2 text-xs font-medium tracking-wide',
+}
+
+export default function TypePill({
+  type,
+  size = 'lg',
+}: {
+  type: Type
+  size?: 'sm' | 'md' | 'lg'
+}) {
   const name = getTranslation(type.names, 'name')
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${type.name}.png`
 
@@ -34,23 +50,31 @@ export default function TypePill({ type }: { type: Type }) {
     <Link
       href={`/type/${type.name}`}
       className={[
-        'flex w-32 flex-row items-center rounded-full px-2 py-1.5',
+        'flex flex-row items-center',
         typeClasses[type.name],
+        sizeContainerClasses[size],
       ].join(' ')}
     >
-      <Image
-        src={imageUrl}
-        alt={type.name}
-        width={24}
-        height={24}
-        priority
-        loading="eager"
+      {size !== 'sm' && (
+        <Image
+          src={imageUrl}
+          alt={type.name}
+          width={24}
+          height={24}
+          priority
+          loading="eager"
+          className={[
+            'aspect-square rounded-md object-contain',
+            `bg-transparent`,
+          ].join(' ')}
+        />
+      )}
+      <p
         className={[
-          'aspect-square rounded-md object-contain',
-          `bg-transparent`,
+          'w-full text-white uppercase dark:text-white',
+          sizeTextClasses[size],
         ].join(' ')}
-      />
-      <p className="w-full rounded-r-md px-2 text-xs font-medium tracking-wide text-white uppercase dark:text-white">
+      >
         {name}
       </p>
     </Link>

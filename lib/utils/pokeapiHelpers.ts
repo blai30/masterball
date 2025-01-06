@@ -18,44 +18,44 @@ export function getTranslation<T extends BaseTranslatable, K extends keyof T>(
   return String(resource[field])
 }
 
-export const ALL_TYPES: string[] = [
-  'normal',
-  'fighting',
-  'flying',
-  'poison',
-  'ground',
-  'rock',
-  'bug',
-  'ghost',
-  'steel',
-  'fire',
-  'water',
-  'grass',
-  'electric',
-  'psychic',
-  'ice',
-  'dragon',
-  'dark',
-  'fairy',
-] as const
+export enum TypeName {
+  Normal = 'normal',
+  Fighting = 'fighting',
+  Flying = 'flying',
+  Poison = 'poison',
+  Ground = 'ground',
+  Rock = 'rock',
+  Bug = 'bug',
+  Ghost = 'ghost',
+  Steel = 'steel',
+  Fire = 'fire',
+  Water = 'water',
+  Grass = 'grass',
+  Electric = 'electric',
+  Psychic = 'psychic',
+  Ice = 'ice',
+  Dragon = 'dragon',
+  Dark = 'dark',
+  Fairy = 'fairy',
+}
 
-export type TypeEffectiveness = Record<string, number>
+export type TypeEffectiveness = Record<TypeName, number>
 
 export function getEffectiveness(typeResources: Type[]): TypeEffectiveness {
   // Initialize all types with neutral effectiveness.
   const effectiveness = Object.fromEntries(
-    ALL_TYPES.map((type) => [type, 1])
+    Object.values(TypeName).map((type) => [type, 1])
   ) as TypeEffectiveness
 
   typeResources.forEach((type) => {
     // Process immunities first.
     type.damage_relations.no_damage_from.forEach((t) => {
-      effectiveness[t.name] = 0
+      effectiveness[t.name as TypeName] = 0
     })
 
     // Process resistances (if not immune).
     type.damage_relations.half_damage_from.forEach((t) => {
-      const typeName = t.name
+      const typeName = t.name as TypeName
       if (effectiveness[typeName] !== 0) {
         effectiveness[typeName] *= 0.5
       }
@@ -63,7 +63,7 @@ export function getEffectiveness(typeResources: Type[]): TypeEffectiveness {
 
     // Process weaknesses (if not immune).
     type.damage_relations.double_damage_from.forEach((t) => {
-      const typeName = t.name
+      const typeName = t.name as TypeName
       if (effectiveness[typeName] !== 0) {
         effectiveness[typeName] *= 2
       }

@@ -1,6 +1,6 @@
 import { Type } from 'pokedex-promise-v2'
-import { getEffectiveness } from '@/lib/utils/pokeapiHelpers'
-import TypePill from '../TypePill'
+import { getEffectiveness, TypeName } from '@/lib/utils/pokeapiHelpers'
+import TypePill from '@/components/TypePill'
 
 type TypeRelation = {
   type: Type
@@ -27,7 +27,7 @@ export default function TypeEffectiveness({
   const typeEffectiveness = getEffectiveness(monsterTypes)
   const allTypeRelations = allTypes.map((typeResource) => ({
     type: typeResource,
-    effectiveness: typeEffectiveness[typeResource.name],
+    effectiveness: typeEffectiveness[typeResource.name as TypeName],
   }))
 
   const categorizedTypes = allTypeRelations.reduce<EffectivenessCategories>(
@@ -74,20 +74,20 @@ export default function TypeEffectiveness({
           <h4 className="text-green-800 dark:text-green-200">Weakness</h4>
           {categorizedTypes.quadruple.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5>4×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold">4×</h5>
               {categorizedTypes.quadruple.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} />
+                  <TypePill type={type} size="md" />
                 </li>
               ))}
             </ul>
           )}
           {categorizedTypes.double.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5>2×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold">2×</h5>
               {categorizedTypes.double.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} />
+                  <TypePill type={type} size="md" />
                 </li>
               ))}
             </ul>
@@ -97,10 +97,10 @@ export default function TypeEffectiveness({
           <h4 className="text-yellow-800 dark:text-yellow-200">Neutral</h4>
           {categorizedTypes.neutral.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5>1×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold">1×</h5>
               {categorizedTypes.neutral.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} />
+                  <TypePill type={type} size="md" />
                 </li>
               ))}
             </ul>
@@ -110,20 +110,20 @@ export default function TypeEffectiveness({
           <h4 className="text-red-800 dark:text-red-200">Resistant</h4>
           {categorizedTypes.half.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5>0.5×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold">0.5×</h5>
               {categorizedTypes.half.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} />
+                  <TypePill type={type} size="md" />
                 </li>
               ))}
             </ul>
           )}
           {categorizedTypes.quarter.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5>0.25×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold">0.25×</h5>
               {categorizedTypes.quarter.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} />
+                  <TypePill type={type} size="md" />
                 </li>
               ))}
             </ul>
@@ -133,10 +133,10 @@ export default function TypeEffectiveness({
           <h4 className="text-purple-800 dark:text-purple-200">Immune</h4>
           {categorizedTypes.immune.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5>0×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold">0×</h5>
               {categorizedTypes.immune.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} />
+                  <TypePill type={type} size="md" />
                 </li>
               ))}
             </ul>

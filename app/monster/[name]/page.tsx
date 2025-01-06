@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { EvolutionChain } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
-import { ALL_TYPES } from '@/lib/utils/pokeapiHelpers'
+import { TypeName } from '@/lib/utils/pokeapiHelpers'
 import MonsterHero from '@/components/MonsterHero'
 import Stats from '@/components/details/Stats'
 import TypeEffectiveness from '@/components/details/TypeEffectiveness'
@@ -89,7 +89,9 @@ export default async function Page({
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
-  const allTypeResources = await pokeapi.getTypeByName(ALL_TYPES.map((t) => t))
+  const allTypeResources = await pokeapi.getTypeByName(
+    Object.values(TypeName).map((t) => t)
+  )
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
   )
