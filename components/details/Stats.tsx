@@ -1,6 +1,15 @@
 import { Pokemon, Stat } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
+const labelMap: Record<string, string> = {
+  ['hp']: 'HP',
+  ['attack']: 'Attack',
+  ['defense']: 'Defense',
+  ['special-attack']: 'Sp. Atk',
+  ['special-defense']: 'Sp. Def',
+  ['speed']: 'Speed',
+}
+
 export default function Stats({
   pokemon,
   stats,
@@ -18,6 +27,7 @@ export default function Stats({
       </h2>
       <ul className="flex flex-col">
         {stats.map((stat) => {
+          const name = getTranslation(stat.names, 'name')
           const pokemonStat = pokemon.stats.find(
             (s) => s.stat.name === stat.name
           )!
@@ -26,18 +36,22 @@ export default function Stats({
           )
           return (
             <li key={stat.id} className="flex flex-row items-center gap-4">
-              <h3 className="w-36 font-normal text-black dark:text-white">
-                {getTranslation(stat.names, 'name')}
-              </h3>
-              <p className="w-10 text-right text-black dark:text-white">
+              <abbr
+                title={name}
+                aria-label={name}
+                className="min-w-20 font-normal text-black no-underline dark:text-white"
+              >
+                {labelMap[stat.name]}
+              </abbr>
+              <p className="min-w-12 text-right text-black tabular-nums dark:text-white">
                 {pokemonStat.base_stat.toLocaleString()}
               </p>
 
               {/* Progress bar visualization */}
               <div className="flex h-5 w-72 flex-row items-center">
-                <div className="h-full w-full rounded-br-md bg-zinc-200 dark:bg-zinc-900">
+                <div className="h-full max-w-full flex-grow rounded-br-md rounded-l-xs rounded-tr-xs bg-zinc-200 dark:bg-zinc-900">
                   <div
-                    className="h-full bg-black pl-2 dark:bg-white"
+                    className="h-full bg-black dark:bg-white rounded-l-xs"
                     style={{
                       width: `${fillPercentage}%`,
                     }}
@@ -49,8 +63,14 @@ export default function Stats({
         })}
         <p>—</p>
         <li className="flex flex-row items-center gap-4">
-          <h3 className="w-36 font-normal text-black dark:text-white">Total</h3>
-          <p className="w-10 text-right text-black dark:text-white">
+          <abbr
+            title="Base stat total"
+            aria-label="Base stat total"
+            className="min-w-20 font-normal text-black no-underline dark:text-white"
+          >
+            Total
+          </abbr>
+          <p className="min-w-12 text-right text-black tabular-nums dark:text-white">
             {statTotal.toLocaleString()}
           </p>
         </li>
