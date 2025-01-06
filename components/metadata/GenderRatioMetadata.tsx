@@ -7,6 +7,15 @@ export default function GenderRatioMetadata({
 }) {
   const title = 'Gender ratio'
 
+  if (genderRate === -1) {
+    return (
+      <div className="flex flex-col gap-2 rounded-lg p-4">
+        <h2 className="text-sm/6 text-zinc-600 dark:text-zinc-400">{title}</h2>
+        <p>Genderless</p>
+      </div>
+    )
+  }
+
   // Gender ratio is presented as a multiple of 8.
   const maleRate = Math.fround((1 - genderRate / 8) * 100).toFixed(1)
   const femaleRate = Math.fround((genderRate / 8) * 100).toFixed(1)
@@ -16,15 +25,17 @@ export default function GenderRatioMetadata({
       <h2 className="text-sm/6 text-zinc-600 dark:text-zinc-400">{title}</h2>
       <div className="flex flex-col">
         {/* Progress bar visualization */}
-        <div className="mb-2 flex h-2 max-w-36 flex-row items-center gap-x-[2px] overflow-hidden">
-          <div
-            className="h-full bg-blue-300"
-            style={{ width: `${maleRate}%` }}
-          ></div>
-          <div
-            className="h-full bg-pink-300"
-            style={{ width: `${femaleRate}%` }}
-          ></div>
+        <div className="mb-2 h-2 w-full max-w-36 overflow-hidden">
+          <div className="relative h-full max-w-full bg-pink-300">
+            <div
+              className="absolute inset-0 h-full bg-black"
+              style={{ width: `calc(${maleRate}% + 1px)` }}
+            ></div>
+            <div
+              className="absolute inset-0 h-full bg-blue-300"
+              style={{ width: `calc(${maleRate}% - 1px)` }}
+            ></div>
+          </div>
         </div>
         <div className="flex gap-x-1">
           <span className="flex flex-row items-center gap-x-2 text-base font-light text-blue-800 dark:text-blue-200">
