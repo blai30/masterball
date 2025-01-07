@@ -44,24 +44,27 @@ export default async function MonsterCard({
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <Link href={`/monster/${species.name}`}>
-      <div className="flex flex-col items-center justify-between overflow-hidden rounded-xl bg-white p-2 group-hover:bg-zinc-300 dark:bg-black dark:group-hover:bg-zinc-700">
-        <div className="relative flex w-full flex-col items-center rounded-md bg-zinc-100 p-4 dark:bg-zinc-900">
-          <Image
-            src={imageUrl}
-            alt={species.name}
-            width={128}
-            height={128}
-            priority
-            className="h-full object-scale-down"
-          />
-          <div className="absolute inset-x-0 top-0 flex h-full flex-col items-start justify-between rounded-lg p-2">
-            <p
-              aria-hidden="true"
-              className="font-num text-sm text-zinc-400 dark:text-zinc-500"
-            >
-              {species.id}
-            </p>
+    <Link
+      href={`/monster/${species.name}`}
+      className="group outline-inset flex aspect-[3/4] flex-col items-center justify-between overflow-visible rounded-xl bg-zinc-200/15 p-2 shadow-lg outline-1 outline-zinc-400/30 backdrop-blur-md transition dark:bg-zinc-800/15 dark:outline-zinc-600/30"
+    >
+      <div className="relative flex size-full flex-col items-center justify-start rounded-md">
+        <Image
+          src={imageUrl}
+          alt={species.name}
+          width={128}
+          height={128}
+          priority
+          className="w-full object-scale-down py-4"
+        />
+        <div className="absolute inset-x-0 top-0 flex h-full flex-col items-start justify-between rounded-lg p-2">
+          <p
+            aria-hidden="true"
+            className="font-num text-sm text-zinc-400 dark:text-zinc-500"
+          >
+            {species.id}
+          </p>
+          <div className="flex flex-col gap-2">
             <div className="flex flex-row gap-2">
               {types.map((typeResource) => (
                 <Image
@@ -77,12 +80,12 @@ export default async function MonsterCard({
                 />
               ))}
             </div>
+            <div className="flex w-full flex-row justify-between">
+              <h3 className="rounded-xs text-base font-light text-black dark:text-white">
+                {name}
+              </h3>
+            </div>
           </div>
-        </div>
-        <div className="flex w-full flex-row justify-between px-2 pt-2">
-          <h3 className="rounded-xs font-normal text-black dark:text-white">
-            {name}
-          </h3>
         </div>
       </div>
     </Link>
