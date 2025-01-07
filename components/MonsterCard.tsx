@@ -65,7 +65,7 @@ export default async function MonsterCard({
             {species.id}
           </p>
           <div className="flex flex-col gap-2">
-            <div className="flex flex-row gap-2">
+            {/* <div className="flex flex-row gap-2">
               {types.map((typeResource) => (
                 <Image
                   key={typeResource.id}
@@ -79,7 +79,7 @@ export default async function MonsterCard({
                   )}
                 />
               ))}
-            </div>
+            </div> */}
             <div className="flex w-full flex-row justify-between">
               <h3 className="rounded-xs text-base font-light text-black dark:text-white">
                 {name}
