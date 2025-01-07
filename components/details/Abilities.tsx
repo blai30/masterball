@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import clsx from 'clsx/lite'
 import { Ability, Pokemon } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
@@ -34,10 +35,10 @@ export default function Abilities({
             <Link href={`/ability/${a.name}`}>
               <h3
                 title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
-                className={[
+                className={clsx(
                   'text-blue-700 underline underline-offset-4 dark:text-blue-300',
                   a.hidden && 'decoration-dotted',
-                ].join(' ')}
+                )}
               >
                 {name}
               </h3>

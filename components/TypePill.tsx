@@ -1,47 +1,48 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { cva } from 'cva'
 import { Type } from 'pokedex-promise-v2'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
 
-const typeClasses: Record<string, string> = {
-  ['normal']: 'bg-normal',
-  ['fighting']: 'bg-fighting',
-  ['flying']: 'bg-flying',
-  ['poison']: 'bg-poison',
-  ['ground']: 'bg-ground',
-  ['rock']: 'bg-rock',
-  ['bug']: 'bg-bug',
-  ['ghost']: 'bg-ghost',
-  ['steel']: 'bg-steel',
-  ['fire']: 'bg-fire',
-  ['water']: 'bg-water',
-  ['grass']: 'bg-grass',
-  ['electric']: 'bg-electric',
-  ['psychic']: 'bg-psychic',
-  ['ice']: 'bg-ice',
-  ['dragon']: 'bg-dragon',
-  ['dark']: 'bg-dark',
-  ['fairy']: 'bg-fairy',
-}
-
-const sizeContainerClasses: Record<string, string> = {
-  ['sm']: 'h-4 w-20 rounded-br-md rounded-l-xs rounded-tr-xs px-0.5',
-  ['md']: 'h-6 w-28 rounded-br-md rounded-l-xs rounded-tr-xs px-1',
-  ['lg']: 'h-8 w-32 rounded-full px-2',
-}
-
-const sizeTextClasses: Record<string, string> = {
-  ['sm']: 'px-2 text-xs font-light tracking-tight',
-  ['md']: 'px-2 text-xs font-normal tracking-normal',
-  ['lg']: 'px-2 text-xs font-medium tracking-wide',
-}
+const typePill = cva({
+  base: 'flex flex-row items-center',
+  variants: {
+    type: {
+      [TypeName.Normal]: 'bg-normal',
+      [TypeName.Fighting]: 'bg-fighting',
+      [TypeName.Flying]: 'bg-flying',
+      [TypeName.Poison]: 'bg-poison',
+      [TypeName.Ground]: 'bg-ground',
+      [TypeName.Rock]: 'bg-rock',
+      [TypeName.Bug]: 'bg-bug',
+      [TypeName.Ghost]: 'bg-ghost',
+      [TypeName.Steel]: 'bg-steel',
+      [TypeName.Fire]: 'bg-fire',
+      [TypeName.Water]: 'bg-water',
+      [TypeName.Grass]: 'bg-grass',
+      [TypeName.Electric]: 'bg-electric',
+      [TypeName.Psychic]: 'bg-psychic',
+      [TypeName.Ice]: 'bg-ice',
+      [TypeName.Dragon]: 'bg-dragon',
+      [TypeName.Dark]: 'bg-dark',
+      [TypeName.Fairy]: 'bg-fairy',
+    },
+    size: {
+      small:
+        'h-4 w-20 rounded-l-xs rounded-tr-xs rounded-br-md px-0.5 font-light tracking-tight',
+      medium:
+        'h-6 w-28 rounded-l-xs rounded-tr-xs rounded-br-md px-1 font-normal tracking-normal',
+      large: 'h-8 w-32 rounded-full px-2 font-medium tracking-wide',
+    },
+  },
+})
 
 export default function TypePill({
   type,
-  size = 'lg',
+  size = 'large',
 }: {
   type: Type
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'small' | 'medium' | 'large'
 }) {
   const name = getTranslation(type.names, 'name')
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${type.name}.png`
@@ -49,13 +50,9 @@ export default function TypePill({
   return (
     <Link
       href={`/type/${type.name}`}
-      className={[
-        'flex flex-row items-center',
-        typeClasses[type.name],
-        sizeContainerClasses[size],
-      ].join(' ')}
+      className={typePill({ type: type.name as TypeName, size })}
     >
-      {size !== 'sm' && (
+      {size !== 'small' && (
         <Image
           src={imageUrl}
           alt={type.name}
@@ -63,18 +60,10 @@ export default function TypePill({
           height={24}
           priority
           loading="eager"
-          className={[
-            'aspect-square rounded-md object-contain',
-            `bg-transparent`,
-          ].join(' ')}
+          className="aspect-square rounded-md bg-transparent object-contain"
         />
       )}
-      <p
-        className={[
-          'w-full text-white uppercase dark:text-white',
-          sizeTextClasses[size],
-        ].join(' ')}
-      >
+      <p className="w-full px-2 text-xs text-white uppercase dark:text-white">
         {name}
       </p>
     </Link>

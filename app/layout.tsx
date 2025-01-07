@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
 import './globals.css'
+import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
 import Header from '@/components/shared/Header'
 
@@ -64,12 +65,12 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={[
+      className={clsx(
         'scheme-light dark:scheme-dark',
         inter.variable,
         jetBrainsMono.variable,
-        sofiaSans.variable,
-      ].join(' ')}
+        sofiaSans.variable
+      )}
     >
       <body className="bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider
