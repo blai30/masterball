@@ -5,7 +5,7 @@
 @theme {
   /* --breakpoint-3xs: 160px; */
   /* --breakpoint-2xs: 350px; */
-  /* --breakpoint-xs: 500px; */
+  --breakpoint-xs: 500px;
 
   --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;
