@@ -26,7 +26,7 @@ export default function GenderRatioMetadata({
         <div className="mb-2 h-2 w-full max-w-36 overflow-hidden">
           <div className="relative h-full max-w-full bg-pink-300">
             <div
-              className="absolute inset-0 h-full bg-black"
+              className="absolute inset-0 h-full bg-white dark:bg-black"
               style={{ width: `calc(${maleRate}% + 1px)` }}
             ></div>
             <div
