@@ -6,14 +6,14 @@ import MonsterCard from '@/components/MonsterCard'
 
 export default async function Home() {
   const speciesResourceList = await pokeapi.getPokemonSpeciesList({
-    limit: 20,
+    limit: 22,
     offset: 718,
   })
 
   return (
     <div className="container mx-auto">
       {/* <input type="search" name="search" placeholder="Search..." /> */}
-      <ul className="2xs:grid-cols-2 xs:grid-cols-3 grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
+      <ul className="2xs:grid-cols-2 xs:grid-cols-3 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8">
         {/* <ul className="flex flex-row flex-wrap gap-4"> */}
         {speciesResourceList.results.map(
           (speciesResource: NamedAPIResource) => (

@@ -46,18 +46,32 @@ export default async function MonsterCard({
   return (
     <Link
       href={`/monster/${species.name}`}
-      className="group outline-inset flex aspect-[3/4] flex-col items-center justify-between overflow-visible rounded-xl bg-zinc-200/15 p-2 shadow-lg outline-1 outline-zinc-400/30 backdrop-blur-md transition dark:bg-zinc-800/15 dark:outline-zinc-600/30"
+      className="group flex aspect-square flex-col items-center justify-between overflow-visible"
     >
-      <div className="relative flex size-full flex-col items-center justify-start rounded-md">
+      <div className="relative flex size-full flex-col items-center justify-center rounded-md">
         <Image
           src={imageUrl}
           alt={species.name}
           width={128}
           height={128}
           priority
-          className="w-full object-scale-down py-4"
+          className="w-full object-scale-down"
         />
-        <div className="absolute inset-x-0 top-0 flex h-full flex-col items-start justify-between rounded-lg p-2">
+        <div className="pointer-events-none absolute -z-10 size-full scale-0 overflow-clip rounded-full transition-transform group-hover:scale-125 group-hover:bg-black dark:group-hover:bg-white p-6"></div>
+        <div className="absolute flex flex-col items-center justify-between opacity-0 group-hover:opacity-100 size-full transition-opacity">
+          <p
+            aria-hidden="true"
+            className="font-num text-lg text-zinc-400 dark:text-zinc-500"
+          >
+            {species.id}
+          </p>
+          <div className="flex flex-col items-center gap-2">
+            <h3 className="rounded-xs text-xl font-light text-white dark:text-black">
+              {name}
+            </h3>
+          </div>
+        </div>
+        {/* <div className="pointer-events-none absolute flex flex-col items-start justify-between">
           <p
             aria-hidden="true"
             className="font-num text-sm text-zinc-400 dark:text-zinc-500"
@@ -65,7 +79,7 @@ export default async function MonsterCard({
             {species.id}
           </p>
           <div className="flex flex-col gap-2">
-            {/* <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2">
               {types.map((typeResource) => (
                 <Image
                   key={typeResource.id}
@@ -79,14 +93,14 @@ export default async function MonsterCard({
                   )}
                 />
               ))}
-            </div> */}
+            </div>
             <div className="flex w-full flex-row justify-between">
               <h3 className="rounded-xs text-base font-light text-black dark:text-white">
                 {name}
               </h3>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </Link>
   )

@@ -18,7 +18,7 @@ import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
-    limit: 20,
+    limit: 22,
     offset: 718,
   })
 
