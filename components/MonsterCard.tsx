@@ -46,17 +46,17 @@ export default async function MonsterCard({
   return (
     <Link
       href={`/monster/${species.name}`}
-      className="group flex flex-col items-center justify-between overflow-visible"
+      className="group from-50 flex flex-col items-center justify-between rounded-l-md rounded-tr-md rounded-br-3xl bg-gradient-to-br to-zinc-100 to-75% ring-1 ring-zinc-200 hover:from-zinc-100 hover:to-zinc-200 hover:ring-zinc-300 focus-visible:from-zinc-100 focus-visible:to-zinc-200 focus-visible:ring-zinc-300 dark:from-zinc-900 dark:to-zinc-950 dark:ring-zinc-800 dark:hover:from-zinc-900 dark:hover:to-zinc-800 dark:hover:ring-zinc-700 dark:focus-visible:from-zinc-900 dark:focus-visible:to-zinc-800 dark:focus-visible:ring-zinc-700"
     >
-      <div className="flex flex-col items-center justify-between overflow-hidden rounded-xl bg-white p-2 group-hover:bg-zinc-300 dark:bg-black dark:group-hover:bg-zinc-700">
-        <div className="relative flex w-full flex-col items-center rounded-md bg-zinc-100 p-4 dark:bg-zinc-900">
+      <div className="flex flex-col items-center justify-between">
+        <div className="relative flex w-full flex-col items-center p-4">
           <Image
             src={imageUrl}
             alt={species.name}
             width={128}
             height={128}
             priority
-            className="w-full object-scale-down"
+            className="w-full object-scale-down py-1"
           />
           <div className="absolute inset-x-0 top-0 flex h-full flex-col items-start justify-between rounded-lg p-2">
             <p
@@ -65,7 +65,7 @@ export default async function MonsterCard({
             >
               {species.id}
             </p>
-            <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100">
+            <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
               {types.map((typeResource) => (
                 <Image
                   key={typeResource.id}
@@ -82,7 +82,7 @@ export default async function MonsterCard({
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-row justify-between px-2 pt-2">
+        <div className="flex w-full flex-row justify-between p-2">
           <h3 className="rounded-xs text-base font-light text-black dark:text-white">
             {name}
           </h3>
