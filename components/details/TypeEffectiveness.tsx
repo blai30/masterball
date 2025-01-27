@@ -107,7 +107,7 @@ export default function TypeEffectiveness({
           )}
         </div>
         <div className="flex min-w-32 flex-col gap-y-4">
-          <h4 className="text-red-800 dark:text-red-200">Resistant</h4>
+          <h4 className="text-red-800 dark:text-red-200">Resistance</h4>
           {categorizedTypes.half.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
               <h5 className="w-14 rounded-md text-sm font-semibold">0.5×</h5>
@@ -130,8 +130,8 @@ export default function TypeEffectiveness({
           )}
         </div>
         <div className="flex min-w-32 flex-col gap-y-4">
-          <h4 className="text-purple-800 dark:text-purple-200">Immune</h4>
-          {categorizedTypes.immune.length > 0 && (
+          <h4 className="text-purple-800 dark:text-purple-200">Immunity</h4>
+          {categorizedTypes.immune.length > 0 ? (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
               <h5 className="w-14 rounded-md text-sm font-semibold">0×</h5>
               {categorizedTypes.immune.map(({ type }) => (
@@ -140,6 +140,8 @@ export default function TypeEffectiveness({
                 </li>
               ))}
             </ul>
+          ) : (
+            <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
           )}
         </div>
       </div>

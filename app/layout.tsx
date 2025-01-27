@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
+import { Geist, Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
 import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
 import Header from '@/components/shared/Header'
+
+const geist = Geist({
+  variable: '--font-geist',
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 const inter = Inter({
   variable: '--font-inter',
@@ -67,6 +73,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={clsx(
         'scheme-light dark:scheme-dark',
+        geist.variable,
         inter.variable,
         jetBrainsMono.variable,
         sofiaSans.variable
