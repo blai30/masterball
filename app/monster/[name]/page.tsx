@@ -15,6 +15,7 @@ import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
 import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
+import Moves from '@/components/details/Moves'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -99,9 +100,6 @@ export default async function Page({
     pokemon.abilities.map((ability) => ability.ability.name)
   )
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
-  const moves = await pokeapi.getMoveByName(
-    pokemon.moves.map((move) => move.move.name)
-  )
 
   return (
     <div className="container mx-auto flex flex-col gap-4 xl:gap-8">
@@ -134,14 +132,7 @@ export default async function Page({
               </Link>
             </section>
             <FlavorText species={species} />
-            <section className="flex flex-col gap-4 px-4 py-6">
-              <h2 className="text-xl font-medium text-black dark:text-white">
-                Moves
-              </h2>
-              <p className="text-lg text-zinc-600 dark:text-zinc-400">
-                {pokemon.moves.map((move) => move.move.name).join(', ')}
-              </p>
-            </section>
+            <Moves pokemon={pokemon} />
           </div>
         </div>
 

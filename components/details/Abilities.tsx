@@ -32,17 +32,19 @@ export default function Abilities({
         const name = getTranslation(a.resource.names, 'name')
         return (
           <div key={a.id}>
-            <Link href={`/ability/${a.name}`}>
-              <h3
-                title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
-                className={clsx(
-                  'text-blue-700 underline underline-offset-4 dark:text-blue-300',
-                  a.hidden && 'decoration-dotted',
-                )}
-              >
-                {name}
-              </h3>
-            </Link>
+            <div className="flex">
+              <Link href={`/ability/${a.name}`} className="">
+                <h3
+                  title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
+                  className={clsx(
+                    'text-blue-700 underline underline-offset-4 dark:text-blue-300',
+                    a.hidden && 'decoration-dotted'
+                  )}
+                >
+                  {name}
+                </h3>
+              </Link>
+            </div>
             <p className="text-lg text-zinc-600 dark:text-zinc-400">
               {getTranslation(a.resource.effect_entries, 'effect')}
             </p>
