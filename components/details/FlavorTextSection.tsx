@@ -1,7 +1,7 @@
 import { PokemonSpecies } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
-export default function FlavorText({
+export default function FlavorTextSection({
   species,
 }: Readonly<{ species: PokemonSpecies }>) {
   const title = 'About'

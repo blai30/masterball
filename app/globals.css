@@ -11,6 +11,10 @@
   --font-mono: var(--font-jetbrains-mono), monospace;
   --font-num: var(--font-sofia-sans);
 
+  --color-physical: #eb5628;
+  --color-special: #375ab2;
+  --color-status: #828282;
+
   --color-normal: #9fa19f;
   --color-fighting: #ff8000;
   --color-flying: #81b9ef;

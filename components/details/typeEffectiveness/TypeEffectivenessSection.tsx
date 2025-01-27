@@ -16,7 +16,7 @@ type EffectivenessCategories = {
   quadruple: TypeRelation[]
 }
 
-export default function TypeEffectiveness({
+export default function TypeEffectivenessSection({
   monsterTypes,
   allTypes,
 }: {

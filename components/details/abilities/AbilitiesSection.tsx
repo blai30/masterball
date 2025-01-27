@@ -3,7 +3,7 @@ import clsx from 'clsx/lite'
 import { Ability, Pokemon } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
-export default function Abilities({
+export default function AbilitiesSection({
   pokemon,
   abilities,
 }: {

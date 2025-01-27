@@ -1,13 +1,16 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { EvolutionChain } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { TypeName } from '@/lib/utils/pokeapiHelpers'
 import MonsterHero from '@/components/MonsterHero'
-import Stats from '@/components/details/Stats'
-import TypeEffectiveness from '@/components/details/TypeEffectiveness'
-import Abilities from '@/components/details/Abilities'
-import FlavorText from '@/components/details/FlavorText'
+import LoadingSection from '@/components/details/LoadingSection'
+import StatsSection from '@/components/details/stats/StatsSection'
+import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
+import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
+import FlavorTextSection from '@/components/details/FlavorTextSection'
+import MovesSection from '@/components/details/moves/MovesSection'
 import HeightMetadata from '@/components/metadata/HeightMetadata'
 import WeightMetadata from '@/components/metadata/WeightMetadata'
 import GenderRatioMetadata from '@/components/metadata/GenderRatioMetadata'
@@ -15,7 +18,6 @@ import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
 import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
-import Moves from '@/components/details/Moves'
 
 export async function generateStaticParams() {
   const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -115,12 +117,18 @@ export default async function Page({
         <div className="xl:col-span-2">
           {/* Main details */}
           <div className="">
-            <Stats pokemon={pokemon} stats={stats} />
-            <TypeEffectiveness
-              monsterTypes={typeResources}
-              allTypes={allTypeResources}
-            />
-            <Abilities pokemon={pokemon} abilities={abilities} />
+            <Suspense fallback={<LoadingSection />}>
+              <StatsSection pokemon={pokemon} stats={stats} />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <TypeEffectivenessSection
+                monsterTypes={typeResources}
+                allTypes={allTypeResources}
+              />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <AbilitiesSection pokemon={pokemon} abilities={abilities} />
+            </Suspense>
             <section className="flex flex-col gap-4 px-4 py-6">
               <h2 className="text-xl font-medium text-black dark:text-white">
                 Evolution
@@ -131,8 +139,13 @@ export default async function Page({
                 </span>
               </Link>
             </section>
-            <FlavorText species={species} />
-            <Moves pokemon={pokemon} />
+            <Suspense fallback={<LoadingSection />}>
+              <FlavorTextSection species={species} />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <MovesSection pokemon={pokemon} />
+            </Suspense>
+            <LoadingSection />
           </div>
         </div>
 

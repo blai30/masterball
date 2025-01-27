@@ -1,21 +1,24 @@
 import { Type } from 'pokedex-promise-v2'
 
-type BaseTranslatable = {
-  language: {
-    name: string
-  }
-}
-
-export function getTranslation<T extends BaseTranslatable, K extends keyof T>(
-  resources: T[],
-  field: K,
-  language: string = 'en'
-): string {
+export function getTranslation<
+  T extends {
+    language: {
+      name: string
+    }
+  },
+  K extends keyof T,
+>(resources: T[], field: K, language: string = 'en'): string {
   const resource =
     resources.find((r) => r.language.name === language) ??
     resources.find((r) => r.language.name === 'en')!
 
   return String(resource[field])
+}
+
+export enum DamageClassName {
+  Physical = 'physical',
+  Special = 'special',
+  Status = 'status',
 }
 
 export enum TypeName {

@@ -11,7 +11,7 @@ const labelMap: Record<string, string> = {
   ['speed']: 'Speed',
 }
 
-export default function Stats({
+export default function StatsSection({
   pokemon,
   stats,
 }: {
