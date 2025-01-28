@@ -46,7 +46,7 @@ export default async function MonsterCard({
   return (
     <Link
       href={`/monster/${species.name}`}
-      className="group from-50 flex flex-col items-center justify-between rounded-l-md rounded-tr-md rounded-br-3xl bg-gradient-to-br to-zinc-100 to-75% ring-1 ring-zinc-200 transition-colors duration-100 hover:from-zinc-200 hover:to-zinc-100 hover:ring-zinc-300 focus-visible:from-zinc-100 focus-visible:to-zinc-200 focus-visible:ring-zinc-300 dark:from-zinc-900 dark:to-zinc-950 dark:ring-zinc-800 dark:hover:from-zinc-900 dark:hover:to-zinc-800 dark:hover:ring-zinc-700 dark:focus-visible:from-zinc-900 dark:focus-visible:to-zinc-800 dark:focus-visible:ring-zinc-700 overflow-hidden"
+      className="group from-50 flex flex-col items-center justify-between rounded-l-sm rounded-tr-sm rounded-br-xl bg-gradient-to-br to-zinc-100 to-75% ring-1 ring-zinc-200 transition-colors duration-100 hover:from-zinc-200 hover:to-zinc-100 hover:ring-zinc-300 focus-visible:from-zinc-100 focus-visible:to-zinc-200 focus-visible:ring-zinc-300 dark:from-zinc-900 dark:to-zinc-950 dark:ring-zinc-800 dark:hover:from-zinc-900 dark:hover:to-zinc-800 dark:hover:ring-zinc-700 dark:focus-visible:from-zinc-900 dark:focus-visible:to-zinc-800 dark:focus-visible:ring-zinc-700 overflow-hidden"
     >
       <div className="flex flex-col items-center justify-between gap-2 p-2">
         <p
@@ -78,7 +78,7 @@ export default async function MonsterCard({
             />
           ))}
         </div> */}
-        <h3 className="rounded-xs text-base font-medium text-zinc-800 dark:text-zinc-200">
+        <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
           {name}
         </h3>
       </div>
