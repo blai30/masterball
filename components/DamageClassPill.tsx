@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { clsx } from 'clsx/lite'
 import { cva } from 'cva'
 import { damageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
 
@@ -13,10 +14,10 @@ const damageClassPill = cva({
     },
     size: {
       small:
-        'h-4 rounded-l-xs rounded-tr-xs rounded-br-md px-0.5 font-light tracking-tight',
+        'h-4 rounded-l-xs rounded-tr-xs rounded-br-md font-light tracking-tight',
       medium:
-        'h-6 rounded-l-xs rounded-tr-xs rounded-br-md px-1 font-normal tracking-normal',
-      large: 'h-8 rounded-full px-2 font-medium tracking-wide',
+        'h-6 rounded-l-xs rounded-tr-xs rounded-br-md font-normal tracking-normal',
+      large: 'h-8 rounded-full font-medium tracking-wide',
     },
   },
 })
@@ -34,19 +35,28 @@ export default function DamageClassPill({
   return (
     <Link
       href={`/damage-class/${name}`}
-      className={damageClassPill({
-        // damageClass: damageClass as DamageClassName,
-        size,
-      })}
+      className={clsx(
+        'py-1',
+        damageClassPill({
+          damageClass: damageClass as DamageClassName,
+          size,
+        })
+      )}
     >
+      {/* <div
+        className={clsx(
+          'h-full w-2',
+          damageClassPill({ damageClass: damageClass as DamageClassName })
+        )}
+      ></div> */}
       <Image
         src={imageUrl}
         alt={name}
-        width={40}
-        height={20}
+        width={50}
+        height={40}
         priority
         loading="eager"
-        className="rounded-md bg-transparent object-contain"
+        className="object-scale-down p-2"
       />
     </Link>
   )
