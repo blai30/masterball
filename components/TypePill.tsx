@@ -44,11 +44,11 @@ export default function TypePill({
   size?: 'small' | 'medium' | 'large'
 }) {
   const name = typeLabels[type as TypeName]
-  const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${name}.png`
+  const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${type}.png`
 
   return (
     <Link
-      href={`/type/${name}`}
+      href={`/type/${type}`}
       className={typePill({ type: type as TypeName, size })}
     >
       {size !== 'small' && (

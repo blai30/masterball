@@ -14,27 +14,27 @@ export default function MovesTable({
 }) {
   return (
     <ul className="flex w-min flex-col">
-      <li className="flex h-6 flex-row gap-2">
-        <div className="flex w-12 p-1">
+      <li className="flex h-6 flex-row items-center">
+        <div className="flex w-12 py-1 px-2">
           <p className="w-full text-xs font-semibold">Level</p>
         </div>
-        <div className="flex w-40 p-1">
+        <div className="flex w-40 py-1 px-2">
           <p className="w-full text-xs font-semibold">Name</p>
         </div>
-        <div className="flex w-32 p-1">
+        <div className="flex w-32 py-1 px-2">
           <p className="w-full text-xs font-semibold">Type</p>
         </div>
-        <div className="flex w-12 p-1">
+        <div className="flex w-14 py-1 px-2">
           <p className="w-full text-xs font-semibold">Class</p>
         </div>
-        <div className="flex w-16 p-1">
-          <p className="w-full text-xs font-semibold">Power</p>
+        <div className="flex w-14 py-1 px-2">
+          <p className="w-full text-xs font-semibold text-right">Power</p>
         </div>
-        <div className="flex w-16 p-1">
-          <p className="w-full text-xs font-semibold">Accuracy</p>
+        <div className="flex w-16 py-1 px-2">
+          <p className="w-full text-xs font-semibold text-right">Accuracy</p>
         </div>
-        <div className="flex w-16 p-1">
-          <p className="w-full text-xs font-semibold">PP</p>
+        <div className="flex w-12 py-1 px-2">
+          <p className="w-full text-xs font-semibold text-right">PP</p>
         </div>
       </li>
       {moves.map((move) => {
@@ -50,12 +50,12 @@ export default function MovesTable({
         return (
           <li
             key={resource.id}
-            className="flex h-8 flex-row gap-2 even:bg-zinc-50 dark:even:bg-zinc-950"
+            className="flex h-8 flex-row items-center even:bg-zinc-50 dark:even:bg-zinc-950"
           >
-            <div className="flex w-12 p-1">
+            <div className="flex w-12 py-1 px-2">
               <p className="font-num w-full text-right">{level}</p>
             </div>
-            <div className="flex w-40 p-1">
+            <div className="flex w-40 py-1 px-2">
               <Link href={`/move/${move.move.name}`} className="relative">
                 <p
                   title={`Learned at level ${level}: ${name.name}`}
@@ -67,19 +67,19 @@ export default function MovesTable({
                 </p>
               </Link>
             </div>
-            <div className="flex w-32 p-1">
+            <div className="flex w-32 py-1 px-2">
               <TypePill type={type} size="medium" />
             </div>
-            <div className="flex w-12 p-1">
+            <div className="flex w-14 py-1 px-2">
               <DamageClassPill damageClass={damageClass} size="medium" />
             </div>
-            <div className="flex w-16 p-1">
+            <div className="flex w-14 py-1 px-2">
               <p className="font-num w-full text-right">{power}</p>
             </div>
-            <div className="flex w-16 p-1">
+            <div className="flex w-16 py-1 px-2">
               <p className="font-num w-full text-right">{accuracy}%</p>
             </div>
-            <div className="flex w-16 p-1">
+            <div className="flex w-12 py-1 px-2">
               <p className="font-num w-full text-right">{pp}</p>
             </div>
           </li>
