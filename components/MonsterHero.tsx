@@ -40,7 +40,7 @@ export default function MonsterHero({
           <ul className="flex flex-row gap-2">
             {typeResources.map((type) => (
               <li key={type.id}>
-                <TypePill type={type} />
+                <TypePill type={type.name} />
               </li>
             ))}
           </ul>

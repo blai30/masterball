@@ -77,7 +77,7 @@ export default function TypeEffectivenessSection({
               <h5 className="w-14 rounded-md text-sm font-semibold">4×</h5>
               {categorizedTypes.quadruple.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} size="medium" />
+                  <TypePill type={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -87,7 +87,7 @@ export default function TypeEffectivenessSection({
               <h5 className="w-14 rounded-md text-sm font-semibold">2×</h5>
               {categorizedTypes.double.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} size="medium" />
+                  <TypePill type={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -100,7 +100,7 @@ export default function TypeEffectivenessSection({
               <h5 className="w-14 rounded-md text-sm font-semibold">1×</h5>
               {categorizedTypes.neutral.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} size="medium" />
+                  <TypePill type={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -113,7 +113,7 @@ export default function TypeEffectivenessSection({
               <h5 className="w-14 rounded-md text-sm font-semibold">0.5×</h5>
               {categorizedTypes.half.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} size="medium" />
+                  <TypePill type={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -123,7 +123,7 @@ export default function TypeEffectivenessSection({
               <h5 className="w-14 rounded-md text-sm font-semibold">0.25×</h5>
               {categorizedTypes.quarter.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} size="medium" />
+                  <TypePill type={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -136,7 +136,7 @@ export default function TypeEffectivenessSection({
               <h5 className="w-14 rounded-md text-sm font-semibold">0×</h5>
               {categorizedTypes.immune.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type} size="medium" />
+                  <TypePill type={type.name} size="medium" />
                 </li>
               ))}
             </ul>

@@ -2,8 +2,9 @@ import Link from 'next/link'
 import clsx from 'clsx/lite'
 import { Move, Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
-import TypePill from '@/components/TypePill'
 import { DamageClassName, TypeName } from '@/lib/utils/pokeapiHelpers'
+import DamageClassPill from '@/components/DamageClassPill'
+import TypePill from '@/components/TypePill'
 
 export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const title = 'Moves'
@@ -48,7 +49,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
         {title}
       </h2>
       <h3 className="text-sm font-semibold">{learnMethodNames['level-up']}</h3>
-      <ul className="flex flex-col gap-1">
+      <ul className="flex flex-col">
         {filteredMoves.map((move) => {
           const resource = movesMap[move.move.name]
           const name = resource.names.find((n) => n.language.name === 'en')!
@@ -60,29 +61,46 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
           const pp = resource.pp
 
           return (
-            <li key={resource.id} className="grid grid-cols-7">
-              <span className="col-span-1">{level}</span>
-              <Link href={`/move/${move.name}`} className="col-span-1">
-                <span
-                  title={`Learned at level ${level}: ${name.name}`}
-                  className={clsx(
-                    'text-blue-700 underline underline-offset-4 dark:text-blue-300'
-                  )}
-                >
-                  {name.name}
-                </span>
-              </Link>
-              <span className="col-span-1">
-                {/* <TypePill type={type} size="medium" /> */}
-                {type}
-              </span>
-              <span className="col-span-1">
-                {/* <DamageClassPill damageClass={damageClass} /> */}
-                {damageClass}
-              </span>
-              <span className="col-span-1">{power}</span>
-              <span className="col-span-1">{accuracy}%</span>
-              <span className="col-span-1">{pp}</span>
+            <li
+              key={resource.id}
+              className="flex flex-row gap-2 even:bg-zinc-50 dark:even:bg-zinc-950"
+            >
+              <div className="flex w-12 p-1">
+                <p className="font-num w-full text-right tabular-nums">
+                  {level}
+                </p>
+              </div>
+              <div className="flex w-40 p-1">
+                <Link href={`/move/${move.move.name}`} className="relative">
+                  <p
+                    title={`Learned at level ${level}: ${name.name}`}
+                    className={clsx(
+                      'text-blue-700 underline underline-offset-4 dark:text-blue-300'
+                    )}
+                  >
+                    {name.name}
+                  </p>
+                </Link>
+              </div>
+              <div className="flex p-1">
+                <TypePill type={type} size="medium" />
+              </div>
+              <div className="flex p-1">
+                <DamageClassPill damageClass={damageClass} size="medium" />
+              </div>
+              <div className="flex w-16 p-1">
+                <p className="font-num w-full text-right tabular-nums">
+                  {power}
+                </p>
+              </div>
+              <div className="flex w-16 p-1">
+                <p className="font-num w-full text-right tabular-nums">
+                  {accuracy}%
+                </p>
+              </div>
+              <div className="flex w-16 p-1">
+                <p className="font-num w-full text-right tabular-nums">{pp}</p>
+              </div>
             </li>
           )
         })}

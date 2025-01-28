@@ -21,6 +21,12 @@ export enum DamageClassName {
   Status = 'status',
 }
 
+export const damageClassLabels: Record<DamageClassName, string> = {
+  [DamageClassName.Physical]: 'Physical',
+  [DamageClassName.Special]: 'Special',
+  [DamageClassName.Status]: 'Status',
+}
+
 export enum TypeName {
   Normal = 'normal',
   Fighting = 'fighting',
@@ -40,6 +46,27 @@ export enum TypeName {
   Dragon = 'dragon',
   Dark = 'dark',
   Fairy = 'fairy',
+}
+
+export const typeLabels: Record<TypeName, string> = {
+  [TypeName.Normal]: 'Normal',
+  [TypeName.Fighting]: 'Fighting',
+  [TypeName.Flying]: 'Flying',
+  [TypeName.Poison]: 'Poison',
+  [TypeName.Ground]: 'Ground',
+  [TypeName.Rock]: 'Rock',
+  [TypeName.Bug]: 'Bug',
+  [TypeName.Ghost]: 'Ghost',
+  [TypeName.Steel]: 'Steel',
+  [TypeName.Fire]: 'Fire',
+  [TypeName.Water]: 'Water',
+  [TypeName.Grass]: 'Grass',
+  [TypeName.Electric]: 'Electric',
+  [TypeName.Psychic]: 'Psychic',
+  [TypeName.Ice]: 'Ice',
+  [TypeName.Dragon]: 'Dragon',
+  [TypeName.Dark]: 'Dark',
+  [TypeName.Fairy]: 'Fairy',
 }
 
 export type TypeEffectiveness = Record<TypeName, number>

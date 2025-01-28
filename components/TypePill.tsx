@@ -1,8 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { cva } from 'cva'
-import { Type } from 'pokedex-promise-v2'
-import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
+import { typeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
 
 const typePill = cva({
   base: 'flex flex-row items-center',
@@ -41,21 +40,21 @@ export default function TypePill({
   type,
   size = 'large',
 }: {
-  type: Type
+  type: string
   size?: 'small' | 'medium' | 'large'
 }) {
-  const name = getTranslation(type.names, 'name')
-  const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${type.name}.png`
+  const name = typeLabels[type as TypeName]
+  const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${name}.png`
 
   return (
     <Link
-      href={`/type/${type.name}`}
-      className={typePill({ type: type.name as TypeName, size })}
+      href={`/type/${name}`}
+      className={typePill({ type: type as TypeName, size })}
     >
       {size !== 'small' && (
         <Image
           src={imageUrl}
-          alt={type.name}
+          alt={name}
           width={24}
           height={24}
           priority
