@@ -1,4 +1,5 @@
-import { Pokemon, Stat } from 'pokedex-promise-v2'
+import { Pokemon } from 'pokedex-promise-v2'
+import { pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import StatsRadarChart from '@/components/StatsRadarChart'
 
@@ -11,14 +12,11 @@ const labelMap: Record<string, string> = {
   ['speed']: 'Speed',
 }
 
-export default function StatsSection({
-  pokemon,
-  stats,
-}: {
-  pokemon: Pokemon
-  stats: Stat[]
-}) {
+export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
   const title = 'Stats'
+  const stats = await pokeapi.getStatByName(
+    pokemon.stats.map((stat) => stat.stat.name)
+  )
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
 
   return (

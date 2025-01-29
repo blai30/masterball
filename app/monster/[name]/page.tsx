@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { EvolutionChain } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
-import { TypeName } from '@/lib/utils/pokeapiHelpers'
 import MonsterHero from '@/components/MonsterHero'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
@@ -86,20 +85,8 @@ export default async function Page({
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties[0].pokemon.name
   )
-  const stats = await pokeapi.getStatByName(
-    pokemon.stats.map((stat) => stat.stat.name)
-  )
-  const typeResources = await pokeapi.getTypeByName(
-    pokemon.types.map((type) => type.type.name)
-  )
-  const allTypeResources = await pokeapi.getTypeByName(
-    Object.values(TypeName).map((t) => t)
-  )
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
-  )
-  const abilities = await pokeapi.getAbilityByName(
-    pokemon.abilities.map((ability) => ability.ability.name)
   )
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
 
@@ -107,37 +94,39 @@ export default async function Page({
     <div className="container mx-auto flex flex-col gap-4 xl:gap-8">
       <div className="w-full">
         {/* Hero section */}
-        <MonsterHero
-          species={species}
-          pokemon={pokemon}
-          typeResources={typeResources}
-        />
+        <MonsterHero species={species} pokemon={pokemon} />
       </div>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3 xl:gap-8">
         <div className="xl:col-span-2">
           {/* Main details */}
           <div className="">
             <Suspense fallback={<LoadingSection />}>
-              <StatsSection pokemon={pokemon} stats={stats} />
+              <StatsSection pokemon={pokemon} />
             </Suspense>
             <Suspense fallback={<LoadingSection />}>
-              <TypeEffectivenessSection
-                monsterTypes={typeResources}
-                allTypes={allTypeResources}
-              />
+              <TypeEffectivenessSection pokemon={pokemon} />
             </Suspense>
             <Suspense fallback={<LoadingSection />}>
-              <AbilitiesSection pokemon={pokemon} abilities={abilities} />
+              <AbilitiesSection pokemon={pokemon} />
             </Suspense>
             <section className="flex flex-col gap-4 px-4 py-6">
               <h2 className="text-xl font-medium text-black dark:text-white">
                 Evolution
               </h2>
-              <Link href={`/monster/${evolutionChain.chain.species.name}`}>
-                <span className="text-blue-700 underline dark:text-blue-300">
-                  {evolutionChain.chain.species.name}
-                </span>
-              </Link>
+              <ul className="flex flex-col gap-4">
+                {evolutionChain.chain.evolves_to.map((evolution) => (
+                  <li key={evolution.species.name}>
+                    <Link
+                      href={`/monster/${evolution.species.name}`}
+                      className="inline-block"
+                    >
+                      <span className="text-blue-700 underline dark:text-blue-300">
+                        {evolution.species.name}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </section>
             <Suspense fallback={<LoadingSection />}>
               <FlavorTextSection species={species} />

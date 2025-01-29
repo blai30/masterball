@@ -1,16 +1,19 @@
 import Link from 'next/link'
 import clsx from 'clsx/lite'
-import { Ability, Pokemon } from 'pokedex-promise-v2'
+import { Pokemon } from 'pokedex-promise-v2'
+import { pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
-export default function AbilitiesSection({
+export default async function AbilitiesSection({
   pokemon,
-  abilities,
 }: {
   pokemon: Pokemon
-  abilities: Ability[]
 }) {
   const title = 'Abilities'
+  const abilities = await pokeapi.getAbilityByName(
+    pokemon.abilities.map((ability) => ability.ability.name)
+  )
+
   const abilitiesMap = pokemon.abilities.map((ability) => {
     const resource = abilities.find((a) => a.name === ability.ability.name)!
 
@@ -28,12 +31,12 @@ export default function AbilitiesSection({
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      {abilitiesMap.map((a) => {
-        const name = getTranslation(a.resource.names, 'name')
-        return (
-          <div key={a.id}>
-            <div className="flex">
-              <Link href={`/ability/${a.name}`} className="">
+      <ul className="flex flex-col gap-4">
+        {abilitiesMap.map((a) => {
+          const name = getTranslation(a.resource.names, 'name')
+          return (
+            <li key={a.id}>
+              <Link href={`/ability/${a.name}`} className="inline-block">
                 <h3
                   title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
                   className={clsx(
@@ -44,13 +47,13 @@ export default function AbilitiesSection({
                   {name}
                 </h3>
               </Link>
-            </div>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400">
-              {getTranslation(a.resource.effect_entries, 'effect')}
-            </p>
-          </div>
-        )
-      })}
+              <p className="text-lg text-zinc-600 dark:text-zinc-400">
+                {getTranslation(a.resource.effect_entries, 'effect')}
+              </p>
+            </li>
+          )
+        })}
+      </ul>
     </section>
   )
 }

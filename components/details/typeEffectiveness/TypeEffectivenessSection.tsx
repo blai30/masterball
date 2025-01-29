@@ -1,4 +1,5 @@
-import { Type } from 'pokedex-promise-v2'
+import { Pokemon, Type } from 'pokedex-promise-v2'
+import { pokeapi } from '@/lib/providers'
 import { getEffectiveness, TypeName } from '@/lib/utils/pokeapiHelpers'
 import TypePill from '@/components/TypePill'
 
@@ -16,16 +17,20 @@ type EffectivenessCategories = {
   quadruple: TypeRelation[]
 }
 
-export default function TypeEffectivenessSection({
-  monsterTypes,
-  allTypes,
+export default async function TypeEffectivenessSection({
+  pokemon,
 }: {
-  monsterTypes: Type[]
-  allTypes: Type[]
+  pokemon: Pokemon
 }) {
   const title = 'Type Effectiveness'
-  const typeEffectiveness = getEffectiveness(monsterTypes)
-  const allTypeRelations = allTypes.map((typeResource) => ({
+  const typeResources = await pokeapi.getTypeByName(
+    pokemon.types.map((type) => type.type.name)
+  )
+  const allTypeResources = await pokeapi.getTypeByName(
+    Object.values(TypeName).map((t) => t)
+  )
+  const typeEffectiveness = getEffectiveness(typeResources)
+  const allTypeRelations = allTypeResources.map((typeResource) => ({
     type: typeResource,
     effectiveness: typeEffectiveness[typeResource.name as TypeName],
   }))

@@ -1,16 +1,14 @@
 import Image from 'next/image'
-import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
+import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import TypePill from '@/components/TypePill'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function MonsterHero({
   species,
   pokemon,
-  typeResources,
 }: {
   species: PokemonSpecies
   pokemon: Pokemon
-  typeResources: Type[]
 }) {
   const name = getTranslation(species.names, 'name')
 
@@ -24,7 +22,7 @@ export default function MonsterHero({
     <section className="flex flex-col items-start px-4 lg:flex-row lg:items-end lg:gap-12">
       <div className="flex flex-col items-start gap-4">
         {/* <div className="flex flex-row items-center gap-4"> */}
-        <p className="relative font-num text-2xl sm:text-3xl">
+        <p className="font-num relative text-2xl sm:text-3xl">
           <span className="text-zinc-400 dark:text-zinc-600">
             {leadingZeros}
           </span>
@@ -38,9 +36,9 @@ export default function MonsterHero({
             {name}
           </h1>
           <ul className="flex flex-row gap-2">
-            {typeResources.map((type) => (
-              <li key={type.id}>
-                <TypePill type={type.name} />
+            {pokemon.types.map((type) => (
+              <li key={type.type.name}>
+                <TypePill type={type.type.name} />
               </li>
             ))}
           </ul>

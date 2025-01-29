@@ -31,7 +31,7 @@ export default function MovesTable({
           <p className="w-full text-xs font-semibold">Type</p>
         </div>
         <div className="flex min-w-14 px-2 py-1">
-          <p className="w-full text-xs font-semibold">Class</p>
+          <p className="w-full text-center text-xs font-semibold">Class</p>
         </div>
         <div className="flex min-w-14 px-2 py-1">
           <p className="w-full text-right text-xs font-semibold">Power</p>
@@ -59,7 +59,7 @@ export default function MovesTable({
             className={clsx(
               'group inline-flex h-8 min-w-full flex-row items-center',
               'rounded-l-xs rounded-tr-xs rounded-br-md',
-              'transition-colors odd:bg-zinc-100 even:bg-white hover:bg-purple-200/40 hover:duration-0 dark:odd:bg-zinc-900 dark:even:bg-black dark:hover:bg-purple-800/40'
+              'transition-colors odd:bg-zinc-100 even:bg-white hover:bg-zinc-300 hover:duration-0 dark:odd:bg-zinc-900 dark:even:bg-black dark:hover:bg-zinc-700'
             )}
           >
             <div className="flex min-w-12 px-2 py-1">
