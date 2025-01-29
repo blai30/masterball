@@ -14,10 +14,10 @@ const damageClassPill = cva({
     },
     size: {
       small:
-        'h-4 w-8 rounded-l-xs rounded-tr-xs rounded-br-md font-light tracking-tight',
+        'h-4 w-8 rounded-l-xs rounded-tr-xs rounded-br-md',
       medium:
-        'h-6 w-10 rounded-l-xs rounded-tr-xs rounded-br-md font-normal tracking-normal',
-      large: 'h-8 w-12 rounded-full font-medium tracking-wide',
+        'h-6 w-10 rounded-l-xs rounded-tr-xs rounded-br-md',
+      large: 'h-8 w-12 rounded-full',
     },
   },
 })
@@ -37,9 +37,10 @@ export default function DamageClassPill({
       href={`/damage-class/${damageClass}`}
       title={name}
       className={clsx(
-        'py-1',
+        // 'py-1',
+        ' relative',
         damageClassPill({
-          damageClass: damageClass as DamageClassName,
+          // damageClass: damageClass as DamageClassName,
           size,
         })
       )}
@@ -57,9 +58,8 @@ export default function DamageClassPill({
         height={40}
         priority
         loading="eager"
-        className="object-fill p-2"
+        className="object-contain p-1 dark:brightness-200 relative"
       />
-      <span className="sr-only">{name}</span>
     </Link>
   )
 }

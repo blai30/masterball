@@ -13,28 +13,34 @@ export default function MovesTable({
   movesMap: Record<string, Move>
 }) {
   return (
-    <ul className="flex w-min flex-col">
-      <li className="flex h-6 flex-row items-center">
-        <div className="flex w-12 py-1 px-2">
+    <ul className="w-full table-fixed flex-col overflow-x-scroll py-1 md:w-min md:overflow-auto">
+      <li
+        className={clsx(
+          'inline-flex h-6 w-full min-w-full items-center',
+          'rounded-l-xs rounded-tr-xs rounded-br-md',
+          'bg-white dark:bg-black'
+        )}
+      >
+        <div className="flex min-w-12 px-2 py-1">
           <p className="w-full text-xs font-semibold">Level</p>
         </div>
-        <div className="flex w-40 py-1 px-2">
+        <div className="flex min-w-44 px-2 py-1">
           <p className="w-full text-xs font-semibold">Name</p>
         </div>
-        <div className="flex w-32 py-1 px-2">
+        <div className="flex min-w-32 px-2 py-1">
           <p className="w-full text-xs font-semibold">Type</p>
         </div>
-        <div className="flex w-14 py-1 px-2">
+        <div className="flex min-w-14 px-2 py-1">
           <p className="w-full text-xs font-semibold">Class</p>
         </div>
-        <div className="flex w-14 py-1 px-2">
-          <p className="w-full text-xs font-semibold text-right">Power</p>
+        <div className="flex min-w-14 px-2 py-1">
+          <p className="w-full text-right text-xs font-semibold">Power</p>
         </div>
-        <div className="flex w-16 py-1 px-2">
-          <p className="w-full text-xs font-semibold text-right">Accuracy</p>
+        <div className="flex min-w-20 px-2 py-1">
+          <p className="w-full text-right text-xs font-semibold">Accuracy</p>
         </div>
-        <div className="flex w-12 py-1 px-2">
-          <p className="w-full text-xs font-semibold text-right">PP</p>
+        <div className="flex min-w-12 px-2 py-1">
+          <p className="w-full text-right text-xs font-semibold">PP</p>
         </div>
       </li>
       {moves.map((move) => {
@@ -50,36 +56,45 @@ export default function MovesTable({
         return (
           <li
             key={resource.id}
-            className="flex h-8 flex-row items-center even:bg-zinc-50 dark:even:bg-zinc-950"
+            className={clsx(
+              'group inline-flex h-8 min-w-full flex-row items-center',
+              'rounded-l-xs rounded-tr-xs rounded-br-md',
+              'transition-colors odd:bg-zinc-100 even:bg-white hover:bg-purple-200/40 hover:duration-0 dark:odd:bg-zinc-900 dark:even:bg-black dark:hover:bg-purple-800/40'
+            )}
           >
-            <div className="flex w-12 py-1 px-2">
+            <div className="flex min-w-12 px-2 py-1">
               <p className="font-num w-full text-right">{level}</p>
             </div>
-            <div className="flex w-40 py-1 px-2">
-              <Link href={`/move/${move.move.name}`} className="relative">
+            <div className="flex min-w-44 px-2 py-1">
+              <Link href={`/move/${move.move.name}`} className="">
                 <p
                   title={`Learned at level ${level}: ${name.name}`}
                   className={clsx(
-                    'text-blue-700 underline underline-offset-4 dark:text-blue-300'
+                    'font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300'
                   )}
                 >
                   {name.name}
                 </p>
               </Link>
             </div>
-            <div className="flex w-32 py-1 px-2">
+            <div className="flex min-w-32 px-2 py-1">
               <TypePill type={type} size="medium" />
             </div>
-            <div className="flex w-14 py-1 px-2">
+            <div className="flex min-w-14 px-2 py-1">
               <DamageClassPill damageClass={damageClass} size="medium" />
             </div>
-            <div className="flex w-14 py-1 px-2">
+            <div className="flex min-w-14 px-2 py-1">
               <p className="font-num w-full text-right">{power}</p>
             </div>
-            <div className="flex w-16 py-1 px-2">
-              <p className="font-num w-full text-right">{accuracy}%</p>
+            <div className="flex min-w-20 px-2 py-1">
+              <p className="font-num w-full text-right">
+                {accuracy}
+                <span className="ml-0.5 text-zinc-600 dark:text-zinc-400">
+                  %
+                </span>
+              </p>
             </div>
-            <div className="flex w-12 py-1 px-2">
+            <div className="flex min-w-12 px-2 py-1">
               <p className="font-num w-full text-right">{pp}</p>
             </div>
           </li>

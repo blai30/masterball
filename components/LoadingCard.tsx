@@ -2,7 +2,7 @@ export default function LoadingCard() {
   const id = 0
 
   return (
-    <div className="group from-50 flex flex-col items-center justify-between overflow-hidden rounded-l-sm rounded-tr-sm rounded-br-xl bg-gradient-to-br to-zinc-100 to-75% ring-1 ring-zinc-200 transition-colors duration-100 hover:from-zinc-200 hover:to-zinc-100 hover:ring-zinc-300 focus-visible:from-zinc-100 focus-visible:to-zinc-200 focus-visible:ring-zinc-300 dark:from-zinc-900 dark:to-zinc-950 dark:ring-zinc-800 dark:hover:from-zinc-900 dark:hover:to-zinc-800 dark:hover:ring-zinc-700 dark:focus-visible:from-zinc-900 dark:focus-visible:to-zinc-800 dark:focus-visible:ring-zinc-700">
+    <div className="group from-50 flex flex-col items-center justify-between overflow-hidden rounded-l-sm rounded-tr-sm rounded-br-xl bg-gradient-to-br to-zinc-100 to-75% ring-1 ring-zinc-200 transition-colors hover:from-zinc-200 hover:to-zinc-100 hover:ring-zinc-300 hover:duration-0 focus-visible:from-zinc-100 focus-visible:to-zinc-200 focus-visible:ring-zinc-300 dark:from-zinc-900 dark:to-zinc-950 dark:ring-zinc-800 dark:hover:from-zinc-900 dark:hover:to-zinc-800 dark:hover:ring-zinc-700 dark:focus-visible:from-zinc-900 dark:focus-visible:to-zinc-800 dark:focus-visible:ring-zinc-700">
       <div className="flex flex-col items-center justify-between gap-2 p-2">
         <p
           aria-hidden="true"
