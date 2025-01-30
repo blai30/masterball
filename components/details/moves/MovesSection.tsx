@@ -6,12 +6,11 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const title = 'Moves'
   const versionGroup = 'scarlet-violet'
 
-  const moves = pokemon.moves.filter((move) => {
-    const versionGroupDetails = move.version_group_details.find(
+  const moves = pokemon.moves.filter((move) =>
+    move.version_group_details.some(
       (v) => v.version_group.name === versionGroup
     )
-    return versionGroupDetails !== undefined
-  })
+  )
 
   const movesData = await pokeapi.getMoveByName(
     moves.map((move) => move.move.name)
@@ -48,7 +47,9 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const levelUpMoves = moves
     .filter((move) =>
       move.version_group_details.some(
-        (v) => v.move_learn_method.name === 'level-up'
+        (v) =>
+          v.move_learn_method.name === 'level-up' &&
+          v.version_group.name === versionGroup
       )
     )
     .toSorted((a, b) => {
@@ -60,7 +61,9 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const machineMoves = moves
     .filter((move) =>
       move.version_group_details.some(
-        (v) => v.move_learn_method.name === 'machine'
+        (v) =>
+          v.move_learn_method.name === 'machine' &&
+          v.version_group.name === versionGroup
       )
     )
     .toSorted((a, b) => {
