@@ -66,6 +66,9 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
     .toSorted((a, b) => {
       // Item name examples: TM02, TM21, TM211, TR21, TR211, HM04, etc.
       // Sort by machine type and by their numbers.
+      if (!machinesMap[a.move.name] || !machinesMap[b.move.name]) {
+        return 0
+      }
       const machineA = machinesMap[a.move.name].item.name
       const machineB = machinesMap[b.move.name].item.name
       const typeA = machineA.slice(0, 2)

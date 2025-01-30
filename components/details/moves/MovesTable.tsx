@@ -76,7 +76,7 @@ export default function MovesTable({
                 ? move.version_group_details[0].level_learned_at === 0
                   ? 'Evolve'
                   : move.version_group_details[0].level_learned_at.toString()
-                : variant === 'machine'
+                : variant === 'machine' && movesMap[move.move.name]?.machine
                   ? movesMap[move.move.name].machine.item.name.toUpperCase()
                   : ''
             const type = resource.type.name as TypeName
