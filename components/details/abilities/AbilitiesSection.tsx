@@ -48,7 +48,7 @@ export default async function AbilitiesSection({
                 </h3>
               </Link>
               <p className="text-lg text-zinc-600 dark:text-zinc-400">
-                {getTranslation(a.resource.effect_entries, 'effect')}
+                {getTranslation(a.resource.effect_entries, 'short_effect')}
               </p>
             </li>
           )

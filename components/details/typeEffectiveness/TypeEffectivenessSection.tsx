@@ -1,3 +1,4 @@
+import clsx from 'clsx/lite'
 import { Pokemon, Type } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getEffectiveness, TypeName } from '@/lib/utils/pokeapiHelpers'
@@ -74,8 +75,14 @@ export default async function TypeEffectivenessSection({
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex flex-wrap gap-8">
-        <div className="flex min-w-32 flex-col gap-y-4">
+      <div className="flex flex-wrap gap-2">
+        <div
+          className={clsx(
+            'flex min-w-32 flex-col gap-y-4 p-2',
+            'rounded-l-sm rounded-tr-sm rounded-br-xl',
+            'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800'
+          )}
+        >
           <h4 className="text-green-800 dark:text-green-200">Weakness</h4>
           {categorizedTypes.quadruple.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -98,7 +105,13 @@ export default async function TypeEffectivenessSection({
             </ul>
           )}
         </div>
-        <div className="flex min-w-32 flex-col gap-y-4">
+        <div
+          className={clsx(
+            'flex min-w-32 flex-col gap-y-4 p-2',
+            'rounded-l-sm rounded-tr-sm rounded-br-xl',
+            'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800'
+          )}
+        >
           <h4 className="text-yellow-800 dark:text-yellow-200">Neutral</h4>
           {categorizedTypes.neutral.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -111,7 +124,13 @@ export default async function TypeEffectivenessSection({
             </ul>
           )}
         </div>
-        <div className="flex min-w-32 flex-col gap-y-4">
+        <div
+          className={clsx(
+            'flex min-w-32 flex-col gap-y-4 p-2',
+            'rounded-l-sm rounded-tr-sm rounded-br-xl',
+            'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800'
+          )}
+        >
           <h4 className="text-red-800 dark:text-red-200">Resistance</h4>
           {categorizedTypes.half.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -134,7 +153,13 @@ export default async function TypeEffectivenessSection({
             </ul>
           )}
         </div>
-        <div className="flex min-w-32 flex-col gap-y-4">
+        <div
+          className={clsx(
+            'flex min-w-32 flex-col gap-y-4 p-2',
+            'rounded-l-sm rounded-tr-sm rounded-br-xl',
+            'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800'
+          )}
+        >
           <h4 className="text-purple-800 dark:text-purple-200">Immunity</h4>
           {categorizedTypes.immune.length > 0 ? (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">

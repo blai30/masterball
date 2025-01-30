@@ -1,3 +1,4 @@
+import clsx from 'clsx/lite'
 import { Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
@@ -25,7 +26,13 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
         {title}
       </h2>
       <div className="flex flex-row items-start gap-2">
-        <div className="">
+        <div
+          className={clsx(
+            'p-2',
+            'rounded-l-sm rounded-tr-sm rounded-br-xl',
+            'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800'
+          )}
+        >
           {/* Bar chart */}
           <ul className="flex flex-col">
             {stats.map((stat) => {
@@ -52,7 +59,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
 
                   {/* Progress bar visualization */}
                   <div className="flex h-5 w-72 flex-row items-center">
-                    <div className="h-full max-w-full flex-grow rounded-l-xs rounded-tr-xs rounded-br-md bg-zinc-200 dark:bg-zinc-900">
+                    <div className="h-full max-w-full flex-grow rounded-l-xs rounded-tr-xs rounded-br-md bg-white dark:bg-black">
                       <div
                         className="h-full rounded-l-xs bg-black dark:bg-white"
                         style={{
