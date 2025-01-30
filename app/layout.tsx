@@ -67,6 +67,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { NODE_ENV } = process.env
+
   // Font applied in globals.css.
   return (
     <html
@@ -80,9 +82,11 @@ export default function RootLayout({
         sofiaSans.variable
       )}
     >
-      <head>
-        <Script src="https://unpkg.com/react-scan/dist/auto.global.js"></Script>
-      </head>
+      {NODE_ENV !== 'production' && (
+        <head>
+          <Script src="https://unpkg.com/react-scan/dist/auto.global.js"></Script>
+        </head>
+      )}
       <body className="bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider
           attribute="class"
