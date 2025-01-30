@@ -4,6 +4,7 @@ import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
 import Header from '@/components/shared/Header'
+import Script from 'next/script'
 
 const geist = Geist({
   variable: '--font-geist',
@@ -79,6 +80,9 @@ export default function RootLayout({
         sofiaSans.variable
       )}
     >
+      <head>
+        <Script src="https://unpkg.com/react-scan/dist/auto.global.js"></Script>
+      </head>
       <body className="bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider
           attribute="class"

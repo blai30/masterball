@@ -102,16 +102,7 @@ export default function MovesTable({
                     'flex h-full min-w-16 px-2 py-1'
                   )}
                 >
-                  <p
-                    className={clsx(
-                      ['level-up', 'machine'].includes(variant)
-                        ? 'visible'
-                        : 'invisible',
-                      'font-num w-full text-right'
-                    )}
-                  >
-                    {rowLabel}
-                  </p>
+                  <p className="font-num w-full text-right text-zinc-700 dark:text-zinc-300">{rowLabel}</p>
                 </div>
                 <div className="flex h-full min-w-44 px-2 py-1">
                   <Link href={`/move/${move.move.name}`} className="">
