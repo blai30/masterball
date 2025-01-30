@@ -22,6 +22,10 @@ export default function StatsRadarChart({
   pokemon: Pokemon
   stats: Stat[]
 }) {
+  const generateSubdivisions = (length: number) => {
+    return Array.from({ length }, (_, i) => Math.ceil((i + 1) * (50 / length)))
+  }
+
   const generateHexagonPoints = (
     radius: number,
     centerX: number,
@@ -50,27 +54,18 @@ export default function StatsRadarChart({
     .join(' ')
 
   return (
-    <div className="relative xs:h-80 xs:w-80 p-2">
-      <svg viewBox="0 0 100 100" className="h-full w-full">
-        <polygon
-          points={generateHexagonPoints(40, 50, 50)}
-          className="fill-none stroke-zinc-300 stroke-1 dark:stroke-zinc-700"
-        />
-        <polygon
-          points={generateHexagonPoints(30, 50, 50)}
-          className="fill-none stroke-zinc-300 stroke-1 dark:stroke-zinc-700"
-        />
-        <polygon
-          points={generateHexagonPoints(20, 50, 50)}
-          className="fill-none stroke-zinc-300 stroke-1 dark:stroke-zinc-700"
-        />
-        <polygon
-          points={generateHexagonPoints(10, 50, 50)}
-          className="fill-none stroke-zinc-300 stroke-1 dark:stroke-zinc-700"
-        />
+    <div className="xs:h-80 xs:w-80 relative p-8">
+      <svg viewBox="0 0 100 100" className="h-full w-full overflow-visible">
+        {generateSubdivisions(5).map((value, index) => (
+          <polygon
+            key={index}
+            points={generateHexagonPoints(value, 50, 50)}
+            className="fill-none stroke-zinc-300 stroke-[0.5] dark:stroke-zinc-700"
+          />
+        ))}
         <polygon
           points={dataPoints}
-          className="fill-black/60 stroke-black stroke-1 dark:fill-white/60 dark:stroke-white"
+          className="fill-black/60 stroke-black stroke-[0.5] dark:fill-white/60 dark:stroke-white"
         />
         {/* Add dots at stat points */}
         {pokemon.stats

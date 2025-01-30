@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { EvolutionChain } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
+import { getMockSpeciesList, pokeapi } from '@/lib/providers'
 import MonsterHero from '@/components/MonsterHero'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
@@ -19,10 +19,12 @@ import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 
 export async function generateStaticParams() {
-  const speciesList = await pokeapi.getPokemonSpeciesList({
-    limit: 22,
-    offset: 718,
-  })
+  // const speciesList = await pokeapi.getPokemonSpeciesList({
+  //   limit: 22,
+  //   offset: 718,
+  // })
+
+  const speciesList = await getMockSpeciesList()
 
   return speciesList.results.map((result) => ({
     name: result.name,
