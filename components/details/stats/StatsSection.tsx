@@ -44,7 +44,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
                   <abbr
                     title={name}
                     aria-label={name}
-                    className="xs:min-w-20 min-w-16 font-normal text-black no-underline dark:text-white"
+                    className="xs:min-w-20 min-w-16 font-normal text-zinc-700 dark:text-zinc-300 no-underline"
                   >
                     {StatLabels[stat.name as StatName]}
                   </abbr>

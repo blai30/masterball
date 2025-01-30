@@ -8,7 +8,6 @@ import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
 import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
-import FlavorTextSection from '@/components/details/FlavorTextSection'
 import MovesSection from '@/components/details/moves/MovesSection'
 import HeightMetadata from '@/components/metadata/HeightMetadata'
 import WeightMetadata from '@/components/metadata/WeightMetadata'
@@ -130,9 +129,6 @@ export default async function Page({
                 ))}
               </ul>
             </section>
-            <Suspense fallback={<LoadingSection />}>
-              <FlavorTextSection species={species} />
-            </Suspense>
             <Suspense fallback={<LoadingSection />}>
               <MovesSection pokemon={pokemon} />
             </Suspense>
