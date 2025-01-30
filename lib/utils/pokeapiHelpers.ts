@@ -15,6 +15,24 @@ export function getTranslation<
   return String(resource[field])
 }
 
+export enum StatName {
+  Hp = 'hp',
+  Attack = 'attack',
+  Defense = 'defense',
+  SpecialAttack = 'special-attack',
+  SpecialDefense = 'special-defense',
+  Speed = 'speed',
+}
+
+export const StatLabels: Record<StatName, string> = {
+  [StatName.Hp]: 'HP',
+  [StatName.Attack]: 'Attack',
+  [StatName.Defense]: 'Defense',
+  [StatName.SpecialAttack]: 'Sp. Atk',
+  [StatName.SpecialDefense]: 'Sp. Def',
+  [StatName.Speed]: 'Speed',
+}
+
 export enum DamageClassName {
   Physical = 'physical',
   Special = 'special',

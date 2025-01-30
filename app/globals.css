@@ -4,7 +4,7 @@
 
 @theme {
   /* --breakpoint-3xs: 160px; */
-  /* --breakpoint-2xs: 350px; */
+  --breakpoint-2xs: 320px;
   --breakpoint-xs: 500px;
 
   --font-sans: var(--font-geist), Arial, Helvetica, sans-serif;
