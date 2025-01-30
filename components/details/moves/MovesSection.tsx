@@ -19,7 +19,9 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const filterByLearnMethod = (method: string) =>
     moves.filter((move) =>
       move.version_group_details.some(
-        (v) => v.move_learn_method.name === method
+        (v) =>
+          v.move_learn_method.name === method &&
+          v.version_group.name === versionGroup
       )
     )
 
