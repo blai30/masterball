@@ -82,6 +82,22 @@ const data: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/475/',
     },
     {
+      name: 'chesnaught',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/652/',
+    },
+    {
+      name: 'greninja',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/658/',
+    },
+    {
+      name: 'talonflame',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/663/',
+    },
+    {
+      name: 'aegislash',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/681/',
+    },
+    {
       name: 'yveltal',
       url: 'https://pokeapi.co/api/v2/pokemon-species/717/',
     },
@@ -102,8 +118,24 @@ const data: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/758/',
     },
     {
+      name: 'lunala',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/792/',
+    },
+    {
+      name: 'necrozma',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/800/',
+    },
+    {
+      name: 'hatterene',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/858/',
+    },
+    {
       name: 'eternatus',
       url: 'https://pokeapi.co/api/v2/pokemon-species/890/',
+    },
+    {
+      name: 'brute-bonnet',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/986/',
     },
     {
       name: 'chi-yu',
