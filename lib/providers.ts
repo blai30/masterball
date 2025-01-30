@@ -139,11 +139,11 @@ const data: NamedAPIResourceList = {
     },
     {
       name: 'chi-yu',
-      url: 'https://pokeapi.co/api/v2/pokemon-species/1004/',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/6004/',
     },
     {
       name: 'pecharunt',
-      url: 'https://pokeapi.co/api/v2/pokemon-species/1025/',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/6025/',
     },
   ],
 }

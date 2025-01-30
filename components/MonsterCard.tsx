@@ -48,8 +48,8 @@ export default async function MonsterCard({
       href={`/monster/${species.name}`}
       className={clsx(
         'group from-50 flex flex-col items-center justify-between overflow-hidden',
-        'rounded-l-sm rounded-tr-sm rounded-br-xl',
-        'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 transition-colors hover:from-zinc-200 hover:to-zinc-100 hover:inset-ring-zinc-300 hover:duration-0 focus-visible:from-zinc-100 focus-visible:to-zinc-200 focus-visible:inset-ring-zinc-300 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800 dark:hover:from-zinc-900 dark:hover:to-zinc-800 dark:hover:inset-ring-zinc-700 dark:focus-visible:from-zinc-900 dark:focus-visible:to-zinc-800 dark:focus-visible:inset-ring-zinc-700'
+        'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
+        'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors hover:from-zinc-200/60 hover:to-zinc-300/60 hover:inset-ring-zinc-300/60 hover:duration-0 focus-visible:from-zinc-100 focus-visible:to-zinc-200 focus-visible:inset-ring-zinc-300/60 dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60 dark:hover:from-zinc-800/60 dark:hover:to-zinc-700/60 dark:hover:inset-ring-zinc-700/60 dark:focus-visible:from-zinc-900 dark:focus-visible:to-zinc-800 dark:focus-visible:inset-ring-zinc-700/60'
       )}
     >
       <div className="flex flex-col items-center justify-between gap-2 p-2">

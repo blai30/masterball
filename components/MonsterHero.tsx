@@ -47,6 +47,7 @@ export default function MonsterHero({
       <div className="flex flex-row gap-6">
         <Image
           src={pokemon.sprites.other.home.front_default!}
+          // src={pokemon.sprites.front_default!}
           alt={`${species.name} front default`}
           width={200}
           height={200}
@@ -56,6 +57,7 @@ export default function MonsterHero({
         />
         <Image
           src={pokemon.sprites.other.home.front_shiny!}
+          // src={pokemon.sprites.front_shiny!}
           alt={`${species.name} front shiny`}
           width={200}
           height={200}

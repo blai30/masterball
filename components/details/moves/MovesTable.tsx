@@ -23,9 +23,9 @@ export default function MovesTable({
     <div className="overflow-x-scroll md:overflow-auto">
       <ul
         className={clsx(
-          'group inline-flex flex-col gap-0.5 p-2',
-          'rounded-l-sm rounded-tr-sm rounded-br-xl',
-          'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800'
+          'group inline-flex flex-col gap-0.5 p-4',
+          'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
+          'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
         )}
       >
         <li className="inline-flex h-8 items-start rounded-l-xs rounded-tr-xs rounded-br-md">
@@ -76,7 +76,7 @@ export default function MovesTable({
               className={clsx(
                 'group inline-flex h-8 min-w-full flex-row items-center',
                 'rounded-l-xs rounded-tr-xs rounded-br-md',
-                'transition-colors hover:bg-zinc-200 hover:duration-0 dark:hover:bg-zinc-800'
+                'transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75'
               )}
             >
               <div className="flex h-full min-w-16 px-2 py-1">

@@ -23,9 +23,9 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
       <div className="flex flex-wrap items-start gap-2">
         <div
           className={clsx(
-            'p-2',
-            'rounded-l-sm rounded-tr-sm rounded-br-xl',
-            'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800'
+            'p-4',
+            'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
+            'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
         >
           {/* Bar chart */}
@@ -44,7 +44,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
                   <abbr
                     title={name}
                     aria-label={name}
-                    className="xs:min-w-20 min-w-16 font-normal text-zinc-700 dark:text-zinc-300 no-underline"
+                    className="xs:min-w-20 min-w-16 font-normal text-zinc-700 no-underline dark:text-zinc-300"
                   >
                     {StatLabels[stat.name as StatName]}
                   </abbr>
@@ -84,9 +84,9 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
 
         <div
           className={clsx(
-            'px-4 py-8',
-            'rounded-l-sm rounded-tr-sm rounded-br-xl',
-            'bg-gradient-to-br to-zinc-100 to-75% inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800'
+            'px-4 py-10',
+            'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
+            'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
         >
           {/* Radar chart */}

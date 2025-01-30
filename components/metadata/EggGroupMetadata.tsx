@@ -21,17 +21,18 @@ export default function EggGroupMetadata({
   return (
     <div className="flex flex-col gap-2 rounded-lg p-4">
       <h2 className="text-sm/6 text-zinc-600 dark:text-zinc-400">{title}</h2>
-      <div className="flex flex-col">
+      <ul className="flex flex-col">
         {eggGroupObjects.map((group) => (
-          <Link
-            key={group.key}
-            href={`/egg-group/${group.key}`}
-            className="text-base font-light text-blue-700 underline dark:text-blue-300"
-          >
-            {group.name}
-          </Link>
+          <li key={group.key} className="inline-block">
+            <Link
+              href={`/egg-group/${group.key}`}
+              className="text-base font-light text-blue-700 underline dark:text-blue-300"
+            >
+              {group.name}
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   )
 }
