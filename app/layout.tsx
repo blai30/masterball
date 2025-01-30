@@ -82,11 +82,11 @@ export default function RootLayout({
         sofiaSans.variable
       )}
     >
-      {NODE_ENV !== 'production' && (
-        <head>
+      <head>
+        {NODE_ENV !== 'production' && (
           <Script src="https://unpkg.com/react-scan/dist/auto.global.js"></Script>
-        </head>
-      )}
+        )}
+      </head>
       <body className="bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider
           attribute="class"
