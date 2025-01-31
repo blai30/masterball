@@ -83,10 +83,12 @@ export default async function TypeEffectivenessSection({
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
         >
-          <h4 className="text-green-800 dark:text-green-200">Weakness</h4>
+          <h4 className="text-zinc-700 dark:text-zinc-300">Weakness</h4>
           {categorizedTypes.quadruple.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5 className="w-14 rounded-md text-sm font-semibold">4×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold text-emerald-800 dark:text-emerald-200">
+                4×
+              </h5>
               {categorizedTypes.quadruple.map(({ type }) => (
                 <li key={type.name}>
                   <TypePill type={type.name} size="medium" />
@@ -96,7 +98,9 @@ export default async function TypeEffectivenessSection({
           )}
           {categorizedTypes.double.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5 className="w-14 rounded-md text-sm font-semibold">2×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold text-green-800 dark:text-green-200">
+                2×
+              </h5>
               {categorizedTypes.double.map(({ type }) => (
                 <li key={type.name}>
                   <TypePill type={type.name} size="medium" />
@@ -116,10 +120,12 @@ export default async function TypeEffectivenessSection({
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
         >
-          <h4 className="text-yellow-800 dark:text-yellow-200">Neutral</h4>
+          <h4 className="text-zinc-700 dark:text-zinc-300">Neutral</h4>
           {categorizedTypes.neutral.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5 className="w-14 rounded-md text-sm font-semibold">1×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold text-yellow-800 dark:text-yellow-200">
+                1×
+              </h5>
               {categorizedTypes.neutral.map(({ type }) => (
                 <li key={type.name}>
                   <TypePill type={type.name} size="medium" />
@@ -138,10 +144,12 @@ export default async function TypeEffectivenessSection({
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
         >
-          <h4 className="text-red-800 dark:text-red-200">Resistance</h4>
+          <h4 className="text-zinc-700 dark:text-zinc-300">Resistance</h4>
           {categorizedTypes.half.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5 className="w-14 rounded-md text-sm font-semibold">0.5×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold text-orange-800 dark:text-orange-200">
+                0.5×
+              </h5>
               {categorizedTypes.half.map(({ type }) => (
                 <li key={type.name}>
                   <TypePill type={type.name} size="medium" />
@@ -151,7 +159,9 @@ export default async function TypeEffectivenessSection({
           )}
           {categorizedTypes.quarter.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5 className="w-14 rounded-md text-sm font-semibold">0.25×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold text-red-800 dark:text-red-200">
+                0.25×
+              </h5>
               {categorizedTypes.quarter.map(({ type }) => (
                 <li key={type.name}>
                   <TypePill type={type.name} size="medium" />
@@ -171,10 +181,12 @@ export default async function TypeEffectivenessSection({
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
         >
-          <h4 className="text-purple-800 dark:text-purple-200">Immunity</h4>
+          <h4 className="text-zinc-700 dark:text-zinc-300">Immunity</h4>
           {categorizedTypes.immune.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
-              <h5 className="w-14 rounded-md text-sm font-semibold">0×</h5>
+              <h5 className="w-14 rounded-md text-sm font-semibold text-purple-800 dark:text-purple-200">
+                0×
+              </h5>
               {categorizedTypes.immune.map(({ type }) => (
                 <li key={type.name}>
                   <TypePill type={type.name} size="medium" />
