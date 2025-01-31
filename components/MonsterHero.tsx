@@ -44,27 +44,29 @@ export default function MonsterHero({
           </ul>
         </div>
       </div>
-      <div className="flex flex-row gap-6">
-        <Image
-          src={pokemon.sprites.other.home.front_default!}
-          // src={pokemon.sprites.front_default!}
-          alt={`${species.name} front default`}
-          width={200}
-          height={200}
-          priority
-          loading="eager"
-          className="h-32 w-auto object-scale-down sm:h-40 md:h-52"
-        />
-        <Image
-          src={pokemon.sprites.other.home.front_shiny!}
-          // src={pokemon.sprites.front_shiny!}
-          alt={`${species.name} front shiny`}
-          width={200}
-          height={200}
-          priority
-          loading="eager"
-          className="h-32 w-auto object-scale-down sm:h-40 md:h-52"
-        />
+      <div className="flex">
+        <div className="grid w-full grid-cols-2">
+          <Image
+            src={pokemon.sprites.other.home.front_default!}
+            // src={pokemon.sprites.front_default!}
+            alt={`${species.name} front default`}
+            width={200}
+            height={200}
+            priority
+            loading="eager"
+            className="object-scale-down"
+          />
+          <Image
+            src={pokemon.sprites.other.home.front_shiny!}
+            // src={pokemon.sprites.front_shiny!}
+            alt={`${species.name} front shiny`}
+            width={200}
+            height={200}
+            priority
+            loading="eager"
+            className="object-scale-down"
+          />
+        </div>
       </div>
     </section>
   )
