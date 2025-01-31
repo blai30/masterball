@@ -6,7 +6,7 @@ import {
   StatLabels,
   StatName,
 } from '@/lib/utils/pokeapiHelpers'
-import StatsRadarChart from '@/components/StatsRadarChart'
+import StatsRadarChart from '@/components/details/stats/StatsRadarChart'
 
 export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
   const title = 'Stats'
@@ -20,10 +20,10 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex flex-wrap items-start gap-2">
+      <div className="flex w-full flex-col items-start gap-2 md:flex-row">
         <div
           className={clsx(
-            'p-4',
+            'w-full p-4 md:w-1/2',
             'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
@@ -53,7 +53,8 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
                   </p>
 
                   {/* Progress bar visualization */}
-                  <div className="2xs:w-36 xs:w-44 flex h-5 w-28 flex-row items-center sm:w-72">
+                  {/* <div className="2xs:w-36 xs:w-44 flex h-5 w-28 flex-row items-center sm:w-72"> */}
+                  <div className="flex h-5 w-full flex-row items-center">
                     <div className="h-full max-w-full flex-grow rounded-l-xs rounded-tr-xs rounded-br-md bg-white dark:bg-black">
                       <div
                         className="h-full rounded-l-xs bg-black dark:bg-white"
@@ -84,7 +85,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
 
         <div
           className={clsx(
-            'px-4 py-10',
+            'flex w-full flex-col items-center px-4 py-10 md:w-1/2',
             'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}

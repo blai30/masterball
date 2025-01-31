@@ -78,7 +78,7 @@ export default async function TypeEffectivenessSection({
       <div className="flex flex-wrap gap-2">
         <div
           className={clsx(
-            'flex min-w-32 flex-col gap-y-4 p-4',
+            'flex min-w-36 flex-col gap-y-4 p-4',
             'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
@@ -104,10 +104,14 @@ export default async function TypeEffectivenessSection({
               ))}
             </ul>
           )}
+          {categorizedTypes.quadruple.length === 0 &&
+            categorizedTypes.double.length === 0 && (
+              <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
+            )}
         </div>
         <div
           className={clsx(
-            'flex min-w-32 flex-col gap-y-4 p-4',
+            'flex min-w-36 flex-col gap-y-4 p-4',
             'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
@@ -123,10 +127,13 @@ export default async function TypeEffectivenessSection({
               ))}
             </ul>
           )}
+          {categorizedTypes.neutral.length === 0 && (
+            <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
+          )}
         </div>
         <div
           className={clsx(
-            'flex min-w-32 flex-col gap-y-4 p-4',
+            'flex min-w-36 flex-col gap-y-4 p-4',
             'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
@@ -152,16 +159,20 @@ export default async function TypeEffectivenessSection({
               ))}
             </ul>
           )}
+          {categorizedTypes.half.length === 0 &&
+            categorizedTypes.quarter.length === 0 && (
+              <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
+            )}
         </div>
         <div
           className={clsx(
-            'flex min-w-32 flex-col gap-y-4 p-4',
+            'flex min-w-36 flex-col gap-y-4 p-4',
             'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
             'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
           )}
         >
           <h4 className="text-purple-800 dark:text-purple-200">Immunity</h4>
-          {categorizedTypes.immune.length > 0 ? (
+          {categorizedTypes.immune.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
               <h5 className="w-14 rounded-md text-sm font-semibold">0×</h5>
               {categorizedTypes.immune.map(({ type }) => (
@@ -170,7 +181,8 @@ export default async function TypeEffectivenessSection({
                 </li>
               ))}
             </ul>
-          ) : (
+          )}
+          {categorizedTypes.immune.length === 0 && (
             <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
           )}
         </div>
