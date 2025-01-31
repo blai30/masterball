@@ -4,7 +4,7 @@ import { clsx } from 'clsx/lite'
 import { cva } from 'cva'
 import { damageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
 
-const damageClassPill = cva({
+const variants = cva({
   base: 'flex flex-row items-center',
   variants: {
     variant: {
@@ -23,24 +23,24 @@ const damageClassPill = cva({
 })
 
 export default function DamageClassPill({
-  damageClass,
+  variant,
   size = 'large',
 }: {
-  damageClass: string
+  variant: string
   size?: 'small' | 'medium' | 'large'
 }) {
-  const name = damageClassLabels[damageClass as DamageClassName]
-  const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${damageClass}.png`
+  const name = damageClassLabels[variant as DamageClassName]
+  const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
 
   return (
     <Link
-      href={`/damage-class/${damageClass}`}
+      href={`/damage-class/${variant}`}
       title={name}
       className={clsx(
         // 'py-1',
         ' relative',
-        damageClassPill({
-          // variant: damageClass as DamageClassName,
+        variants({
+          // variant: variant as DamageClassName,
           size,
         })
       )}
@@ -48,7 +48,7 @@ export default function DamageClassPill({
       {/* <div
         className={clsx(
           'h-full w-2',
-          damageClassPill({ variant: damageClass as DamageClassName })
+          variants({ variant: variant as DamageClassName })
         )}
       ></div> */}
       <Image

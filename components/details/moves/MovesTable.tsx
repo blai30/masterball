@@ -93,10 +93,10 @@ export default function MovesTable({
                   </Link>
                 </div>
                 <div className="flex h-full min-w-32 px-2 py-1">
-                  <TypePill type={type} size="medium" />
+                  <TypePill variant={type} size="medium" />
                 </div>
                 <div className="flex h-full min-w-14 px-2 py-1">
-                  <DamageClassPill damageClass={damageClass} size="medium" />
+                  <DamageClassPill variant={damageClass} size="medium" />
                 </div>
                 <div className="flex h-full min-w-14 px-2 py-1">
                   <p className="font-num w-full text-right">{power}</p>

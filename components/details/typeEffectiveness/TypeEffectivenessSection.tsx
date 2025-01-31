@@ -85,7 +85,7 @@ export default async function TypeEffectivenessSection({
               </h5>
               {categorizedTypes.quadruple.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type.name} size="medium" />
+                  <TypePill variant={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -97,7 +97,7 @@ export default async function TypeEffectivenessSection({
               </h5>
               {categorizedTypes.double.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type.name} size="medium" />
+                  <TypePill variant={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -116,7 +116,7 @@ export default async function TypeEffectivenessSection({
               </h5>
               {categorizedTypes.neutral.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type.name} size="medium" />
+                  <TypePill variant={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -134,7 +134,7 @@ export default async function TypeEffectivenessSection({
               </h5>
               {categorizedTypes.half.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type.name} size="medium" />
+                  <TypePill variant={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -146,7 +146,7 @@ export default async function TypeEffectivenessSection({
               </h5>
               {categorizedTypes.quarter.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type.name} size="medium" />
+                  <TypePill variant={type.name} size="medium" />
                 </li>
               ))}
             </ul>
@@ -165,7 +165,7 @@ export default async function TypeEffectivenessSection({
               </h5>
               {categorizedTypes.immune.map(({ type }) => (
                 <li key={type.name}>
-                  <TypePill type={type.name} size="medium" />
+                  <TypePill variant={type.name} size="medium" />
                 </li>
               ))}
             </ul>

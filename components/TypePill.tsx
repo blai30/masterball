@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { cva } from 'cva'
 import { typeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
 
-const typePill = cva({
+const variants = cva({
   base: 'flex flex-row items-center',
   variants: {
     variant: {
@@ -37,19 +37,19 @@ const typePill = cva({
 })
 
 export default function TypePill({
-  type,
+  variant,
   size = 'large',
 }: {
-  type: string
+  variant: string
   size?: 'small' | 'medium' | 'large'
 }) {
-  const name = typeLabels[type as TypeName]
-  const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${type}.png`
+  const name = typeLabels[variant as TypeName]
+  const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
 
   return (
     <Link
-      href={`/type/${type}`}
-      className={typePill({ variant: type as TypeName, size })}
+      href={`/type/${variant}`}
+      className={variants({ variant: variant as TypeName, size })}
     >
       {size !== 'small' && (
         <Image
