@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import clsx from 'clsx/lite'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
+import GlassCard from '@/components/GlassCard'
 
 const typeClasses: Record<string, string> = {
   [TypeName.Normal]: 'bg-normal',
@@ -44,30 +44,27 @@ export default async function MonsterCard({
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <Link
-      href={`/monster/${species.name}`}
-      className={clsx(
-        'group from-50 flex flex-col items-center justify-between overflow-hidden',
-        'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
-        'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors hover:from-zinc-200/60 hover:to-zinc-300/60 hover:inset-ring-zinc-300/60 hover:duration-0 focus-visible:from-zinc-100 focus-visible:to-zinc-200 focus-visible:inset-ring-zinc-300/60 dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60 dark:hover:from-zinc-800/60 dark:hover:to-zinc-700/60 dark:hover:inset-ring-zinc-700/60 dark:focus-visible:from-zinc-900 dark:focus-visible:to-zinc-800 dark:focus-visible:inset-ring-zinc-700/60'
-      )}
-    >
-      <div className="flex flex-col items-center justify-between px-2 py-3">
-        <p
-          aria-hidden="true"
-          className="font-num text-sm text-zinc-400 dark:text-zinc-500"
-        >
-          {species.id}
-        </p>
-        <Image
-          src={imageUrl}
-          alt={species.name}
-          width={128}
-          height={128}
-          priority
-          className="min-w-full object-scale-down py-1"
-        />
-        {/* <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
+    <GlassCard variant="link">
+      <Link
+        href={`/monster/${species.name}`}
+        className="group from-50 flex flex-col items-center justify-between overflow-hidden"
+      >
+        <div className="flex flex-col items-center justify-between px-2 py-3">
+          <p
+            aria-hidden="true"
+            className="font-num text-sm text-zinc-400 dark:text-zinc-500"
+          >
+            {species.id}
+          </p>
+          <Image
+            src={imageUrl}
+            alt={species.name}
+            width={128}
+            height={128}
+            priority
+            className="min-w-full object-scale-down py-1"
+          />
+          {/* <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
           {types.map((typeResource) => (
             <Image
               key={typeResource.id}
@@ -82,10 +79,11 @@ export default async function MonsterCard({
             />
           ))}
         </div> */}
-        <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
-          {name}
-        </h3>
-      </div>
-    </Link>
+          <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
+            {name}
+          </h3>
+        </div>
+      </Link>
+    </GlassCard>
   )
 }

@@ -1,7 +1,7 @@
-import clsx from 'clsx/lite'
 import { Pokemon, Type } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getEffectiveness, TypeName } from '@/lib/utils/pokeapiHelpers'
+import GlassCard from '@/components/GlassCard'
 import TypePill from '@/components/TypePill'
 
 type TypeRelation = {
@@ -76,13 +76,7 @@ export default async function TypeEffectivenessSection({
         {title}
       </h2>
       <div className="flex flex-wrap gap-2">
-        <div
-          className={clsx(
-            'flex min-w-36 flex-col gap-y-4 p-4',
-            'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
-            'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
-          )}
-        >
+        <GlassCard className="flex min-w-36 flex-col gap-y-4 p-4">
           <h4 className="text-zinc-700 dark:text-zinc-300">Weakness</h4>
           {categorizedTypes.quadruple.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -112,14 +106,8 @@ export default async function TypeEffectivenessSection({
             categorizedTypes.double.length === 0 && (
               <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
             )}
-        </div>
-        <div
-          className={clsx(
-            'flex min-w-36 flex-col gap-y-4 p-4',
-            'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
-            'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
-          )}
-        >
+        </GlassCard>
+        <GlassCard className="flex min-w-36 flex-col gap-y-4 p-4">
           <h4 className="text-zinc-700 dark:text-zinc-300">Neutral</h4>
           {categorizedTypes.neutral.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -136,14 +124,8 @@ export default async function TypeEffectivenessSection({
           {categorizedTypes.neutral.length === 0 && (
             <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
           )}
-        </div>
-        <div
-          className={clsx(
-            'flex min-w-36 flex-col gap-y-4 p-4',
-            'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
-            'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
-          )}
-        >
+        </GlassCard>
+        <GlassCard className="flex min-w-36 flex-col gap-y-4 p-4">
           <h4 className="text-zinc-700 dark:text-zinc-300">Resistance</h4>
           {categorizedTypes.half.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -173,14 +155,8 @@ export default async function TypeEffectivenessSection({
             categorizedTypes.quarter.length === 0 && (
               <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
             )}
-        </div>
-        <div
-          className={clsx(
-            'flex min-w-36 flex-col gap-y-4 p-4',
-            'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
-            'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
-          )}
-        >
+        </GlassCard>
+        <GlassCard className="flex min-w-36 flex-col gap-y-4 p-4">
           <h4 className="text-zinc-700 dark:text-zinc-300">Immunity</h4>
           {categorizedTypes.immune.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -197,7 +173,7 @@ export default async function TypeEffectivenessSection({
           {categorizedTypes.immune.length === 0 && (
             <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
           )}
-        </div>
+        </GlassCard>
       </div>
     </section>
   )

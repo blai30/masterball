@@ -6,7 +6,7 @@ import { typeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
 const typePill = cva({
   base: 'flex flex-row items-center',
   variants: {
-    type: {
+    variant: {
       [TypeName.Normal]: 'bg-normal',
       [TypeName.Fighting]: 'bg-fighting',
       [TypeName.Flying]: 'bg-flying',
@@ -49,7 +49,7 @@ export default function TypePill({
   return (
     <Link
       href={`/type/${type}`}
-      className={typePill({ type: type as TypeName, size })}
+      className={typePill({ variant: type as TypeName, size })}
     >
       {size !== 'small' && (
         <Image

@@ -7,7 +7,7 @@ import { damageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
 const damageClassPill = cva({
   base: 'flex flex-row items-center',
   variants: {
-    damageClass: {
+    variant: {
       [DamageClassName.Physical]: 'bg-physical',
       [DamageClassName.Special]: 'bg-special',
       [DamageClassName.Status]: 'bg-status',
@@ -40,7 +40,7 @@ export default function DamageClassPill({
         // 'py-1',
         ' relative',
         damageClassPill({
-          // damageClass: damageClass as DamageClassName,
+          // variant: damageClass as DamageClassName,
           size,
         })
       )}
@@ -48,7 +48,7 @@ export default function DamageClassPill({
       {/* <div
         className={clsx(
           'h-full w-2',
-          damageClassPill({ damageClass: damageClass as DamageClassName })
+          damageClassPill({ variant: damageClass as DamageClassName })
         )}
       ></div> */}
       <Image

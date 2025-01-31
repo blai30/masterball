@@ -1,4 +1,3 @@
-import clsx from 'clsx/lite'
 import { Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import {
@@ -6,6 +5,7 @@ import {
   StatLabels,
   StatName,
 } from '@/lib/utils/pokeapiHelpers'
+import GlassCard from '@/components/GlassCard'
 import StatsRadarChart from '@/components/details/stats/StatsRadarChart'
 
 export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
@@ -21,13 +21,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
         {title}
       </h2>
       <div className="flex w-full flex-col items-start gap-2 md:flex-row">
-        <div
-          className={clsx(
-            'w-full p-4 md:w-1/2',
-            'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
-            'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
-          )}
-        >
+        <GlassCard className="w-full p-4 md:w-1/2">
           {/* Bar chart */}
           <ul className="flex flex-col">
             {stats.map((stat) => {
@@ -81,18 +75,12 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
               {statTotal.toLocaleString()}
             </p>
           </div>
-        </div>
+        </GlassCard>
 
-        <div
-          className={clsx(
-            'flex w-full flex-col items-center px-4 py-10 md:w-1/2',
-            'rounded-l-sm rounded-tr-sm rounded-br-xl backdrop-blur-md',
-            'bg-gradient-to-br from-zinc-100/60 to-zinc-200/60 to-75% inset-ring-1 inset-ring-zinc-200/60 transition-colors dark:from-zinc-800/60 dark:to-zinc-900/60 dark:inset-ring-zinc-800/60'
-          )}
-        >
+        <GlassCard className="flex w-full flex-col items-center px-4 py-10 md:w-1/2">
           {/* Radar chart */}
           <StatsRadarChart pokemon={pokemon} stats={stats} />
-        </div>
+        </GlassCard>
       </div>
     </section>
   )
