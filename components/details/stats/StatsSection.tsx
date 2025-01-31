@@ -77,7 +77,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
           </div>
         </GlassCard>
 
-        <GlassCard className="flex w-full flex-col items-center px-4 py-10 md:w-1/2">
+        <GlassCard className="flex w-full flex-col items-center px-8 py-10 md:w-1/2">
           {/* Radar chart */}
           <StatsRadarChart pokemon={pokemon} stats={stats} />
         </GlassCard>
