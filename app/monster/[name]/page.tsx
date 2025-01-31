@@ -39,7 +39,7 @@ export async function generateMetadata({
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties[0].pokemon.name
+    species.varieties.find((variety) => variety.is_default)!.pokemon.name
   )
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
@@ -84,7 +84,7 @@ export default async function Page({
     species.evolution_chain.url
   )
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties[0].pokemon.name
+    species.varieties.find((variety) => variety.is_default)!.pokemon.name
   )
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)

@@ -33,7 +33,7 @@ export default async function MonsterCard({
 }) {
   const species = await pokeapi.getPokemonSpeciesByName(speciesResource.name)
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties[0].pokemon.name
+    species.varieties.find((variety) => variety.is_default)!.pokemon.name
   )
   const types = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
