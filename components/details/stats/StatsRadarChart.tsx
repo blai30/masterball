@@ -1,9 +1,10 @@
+import clsx from 'clsx/lite'
+import { Pokemon, Stat } from 'pokedex-promise-v2'
 import {
   getTranslation,
   StatLabels,
   StatName,
 } from '@/lib/utils/pokeapiHelpers'
-import { Pokemon, Stat } from 'pokedex-promise-v2'
 
 const statAngleMap: Record<string, number> = {
   hp: 0, // top
@@ -83,11 +84,15 @@ export default function StatsRadarChart({
         />
         {/* Add dots at stat points */}
         {stats.map((stat) => {
-          const pokemonStat = pokemon.stats.find((s) => s.stat.name === stat.name)!
+          const pokemonStat = pokemon.stats.find(
+            (s) => s.stat.name === stat.name
+          )!
           const angleIndex = statAngleMap[stat.name]
           const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
-          const statX = 50 + (pokemonStat.base_stat / 255) * 50 * Math.cos(angle)
-          const statY = 50 + (pokemonStat.base_stat / 255) * 50 * Math.sin(angle)
+          const statX =
+            50 + (pokemonStat.base_stat / 255) * 50 * Math.cos(angle)
+          const statY =
+            50 + (pokemonStat.base_stat / 255) * 50 * Math.sin(angle)
 
           return (
             <circle
@@ -108,23 +113,41 @@ export default function StatsRadarChart({
         )!
         const angleIndex = statAngleMap[stat.name]
         const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
-        const x = 50 + 50 * Math.cos(angle)
+        const x = 50 + 56 * Math.cos(angle)
         const y = 50 + 50 * Math.sin(angle)
 
         return (
           <div
             key={`label-${stat.id}`}
-            className="absolute top-0 left-0 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center"
+            className="absolute top-0 left-0 flex w-14 -translate-x-1/2 -translate-y-1/2 flex-col"
             style={{ left: `${x}%`, top: `${y}%` }}
           >
             <abbr
               title={name}
               aria-label={name}
-              className="text-xs font-normal text-zinc-700 no-underline dark:text-zinc-300"
+              className={clsx(
+                'text-xs font-normal text-zinc-700 no-underline dark:text-zinc-300',
+                angleIndex === 0 && 'text-center',
+                angleIndex === 1 && 'text-left',
+                angleIndex === 2 && 'text-left',
+                angleIndex === 3 && 'text-center',
+                angleIndex === 4 && 'text-right',
+                angleIndex === 5 && 'text-right'
+              )}
             >
               {StatLabels[stat.name as StatName]}
             </abbr>
-            <p className="font-num text-lg font-semibold text-black tabular-nums dark:text-white">
+            <p
+              className={clsx(
+                'font-num text-lg font-semibold text-black tabular-nums dark:text-white',
+                angleIndex === 0 && 'text-center',
+                angleIndex === 1 && 'text-left',
+                angleIndex === 2 && 'text-left',
+                angleIndex === 3 && 'text-center',
+                angleIndex === 4 && 'text-right',
+                angleIndex === 5 && 'text-right'
+              )}
+            >
               {pokemonStat.base_stat}
             </p>
           </div>
