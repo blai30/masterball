@@ -80,7 +80,7 @@ export default function StatsRadarChart({
         ))}
         <polygon
           points={dataPoints}
-          className="fill-black/60 stroke-black stroke-[0.5] dark:fill-white/60 dark:stroke-white"
+          className="fill-black/60 stroke-black stroke-1 dark:fill-white/60 dark:stroke-white"
         />
         {/* Add dots at stat points */}
         {stats.map((stat) => {
@@ -95,7 +95,7 @@ export default function StatsRadarChart({
               key={`dot-${stat.name}`}
               cx={statX}
               cy={statY}
-              r="1"
+              r="1.2"
               className="fill-black dark:fill-white"
             />
           )
