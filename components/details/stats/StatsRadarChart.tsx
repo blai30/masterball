@@ -5,7 +5,6 @@ import {
 } from '@/lib/utils/pokeapiHelpers'
 import { Pokemon, Stat } from 'pokedex-promise-v2'
 
-// Map stats to their desired angle indices
 const statAngleMap: Record<string, number> = {
   hp: 0, // top
   attack: 1, // top right

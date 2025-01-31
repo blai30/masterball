@@ -10,8 +10,11 @@ const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
 export default function Header() {
   return (
     <header className="flex flex-row gap-4">
-      <Link href="/" className="text-blue-700 underline dark:text-blue-300">
-        <p>Home</p>
+      <Link href="/">
+        <p className="text-blue-700 underline dark:text-blue-300">Home</p>
+      </Link>
+      <Link href="https://github.com/blai30/masterball">
+        <p className="text-blue-700 underline dark:text-blue-300">GitHub</p>
       </Link>
       <ThemeSwitch />
     </header>
