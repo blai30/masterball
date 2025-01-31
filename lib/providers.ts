@@ -114,6 +114,10 @@ const data: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/740/',
     },
     {
+      name: 'rockruff',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/744/',
+    },
+    {
       name: 'salazzle',
       url: 'https://pokeapi.co/api/v2/pokemon-species/758/',
     },
