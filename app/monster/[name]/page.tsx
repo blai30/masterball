@@ -38,7 +38,6 @@ export async function generateMetadata({
 }: {
   params: Promise<{ name: string }>
 }): Promise<Metadata> {
-  const language = 'en'
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
   const pokemon = await pokeapi.getPokemonByName(
@@ -48,7 +47,7 @@ export async function generateMetadata({
     pokemon.types.map((type) => type.type.name)
   )
   const types = typeResources.map((resource) => {
-    const typeName = resource.names.find((n) => n.language.name === language)!
+    const typeName = getTranslation(resource.names, 'name')!
     return {
       id: resource.id,
       typeName,
@@ -60,7 +59,7 @@ export async function generateMetadata({
 
   return {
     title: `${translatedName} - ${imageId}`,
-    description: `${types.map((t) => t.typeName.name).join(' ')}`,
+    description: `${types.map((t) => t.typeName).join(' ')}`,
     openGraph: {
       images: [
         {

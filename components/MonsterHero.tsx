@@ -45,7 +45,7 @@ export default function MonsterHero({
         </div>
       </div>
       <div className="flex">
-        <div className="grid w-full grid-cols-2">
+        <div className="grid w-full grid-cols-2 gap-8">
           <Image
             src={pokemon.sprites.other.home.front_default!}
             // src={pokemon.sprites.front_default!}

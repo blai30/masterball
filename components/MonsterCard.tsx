@@ -32,12 +32,12 @@ export default async function MonsterCard({
   speciesResource: NamedAPIResource
 }) {
   const species = await pokeapi.getPokemonSpeciesByName(speciesResource.name)
-  const pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((variety) => variety.is_default)!.pokemon.name
-  )
-  const types = await pokeapi.getTypeByName(
-    pokemon.types.map((type) => type.type.name)
-  )
+  // const pokemon = await pokeapi.getPokemonByName(
+  //   species.varieties.find((variety) => variety.is_default)!.pokemon.name
+  // )
+  // const types = await pokeapi.getTypeByName(
+  //   pokemon.types.map((type) => type.type.name)
+  // )
 
   const name = getTranslation(species.names, 'name')
   const imageId = species.id.toString().padStart(4, '0')
