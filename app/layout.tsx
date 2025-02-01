@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
 import Header from '@/components/shared/Header'
-import Script from 'next/script'
 
 const geist = Geist({
   variable: '--font-geist',

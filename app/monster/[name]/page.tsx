@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { EvolutionChain } from 'pokedex-promise-v2'
 import { getMockSpeciesList, pokeapi } from '@/lib/providers'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import MonsterHero from '@/components/MonsterHero'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
@@ -16,6 +17,8 @@ import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
 import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
+
+export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
   // const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -53,9 +56,7 @@ export async function generateMetadata({
   })
 
   const imageId = pokemon.id.toString().padStart(4, '0')
-  const translatedName = species.names.filter(
-    (nameResource) => nameResource.language.name === language
-  )[0].name
+  const translatedName = getTranslation(species.names, 'name')
 
   return {
     title: `${translatedName} - ${imageId}`,
