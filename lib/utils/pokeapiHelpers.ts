@@ -88,7 +88,16 @@ export const typeLabels: Record<TypeName, string> = {
   [TypeName.Fairy]: 'Fairy',
 }
 
-export type TypeEffectiveness = Record<TypeName, number>
+export enum Effectiveness {
+  Immune = 0.0,
+  Quarter = 0.25,
+  Half = 0.5,
+  Neutral = 1.0,
+  Double = 2.0,
+  Quadruple = 4.0,
+}
+
+export type TypeEffectiveness = Record<TypeName, Effectiveness>
 
 export function getEffectiveness(typeResources: Type[]): TypeEffectiveness {
   // Initialize all types with neutral effectiveness.

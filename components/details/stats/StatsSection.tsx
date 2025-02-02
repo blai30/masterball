@@ -16,7 +16,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
 
   return (
-    <section className="flex flex-col gap-4 px-4 py-6">
+    <section className="flex grow flex-col gap-4 px-4 py-6">
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
