@@ -28,7 +28,7 @@ const variants = cva({
     },
     size: {
       small:
-        'h-4 w-20 rounded-l-xs rounded-tr-xs rounded-br-md px-0.5 font-light tracking-tight',
+        'h-4 w-20 rounded-l-xs rounded-tr-xs rounded-br-md px-0.5 font-normal tracking-normal',
       medium:
         'h-6 w-28 rounded-l-xs rounded-tr-xs rounded-br-md px-1 font-normal tracking-normal',
       large: 'h-8 w-32 rounded-full px-2 font-medium tracking-wide',

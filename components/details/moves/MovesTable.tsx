@@ -22,7 +22,7 @@ export default function MovesTable({
 }) {
   return (
     <div className="overflow-x-scroll md:overflow-auto">
-      <GlassCard className="inline-block">
+      <GlassCard className="w-full">
         <ul className="group flex flex-col gap-0.5 p-4">
           <li className="flex h-8 items-start rounded-l-xs rounded-tr-xs rounded-br-md">
             <div className="flex h-full min-w-16 px-2 py-1">
@@ -30,7 +30,7 @@ export default function MovesTable({
                 {variantColumnLabels[variant] ?? ''}
               </p>
             </div>
-            <div className="flex h-full min-w-44 px-2 py-1">
+            <div className="flex h-full grow px-2 py-1">
               <p className="w-full text-xs font-semibold">Name</p>
             </div>
             <div className="flex h-full min-w-32 px-2 py-1">
@@ -82,7 +82,7 @@ export default function MovesTable({
                     {rowLabel}
                   </p>
                 </div>
-                <div className="flex h-full min-w-44 px-2 py-1">
+                <div className="flex h-full grow px-2 py-1">
                   <Link href={`/move/${move.move.name}`} className="">
                     <p
                       title={`Learned at level ${rowLabel}: ${name.name}`}

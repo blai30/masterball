@@ -6,7 +6,7 @@
   /* --breakpoint-3xs: 160px; */
   --breakpoint-2xs: 24rem;
   --breakpoint-xs: 32rem;
-  --breakpoint-3xl: 132rem;
+  /* --breakpoint-3xl: 132rem; */
 
   --font-sans: var(--font-geist), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;

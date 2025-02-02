@@ -97,54 +97,10 @@ export default async function Page({
         {/* Hero section */}
         <MonsterHero species={species} pokemon={pokemon} />
       </div>
-      <div className="flex w-full flex-col gap-4 xl:flex-row xl:gap-8">
-        <div className="order-last w-full xl:order-first">
-          {/* Main details, one column on medium screens, two columns on very large screens */}
-          <div className="3xl:flex 3xl:flex-row 3xl:gap-4">
-            {/* First column on very large screens */}
-            <div className="flex w-full flex-col gap-4">
-              <Suspense fallback={<LoadingSection />}>
-                <StatsSection pokemon={pokemon} />
-              </Suspense>
-              <Suspense fallback={<LoadingSection />}>
-                <TypeEffectivenessSection pokemon={pokemon} />
-              </Suspense>
-              <Suspense fallback={<LoadingSection />}>
-                <AbilitiesSection pokemon={pokemon} />
-              </Suspense>
-              <section className="flex flex-col gap-4 px-4 py-6">
-                <h2 className="text-xl font-medium text-black dark:text-white">
-                  Evolution
-                </h2>
-                <ul className="flex flex-col gap-4">
-                  {evolutionChain.chain.evolves_to.map((evolution) => (
-                    <li key={evolution.species.name}>
-                      <Link
-                        href={`/monster/${evolution.species.name}`}
-                        className="inline-block"
-                      >
-                        <span className="text-blue-700 underline dark:text-blue-300">
-                          {evolution.species.name}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            </div>
-            {/* Second column on very large screens */}
-            <div className="flex flex-col gap-4">
-              <Suspense fallback={<LoadingSection />}>
-                <MovesSection pokemon={pokemon} />
-              </Suspense>
-              <LoadingSection />
-            </div>
-          </div>
-        </div>
-
-        {/* Metadata section, third column on medium to very large screens */}
-        <section className="order-first flex w-full flex-col gap-8 xl:order-last xl:w-lg xl:max-w-lg">
-          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2">
+      <div className="flex w-full flex-col gap-4">
+        {/* Metadata section */}
+        <section className="flex w-full flex-col gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8">
             <HeightMetadata height={pokemon.height} />
             <WeightMetadata weight={pokemon.weight} />
             <GenderRatioMetadata genderRate={species.gender_rate} />
@@ -176,6 +132,46 @@ export default async function Page({
             </div>
           </div>
         </section>
+        <div className="w-full flex flex-col lg:flex-row lg:grow">
+          {/* First column on large screens */}
+          <div className="flex flex-col gap-4 w-full">
+            <Suspense fallback={<LoadingSection />}>
+              <StatsSection pokemon={pokemon} />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <TypeEffectivenessSection pokemon={pokemon} />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <AbilitiesSection pokemon={pokemon} />
+            </Suspense>
+            <section className="flex flex-col gap-4 px-4 py-6">
+              <h2 className="text-xl font-medium text-black dark:text-white">
+                Evolution
+              </h2>
+              <ul className="flex flex-col gap-4">
+                {evolutionChain.chain.evolves_to.map((evolution) => (
+                  <li key={evolution.species.name}>
+                    <Link
+                      href={`/monster/${evolution.species.name}`}
+                      className="inline-block"
+                    >
+                      <span className="text-blue-700 underline dark:text-blue-300">
+                        {evolution.species.name}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+          {/* Second column on large screens */}
+          <div className="flex flex-col gap-4 lg:min-w-2xl w-full">
+            <Suspense fallback={<LoadingSection />}>
+              <MovesSection pokemon={pokemon} />
+            </Suspense>
+            <LoadingSection />
+          </div>
+        </div>
       </div>
     </div>
   )

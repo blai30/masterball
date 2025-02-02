@@ -75,8 +75,8 @@ export default async function TypeEffectivenessSection({
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex flex-wrap gap-2">
-        <GlassCard className="flex min-w-36 flex-col gap-y-4 p-4">
+      <GlassCard className="grid grid-cols-2 xs:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-2 w-full">
+        <div className="flex min-w-36 flex-col gap-y-4 p-4">
           <h4 className="text-zinc-700 dark:text-zinc-300">Weakness</h4>
           {categorizedTypes.quadruple.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -106,8 +106,8 @@ export default async function TypeEffectivenessSection({
             categorizedTypes.double.length === 0 && (
               <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
             )}
-        </GlassCard>
-        <GlassCard className="flex min-w-36 flex-col gap-y-4 p-4">
+        </div>
+        <div className="flex min-w-36 flex-col gap-y-4 p-4">
           <h4 className="text-zinc-700 dark:text-zinc-300">Neutral</h4>
           {categorizedTypes.neutral.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -124,8 +124,8 @@ export default async function TypeEffectivenessSection({
           {categorizedTypes.neutral.length === 0 && (
             <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
           )}
-        </GlassCard>
-        <GlassCard className="flex min-w-36 flex-col gap-y-4 p-4">
+        </div>
+        <div className="flex min-w-36 flex-col gap-y-4 p-4">
           <h4 className="text-zinc-700 dark:text-zinc-300">Resistance</h4>
           {categorizedTypes.half.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -155,8 +155,8 @@ export default async function TypeEffectivenessSection({
             categorizedTypes.quarter.length === 0 && (
               <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
             )}
-        </GlassCard>
-        <GlassCard className="flex min-w-36 flex-col gap-y-4 p-4">
+        </div>
+        <div className="flex min-w-36 flex-col gap-y-4 p-4">
           <h4 className="text-zinc-700 dark:text-zinc-300">Immunity</h4>
           {categorizedTypes.immune.length > 0 && (
             <ul className="flex flex-col flex-wrap gap-2 rounded-3xl">
@@ -173,8 +173,8 @@ export default async function TypeEffectivenessSection({
           {categorizedTypes.immune.length === 0 && (
             <h5 className="w-14 rounded-md text-sm font-semibold">None</h5>
           )}
-        </GlassCard>
-      </div>
+        </div>
+      </GlassCard>
     </section>
   )
 }
