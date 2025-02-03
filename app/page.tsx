@@ -29,7 +29,7 @@ export default async function Home() {
             </Suspense>
           </li>
         ))}
-        <li className="group relative col-span-1 rounded-lg">
+        <li className="col-span-1">
           <LoadingCard />
         </li>
       </ul>
