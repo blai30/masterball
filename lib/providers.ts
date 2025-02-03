@@ -54,6 +54,10 @@ const data: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/260/',
     },
     {
+      name: 'wurmple',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/265/',
+    },
+    {
       name: 'aggron',
       url: 'https://pokeapi.co/api/v2/pokemon-species/306/',
     },
@@ -138,16 +142,16 @@ const data: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/890/',
     },
     {
-      name: 'brute-bonnet',
-      url: 'https://pokeapi.co/api/v2/pokemon-species/986/',
+      name: 'roaring-moon',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/1005/',
     },
     {
       name: 'chi-yu',
-      url: 'https://pokeapi.co/api/v2/pokemon-species/6004/',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/1004/',
     },
     {
       name: 'pecharunt',
-      url: 'https://pokeapi.co/api/v2/pokemon-species/6025/',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/1025/',
     },
   ],
 }

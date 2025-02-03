@@ -10,9 +10,9 @@ export default function LoadingCard() {
         >
           {id}
         </p>
-        <div className="w-full py-1">
+        <div className="flex w-full flex-col items-center py-1">
           <svg
-            className="animate-spin p-6"
+            className="w-full animate-spin p-6"
             viewBox="0 0 64 64"
             fill="none"
             width={128}
