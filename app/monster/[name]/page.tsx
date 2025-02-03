@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
-import Link from 'next/link'
 import { Suspense } from 'react'
-import { EvolutionChain } from 'pokedex-promise-v2'
 import { getMockSpeciesList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import MonsterHero from '@/components/MonsterHero'
@@ -9,6 +7,7 @@ import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
 import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
+import EvolutionSection from '@/components/details/evolution/EvolutionSection'
 import MovesSection from '@/components/details/moves/MovesSection'
 import HeightMetadata from '@/components/metadata/HeightMetadata'
 import WeightMetadata from '@/components/metadata/WeightMetadata'
@@ -80,9 +79,6 @@ export default async function Page({
 }) {
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
-  const evolutionChain: EvolutionChain = await pokeapi.getResource(
-    species.evolution_chain.url
-  )
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties.find((variety) => variety.is_default)!.pokemon.name
   )
@@ -146,25 +142,9 @@ export default async function Page({
             <Suspense fallback={<LoadingSection />}>
               <AbilitiesSection pokemon={pokemon} />
             </Suspense>
-            <section className="flex flex-col gap-4 px-4 py-6">
-              <h2 className="text-xl font-medium text-black dark:text-white">
-                Evolution
-              </h2>
-              <ul className="flex flex-col gap-4">
-                {evolutionChain.chain.evolves_to.map((evolution) => (
-                  <li key={evolution.species.name}>
-                    <Link
-                      href={`/monster/${evolution.species.name}`}
-                      className="inline-block"
-                    >
-                      <span className="text-blue-700 underline dark:text-blue-300">
-                        {evolution.species.name}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <Suspense fallback={<LoadingSection />}>
+              <EvolutionSection species={species} />
+            </Suspense>
           </div>
           {/* Second column on large screens */}
           <div className="flex w-full flex-col gap-4 lg:min-w-2xl">

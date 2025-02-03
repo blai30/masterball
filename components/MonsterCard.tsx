@@ -47,24 +47,23 @@ export default async function MonsterCard({
     <GlassCard variant="link">
       <Link
         href={`/monster/${species.name}`}
-        className="group from-50 flex flex-col items-center justify-between overflow-hidden"
+        className="group flex flex-col items-center justify-between px-2 py-3"
       >
-        <div className="flex flex-col items-center justify-between px-2 py-3">
-          <p
-            aria-hidden="true"
-            className="font-num text-sm text-zinc-400 dark:text-zinc-500"
-          >
-            {species.id}
-          </p>
-          <Image
-            src={imageUrl}
-            alt={species.name}
-            width={128}
-            height={128}
-            priority
-            className="min-w-full object-scale-down py-1"
-          />
-          {/* <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
+        <p
+          aria-hidden="true"
+          className="font-num text-sm text-zinc-400 dark:text-zinc-500"
+        >
+          {species.id}
+        </p>
+        <Image
+          src={imageUrl}
+          alt={species.name}
+          width={128}
+          height={128}
+          priority
+          className="min-w-full object-scale-down py-1"
+        />
+        {/* <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
           {types.map((typeResource) => (
             <Image
               key={typeResource.id}
@@ -79,10 +78,9 @@ export default async function MonsterCard({
             />
           ))}
         </div> */}
-          <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
-            {name}
-          </h3>
-        </div>
+        <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
+          {name}
+        </h3>
       </Link>
     </GlassCard>
   )

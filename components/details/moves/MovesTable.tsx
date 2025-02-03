@@ -78,7 +78,12 @@ export default function MovesTable({
                 )}
               >
                 <div className="flex h-full min-w-16 px-2 py-1">
-                  <p className="font-num w-full text-right text-zinc-700 dark:text-zinc-300">
+                  <p
+                    className={clsx(
+                      'font-num w-full text-right text-zinc-700 dark:text-zinc-300',
+                      rowLabel ? 'visible' : 'invisible'
+                    )}
+                  >
                     {rowLabel}
                   </p>
                 </div>
