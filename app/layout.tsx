@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
-    site: 'Masterball',
+    title: 'Masterball',
   },
   authors: [
     {
@@ -62,7 +62,6 @@ export const metadata: Metadata = {
     },
   ],
   generator: 'Next.js',
-  applicationName: 'Masterball',
   // prettier-ignore
   keywords: ['Next.js', 'React', 'JavaScript', 'TypeScript', 'Tailwind CSS', 'Pokémon', 'PokeAPI', 'Pokédex', 'Pokemon', 'Pokedex', 'Masterball', 'Database', 'Static', 'Web App', 'JSX', 'SSG', 'API', 'REST', 'Node', 'Node.js', 'Monster', 'Pocket Monsters', 'GitHub', 'Pages'],
   creator: 'blai30',
