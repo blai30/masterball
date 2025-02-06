@@ -32,12 +32,13 @@ const sofiaSans = Sofia_Sans({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Masterball',
+    template: '%s',
     default: 'Masterball',
   },
   description:
     'Statically rendered and hosted web app for a modern Pokémon database.',
   openGraph: {
+    siteName: 'Masterball',
     type: 'website',
     locale: 'en_US',
     url: 'https://blai30.github.io/masterball/',
@@ -52,6 +53,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
+    site: 'Masterball',
   },
   authors: [
     {
