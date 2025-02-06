@@ -21,7 +21,7 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 
-export const dynamic = 'auto'
+export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
   // const speciesList = await pokeapi.getPokemonSpeciesList({
@@ -70,8 +70,7 @@ export async function generateMetadata({
     openGraph: {
       images: [
         {
-          // url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
-          url: 'https://www.brianlai.dev/masterball/api/og',
+          url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
           width: 128,
           height: 128,
           alt: species.name,

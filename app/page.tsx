@@ -5,7 +5,7 @@ import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import LoadingCard from '@/components/LoadingCard'
 import MonsterCard from '@/components/MonsterCard'
 
-export const dynamic = 'auto'
+export const dynamic = 'force-static'
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata = {
