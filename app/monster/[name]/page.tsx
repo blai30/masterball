@@ -1,7 +1,11 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getMockSpeciesList, pokeapi } from '@/lib/providers'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import {
+  getTranslation,
+  StatLabels,
+  StatName,
+} from '@/lib/utils/pokeapiHelpers'
 import MonsterHero from '@/components/MonsterHero'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
@@ -49,16 +53,20 @@ export async function generateMetadata({
     const typeName = getTranslation(resource.names, 'name')!
     return {
       id: resource.id,
+      key: resource.name,
       typeName,
     }
   })
+  const stats = pokemon.stats.map(
+    (stat) => `${StatLabels[stat.stat.name as StatName]}: ${stat.base_stat}`
+  )
 
   const imageId = pokemon.id.toString().padStart(4, '0')
   const translatedName = getTranslation(species.names, 'name')
 
-  return {
-    title: `${translatedName} - ${imageId}`,
-    description: `${types.map((t) => t.typeName).join(' ')}`,
+  const metadata = {
+    title: `${translatedName} #${imageId}`,
+    description: `${types.map((t) => t.typeName).join(' ')}\n${stats.join('\n')}`,
     openGraph: {
       images: [
         {
@@ -70,6 +78,8 @@ export async function generateMetadata({
       ],
     },
   }
+
+  return metadata
 }
 
 export default async function Page({
