@@ -65,16 +65,17 @@ export async function generateMetadata({
   const metadata = {
     title: `${translatedName} #${imageId}`,
     description: `${types.map((t) => t.typeName).join(' ')}\n${stats.join('\n')}`,
-    // openGraph: {
-    //   images: [
-    //     {
-    //       url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
-    //       width: 128,
-    //       height: 128,
-    //       alt: species.name,
-    //     },
-    //   ],
-    // },
+    openGraph: {
+      images: [
+        {
+          // url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
+          url: 'https://www.brianlai.dev/masterball/api/og',
+          width: 128,
+          height: 128,
+          alt: species.name,
+        },
+      ],
+    },
   }
 
   return metadata
