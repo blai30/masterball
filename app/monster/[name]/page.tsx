@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
-import { getMockSpeciesList, pokeapi } from '@/lib/providers'
+import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import {
   getTranslation,
   StatLabels,
@@ -29,7 +29,7 @@ export async function generateStaticParams() {
   //   offset: 718,
   // })
 
-  const speciesList = await getMockSpeciesList()
+  const speciesList = await getTestSpeciesList()
 
   return speciesList.results.map((result) => ({
     name: result.name,

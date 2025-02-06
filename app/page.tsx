@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import { NamedAPIResource } from 'pokedex-promise-v2'
-import { getMockSpeciesList, pokeapi } from '@/lib/providers'
+import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import LoadingCard from '@/components/LoadingCard'
 import MonsterCard from '@/components/MonsterCard'
 
@@ -21,7 +21,7 @@ export default async function Home() {
   //   offset: 718,
   // })
 
-  const speciesList = await getMockSpeciesList()
+  const speciesList = await getTestSpeciesList()
 
   return (
     <div className="container mx-auto">
