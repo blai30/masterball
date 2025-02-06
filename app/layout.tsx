@@ -38,6 +38,7 @@ export const metadata: Metadata = {
   description:
     'Statically rendered and hosted web app for a modern Pokémon database.',
   openGraph: {
+    title: 'Masterball',
     siteName: 'Masterball',
     type: 'website',
     locale: 'en_US',
@@ -70,11 +71,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
-  themeColor: [
-    { color: '#A25C7E' },
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
-  ],
+  themeColor: '#A25C7E',
 }
 
 export default function RootLayout({
