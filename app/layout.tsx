@@ -39,7 +39,6 @@ export const metadata: Metadata = {
     'Statically rendered and hosted web app for a modern Pokémon database.',
   openGraph: {
     title: 'Masterball',
-    siteName: 'Masterball',
     type: 'website',
     locale: 'en_US',
     url: 'https://blai30.github.io/masterball/',
