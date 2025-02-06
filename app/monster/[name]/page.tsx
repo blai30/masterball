@@ -21,6 +21,8 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 
+export const dynamic = 'auto'
+
 export async function generateStaticParams() {
   // const speciesList = await pokeapi.getPokemonSpeciesList({
   //   limit: 22,
