@@ -21,8 +21,6 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 
-export const dynamic = 'force-static'
-
 export async function generateStaticParams() {
   // const speciesList = await pokeapi.getPokemonSpeciesList({
   //   limit: 22,
@@ -67,16 +65,16 @@ export async function generateMetadata({
   const metadata = {
     title: `${translatedName} #${imageId}`,
     description: `${types.map((t) => t.typeName).join(' ')}\n${stats.join('\n')}`,
-    openGraph: {
-      images: [
-        {
-          url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
-          width: 128,
-          height: 128,
-          alt: species.name,
-        },
-      ],
-    },
+    // openGraph: {
+    //   images: [
+    //     {
+    //       url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
+    //       width: 128,
+    //       height: 128,
+    //       alt: species.name,
+    //     },
+    //   ],
+    // },
   }
 
   return metadata
