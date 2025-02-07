@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
-import Script from 'next/script'
 import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
@@ -91,9 +90,11 @@ export default function RootLayout({
         sofiaSans.variable
       )}
     >
-      <head>
-        <Script src="https://unpkg.com/react-scan/dist/auto.global.js"></Script>
-      </head>
+      {process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development' && (
+        <head>
+          <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script>
+        </head>
+      )}
       <body className="bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider
           attribute="class"

@@ -31,16 +31,16 @@ export async function GET(
 
   return new ImageResponse(
     (
-      <div tw="w-full h-full bg-black flex flex-col justify-start p-8 items-start">
+      <div tw="w-full h-full bg-black flex flex-col justify-start p-8 items-start gap-2">
         <div tw="flex flex-row items-center justify-between w-full">
-          <div tw="flex flex-col">
+          <div tw="flex flex-col gap-2">
             <p tw="font-num relative text-2xl">
               <span tw="text-zinc-600">{leadingZeros}</span>
               <span tw="text-white">{significantDigits}</span>
             </p>
-            <h1 tw="text-white text-4xl font-semibold tracking-tight">
+            <p tw="text-white text-4xl font-semibold tracking-tight">
               {species.name}
-            </h1>
+            </p>
           </div>
           <img
             src={imageUrl}
