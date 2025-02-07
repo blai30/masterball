@@ -15,7 +15,7 @@ export default async function StatsBarChart({
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
 
   return (
-    <>
+    <div className="w-full">
       {/* Bar chart */}
       <ul className="flex flex-col">
         {stats.map((stat) => {
@@ -71,6 +71,6 @@ export default async function StatsBarChart({
           </span>
         </p>
       </div>
-    </>
+    </div>
   )
 }
