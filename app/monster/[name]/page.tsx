@@ -71,15 +71,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
     },
     openGraph: {
-      images: [
-        {
-          // url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
-          url: `https://blai30.github.io/masterball/monster/${name}/og.png`,
-          width: 128,
-          height: 128,
-          alt: species.name,
-        },
-      ],
+      images: `https://blai30.github.io/masterball/monster/${name}/og.png`,
     },
   }
 
