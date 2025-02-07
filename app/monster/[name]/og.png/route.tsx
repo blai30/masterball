@@ -28,7 +28,7 @@ export async function GET(
   })
   const page = await browser.newPage({
     colorScheme: 'dark',
-    baseURL: process.env.NEXT_PUBLIC_BASEPATH || 'http://localhost:3000',
+    baseURL: 'https://blai30.github.io/masterball',
     viewport: { width: 800, height: 400 },
   })
 
