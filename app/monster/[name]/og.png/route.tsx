@@ -67,11 +67,11 @@ export async function GET(
         <div tw="w-full h-full bg-black flex flex-col p-12">
           <div tw="flex flex-row justify-between w-full">
             <div tw="flex flex-col">
-              <div tw="text-5xl flex flex-row">
+              <div tw="text-3xl flex flex-row">
                 <span tw="text-zinc-600">{leadingZeros}</span>
                 <span tw="text-white">{significantDigits}</span>
               </div>
-              <div tw="mt-6 text-white text-7xl font-semibold tracking-tight">
+              <div tw="mt-6 text-white text-6xl font-semibold tracking-tight">
                 {getTranslation(species.names, 'name')}
               </div>
               <div tw="mt-6 flex flex-row">
@@ -79,7 +79,7 @@ export async function GET(
                   return (
                     <div
                       key={type.type.name}
-                      tw="flex flex-row items-center justify-start text-white text-2xl w-44 bg-red-200 px-6 py-1 rounded-full mr-4"
+                      tw="flex flex-row items-center justify-start text-white text-4xl w-56 bg-red-200 px-8 py-2 rounded-full mr-4"
                       style={{
                         backgroundColor:
                           typeBackgrounds[type.type.name as TypeName],
@@ -91,9 +91,9 @@ export async function GET(
                 })}
               </div>
             </div>
-            <img src={imageUrl} alt={species.name} width={128} height={128} />
+            <img src={imageUrl} alt={species.name} width={200} height={200} />
           </div>
-          <div tw="mt-16 flex flex-col">
+          <div tw="mt-14 flex flex-col">
             {stats.map((stat) => {
               const pokemonStat = pokemon.stats.find(
                 (s) => s.stat.name === stat.name
@@ -103,11 +103,11 @@ export async function GET(
               return (
                 <div key={stat.id} tw="flex flex-row items-center mb-1">
                   <div tw="flex flex-row items-center justify-between">
-                    <abbr tw="min-w-20 font-normal text-zinc-300 no-underline">
+                    <span tw="min-w-44 text-3xl font-medium text-zinc-300 no-underline">
                       {StatLabels[stat.name as StatName]}
-                    </abbr>
+                    </span>
                     <span
-                      tw="min-w-12 text-right text-white"
+                      tw="min-w-20 text-3xl font-medium text-right text-white"
                       style={{ fontVariantNumeric: 'tabular-nums' }}
                     >
                       {pokemonStat.base_stat.toLocaleString()}
@@ -115,7 +115,7 @@ export async function GET(
                   </div>
 
                   {/* Progress bar visualization */}
-                  <div tw="flex h-5 w-full flex-row items-center">
+                  <div tw="flex h-8 w-full flex-row items-center">
                     <div tw="h-full flex max-w-full bg-black">
                       <div
                         tw="h-full flex bg-white"
