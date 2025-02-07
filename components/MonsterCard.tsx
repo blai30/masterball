@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { NamedAPIResource } from 'pokedex-promise-v2'
+import { PokemonSpecies } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
@@ -27,11 +27,10 @@ const typeClasses: Record<string, string> = {
 }
 
 export default async function MonsterCard({
-  speciesResource,
+  species,
 }: {
-  speciesResource: NamedAPIResource
+  species: PokemonSpecies
 }) {
-  const species = await pokeapi.getPokemonSpeciesByName(speciesResource.name)
   // const pokemon = await pokeapi.getPokemonByName(
   //   species.varieties.find((variety) => variety.is_default)!.pokemon.name
   // )
