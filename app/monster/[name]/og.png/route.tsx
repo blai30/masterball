@@ -20,10 +20,22 @@ export async function GET(
   }
 ) {
   const { name } = await params
+  const species = await pokeapi.getPokemonSpeciesByName(name)
+  const id = species.id.toString().padStart(4, '0')
+  const leadingZeros = id.match(/^0+/)?.[0] || ''
+  const significantDigits = id.slice(leadingZeros.length)
+
   return new ImageResponse(
     (
-      <div tw="w-full h-full bg-black flex flex-col items-center justify-center">
-        <h1 tw="text-white">{name}</h1>
+      <div tw="w-full h-full bg-black flex flex-col justify-center p-12 items-start gap-4">
+        <h1 tw="text-zinc-300">{species.id}</h1>
+        <p tw="font-num relative text-2xl">
+          <span tw="text-zinc-600">{leadingZeros}</span>
+          <span tw="text-white">{significantDigits}</span>
+        </p>
+        <h2 tw="text-white text-4xl font-semibold tracking-tight">
+          {species.name}
+        </h2>
       </div>
     ),
     {

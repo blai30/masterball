@@ -64,9 +64,12 @@ export async function generateMetadata({
   const imageId = pokemon.id.toString().padStart(4, '0')
   const translatedName = getTranslation(species.names, 'name')
 
-  const metadata = {
+  const metadata: Metadata = {
     title: `${translatedName} #${imageId}`,
     description: `${types.map((t) => t.typeName).join(' ')}\n${stats.join('\n')}`,
+    twitter: {
+      card: 'summary_large_image',
+    },
     openGraph: {
       images: [
         {
