@@ -9,7 +9,15 @@ export async function generateStaticParams() {
   }))
 }
 
-export async function GET({ params }: { params: Promise<{ name: string }> }) {
+export async function GET(
+  request: Request,
+  {
+    params,
+  }: {
+    params: Promise<{ name: string }>
+  }
+) {
+  console.log(request)
   const { name } = await params
   return new ImageResponse(
     (
