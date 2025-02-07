@@ -1,6 +1,6 @@
+import playwright from 'playwright'
 import { getTestSpeciesList } from '@/lib/providers'
 import { NextResponse } from 'next/server'
-import puppeteer from 'puppeteer'
 
 export const dynamic = 'force-static'
 
@@ -21,24 +21,28 @@ export async function GET(
   }
 ) {
   const { name } = await params
-  const url = `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/splash`
+  const url = `/monster/${name}/splash`
 
-  const browser = await puppeteer.launch()
-  const page = await browser.newPage()
+  const browser = await playwright.chromium.launch({
+    headless: true,
+  })
+  const page = await browser.newPage({
+    colorScheme: 'dark',
+    baseURL: process.env.NEXT_PUBLIC_BASEPATH || 'http://localhost:3000',
+    viewport: { width: 800, height: 400 },
+  })
 
-  try {
-    await page.setViewport({ width: 1200, height: 630 })
-    await page.goto(url, { waitUntil: 'networkidle0' })
-    const imageBuffer = await page.screenshot()
-
-    await browser.close()
-    return new NextResponse(imageBuffer, {
-      headers: { 'Content-Type': 'image/png' },
-    })
-  } catch (error) {
-    console.error('Screenshot error:', error)
-    return new NextResponse('Failed to generate image', { status: 500 })
-  } finally {
-    await browser.close()
-  }
+  await page.goto(url, { waitUntil: 'commit' })
+  const screenshot = await page.locator('#splash').screenshot({
+    omitBackground: true,
+    type: 'png',
+  })
+  await browser.close()
+  return new NextResponse(screenshot, {
+    status: 200,
+    headers: {
+      'Content-Type': 'image/png',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+  })
 }
