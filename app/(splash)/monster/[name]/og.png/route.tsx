@@ -1,4 +1,3 @@
-import { ImageResponse } from 'next/og'
 import { NextResponse } from 'next/server'
 import playwright from 'playwright'
 import { getTestSpeciesList } from '@/lib/providers'
@@ -38,30 +37,12 @@ export async function GET(
     type: 'png',
   })
   await browser.close()
-  const buffer = screenshot.toString('base64')
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          backgroundColor: 'transparent',
-          backgroundImage: `url('data:image/png;base64,${buffer}')`,
-          backgroundSize: '800px 400px',
-          height: '100%',
-          width: '100%',
-        }}
-      />
-    ),
-    {
-      width: 800,
-      height: 400,
-    }
-  )
-  // return new NextResponse(screenshot.toString('base64'), {
-  //   status: 200,
-  //   headers: {
-  //     'Content-Type': 'image/png;base64',
-  //     'Cache-Control': 'public, max-age=31536000, immutable',
-  //   },
-  // })
+  return new NextResponse(screenshot, {
+    status: 200,
+    headers: {
+      'Content-Type': 'image/png',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+  })
 }
