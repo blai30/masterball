@@ -33,7 +33,6 @@ export async function GET(
   })
   await page.goto(url)
   const screenshot = await page.screenshot({
-    omitBackground: true,
     type: 'png',
   })
   await browser.close()
