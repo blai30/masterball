@@ -3,7 +3,6 @@ import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 import TypePill from '@/components/TypePill'
-import StatsBarChart from '@/components/details/stats/StatsBarChart'
 import StatsRadarChart from '@/components/details/stats/StatsRadarChart'
 
 export const dynamic = 'force-static'

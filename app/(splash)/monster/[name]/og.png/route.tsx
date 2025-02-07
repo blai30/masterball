@@ -30,6 +30,7 @@ export async function GET(
     colorScheme: 'dark',
     viewport: { width: 800, height: 400 },
   })
+
   await page.goto(url)
   await page.waitForLoadState()
   const screenshot = await page.screenshot({
