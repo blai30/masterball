@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import { NextRequest } from 'next/server'
 
 export async function generateStaticParams() {
   const speciesList = await getTestSpeciesList()
