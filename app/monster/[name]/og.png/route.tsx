@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import MonsterCard from '@/components/MonsterCard'
+import { NextRequest } from 'next/server'
 
 export async function generateStaticParams() {
   const speciesList = await getTestSpeciesList()
@@ -11,13 +11,22 @@ export async function generateStaticParams() {
 }
 
 export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ name: string }> }
+  request: NextRequest,
+  {
+    params,
+  }: {
+    params: Promise<{ name: string }>
+  }
 ) {
+  console.log(request)
   const { name } = await params
-  const species = await pokeapi.getPokemonSpeciesByName(name)
-  return new ImageResponse(<MonsterCard species={species}></MonsterCard>, {
-    width: 1200,
-    height: 630,
-  })
+  return new ImageResponse(
+    <div tw="w-full h-full bg-black">
+      <h1>{name}</h1>
+    </div>,
+    {
+      width: 1200,
+      height: 630,
+    }
+  )
 }
