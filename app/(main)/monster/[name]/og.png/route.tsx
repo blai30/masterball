@@ -32,8 +32,8 @@ export async function GET(
     viewport: { width: 800, height: 400 },
   })
 
-  await page.goto(url, { waitUntil: 'domcontentloaded' })
-  const screenshot = await page.locator('#splash').screenshot({
+  await page.goto(url)
+  const screenshot = await page.screenshot({
     omitBackground: true,
     type: 'png',
   })

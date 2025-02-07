@@ -3,7 +3,6 @@ import { Geist, Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
 import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
-import Header from '@/components/shared/Header'
 
 const geist = Geist({
   variable: '--font-geist',
@@ -90,11 +89,6 @@ export default function RootLayout({
         sofiaSans.variable
       )}
     >
-      {process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development' && (
-        <head>
-          <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script>
-        </head>
-      )}
       <body className="bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider
           attribute="class"
@@ -102,11 +96,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col gap-6 px-4 py-6 print:mx-0 print:max-w-none print:p-0">
-            <Header />
-            <main className="flex grow flex-col items-center">{children}</main>
-            {/* <Footer /> */}
-          </div>
+            {children}
         </ThemeProvider>
       </body>
     </html>
