@@ -31,7 +31,7 @@ export async function GET(
     baseURL: process.env.NEXT_PUBLIC_BASEPATH,
     viewport: { width: 800, height: 400 },
   })
-  await page.goto(url)
+  await page.goto(url, { waitUntil: 'load' })
   const screenshot = await page.screenshot({
     type: 'png',
   })
