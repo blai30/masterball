@@ -63,8 +63,8 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml', '**/yarn.lock') }}-
       - name: Install dependencies
         run: pnpm install
-      - name: Install Puppeteer browsers
-        run: pnpm dlx puppeteer browsers install
+      - name: Install Playwright browsers
+        run: pnpm dlx playwright install
       - name: Build with Next.js
         run: pnpm next build
       - name: Upload artifact

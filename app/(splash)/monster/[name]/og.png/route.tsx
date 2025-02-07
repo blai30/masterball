@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import puppeteer from 'puppeteer'
+import playwright from 'playwright'
 import { getTestSpeciesList } from '@/lib/providers'
 
 export const dynamic = 'force-static'
@@ -21,14 +21,16 @@ export async function GET(
   }
 ) {
   const { name } = await params
-  const url = `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/splash`
+  const url = `/monster/${name}/splash`
 
-  const browser = await puppeteer.launch({
-    defaultViewport: { width: 800, height: 400 },
+  const browser = await playwright.chromium.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
-  const page = await browser.newPage()
+  const page = await browser.newPage({
+    colorScheme: 'dark',
+    baseURL: process.env.NEXT_PUBLIC_BASEPATH,
+    viewport: { width: 800, height: 400 },
+  })
   await page.goto(url)
   const screenshot = await page.screenshot()
   await browser.close()

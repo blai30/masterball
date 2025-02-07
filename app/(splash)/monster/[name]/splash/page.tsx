@@ -42,17 +42,13 @@ export default async function Page({
       <GlassCard className="h-full w-full p-10">
         <div className="flex h-full flex-row justify-between">
           <div className="flex flex-col items-start gap-4">
-            <p className="font-num relative text-2xl sm:text-3xl">
-              <span className="text-zinc-400 dark:text-zinc-600">
-                {leadingZeros}
-              </span>
-              <span className="text-black dark:text-white">
-                {significantDigits}
-              </span>
+            <p className="font-num relative text-3xl">
+              <span className="text-zinc-600">{leadingZeros}</span>
+              <span className="text-white">{significantDigits}</span>
             </p>
             <div className="flex h-full flex-col items-start justify-between">
               <div className="flex flex-col items-start gap-6">
-                <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl dark:text-white">
+                <h1 className="text-6xl font-semibold tracking-tight text-white">
                   {label}
                 </h1>
                 <ul className="flex flex-row gap-2">
