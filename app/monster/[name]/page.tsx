@@ -70,12 +70,11 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
     },
-    metadataBase: new URL(process.env.NEXT_PUBLIC_BASEPATH || 'http://localhost:3000'),
     openGraph: {
       images: [
         {
           // url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
-          url: `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/og.png`,
+          url: `https://blai30.github.io/masterball/monster/${name}/og.png`,
           width: 128,
           height: 128,
           alt: species.name,
