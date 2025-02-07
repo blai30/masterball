@@ -26,6 +26,7 @@ export async function GET(
   const browser = await puppeteer.launch({
     defaultViewport: { width: 800, height: 400 },
     headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
   const page = await browser.newPage()
   await page.goto(url)
