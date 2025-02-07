@@ -74,7 +74,7 @@ export async function generateMetadata({
       images: [
         {
           // url: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
-          url: `/monster/${name}/og.png`,
+          url: `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/og.png`,
           width: 128,
           height: 128,
           alt: species.name,
