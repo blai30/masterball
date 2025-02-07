@@ -21,21 +21,45 @@ export async function GET(
 ) {
   const { name } = await params
   const species = await pokeapi.getPokemonSpeciesByName(name)
-  const id = species.id.toString().padStart(4, '0')
-  const leadingZeros = id.match(/^0+/)?.[0] || ''
-  const significantDigits = id.slice(leadingZeros.length)
+  const pokemon = await pokeapi.getPokemonByName(
+    species.varieties.find((variety) => variety.is_default)!.pokemon.name
+  )
+  const imageId = species.id.toString().padStart(4, '0')
+  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  const leadingZeros = imageId.match(/^0+/)?.[0] || ''
+  const significantDigits = imageId.slice(leadingZeros.length)
 
   return new ImageResponse(
     (
-      <div tw="w-full h-full bg-black flex flex-col justify-center p-12 items-start gap-4">
-        <h1 tw="text-zinc-300">{species.id}</h1>
-        <p tw="font-num relative text-2xl">
-          <span tw="text-zinc-600">{leadingZeros}</span>
-          <span tw="text-white">{significantDigits}</span>
-        </p>
-        <h2 tw="text-white text-4xl font-semibold tracking-tight">
-          {species.name}
-        </h2>
+      <div tw="w-full h-full bg-black flex flex-col justify-start p-8 items-start">
+        <div tw="flex flex-row items-center justify-between w-full">
+          <div tw="flex flex-col">
+            <p tw="font-num relative text-2xl">
+              <span tw="text-zinc-600">{leadingZeros}</span>
+              <span tw="text-white">{significantDigits}</span>
+            </p>
+            <h1 tw="text-white text-4xl font-semibold tracking-tight">
+              {species.name}
+            </h1>
+          </div>
+          <img
+            src={imageUrl}
+            alt={species.name}
+            width={128}
+            height={128}
+            tw="object-scale-down"
+          />
+        </div>
+        <div tw="flex flex-row">
+          {pokemon.types.map((type) => (
+            <p
+              key={type.type.name}
+              tw="rounded-md bg-zinc-800 px-2 py-1 text-center text-xs font-semibold uppercase text-white"
+            >
+              {type.type.name}
+            </p>
+          ))}
+        </div>
       </div>
     ),
     {
