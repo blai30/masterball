@@ -1,13 +1,9 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import {
-  getTranslation,
-  StatLabels,
-  StatName,
-} from '@/lib/utils/pokeapiHelpers'
-import MonsterHero from '@/components/MonsterHero'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
+import MonsterHero from '@/components/details/MonsterHero'
 import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
 import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'

@@ -39,10 +39,10 @@ export const metadata: Metadata = {
     title: 'Masterball',
     type: 'website',
     locale: 'en_US',
-    url: 'https://blai30.github.io/masterball/',
+    url: process.env.NEXT_PUBLIC_BASEPATH,
     images: [
       {
-        url: 'https://blai30.github.io/masterball/favicon.png',
+        url: `${process.env.NEXT_PUBLIC_BASEPATH}/favicon.png`,
         width: 128,
         height: 128,
         alt: 'Masterball',

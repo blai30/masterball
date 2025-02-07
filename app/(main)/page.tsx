@@ -8,8 +8,11 @@ import MonsterCard from '@/components/MonsterCard'
 export const dynamic = 'force-static'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const metadata = {
+  const metadata: Metadata = {
     title: 'Home',
+    twitter: {
+      card: 'summary',
+    },
   }
 
   return metadata
@@ -34,10 +37,7 @@ export default async function Home() {
         {species.map((specie: PokemonSpecies) => (
           <li key={specie.name} className="col-span-1">
             <Suspense fallback={<LoadingCard />}>
-              <MonsterCard
-                key={specie.id}
-                species={specie}
-              />
+              <MonsterCard key={specie.id} species={specie} />
             </Suspense>
           </li>
         ))}
