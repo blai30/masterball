@@ -71,7 +71,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
     },
     openGraph: {
-      images: `https://blai30.github.io/masterball/monster/${name}/og.png`,
+      images: `${process.env.NEXT_PUBLIC_BASEPATH}/masterball/monster/${name}/og.png`,
     },
   }
 
