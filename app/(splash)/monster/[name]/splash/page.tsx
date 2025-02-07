@@ -38,7 +38,7 @@ export default async function Page({
   const significantDigits = imageId.slice(leadingZeros.length)
 
   return (
-    <div id="splash" className="h-[400px] w-[800px] bg-transparent">
+    <div className="h-[400px] w-[800px] bg-transparent">
       <GlassCard className="h-full w-full p-10">
         <div className="flex h-full flex-row justify-between">
           <div className="flex flex-col items-start gap-4">

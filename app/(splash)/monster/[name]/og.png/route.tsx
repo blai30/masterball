@@ -1,6 +1,6 @@
-import playwright from 'playwright'
-import { getTestSpeciesList } from '@/lib/providers'
 import { NextResponse } from 'next/server'
+import puppeteer from 'puppeteer'
+import { getTestSpeciesList } from '@/lib/providers'
 
 export const dynamic = 'force-static'
 
@@ -21,22 +21,15 @@ export async function GET(
   }
 ) {
   const { name } = await params
-  const url = `/monster/${name}/splash`
+  const url = `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/splash`
 
-  const browser = await playwright.chromium.launch({
+  const browser = await puppeteer.launch({
+    defaultViewport: { width: 800, height: 400 },
     headless: true,
   })
-  const page = await browser.newPage({
-    colorScheme: 'dark',
-    baseURL: 'https://blai30.github.io/masterball',
-    viewport: { width: 800, height: 400 },
-  })
-
+  const page = await browser.newPage()
   await page.goto(url)
-  const screenshot = await page.screenshot({
-    omitBackground: true,
-    type: 'png',
-  })
+  const screenshot = await page.screenshot()
   await browser.close()
   return new NextResponse(screenshot, {
     status: 200,
