@@ -71,7 +71,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
     },
     openGraph: {
-      images: `https://blai30.github.io/masterball/monster/${name}/og.png`,
+      images: `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/og.png`,
     },
   }
 
@@ -119,15 +119,15 @@ export default async function Page({
               <div className="flex flex-col">
                 <p className="flex gap-x-1">
                   <span className="text-base font-light text-black dark:text-white">
-                    {(3).toLocaleString()}
+                    —
                   </span>
                   <span className="text-base text-zinc-600 dark:text-zinc-400">
-                    Attack
+                    stat
                   </span>
                 </p>
                 <p className="flex gap-x-1">
                   <span className="text-base font-light text-black dark:text-white">
-                    {"that's it"}
+                    —
                   </span>
                 </p>
               </div>

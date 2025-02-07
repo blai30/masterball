@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { cva } from 'cva'
-import { typeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
+import { TypeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
   base: 'flex flex-row items-center',
@@ -43,7 +43,7 @@ export default function TypePill({
   variant: string
   size?: 'small' | 'medium' | 'large'
 }) {
-  const name = typeLabels[variant as TypeName]
+  const name = TypeLabels[variant as TypeName]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
 
   return (

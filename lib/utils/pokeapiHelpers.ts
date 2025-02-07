@@ -67,7 +67,7 @@ export enum TypeName {
   Fairy = 'fairy',
 }
 
-export const typeLabels: Record<TypeName, string> = {
+export const TypeLabels: Record<TypeName, string> = {
   [TypeName.Normal]: 'Normal',
   [TypeName.Fighting]: 'Fighting',
   [TypeName.Flying]: 'Flying',
