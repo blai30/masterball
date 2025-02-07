@@ -21,17 +21,17 @@ export async function GET(
   }
 ) {
   const { name } = await params
-  const url = `/monster/${name}/splash`
+  const url = `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/splash`
 
   const browser = await playwright.chromium.launch({
     headless: true,
   })
   const page = await browser.newPage({
     colorScheme: 'dark',
-    baseURL: process.env.NEXT_PUBLIC_BASEPATH,
     viewport: { width: 800, height: 400 },
   })
-  await page.goto(url, { waitUntil: 'load' })
+  await page.goto(url)
+  await page.waitForLoadState()
   const screenshot = await page.screenshot({
     type: 'png',
   })
