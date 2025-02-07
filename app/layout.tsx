@@ -89,6 +89,11 @@ export default function RootLayout({
         sofiaSans.variable
       )}
     >
+      {process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development' && (
+        <head>
+          <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script>
+        </head>
+      )}
       <body className="bg-white text-black antialiased dark:bg-black dark:text-white">
         <ThemeProvider
           attribute="class"
