@@ -1,6 +1,8 @@
 import { ImageResponse } from 'next/og'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   const speciesList = await getTestSpeciesList()
 
@@ -17,7 +19,6 @@ export async function GET(
     params: Promise<{ name: string }>
   }
 ) {
-  console.log(request)
   const { name } = await params
   return new ImageResponse(
     (
