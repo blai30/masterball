@@ -22,8 +22,8 @@ export async function GET(
   const { name } = await params
   return new ImageResponse(
     (
-      <div tw="w-full h-full bg-black">
-        <h1>{name}</h1>
+      <div tw="w-full h-full bg-black flex flex-col items-center justify-center">
+        <h1 tw="text-white">{name}</h1>
       </div>
     ),
     {
