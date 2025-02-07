@@ -10,20 +10,14 @@ export async function generateStaticParams() {
   }))
 }
 
-export async function GET(
-  request: NextRequest,
-  {
-    params,
-  }: {
-    params: Promise<{ name: string }>
-  }
-) {
-  console.log(request)
+export async function GET({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
   return new ImageResponse(
-    <div tw="w-full h-full bg-black">
-      <h1>{name}</h1>
-    </div>,
+    (
+      <div tw="w-full h-full bg-black">
+        <h1>{name}</h1>
+      </div>
+    ),
     {
       width: 1200,
       height: 630,
