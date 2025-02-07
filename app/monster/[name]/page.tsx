@@ -70,6 +70,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
     },
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASEPATH || 'http://localhost:3000'),
     openGraph: {
       images: [
         {
