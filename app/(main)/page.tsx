@@ -39,9 +39,11 @@ export default async function Home() {
             </Suspense>
           </li>
         ))}
-        <li className="col-span-1">
-          <LoadingCard />
-        </li>
+        {Array.from({ length: 1000 }).map((_, i) => (
+          <li key={i} className="col-span-1">
+            <LoadingCard />
+          </li>
+        ))}
       </ul>
     </div>
   )
