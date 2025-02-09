@@ -21,7 +21,7 @@ export async function GET(
   }
 ) {
   const { name } = await params
-  const url = `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/splash`
+  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/monster/${name}/splash`
 
   const browser = await playwright.chromium.launch({
     headless: true,
