@@ -5,7 +5,7 @@ export default function LoadingCard() {
 
   return (
     <GlassCard variant="link" className="h-full">
-      <div className="group flex flex-col items-center justify-between px-2 py-3">
+      <div className="group flex h-full flex-col items-center justify-between px-2 py-3">
         <p
           aria-hidden="true"
           className="font-num text-sm text-zinc-400 dark:text-zinc-500"

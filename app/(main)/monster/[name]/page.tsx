@@ -16,6 +16,7 @@ import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
 import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
+import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
 
 export const dynamic = 'force-static'
 
@@ -110,28 +111,7 @@ export default async function Page({
             <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
             <EggGroupMetadata eggGroups={eggGroups} />
             <GrowthRateMetadata growthRate={growthRate} />
-
-            {/* Placeholder EV yield metadata */}
-            <div className="flex flex-col gap-2 rounded-lg p-4">
-              <p className="text-sm/6 text-zinc-600 dark:text-zinc-400">
-                {'Effort Value yield'}
-              </p>
-              <div className="flex flex-col">
-                <p className="flex gap-x-1">
-                  <span className="text-base font-light text-black dark:text-white">
-                    —
-                  </span>
-                  <span className="text-base text-zinc-600 dark:text-zinc-400">
-                    stat
-                  </span>
-                </p>
-                <p className="flex gap-x-1">
-                  <span className="text-base font-light text-black dark:text-white">
-                    —
-                  </span>
-                </p>
-              </div>
-            </div>
+            <EffortValueYieldMetadata stats={pokemon.stats} />
           </div>
         </section>
         <div className="flex w-full flex-col lg:grow lg:flex-row">
