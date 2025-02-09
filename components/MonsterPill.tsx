@@ -47,7 +47,7 @@ export default async function MonsterPill({
     <GlassCard variant="link">
       <Link
         href={`/monster/${species.name}`}
-        className="group flex w-60 items-center gap-3 px-3 py-1"
+        className="group flex w-56 items-center gap-3 px-3 py-1"
       >
         <Image
           src={imageUrl}
