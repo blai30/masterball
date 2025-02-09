@@ -64,7 +64,14 @@ export async function generateMetadata({
       card: 'summary_large_image',
     },
     openGraph: {
-      images: `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/og.png`,
+      images: [
+        {
+          url: `${process.env.NEXT_PUBLIC_BASEPATH}/monster/${name}/og.png`,
+          width: 800,
+          height: 400,
+          alt: `${translatedName} splash image`,
+        }
+      ],
     },
   }
 
