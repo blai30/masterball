@@ -67,7 +67,7 @@ export async function generateMetadata({
     openGraph: {
       images: [
         {
-          url: `/monster/${name}/og.png`,
+          url: `/${name}/og.png`,
           width: 800,
           height: 400,
           alt: `${translatedName} splash image`,

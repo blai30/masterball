@@ -45,7 +45,7 @@ export default async function MonsterCard({
   return (
     <GlassCard variant="link" className="h-full">
       <Link
-        href={`/monster/${species.name}`}
+        href={`/${species.name}`}
         className="group flex flex-col items-center justify-between px-2 py-3"
       >
         <p
