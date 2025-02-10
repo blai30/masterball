@@ -71,7 +71,7 @@ export async function generateMetadata({
           width: 800,
           height: 400,
           alt: `${translatedName} splash image`,
-        }
+        },
       ],
     },
   }

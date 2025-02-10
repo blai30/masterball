@@ -1,22 +1,33 @@
-'use client'
+import { NamedAPIResource } from 'pokedex-promise-v2'
+import Navigation from '@/components/shared/Navigation'
+import Search from '@/components/shared/Search'
+import { SearchItem, SearchProvider } from '@/components/shared/SearchProvider'
+import { getTestSpeciesList, pokeapi } from '@/lib/providers'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
-import dynamic from 'next/dynamic'
-import Link from 'next/link'
+export default async function Header() {
+  const speciesList = await getTestSpeciesList()
+  const species = await pokeapi.getPokemonSpeciesByName(
+    speciesList.results.map((resource: NamedAPIResource) => resource.name)
+  )
 
-const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
-  ssr: false,
-})
+  const items: SearchItem[] = species.map((specie) => {
+    const imageId = specie.id.toString().padStart(4, '0')
+    return {
+      id: specie.id,
+      title: getTranslation(specie.names, 'name'),
+      path: `${specie.name}`,
+      keywords: [specie.name, getTranslation(specie.names, 'name')],
+      imageUrl: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
+    } as SearchItem
+  })
 
-export default function Header() {
   return (
-    <header className="flex flex-row gap-4">
-      <Link href="/">
-        <p className="text-blue-700 underline dark:text-blue-300">Home</p>
-      </Link>
-      <Link href="https://github.com/blai30/masterball">
-        <p className="text-blue-700 underline dark:text-blue-300">GitHub</p>
-      </Link>
-      <ThemeSwitch />
+    <header className="w-full">
+      <Navigation />
+      <SearchProvider allItems={items}>
+        <Search />
+      </SearchProvider>
     </header>
   )
 }
