@@ -39,7 +39,7 @@ export default async function Home() {
             </Suspense>
           </li>
         ))}
-        {Array.from({ length: 1000 }).map((_, i) => (
+        {Array.from({ length: 40 }).map((_, i) => (
           <li key={i} className="col-span-1">
             <LoadingCard />
           </li>
