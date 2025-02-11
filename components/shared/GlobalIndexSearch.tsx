@@ -43,7 +43,7 @@ export default function GlobalIndexSearch() {
       >
         <Command className="">
           <Command.Input
-            className="w-full rounded-l-xs rounded-tr-xs rounded-br-md border-0 p-4 placeholder-zinc-400 focus:outline-none dark:text-white dark:placeholder-zinc-500"
+            className="w-full rounded-l-xs rounded-tr-xs rounded-br-md p-4 placeholder-zinc-400 focus:outline-none dark:text-white dark:placeholder-zinc-500"
             placeholder="Search"
             autoFocus
           />

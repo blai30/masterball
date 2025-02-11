@@ -37,20 +37,17 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
     )
   )
 
-  const machinesMap = machinesData.reduce<Record<string, Machine>>(
-    (acc, machine) => {
-      acc[machine.move.name] = machine
-      return acc
-    },
-    {}
+  const machinesMap: Record<string, Machine> = Object.fromEntries(
+    machinesData.map((machine) => [machine.move.name, machine])
   )
 
-  const movesMap = movesData.reduce<
-    Record<string, Move & { machine: Machine }>
-  >((acc, move) => {
-    acc[move.name] = { ...move, machine: machinesMap[move.name] }
-    return acc
-  }, {})
+  const movesMap: Record<string, Move & { machine: Machine }> =
+    Object.fromEntries(
+      movesData.map((move) => [
+        move.name,
+        { ...move, machine: machinesMap[move.name] },
+      ])
+    )
 
   const levelUpMoves = filterByLearnMethod('level-up').toSorted((a, b) => {
     const levelA = a.version_group_details[0].level_learned_at
