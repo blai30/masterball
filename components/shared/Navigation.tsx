@@ -7,6 +7,13 @@ const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
   ssr: false,
 })
 
+const GlobalIndexSearch = dynamic(
+  () => import('@/components/shared/GlobalIndexSearch'),
+  {
+    ssr: false,
+  }
+)
+
 export default function Navigation() {
   return (
     <nav className="flex flex-row gap-4">
@@ -17,6 +24,7 @@ export default function Navigation() {
         <p className="text-blue-700 underline dark:text-blue-300">GitHub</p>
       </Link>
       <ThemeSwitch />
+      <GlobalIndexSearch />
     </nav>
   )
 }

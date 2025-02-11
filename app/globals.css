@@ -43,3 +43,7 @@
   --color-dark: #624d4e;
   --color-fairy: #ef70ef;
 }
+
+.scrollbar {
+  @apply [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-zinc-500 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-500 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-zinc-200 dark:[&::-webkit-scrollbar-track]:bg-zinc-800;
+}
