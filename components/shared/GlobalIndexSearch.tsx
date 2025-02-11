@@ -42,15 +42,12 @@ export default function GlobalIndexSearch() {
         className="relative mx-auto max-w-xl overflow-hidden p-2 shadow-2xl"
       >
         <Command className="">
-          <div className="flex items-center">
-            <Command.Input
-              className="w-full rounded-l-xs rounded-tr-xs rounded-br-md border-0 p-4 placeholder-zinc-400 focus:outline-none dark:text-white dark:placeholder-zinc-500"
-              placeholder="Search"
-              autoFocus
-            />
-          </div>
-
-          <Command.List className="scrollbar max-h-[50vh] overflow-y-auto p-2">
+          <Command.Input
+            className="w-full rounded-l-xs rounded-tr-xs rounded-br-md border-0 p-4 placeholder-zinc-400 focus:outline-none dark:text-white dark:placeholder-zinc-500"
+            placeholder="Search"
+            autoFocus
+          />
+          <Command.List className="scrollbar max-h-[70vh] overflow-y-auto p-2 md:max-h-[30rem]">
             <Command.Empty>
               <div className="p-4 text-center text-zinc-500 dark:text-zinc-400">
                 No results found
