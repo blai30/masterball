@@ -29,17 +29,17 @@ export async function generateStaticParams() {
   const speciesList = await getTestSpeciesList()
 
   return speciesList.results.map((result) => ({
-    name: result.name,
+    slug: result.name,
   }))
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ name: string }>
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const { name } = await params
-  const species = await pokeapi.getPokemonSpeciesByName(name)
+  const { slug } = await params
+  const species = await pokeapi.getPokemonSpeciesByName(slug)
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties.find((variety) => variety.is_default)!.pokemon.name
   )
@@ -67,7 +67,7 @@ export async function generateMetadata({
     openGraph: {
       images: [
         {
-          url: `/${name}/og.png`,
+          url: `/${slug}/og.png`,
           width: 800,
           height: 400,
           alt: `${translatedName} splash image`,
@@ -82,10 +82,10 @@ export async function generateMetadata({
 export default async function Page({
   params,
 }: {
-  params: Promise<{ name: string }>
+  params: Promise<{ slug: string }>
 }) {
-  const { name } = await params
-  const species = await pokeapi.getPokemonSpeciesByName(name)
+  const { slug } = await params
+  const species = await pokeapi.getPokemonSpeciesByName(slug)
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties.find((variety) => variety.is_default)!.pokemon.name
   )

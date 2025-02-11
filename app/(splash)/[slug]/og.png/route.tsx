@@ -8,7 +8,7 @@ export async function generateStaticParams() {
   const speciesList = await getTestSpeciesList()
 
   return speciesList.results.map((result) => ({
-    name: result.name,
+    slug: result.name,
   }))
 }
 
@@ -17,11 +17,11 @@ export async function GET(
   {
     params,
   }: {
-    params: Promise<{ name: string }>
+    params: Promise<{ slug: string }>
   }
 ) {
-  const { name } = await params
-  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/${name}/splash`
+  const { slug } = await params
+  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/${slug}/splash`
 
   const browser = await playwright.chromium.launch({
     headless: true,

@@ -6,6 +6,7 @@ import React, { createContext, useContext, useMemo, useState } from 'react'
 export type SearchItem = {
   id: number
   title: string
+  slug: string
   path: string
   keywords: string[]
   imageUrl: string
@@ -30,7 +31,7 @@ export function SearchProvider({
 }) {
   const [query, setQuery] = useState('')
   const fuse = new Fuse(allItems, {
-    keys: ['title', 'keywords'],
+    keys: ['title', 'slug', 'path', 'keywords'],
     includeScore: true,
   })
   const items = useMemo(() => {

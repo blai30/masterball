@@ -11,17 +11,17 @@ export async function generateStaticParams() {
   const speciesList = await getTestSpeciesList()
 
   return speciesList.results.map((result) => ({
-    name: result.name,
+    slug: result.name,
   }))
 }
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ name: string }>
+  params: Promise<{ slug: string }>
 }) {
-  const { name } = await params
-  const species = await pokeapi.getPokemonSpeciesByName(name)
+  const { slug } = await params
+  const species = await pokeapi.getPokemonSpeciesByName(slug)
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties.find((variety) => variety.is_default)!.pokemon.name
   )

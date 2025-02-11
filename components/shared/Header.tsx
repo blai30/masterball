@@ -16,6 +16,7 @@ export default async function Header() {
     return {
       id: specie.id,
       title: getTranslation(specie.names, 'name'),
+      slug: specie.name,
       path: `${specie.name}`,
       keywords: [specie.name, getTranslation(specie.names, 'name')],
       imageUrl: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,

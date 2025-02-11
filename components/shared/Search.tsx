@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -31,7 +32,7 @@ export default function Search() {
     >
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-gray-500/25 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
+        className="fixed inset-0 bg-white/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in dark:bg-black/50"
       />
 
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
@@ -43,6 +44,7 @@ export default function Search() {
             onChange={(item: SearchItem) => {
               if (item) {
                 router.push(item.path)
+                setOpen(false)
               }
             }}
           >
@@ -127,16 +129,23 @@ export default function Search() {
                     {activeOption !== null && activeOption !== undefined && (
                       <div className="hidden h-96 w-1/2 flex-none flex-col divide-y divide-gray-100 overflow-y-auto sm:flex">
                         <div className="flex-none p-6 text-center">
-                          <img
-                            src={activeOption.imageUrl}
-                            alt=""
-                            className="mx-auto size-16 rounded-full"
-                          />
+                          <div className="mx-auto flex w-full flex-col items-center">
+                            <Image
+                              src={activeOption.imageUrl}
+                              alt={activeOption.slug}
+                              width={128}
+                              height={128}
+                              priority
+                              className="size-16 min-w-full object-scale-down"
+                            />
+                          </div>
                           <h2 className="mt-3 font-semibold text-gray-900">
                             {activeOption.title}
                           </h2>
                           <p className="text-sm/6 text-gray-500">
-                            {activeOption.keywords.map((keyword) => keyword).join(', ')}
+                            {activeOption.keywords
+                              .map((keyword) => keyword)
+                              .join(', ')}
                           </p>
                         </div>
                         <div className="flex flex-auto flex-col justify-between p-6">
