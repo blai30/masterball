@@ -15,13 +15,16 @@ export default function GlobalIndexSearch() {
   const router = useRouter()
   const { indexItems } = useGlobalIndex()
   const inputRef = useRef<HTMLInputElement>(null)
-  const listRef = useRef<HTMLDivElement>(null)
   const selectedRef = useRef<HTMLButtonElement>(null)
 
-  const fuse = useMemo(() => new Fuse(indexItems, {
-    keys: ['title', 'path'],
-    threshold: 0.4,
-  }), [indexItems])
+  const fuse = useMemo(
+    () =>
+      new Fuse(indexItems, {
+        keys: ['title', 'path'],
+        threshold: 0.4,
+      }),
+    [indexItems]
+  )
 
   const filteredItems = useMemo(() => {
     return query.length > 0
@@ -56,13 +59,11 @@ export default function GlobalIndexSearch() {
       switch (event.key) {
         case 'ArrowDown':
           event.preventDefault()
-          setSelectedIndex(i => 
-            i < filteredItems.length - 1 ? i + 1 : i
-          )
+          setSelectedIndex((i) => (i < filteredItems.length - 1 ? i + 1 : i))
           break
         case 'ArrowUp':
           event.preventDefault()
-          setSelectedIndex(i => i > 0 ? i - 1 : 0)
+          setSelectedIndex((i) => (i > 0 ? i - 1 : 0))
           break
         case 'Enter':
           event.preventDefault()
@@ -110,10 +111,7 @@ export default function GlobalIndexSearch() {
             placeholder="Search (↑↓ to navigate, ↵ to select)"
           />
 
-          <div 
-            ref={listRef}
-            className="scrollbar max-h-[70vh] overflow-y-auto p-2 md:max-h-[30rem]"
-          >
+          <div className="scrollbar max-h-[70vh] overflow-y-auto p-2 md:max-h-[30rem]">
             {filteredItems.length === 0 ? (
               <div className="p-4 text-center text-zinc-500 dark:text-zinc-400">
                 No results found
@@ -133,7 +131,8 @@ export default function GlobalIndexSearch() {
                       'flex w-full cursor-default items-center gap-3 rounded-lg p-2',
                       'rounded-l-xs rounded-tr-xs rounded-br-md',
                       'transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75',
-                      index === selectedIndex && 'bg-zinc-300/75 dark:bg-zinc-700/75'
+                      index === selectedIndex &&
+                        'bg-zinc-300/75 dark:bg-zinc-700/75'
                     )}
                   >
                     <Image
