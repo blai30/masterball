@@ -156,7 +156,12 @@ const data: NamedAPIResourceList = {
   ],
 }
 
-export const pokeapi = new Pokedex()
+export const pokeapi = new Pokedex({
+  // 3 months
+  cacheLimit: 1000 * 60 * 60 * 24 * 30 * 3,
+  // 5 minutes
+  timeout: 300000,
+})
 
 export const getTestSpeciesList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))
