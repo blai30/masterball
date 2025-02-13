@@ -86,7 +86,6 @@ export default function GlobalIndexSearch() {
         onOpenChange={setOpen}
         shouldFilter={false}
         label="Global Index Search"
-        aria-describedby="global-index-search"
         className="fixed inset-0 z-50 overflow-y-auto p-4 pt-[10vh]"
       >
         {/* Overlay backdrop tint */}
@@ -111,14 +110,29 @@ export default function GlobalIndexSearch() {
           className="relative mx-auto max-w-xl p-2 shadow-2xl"
         >
           <div className="flex flex-col gap-2">
-            <Command.Input
-              className="w-full rounded-l-xs rounded-tr-xs rounded-br-md bg-white/50 px-4 py-3 placeholder-zinc-400 focus:outline-none dark:bg-black/50 dark:text-white dark:placeholder-zinc-500"
-              placeholder="Search (↑↓ to navigate, ↵ to select)"
-              autoFocus
-              value={query}
-              onValueChange={setQuery}
-            />
-            <Command.List className="max-h-[70vh] overflow-y-auto pr-1 *:flex *:flex-col *:gap-1 md:max-h-[30rem]">
+            <div className="relative flex flex-row items-center">
+              <svg
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="absolute ml-2.5 size-6 text-zinc-400 dark:text-zinc-500"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                />
+              </svg>
+              <Command.Input
+                value={query}
+                onValueChange={setQuery}
+                autoFocus
+                placeholder="Search (↑↓ to navigate, ↵ to select)"
+                className="w-full rounded-l-xs rounded-tr-xs rounded-br-md bg-white/50 py-3 pr-4 pl-10.5 placeholder-zinc-400 focus:outline-none dark:bg-black/50 dark:text-white dark:placeholder-zinc-500"
+              />
+            </div>
+            <Command.List className="max-h-[70vh] overflow-y-auto pr-1 *:flex *:flex-col *:gap-1 md:max-h-[32rem]">
               <Command.Empty>
                 <div className="py-8 text-center text-zinc-500 dark:text-zinc-400">
                   {query
@@ -143,17 +157,17 @@ export default function GlobalIndexSearch() {
                       'transition-colors data-[selected=true]:bg-zinc-300/75 data-[selected=true]:duration-0 dark:data-[selected=true]:bg-zinc-700/75'
                     )}
                   >
-                    <div className="flex flex-row items-center justify-start gap-3 p-2">
+                    <div className="flex flex-row items-center justify-start gap-3">
                       <Image
                         src={item.imageUrl}
                         alt={item.title}
                         width={64}
                         height={64}
                         priority
-                        className="pointer-events-none size-16"
+                        className="pointer-events-none h-10 w-12"
                       />
                       <div className="flex flex-1 flex-row items-center justify-between">
-                        <div className="flex flex-col items-start justify-center gap-1">
+                        <div className="flex flex-col items-start justify-center">
                           <span className="pointer-events-none text-black dark:text-white">
                             {item.title}
                           </span>
