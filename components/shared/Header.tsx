@@ -1,4 +1,4 @@
-import { NamedAPIResource } from 'pokedex-promise-v2'
+import { NamedAPIResource, type Pokemon } from 'pokedex-promise-v2'
 import Navigation from '@/components/shared/Navigation'
 import {
   IndexItem,
@@ -21,10 +21,12 @@ export default async function Header() {
   // TODO: Make this more generic for other pages and support all varieties
   const defaultVarieties: Record<string, Pokemon> = Object.fromEntries(
     defaultPokemon.map((pokemon) => [
-      species.find(specie => 
-        specie.varieties.find(v => v.is_default)?.pokemon.name === pokemon.name
+      species.find(
+        (specie) =>
+          specie.varieties.find((v) => v.is_default)?.pokemon.name ===
+          pokemon.name
       )?.name ?? '',
-      pokemon
+      pokemon,
     ])
   )
 
