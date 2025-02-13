@@ -12,6 +12,21 @@ export default async function Header() {
   const species = await pokeapi.getPokemonSpeciesByName(
     speciesList.results.map((resource: NamedAPIResource) => resource.name)
   )
+  const defaultVarietyNames = species.map(
+    (specie) =>
+      specie.varieties.find((variety) => variety.is_default)!.pokemon.name
+  )
+  const defaultPokemon = await pokeapi.getPokemonByName(defaultVarietyNames)
+  // Species to default variety map
+  // TODO: Make this more generic for other pages and support all varieties
+  const defaultVarieties: Record<string, Pokemon> = Object.fromEntries(
+    defaultPokemon.map((pokemon) => [
+      species.find(specie => 
+        specie.varieties.find(v => v.is_default)?.pokemon.name === pokemon.name
+      )?.name ?? '',
+      pokemon
+    ])
+  )
 
   const items: IndexItem[] = species.map((specie) => {
     const imageId = specie.id.toString().padStart(4, '0')
@@ -20,7 +35,11 @@ export default async function Header() {
       title: getTranslation(specie.names, 'name'),
       slug: specie.name,
       path: `${specie.name}`,
-      keywords: [specie.name, getTranslation(specie.names, 'name')],
+      keywords: [
+        ...(defaultVarieties[specie.name].types.map(
+          (type) => type.type.name
+        ) as string[]),
+      ],
       imageUrl: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
     } as IndexItem
   })

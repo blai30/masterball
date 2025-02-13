@@ -7,7 +7,11 @@ import clsx from 'clsx/lite'
 import { Command } from 'cmdk'
 import Fuse from 'fuse.js'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
-import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog'
+import {
+  DialogDescription,
+  DialogOverlay,
+  DialogTitle,
+} from '@radix-ui/react-dialog'
 import { useGlobalIndex } from '@/components/shared/GlobalIndexProvider'
 import GlassCard from '@/components/GlassCard'
 
@@ -86,9 +90,9 @@ export default function GlobalIndexSearch() {
         className="fixed inset-0 z-50 overflow-y-auto p-4 pt-[10vh]"
       >
         {/* Overlay backdrop tint */}
-        <div
-          className="fixed inset-0 bg-white/60 dark:bg-black/60"
+        <DialogOverlay
           onClick={() => setOpen(false)}
+          className="fixed inset-0 bg-white/60 dark:bg-black/60"
         />
 
         {/* Required for screen readers */}
@@ -116,47 +120,53 @@ export default function GlobalIndexSearch() {
             />
             <Command.List className="max-h-[70vh] overflow-y-auto pr-1 *:flex *:flex-col *:gap-1 md:max-h-[30rem]">
               <Command.Empty>
-                <div className="p-4 text-center text-zinc-500 dark:text-zinc-400">
+                <div className="py-8 text-center text-zinc-500 dark:text-zinc-400">
                   {query
                     ? 'No results found'
                     : 'Start typing in the field above'}
                 </div>
               </Command.Empty>
-              {filteredItems.map((item) => (
-                <Command.Item
-                  key={item.id}
-                  value={item.slug}
-                  // keywords={item.keywords}
-                  onSelect={() => {
-                    router.push(`/${item.path}`)
-                    setOpen(false)
-                  }}
-                  className={clsx(
-                    'cursor-default p-2',
-                    'rounded-l-xs rounded-tr-xs rounded-br-md',
-                    'transition-colors data-[selected=true]:bg-zinc-300/75 data-[selected=true]:duration-0 dark:data-[selected=true]:bg-zinc-700/75'
-                  )}
-                >
-                  <div className="flex flex-row items-center justify-start gap-3">
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.title}
-                      width={64}
-                      height={64}
-                      priority
-                      className="pointer-events-none size-16"
-                    />
-                    <div className="flex flex-col items-start justify-center gap-1">
-                      <span className="pointer-events-none flex-1 text-black dark:text-white">
-                        {item.title}
-                      </span>
-                      <span className="pointer-events-none flex-1 text-sm text-zinc-600 dark:text-zinc-400">
-                        {`/${item.path}`}
-                      </span>
+              {filteredItems.map((item) => {
+                const path = `/${item.path}`
+                return (
+                  <Command.Item
+                    key={item.id}
+                    value={item.slug}
+                    // keywords={item.keywords}
+                    onSelect={() => {
+                      router.push(path)
+                      setOpen(false)
+                    }}
+                    className={clsx(
+                      'cursor-default p-2',
+                      'rounded-l-xs rounded-tr-xs rounded-br-md',
+                      'transition-colors data-[selected=true]:bg-zinc-300/75 data-[selected=true]:duration-0 dark:data-[selected=true]:bg-zinc-700/75'
+                    )}
+                  >
+                    <div className="flex flex-row items-center justify-start gap-3 p-2">
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        width={64}
+                        height={64}
+                        priority
+                        className="pointer-events-none size-16"
+                      />
+                      <div className="flex flex-1 flex-row items-center justify-between">
+                        <div className="flex flex-col items-start justify-center gap-1">
+                          <span className="pointer-events-none text-black dark:text-white">
+                            {item.title}
+                          </span>
+                          {item.keywords.join(', ')}
+                        </div>
+                        <span className="pointer-events-none text-sm text-zinc-600 dark:text-zinc-400">
+                          {path}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Command.Item>
-              ))}
+                  </Command.Item>
+                )
+              })}
             </Command.List>
           </div>
         </GlassCard>
