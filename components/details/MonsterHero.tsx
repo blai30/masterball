@@ -32,7 +32,7 @@ export default function MonsterHero({
         </p>
         {/* </div> */}
         <div className="flex flex-col items-start gap-6">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl md:text-6xl dark:text-white">
+          <h1 className="text-4xl font-semibold tracking-tight text-black sm:text-5xl md:text-6xl dark:text-white">
             {name}
           </h1>
           <ul className="flex flex-row gap-2">

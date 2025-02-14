@@ -16,7 +16,7 @@ const GlobalIndexSearch = dynamic(
 
 export default function Navigation() {
   return (
-    <nav className="flex flex-row gap-4">
+    <nav className="flex flex-row flex-wrap gap-4">
       <Link href="/">
         <p className="text-blue-700 underline dark:text-blue-300">Home</p>
       </Link>
