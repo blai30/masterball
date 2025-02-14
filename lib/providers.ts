@@ -1,6 +1,6 @@
 import Pokedex, { type NamedAPIResourceList } from 'pokedex-promise-v2'
 
-const data: NamedAPIResourceList = {
+const species: NamedAPIResourceList = {
   count: 1025,
   next: null,
   previous: null,
@@ -156,6 +156,106 @@ const data: NamedAPIResourceList = {
   ],
 }
 
+const moves: NamedAPIResourceList = {
+  count: 937,
+  next: null,
+  previous: null,
+  results: [
+    {
+      name: 'pound',
+      url: 'https://pokeapi.co/api/v2/move/1/',
+    },
+    {
+      name: 'karate-chop',
+      url: 'https://pokeapi.co/api/v2/move/2/',
+    },
+    {
+      name: 'double-slap',
+      url: 'https://pokeapi.co/api/v2/move/3/',
+    },
+    {
+      name: 'comet-punch',
+      url: 'https://pokeapi.co/api/v2/move/4/',
+    },
+    {
+      name: 'mega-punch',
+      url: 'https://pokeapi.co/api/v2/move/5/',
+    },
+    {
+      name: 'pay-day',
+      url: 'https://pokeapi.co/api/v2/move/6/',
+    },
+    {
+      name: 'fire-punch',
+      url: 'https://pokeapi.co/api/v2/move/7/',
+    },
+    {
+      name: 'ice-punch',
+      url: 'https://pokeapi.co/api/v2/move/8/',
+    },
+    {
+      name: 'thunder-punch',
+      url: 'https://pokeapi.co/api/v2/move/9/',
+    },
+    {
+      name: 'scratch',
+      url: 'https://pokeapi.co/api/v2/move/10/',
+    },
+  ],
+}
+
+const abilities: NamedAPIResourceList = {
+  count: 367,
+  next: null,
+  previous: null,
+  results: [
+    {
+      name: 'stench',
+      url: 'https://pokeapi.co/api/v2/ability/1/',
+    },
+    {
+      name: 'drizzle',
+      url: 'https://pokeapi.co/api/v2/ability/2/',
+    },
+    {
+      name: 'speed-boost',
+      url: 'https://pokeapi.co/api/v2/ability/3/',
+    },
+    {
+      name: 'battle-armor',
+      url: 'https://pokeapi.co/api/v2/ability/4/',
+    },
+    {
+      name: 'sturdy',
+      url: 'https://pokeapi.co/api/v2/ability/5/',
+    },
+    {
+      name: 'damp',
+      url: 'https://pokeapi.co/api/v2/ability/6/',
+    },
+    {
+      name: 'limber',
+      url: 'https://pokeapi.co/api/v2/ability/7/',
+    },
+    {
+      name: 'sand-veil',
+      url: 'https://pokeapi.co/api/v2/ability/8/',
+    },
+    {
+      name: 'static',
+      url: 'https://pokeapi.co/api/v2/ability/9/',
+    },
+    {
+      name: 'volt-absorb',
+      url: 'https://pokeapi.co/api/v2/ability/10/',
+    },
+    {
+      name: 'water-absorb',
+      url: 'https://pokeapi.co/api/v2/ability/11/',
+    },
+  ],
+}
+
 export const pokeapi = new Pokedex({
   // 3 months
   cacheLimit: 1000 * 60 * 60 * 24 * 30 * 3,
@@ -165,5 +265,15 @@ export const pokeapi = new Pokedex({
 
 export const getTestSpeciesList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))
-  return data
+  return species
+}
+
+export const getTestMovesList = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 10))
+  return moves
+}
+
+export const getTestAbilitiesList = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 10))
+  return abilities
 }

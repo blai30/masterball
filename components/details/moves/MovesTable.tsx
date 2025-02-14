@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import clsx from 'clsx/lite'
 import { Machine, Move, MoveElement } from 'pokedex-promise-v2'
-import { TypeName, DamageClassName } from '@/lib/utils/pokeapiHelpers'
+import { TypeName, DamageClassName, getTranslation } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 import DamageClassPill from '@/components/DamageClassPill'
 import TypePill from '@/components/TypePill'
@@ -53,7 +53,7 @@ export default function MovesTable({
           </li>
           {moves.map((move) => {
             const resource = movesMap[move.move.name]
-            const name = resource.names.find((n) => n.language.name === 'en')!
+            const name = getTranslation(resource.names, 'name')
             const rowLabel =
               variant === 'level-up'
                 ? move.version_group_details[0].level_learned_at === 0
@@ -90,10 +90,10 @@ export default function MovesTable({
                 <div className="flex h-full min-w-44 grow px-2 py-1">
                   <Link href={`/move/${move.move.name}`} className="">
                     <p
-                      title={`Learned at level ${rowLabel}: ${name.name}`}
+                      title={`Learned at level ${rowLabel}: ${name}`}
                       className="font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300"
                     >
-                      {name.name}
+                      {name}
                     </p>
                   </Link>
                 </div>
