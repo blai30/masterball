@@ -144,8 +144,8 @@ export default function GlobalIndexSearch() {
                 const path = `/${item.path}`
                 return (
                   <Command.Item
-                    key={item.id}
-                    value={item.slug}
+                    key={item.path}
+                    value={item.path}
                     // keywords={item.keywords}
                     onSelect={() => {
                       router.push(path)
@@ -159,19 +159,19 @@ export default function GlobalIndexSearch() {
                   >
                     <div className="flex flex-row items-center justify-start gap-3">
                       <Image
-                        src={item.imageUrl}
+                        src={item.imageUrl ?? '/favicon.png'}
                         alt={item.title}
                         width={64}
                         height={64}
                         priority
-                        className="pointer-events-none h-10 w-12"
+                        className="pointer-events-none h-10 w-12 object-contain"
                       />
                       <div className="flex flex-1 flex-row items-center justify-between">
                         <div className="flex flex-col items-start justify-center">
                           <span className="pointer-events-none text-black dark:text-white">
                             {item.title}
                           </span>
-                          {item.keywords.join(', ')}
+                          {/* {item.keywords.join(', ')} */}
                         </div>
                         <span className="pointer-events-none text-sm text-zinc-600 dark:text-zinc-400">
                           {path}

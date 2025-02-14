@@ -7,8 +7,8 @@ export type IndexItem = {
   title: string
   slug: string
   path: string
-  keywords: string[]
-  imageUrl: string
+  keywords?: string[]
+  imageUrl?: string
 }
 
 const SearchContext = createContext({
