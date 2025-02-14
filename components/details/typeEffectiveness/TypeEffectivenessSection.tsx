@@ -40,7 +40,7 @@ export default async function TypeEffectivenessSection({
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <GlassCard className="flex w-full flex-col items-center gap-2 p-4">
+      <GlassCard className="flex flex-col w-full items-center justify-center gap-2 p-4 flex-wrap sm:h-full h-80">
         {allTypeRelations.map((relation) => {
           const effectiveness = relation.effectiveness
           const type = relation.type

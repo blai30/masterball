@@ -3,7 +3,7 @@ import clsx from 'clsx/lite'
 import { cva, type VariantProps } from 'cva'
 
 const variants = cva({
-  base: 'rounded-l-sm rounded-tr-sm rounded-br-xl bg-gradient-to-br to-75% inset-ring-1',
+  base: 'rounded-l-sm rounded-tr-sm rounded-br-xl bg-gradient-to-br to-75%',
   variants: {
     variant: {
       default: '',
@@ -11,9 +11,10 @@ const variants = cva({
     },
     transparency: {
       opaque:
-        'from-zinc-50 to-zinc-100 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800',
+        'from-zinc-50 to-zinc-100 inset-ring-1 inset-ring-zinc-200 dark:from-zinc-900 dark:to-zinc-950 dark:inset-ring-zinc-800',
+        // 'bg-zinc-50 inset-ring-1 inset-ring-zinc-100 dark:bg-zinc-950 dark:inset-ring-zinc-900',
       transparent:
-        'from-zinc-50/60 to-zinc-100/60 inset-ring-zinc-200/60 backdrop-blur-xl dark:from-zinc-900/60 dark:to-zinc-950/60 dark:inset-ring-zinc-800',
+        'from-zinc-50/60 to-zinc-100/60 inset-ring-1 inset-ring-zinc-200/60 backdrop-blur-xl dark:from-zinc-900/60 dark:to-zinc-950/60 dark:inset-ring-zinc-800',
     },
   },
   defaultVariants: {
@@ -35,7 +36,7 @@ export default function GlassCard({
   return (
     <div
       {...props}
-      className={clsx('', variants({ variant, transparency, className }))}
+      className={clsx(className, variants({ variant, transparency }))}
     >
       {children}
     </div>
