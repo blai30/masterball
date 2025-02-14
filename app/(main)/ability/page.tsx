@@ -29,8 +29,11 @@ export default async function Page() {
         {abilities.map((ability) => {
           const name = getTranslation(ability.names, 'name')
           return (
-            <li key={ability.name}>
-              <Link href={`/ability/${ability.name}`} className="">
+            <li key={ability.name} className="flex">
+              <Link
+                href={`/ability/${ability.name}`}
+                className="flex flex-row items-center gap-2 border"
+              >
                 <p className="font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300">
                   {name}
                 </p>

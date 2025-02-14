@@ -29,8 +29,11 @@ export default async function Page() {
         {moves.map((move) => {
           const name = getTranslation(move.names, 'name')
           return (
-            <li key={move.name}>
-              <Link href={`/move/${move.name}`} className="">
+            <li key={move.name} className="flex">
+              <Link
+                href={`/move/${move.name}`}
+                className="flex flex-row items-center gap-2 border"
+              >
                 <p className="font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300">
                   {name}
                 </p>

@@ -1,8 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { EggGroup } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
+import { Item } from 'pokedex-promise-v2'
+import { getTestItemsList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import Image from 'next/image'
 
 export const dynamic = 'force-static'
 
@@ -18,22 +19,28 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const eggGroupsList = await pokeapi.getEggGroupsList()
-  const eggGroups: EggGroup[] = await pokeapi.getResource(
-    eggGroupsList.results.map((eggGroup) => eggGroup.url)
+  const itemsList = await getTestItemsList()
+  const items: Item[] = await pokeapi.getResource(
+    itemsList.results.map((item) => item.url)
   )
 
   return (
     <div className="container mx-auto">
       <ul className="flex flex-col gap-2">
-        {eggGroups.map((eggGroup) => {
-          const name = getTranslation(eggGroup.names, 'name')
+        {items.map((item) => {
+          const name = getTranslation(item.names, 'name')
           return (
-            <li key={eggGroup.name} className="flex">
+            <li key={item.name} className="flex">
               <Link
-                href={`/egg-group/${eggGroup.name}`}
+                href={`/item/${item.name}`}
                 className="flex flex-row items-center gap-2 border"
               >
+                <Image
+                  src={item.sprites.default!}
+                  alt={name!}
+                  width={64}
+                  height={64}
+                />
                 <p className="font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300">
                   {name}
                 </p>

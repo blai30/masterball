@@ -256,6 +256,82 @@ const abilities: NamedAPIResourceList = {
   ],
 }
 
+const items: NamedAPIResourceList = {
+  count: 2180,
+  next: null,
+  previous: null,
+  results: [
+    {
+      name: 'master-ball',
+      url: 'https://pokeapi.co/api/v2/item/1/',
+    },
+    {
+      name: 'ultra-ball',
+      url: 'https://pokeapi.co/api/v2/item/2/',
+    },
+    {
+      name: 'great-ball',
+      url: 'https://pokeapi.co/api/v2/item/3/',
+    },
+    {
+      name: 'poke-ball',
+      url: 'https://pokeapi.co/api/v2/item/4/',
+    },
+    {
+      name: 'safari-ball',
+      url: 'https://pokeapi.co/api/v2/item/5/',
+    },
+    {
+      name: 'net-ball',
+      url: 'https://pokeapi.co/api/v2/item/6/',
+    },
+    {
+      name: 'dive-ball',
+      url: 'https://pokeapi.co/api/v2/item/7/',
+    },
+    {
+      name: 'nest-ball',
+      url: 'https://pokeapi.co/api/v2/item/8/',
+    },
+    {
+      name: 'repeat-ball',
+      url: 'https://pokeapi.co/api/v2/item/9/',
+    },
+    {
+      name: 'timer-ball',
+      url: 'https://pokeapi.co/api/v2/item/10/',
+    },
+    {
+      name: 'luxury-ball',
+      url: 'https://pokeapi.co/api/v2/item/11/',
+    },
+    {
+      name: 'premier-ball',
+      url: 'https://pokeapi.co/api/v2/item/12/',
+    },
+    {
+      name: 'dusk-ball',
+      url: 'https://pokeapi.co/api/v2/item/13/',
+    },
+    {
+      name: 'heal-ball',
+      url: 'https://pokeapi.co/api/v2/item/14/',
+    },
+    {
+      name: 'quick-ball',
+      url: 'https://pokeapi.co/api/v2/item/15/',
+    },
+    {
+      name: 'cherish-ball',
+      url: 'https://pokeapi.co/api/v2/item/16/',
+    },
+    {
+      name: 'potion',
+      url: 'https://pokeapi.co/api/v2/item/17/',
+    },
+  ],
+}
+
 export const pokeapi = new Pokedex({
   // 3 months
   cacheLimit: 1000 * 60 * 60 * 24 * 30 * 3,
@@ -276,4 +352,9 @@ export const getTestMovesList = async () => {
 export const getTestAbilitiesList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))
   return abilities
+}
+
+export const getTestItemsList = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 10))
+  return items
 }

@@ -18,7 +18,10 @@ export default function Navigation() {
   return (
     <nav className="flex flex-row flex-wrap gap-4">
       <Link href="/">
-        <p className="text-blue-700 underline dark:text-blue-300">Home</p>
+        <p className="text-blue-700 underline dark:text-blue-300">Pokemon</p>
+      </Link>
+      <Link href="/item">
+        <p className="text-blue-700 underline dark:text-blue-300">Items</p>
       </Link>
       <Link href="/type">
         <p className="text-blue-700 underline dark:text-blue-300">Types</p>
@@ -34,9 +37,6 @@ export default function Navigation() {
       </Link>
       <Link href="/damage-class">
         <p className="text-blue-700 underline dark:text-blue-300">Damage Classes</p>
-      </Link>
-      <Link href="https://github.com/blai30/masterball">
-        <p className="text-blue-700 underline dark:text-blue-300">GitHub</p>
       </Link>
       <ThemeSwitch />
       <GlobalIndexSearch />
