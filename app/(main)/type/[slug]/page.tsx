@@ -1,6 +1,15 @@
 import { Metadata } from 'next'
 import { pokeapi } from '@/lib/providers'
-import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
+import {
+  getEffectiveness,
+  getTranslation,
+  TypeLabels,
+  TypeName,
+  TypeRelation,
+} from '@/lib/utils/pokeapiHelpers'
+import EffectivenessMultiplier from '@/components/details/typeEffectiveness/EffectivenessMultiplier'
+import GlassCard from '@/components/GlassCard'
+import TypePill from '@/components/TypePill'
 
 export const dynamic = 'force-static'
 
@@ -38,5 +47,64 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  return <div>{slug}</div>
+  const type = await pokeapi.getTypeByName(slug)
+  const name = TypeLabels[slug as TypeName]
+
+  const allTypeResources = await pokeapi.getTypeByName(
+    Object.values(TypeName).map((t) => t)
+  )
+  const typeEffectiveness = getEffectiveness(type)
+  const allTypeRelations = allTypeResources.map(
+    (typeResource) =>
+      ({
+        type: typeResource,
+        effectiveness: typeEffectiveness[typeResource.name as TypeName],
+      }) as TypeRelation
+  )
+
+  return (
+    <div className="flex w-full flex-col gap-8">
+      <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-7xl">
+        {name}
+      </h1>
+      <GlassCard className="flex h-80 w-full flex-col flex-wrap items-center justify-center gap-2 p-4 sm:h-full">
+        {allTypeRelations.map((relation) => {
+          const effectiveness = relation.effectiveness
+          const type = relation.type
+          return (
+            <div key={type.id} className="flex flex-row items-center gap-1">
+              <TypePill variant={type.name} size="medium" />
+              <EffectivenessMultiplier variant={effectiveness} />
+            </div>
+          )
+        })}
+      </GlassCard>
+      <h2 className="text-xl font-medium text-black dark:text-white">
+        Pokemon
+      </h2>
+      <ul className="flex flex-wrap gap-2">
+        {type.pokemon.map((pokemon) => (
+          <li
+            key={pokemon.pokemon.name}
+            className="w-32 list-none font-medium text-pretty"
+          >
+            {pokemon.pokemon.name}
+          </li>
+        ))}
+      </ul>
+      <h2 className="text-xl font-medium text-black dark:text-white">Moves</h2>
+      <ul className="flex flex-wrap gap-2">
+        {type.moves
+          .toSorted((a, b) => a.name.localeCompare(b.name))
+          .map((move) => (
+            <li
+              key={move.name}
+              className="w-32 list-none font-medium text-pretty"
+            >
+              {move.name}
+            </li>
+          ))}
+      </ul>
+    </div>
+  )
 }

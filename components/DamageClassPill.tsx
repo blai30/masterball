@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { clsx } from 'clsx/lite'
 import { cva } from 'cva'
-import { damageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
+import { DamageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
   base: 'flex flex-row items-center',
@@ -29,7 +29,7 @@ export default function DamageClassPill({
   variant: string
   size?: 'small' | 'medium' | 'large'
 }) {
-  const name = damageClassLabels[variant as DamageClassName]
+  const name = DamageClassLabels[variant as DamageClassName]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
 
   return (

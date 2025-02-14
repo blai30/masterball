@@ -40,7 +40,7 @@ export enum DamageClassName {
   Status = 'status',
 }
 
-export const damageClassLabels: Record<DamageClassName, string> = {
+export const DamageClassLabels: Record<DamageClassName, string> = {
   [DamageClassName.Physical]: 'Physical',
   [DamageClassName.Special]: 'Special',
   [DamageClassName.Status]: 'Status',
@@ -99,7 +99,12 @@ export enum Effectiveness {
 
 export type TypeEffectiveness = Record<TypeName, Effectiveness>
 
-export function getEffectiveness(typeResources: Type[]): TypeEffectiveness {
+export type TypeRelation = {
+  type: Type
+  effectiveness: Effectiveness
+}
+
+export function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
   // Initialize all types with neutral effectiveness.
   const effectiveness = Object.fromEntries(
     Object.values(TypeName).map((type) => [type, 1])

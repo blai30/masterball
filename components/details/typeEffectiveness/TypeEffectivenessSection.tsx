@@ -1,18 +1,13 @@
-import { Pokemon, Type } from 'pokedex-promise-v2'
+import { Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import {
-  Effectiveness,
   getEffectiveness,
   TypeName,
+  TypeRelation,
 } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 import TypePill from '@/components/TypePill'
 import EffectivenessMultiplier from '@/components/details/typeEffectiveness/EffectivenessMultiplier'
-
-type TypeRelation = {
-  type: Type
-  effectiveness: Effectiveness
-}
 
 export default async function TypeEffectivenessSection({
   pokemon,
@@ -26,7 +21,7 @@ export default async function TypeEffectivenessSection({
   const allTypeResources = await pokeapi.getTypeByName(
     Object.values(TypeName).map((t) => t)
   )
-  const typeEffectiveness = getEffectiveness(typeResources)
+  const typeEffectiveness = getEffectiveness(...typeResources)
   const allTypeRelations = allTypeResources.map(
     (typeResource) =>
       ({
@@ -40,7 +35,7 @@ export default async function TypeEffectivenessSection({
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <GlassCard className="flex flex-col w-full items-center justify-center gap-2 p-4 flex-wrap sm:h-full h-80">
+      <GlassCard className="flex h-80 w-full flex-col flex-wrap items-center justify-center gap-2 p-4 sm:h-full">
         {allTypeRelations.map((relation) => {
           const effectiveness = relation.effectiveness
           const type = relation.type

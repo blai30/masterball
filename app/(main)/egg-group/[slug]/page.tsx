@@ -40,5 +40,24 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  return <div>{slug}</div>
+  const eggGroup = await pokeapi.getEggGroupByName(slug)
+  const name = getTranslation(eggGroup.names, 'name')
+
+  return (
+    <div className="flex w-full flex-col gap-8">
+      <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-7xl">
+        {name}
+      </h1>
+      <ul className="flex flex-wrap gap-2">
+        {eggGroup.pokemon_species.map((species) => (
+          <li
+            key={species.name}
+            className="w-32 list-none font-medium text-pretty"
+          >
+            {species.name}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
