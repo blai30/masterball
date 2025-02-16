@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 import {
   Navbar,
-  NavbarDivider,
   NavbarItem,
   NavbarLabel,
   NavbarSection,
@@ -33,11 +32,11 @@ const GlobalIndexSearch = dynamic(
 const navItems = [
   { label: 'Pokemon', url: '/' },
   { label: 'Items', url: '/item' },
-  { label: 'Types', url: '/type' },
-  { label: 'Abilities', url: '/ability' },
   { label: 'Moves', url: '/move' },
-  { label: 'Egg Groups', url: '/egg-group' },
-  { label: 'Damage Classes', url: '/damage-class' },
+  { label: 'Abilities', url: '/ability' },
+  // { label: 'Types', url: '/type' },
+  // { label: 'Egg Groups', url: '/egg-group' },
+  // { label: 'Damage Classes', url: '/damage-class' },
 ]
 
 export default function Navigation() {

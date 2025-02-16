@@ -1,7 +1,7 @@
+import Link from 'next/link'
 import React, { forwardRef } from 'react'
 import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
-import { Link } from '@/components/ui/link'
 
 const styles = {
   base: [

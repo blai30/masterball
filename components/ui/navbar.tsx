@@ -1,11 +1,11 @@
 'use client'
 
+import Link from 'next/link'
 import React, { forwardRef, useId } from 'react'
 import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
 import { LayoutGroup, motion } from 'framer-motion'
 import { TouchTarget } from '@/components/ui/button'
-import { Link } from '@/components/ui/link'
 
 export function Navbar({
   className,
