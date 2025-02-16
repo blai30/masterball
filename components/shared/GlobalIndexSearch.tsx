@@ -57,27 +57,42 @@ export default function GlobalIndexSearch() {
     <>
       {/* Clickable button on the page to open command palette dialog */}
       <GlassCard variant="link">
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className={clsx(
-            'flex h-8 w-54 cursor-default items-center gap-2 py-1 pr-1 pl-2',
-            'rounded-l-xs rounded-tr-xs rounded-br-md',
-            'text-md text-zinc-600 dark:text-zinc-400'
-          )}
-        >
-          Find something...
-          <kbd
+        <div className="relative flex flex-row items-center">
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="absolute ml-2 size-4 text-zinc-400 dark:text-zinc-600"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
+          </svg>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
             className={clsx(
-              'ml-auto flex gap-1 px-1',
-              'rounded-l-xs rounded-tr-xs rounded-br-lg',
-              'bg-white text-sm text-zinc-400 dark:bg-black dark:text-zinc-600'
+              'flex h-8 w-48 cursor-default items-center gap-2 py-1 pr-1 pl-7',
+              'rounded-l-xs rounded-tr-xs rounded-br-md',
+              'text-md text-zinc-600 dark:text-zinc-400'
             )}
           >
-            <kbd className="font-sans">{modifierKey}</kbd>
-            <kbd className="font-sans">K</kbd>
-          </kbd>
-        </button>
+            Search
+            <kbd
+              className={clsx(
+                'ml-auto flex gap-1 px-1',
+                'rounded-l-xs rounded-tr-xs rounded-br-lg',
+                'bg-white text-sm text-zinc-400 dark:bg-black dark:text-zinc-600'
+              )}
+            >
+              <kbd className="font-sans">{modifierKey}</kbd>
+              <kbd className="font-sans">K</kbd>
+            </kbd>
+          </button>
+        </div>
       </GlassCard>
 
       {/* Command palette dialog not displayed by default */}

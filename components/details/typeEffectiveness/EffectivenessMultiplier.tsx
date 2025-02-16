@@ -27,7 +27,7 @@ export default function EffectivenessMultiplier({
 }: {
   variant: Effectiveness
 }) {
-  const label = `${variant.toPrecision(2)}×`
+  const label = `${variant.toFixed(2)}×`
   return (
     <span
       className={clsx(

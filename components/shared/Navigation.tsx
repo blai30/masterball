@@ -14,32 +14,32 @@ const GlobalIndexSearch = dynamic(
   }
 )
 
+const links = [
+  { href: '/', label: 'Pokemon' },
+  { href: '/item', label: 'Items' },
+  { href: '/type', label: 'Types' },
+  { href: '/ability', label: 'Abilities' },
+  { href: '/move', label: 'Moves' },
+  { href: '/egg-group', label: 'Egg Groups' },
+  { href: '/damage-class', label: 'Damage Classes' },
+]
+
 export default function Navigation() {
   return (
-    <nav className="flex flex-row flex-wrap gap-4">
-      <Link href="/">
-        <p className="text-blue-700 underline dark:text-blue-300">Pokemon</p>
-      </Link>
-      <Link href="/item">
-        <p className="text-blue-700 underline dark:text-blue-300">Items</p>
-      </Link>
-      <Link href="/type">
-        <p className="text-blue-700 underline dark:text-blue-300">Types</p>
-      </Link>
-      <Link href="/ability">
-        <p className="text-blue-700 underline dark:text-blue-300">Abilities</p>
-      </Link>
-      <Link href="/move">
-        <p className="text-blue-700 underline dark:text-blue-300">Moves</p>
-      </Link>
-      <Link href="/egg-group">
-        <p className="text-blue-700 underline dark:text-blue-300">Egg Groups</p>
-      </Link>
-      <Link href="/damage-class">
-        <p className="text-blue-700 underline dark:text-blue-300">Damage Classes</p>
-      </Link>
-      <ThemeSwitch />
-      <GlobalIndexSearch />
+    <nav className="container mx-auto">
+      <div className="flex flex-row flex-wrap gap-4">
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-200 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+          >
+            {link.label}
+          </Link>
+        ))}
+        <ThemeSwitch />
+        <GlobalIndexSearch />
+      </div>
     </nav>
   )
 }

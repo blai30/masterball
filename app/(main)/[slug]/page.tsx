@@ -137,7 +137,6 @@ export default async function Page({
             <Suspense fallback={<LoadingSection />}>
               <MovesSection pokemon={pokemon} />
             </Suspense>
-            <LoadingSection />
           </div>
         </div>
       </div>
