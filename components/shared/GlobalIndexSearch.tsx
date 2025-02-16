@@ -173,7 +173,7 @@ export default function GlobalIndexSearch() {
                   >
                     <div className="flex flex-row items-center justify-start gap-3">
                       <Image
-                        src={item.imageUrl ?? '/favicon.png'}
+                        src={item.imageUrl ?? `${process.env.NEXT_PUBLIC_BASEPATH}/favicon.png`}
                         alt={item.title}
                         width={64}
                         height={64}

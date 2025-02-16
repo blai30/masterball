@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     url: process.env.NEXT_PUBLIC_BASEPATH,
     images: [
       {
-        url: '/favicon.png',
+        url: `${process.env.NEXT_PUBLIC_BASEPATH}/favicon.png`,
         width: 128,
         height: 128,
         alt: 'Masterball',
