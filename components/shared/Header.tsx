@@ -50,7 +50,7 @@ export default async function Header() {
       id: specie.id,
       title: getTranslation(specie.names, 'name'),
       slug: specie.name,
-      path: `${specie.name}`,
+      path: `/${specie.name}`,
       imageUrl: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
     } as IndexItem
   })
@@ -60,7 +60,7 @@ export default async function Header() {
       id: move.id,
       title: getTranslation(move.names, 'name'),
       slug: move.name,
-      path: `move/${move.name}`,
+      path: `/move/${move.name}`,
     } as IndexItem
   })
 
@@ -69,7 +69,7 @@ export default async function Header() {
       id: ability.id,
       title: getTranslation(ability.names, 'name'),
       slug: ability.name,
-      path: `ability/${ability.name}`,
+      path: `/ability/${ability.name}`,
     } as IndexItem
   })
 
@@ -78,7 +78,7 @@ export default async function Header() {
       id: item.id,
       title: getTranslation(item.names, 'name'),
       slug: item.name,
-      path: `item/${item.name}`,
+      path: `/item/${item.name}`,
     } as IndexItem
   })
 
@@ -87,7 +87,7 @@ export default async function Header() {
       id: type.id,
       title: getTranslation(type.names, 'name'),
       slug: type.name,
-      path: `type/${type.name}`,
+      path: `/type/${type.name}`,
     } as IndexItem
   })
 
@@ -96,7 +96,7 @@ export default async function Header() {
       id: type.id,
       title: getTranslation(type.names, 'name'),
       slug: type.name,
-      path: `damage-class/${type.name}`,
+      path: `/damage-class/${type.name}`,
     } as IndexItem
   })
 
@@ -105,7 +105,7 @@ export default async function Header() {
       id: eggGroup.id,
       title: getTranslation(eggGroup.names, 'name'),
       slug: eggGroup.name,
-      path: `egg-group/${eggGroup.name}`,
+      path: `/egg-group/${eggGroup.name}`,
     } as IndexItem
   })
 

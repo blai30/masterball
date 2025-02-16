@@ -71,7 +71,7 @@ export default function GlobalIndexSearch() {
             className={clsx(
               'ml-auto flex gap-1 px-1',
               'rounded-l-xs rounded-tr-xs rounded-br-lg',
-              'bg-white text-sm text-zinc-500 dark:bg-black dark:text-zinc-500'
+              'bg-white text-sm text-zinc-400 dark:bg-black dark:text-zinc-600'
             )}
           >
             <kbd className="font-sans">{modifierKey}</kbd>
@@ -116,7 +116,7 @@ export default function GlobalIndexSearch() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="absolute ml-2.5 size-6 text-zinc-400 dark:text-zinc-500"
+                className="absolute ml-2.5 size-6 text-zinc-400 dark:text-zinc-600"
               >
                 <path
                   strokeLinecap="round"
@@ -129,26 +129,25 @@ export default function GlobalIndexSearch() {
                 onValueChange={setQuery}
                 autoFocus
                 placeholder="Search (↑↓ to navigate, ↵ to select)"
-                className="w-full rounded-l-xs rounded-tr-xs rounded-br-md bg-white/50 py-3 pr-4 pl-10.5 placeholder-zinc-400 focus:outline-none dark:bg-black/50 dark:text-white dark:placeholder-zinc-500"
+                className="w-full rounded-l-xs rounded-tr-xs rounded-br-md bg-white/50 py-3 pr-4 pl-10.5 placeholder-zinc-400 focus:outline-none dark:bg-black/50 dark:text-white dark:placeholder-zinc-600"
               />
             </div>
             <Command.List className="max-h-[70vh] overflow-y-auto pr-1 *:flex *:flex-col *:gap-1 md:max-h-[32rem]">
               <Command.Empty>
-                <div className="py-8 text-center text-zinc-500 dark:text-zinc-400">
+                <div className="py-8 text-center text-zinc-600 dark:text-zinc-400">
                   {query
                     ? 'No results found'
                     : 'Start typing in the field above'}
                 </div>
               </Command.Empty>
               {filteredItems.map((item) => {
-                const path = `/${item.path}`
                 return (
                   <Command.Item
                     key={item.path}
                     value={item.path}
                     // keywords={item.keywords}
                     onSelect={() => {
-                      router.push(path)
+                      router.push(item.path)
                       setOpen(false)
                     }}
                     className={clsx(
@@ -174,7 +173,7 @@ export default function GlobalIndexSearch() {
                           {/* {item.keywords.join(', ')} */}
                         </div>
                         <span className="pointer-events-none text-sm text-zinc-600 dark:text-zinc-400">
-                          {path}
+                          {item.path}
                         </span>
                       </div>
                     </div>
