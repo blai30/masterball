@@ -26,7 +26,7 @@ export default function EggGroupMetadata({
           <li key={group.key} className="inline-block">
             <Link
               href={`/egg-group/${group.key}`}
-              className="text-base font-light text-blue-700 underline dark:text-blue-300"
+              className="font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300"
             >
               {group.name}
             </Link>

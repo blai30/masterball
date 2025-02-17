@@ -9,15 +9,15 @@ const variants = cva({
       [Effectiveness.Immune]:
         'text-purple-700 dark:text-purple-300',
       [Effectiveness.Quarter]:
-        'text-red-700 dark:text-red-300',
-      [Effectiveness.Half]:
         'text-red-800 dark:text-red-400',
+      [Effectiveness.Half]:
+        'text-red-700 dark:text-red-300',
       [Effectiveness.Neutral]:
         'text-zinc-700 dark:text-zinc-300',
       [Effectiveness.Double]:
-        'text-green-800 dark:text-green-400',
-      [Effectiveness.Quadruple]:
         'text-green-700 dark:text-green-300',
+      [Effectiveness.Quadruple]:
+        'text-green-800 dark:text-green-400',
     },
   },
 })

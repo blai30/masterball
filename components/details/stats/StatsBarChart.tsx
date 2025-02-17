@@ -43,7 +43,7 @@ export default async function StatsBarChart({
 
               {/* Progress bar visualization */}
               <div className="flex h-5 w-full flex-row items-center">
-                <div className="h-full max-w-full flex-grow rounded-l-xs rounded-tr-xs rounded-br-md bg-white dark:bg-black">
+                <div className="h-full max-w-full flex-grow rounded-l-xs rounded-tr-xs rounded-br-md bg-white dark:bg-black inset-ring-2 inset-ring-zinc-200 dark:inset-ring-zinc-800">
                   <div
                     className="h-full rounded-l-xs bg-black dark:bg-white"
                     style={{

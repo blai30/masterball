@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
+import { Cat } from 'lucide-react'
 
 const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
   ssr: false,
@@ -51,26 +52,24 @@ export default function Navigation() {
               <li
                 key={item.url}
                 className={clsx(
-                  'group inline-flex border-b-2',
+                  'group inline-flex transition-colors hover:duration-0 rounded-lg',
                   active
-                    ? 'border-black dark:border-white'
-                    : 'border-transparent hover:border-zinc-600 focus-visible:border-zinc-600 dark:hover:border-zinc-400 dark:focus-visible:border-zinc-400'
+                    ? 'bg-zinc-300 dark:bg-zinc-700'
+                    : 'hover:bg-zinc-200 focus-visible:bg-zinc-200 dark:hover:bg-zinc-800 dark:focus-visible:bg-zinc-800'
                 )}
               >
                 <Link
                   href={item.url}
-                  className="inline-flex w-24 items-center justify-center py-2"
+                  className={clsx(
+                    'inline-flex items-center gap-2 py-2 px-3',
+                    'font-medium transition-colors group-hover:duration-0',
+                    active
+                      ? 'text-black dark:text-white'
+                      : 'text-zinc-600 group-hover:text-zinc-800 group-focus-visible:text-zinc-800 dark:text-zinc-400 dark:group-hover:text-zinc-200 dark:group-focus-visible:text-zinc-200'
+                  )}
                 >
-                  <span
-                    className={clsx(
-                      'font-medium',
-                      active
-                        ? 'text-black dark:text-white'
-                        : 'text-zinc-600 group-hover:text-zinc-800 group-focus-visible:text-zinc-800 dark:text-zinc-400 dark:group-hover:text-zinc-200 dark:group-focus-visible:text-zinc-200'
-                    )}
-                  >
-                    {item.label}
-                  </span>
+                  <Cat size={20} />
+                  <span>{item.label}</span>
                 </Link>
               </li>
             )
