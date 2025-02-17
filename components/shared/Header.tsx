@@ -120,7 +120,7 @@ export default async function Header() {
   ]
 
   return (
-    <header className="w-full">
+    <header className="w-full border-b border-zinc-100 dark:border-zinc-900">
       <GlobalIndexProvider indexItems={allItems}>
         <Navigation />
       </GlobalIndexProvider>

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React, { forwardRef, useId } from 'react'
 import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
-import { LayoutGroup, motion } from 'framer-motion'
+import { LayoutGroup, motion } from 'motion/react'
 import { TouchTarget } from '@/components/ui/button'
 
 export function Sidebar({ className, ...props }: React.ComponentPropsWithoutRef<'nav'>) {

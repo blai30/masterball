@@ -1,22 +1,9 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  Navbar,
-  NavbarItem,
-  NavbarLabel,
-  NavbarSection,
-  NavbarSpacer,
-} from '@/components/ui/navbar'
-import {
-  Sidebar,
-  SidebarBody,
-  SidebarItem,
-  SidebarLabel,
-  SidebarSection,
-} from '@/components/ui/sidebar'
-import { StackedLayout } from '@/components/ui/stacked-layout'
+import clsx from 'clsx'
 
 const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
   ssr: false,
@@ -55,72 +42,49 @@ export default function Navigation() {
   }
 
   return (
-    <StackedLayout
-      navbar={
-        <Navbar className="">
-          <NavbarSection className="max-lg:hidden">
-            {navItems.map(({ label, url }) => {
-              return (
-                <NavbarItem key={label} href={url} current={isActiveRoute(url)}>
-                  <svg
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
-                    />
-                  </svg>
-                  <NavbarLabel>{label}</NavbarLabel>
-                </NavbarItem>
-              )
-            })}
-          </NavbarSection>
-          <NavbarSpacer />
-          <NavbarSection>
-            <GlobalIndexSearch />
-            <ThemeSwitch />
-          </NavbarSection>
-        </Navbar>
-      }
-      sidebar={
-        <Sidebar className="">
-          <SidebarBody>
-            <SidebarSection>
-              {navItems.map(({ label, url }) => (
-                <SidebarItem
-                  key={label}
-                  href={url}
-                  current={isActiveRoute(url)}
+    <nav className="container mx-auto">
+      <div className="flex flex-row items-center justify-between">
+        <ul className="flex flex-row items-center gap-4">
+          {navItems.map((item) => {
+            const active = isActiveRoute(item.url)
+            return (
+              <li
+                key={item.url}
+                className={clsx(
+                  'group inline-flex border-b-2',
+                  active
+                    ? 'border-black dark:border-white'
+                    : 'border-transparent hover:border-zinc-600 focus-visible:border-zinc-600 dark:hover:border-zinc-400 dark:focus-visible:border-zinc-400'
+                )}
+              >
+                <Link
+                  href={item.url}
+                  className="inline-flex w-24 items-center justify-center py-2"
                 >
-                  <svg
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="size-6"
+                  <span
+                    className={clsx(
+                      'font-medium',
+                      active
+                        ? 'text-black dark:text-white'
+                        : 'text-zinc-600 group-hover:text-zinc-800 group-focus-visible:text-zinc-800 dark:text-zinc-400 dark:group-hover:text-zinc-200 dark:group-focus-visible:text-zinc-200'
+                    )}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"
-                    />
-                  </svg>
-                  <SidebarLabel>{label}</SidebarLabel>
-                </SidebarItem>
-              ))}
-            </SidebarSection>
-            <SidebarSection>
-              <GlobalIndexSearch />
-              <ThemeSwitch />
-            </SidebarSection>
-          </SidebarBody>
-        </Sidebar>
-      }
-    />
+                    {item.label}
+                  </span>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+        <ul className="flex flex-row items-center gap-4">
+          <li>
+            <GlobalIndexSearch />
+          </li>
+          <li>
+            <ThemeSwitch />
+          </li>
+        </ul>
+      </div>
+    </nav>
   )
 }
