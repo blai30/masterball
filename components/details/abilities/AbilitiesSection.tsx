@@ -29,15 +29,15 @@ export default async function AbilitiesSection({
 
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-xl font-medium text-black dark:text-white">
+      {/* <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
-      </h2>
-      <ul className="flex flex-col gap-4">
+      </h2> */}
+      <ul className="flex flex-col gap-2">
         {abilitiesMap.map((a) => {
           const name = getTranslation(a.resource.names, 'name')
           return (
-            <li key={a.id}>
-              <GlassCard>
+            <li key={a.id} className="first:*:rounded-t-2xl last:*:rounded-b-2xl">
+              <GlassCard className="">
                 <div className="flex flex-col gap-2 p-4">
                   <div className="flex flex-row items-baseline gap-2">
                     <Link href={`/ability/${a.name}`} className="inline-block">

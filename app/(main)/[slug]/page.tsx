@@ -17,6 +17,8 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
+import GlassCard from '@/components/GlassCard'
+import clsx from 'clsx'
 
 export const dynamic = 'force-static'
 
@@ -100,22 +102,50 @@ export default async function Page({
         {/* Hero section */}
         <MonsterHero species={species} pokemon={pokemon} />
       </div>
-      <div className="flex w-full flex-col gap-8">
+      <div className="flex w-full flex-col gap-6">
         {/* Metadata section */}
-        <section className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-4">
-          <HeightMetadata height={pokemon.height} />
-          <WeightMetadata weight={pokemon.weight} />
-          <GenderRatioMetadata genderRate={species.gender_rate} />
-          <CaptureRateMetadata captureRate={species.capture_rate} />
-          <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
-          <EggGroupMetadata eggGroups={eggGroups} />
-          <GrowthRateMetadata growthRate={growthRate} />
-          <EffortValueYieldMetadata stats={pokemon.stats} />
+        <section className="grid grid-cols-2 gap-2 md:grid-cols-4 2xl:grid-cols-8">
+          <GlassCard
+            className={clsx('p-4', 'rounded-tl-2xl 2xl:rounded-bl-2xl')}
+          >
+            <HeightMetadata height={pokemon.height} />
+          </GlassCard>
+          <GlassCard
+            className={clsx('p-4', 'rounded-tr-2xl md:rounded-tr-none')}
+          >
+            <WeightMetadata weight={pokemon.weight} />
+          </GlassCard>
+          <GlassCard className={clsx('p-4')}>
+            <GenderRatioMetadata genderRate={species.gender_rate} />
+          </GlassCard>
+          <GlassCard
+            className={clsx('p-4', 'md:rounded-tr-2xl 2xl:rounded-tr-none')}
+          >
+            <CaptureRateMetadata captureRate={species.capture_rate} />
+          </GlassCard>
+          <GlassCard
+            className={clsx('p-4', 'md:rounded-bl-2xl 2xl:rounded-bl-none')}
+          >
+            <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
+          </GlassCard>
+          <GlassCard className={clsx('p-4')}>
+            <EggGroupMetadata eggGroups={eggGroups} />
+          </GlassCard>
+          <GlassCard
+            className={clsx('p-4', 'rounded-bl-2xl md:rounded-bl-none')}
+          >
+            <GrowthRateMetadata growthRate={growthRate} />
+          </GlassCard>
+          <GlassCard
+            className={clsx('p-4', 'rounded-br-2xl 2xl:rounded-tr-2xl')}
+          >
+            <EffortValueYieldMetadata stats={pokemon.stats} />
+          </GlassCard>
         </section>
-        <div className="flex w-full flex-col lg:grow lg:flex-row gap-8">
+        <div className="flex w-full flex-col gap-6 lg:grow lg:flex-row">
           {/* First column on large screens */}
-          <div className="flex w-full flex-col gap-8">
-            <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row gap-8">
+          <div className="flex w-full flex-col gap-6">
+            <div className="flex w-full flex-col gap-2 sm:flex-row lg:flex-col xl:flex-row">
               <Suspense fallback={<LoadingSection />}>
                 <StatsSection pokemon={pokemon} />
               </Suspense>
@@ -131,7 +161,7 @@ export default async function Page({
             </Suspense>
           </div>
           {/* Second column on large screens */}
-          <div className="flex w-full flex-col gap-4 lg:min-w-2xl">
+          <div className="flex w-full flex-col gap-6 lg:min-w-2xl">
             <Suspense fallback={<LoadingSection />}>
               <MovesSection pokemon={pokemon} />
             </Suspense>

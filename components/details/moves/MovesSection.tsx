@@ -70,36 +70,42 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const eggMoves = filterByLearnMethod('egg')
 
   return (
-    <section className="flex flex-col gap-4">
-      <h2 className="text-xl font-medium text-black dark:text-white">
+    <section className="flex flex-col gap-2">
+      {/* <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
-      </h2>
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <h3 className="text-sm font-semibold">Level up</h3>
-          <MovesTable
-            variant="level-up"
-            moves={levelUpMoves}
-            movesMap={movesMap}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-sm font-semibold">Technical Machine (TM)</h3>
-          <MovesTable
-            variant="machine"
-            moves={machineMoves}
-            movesMap={movesMap}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-sm font-semibold">Tutor</h3>
-          <MovesTable variant="tutor" moves={tutorMoves} movesMap={movesMap} />
-        </div>
-        <div className="flex flex-col gap-2">
-          <h3 className="text-sm font-semibold">Egg</h3>
-          <MovesTable variant="egg" moves={eggMoves} movesMap={movesMap} />
-        </div>
-      </div>
+      </h2> */}
+      {levelUpMoves.length > 0 && (
+        <MovesTable
+          variant="level-up"
+          moves={levelUpMoves}
+          movesMap={movesMap}
+          className="rounded-t-2xl"
+        />
+      )}
+      {machineMoves.length > 0 && (
+        <MovesTable
+          variant="machine"
+          moves={machineMoves}
+          movesMap={movesMap}
+          className=""
+        />
+      )}
+      {tutorMoves.length > 0 && (
+        <MovesTable
+          variant="tutor"
+          moves={tutorMoves}
+          movesMap={movesMap}
+          className=""
+        />
+      )}
+      {eggMoves.length > 0 && (
+        <MovesTable
+          variant="egg"
+          moves={eggMoves}
+          movesMap={movesMap}
+          className="rounded-b-2xl"
+        />
+      )}
     </section>
   )
 }

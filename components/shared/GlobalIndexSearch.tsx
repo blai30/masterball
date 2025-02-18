@@ -57,7 +57,7 @@ export default function GlobalIndexSearch() {
   return (
     <>
       {/* Clickable button on the page to open command palette dialog */}
-      <GlassCard variant="link">
+      <GlassCard variant="link" className="rounded-xl">
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -106,7 +106,7 @@ export default function GlobalIndexSearch() {
         {/* Command palette dialog content */}
         <GlassCard
           transparency="transparent"
-          className="relative mx-auto max-w-xl p-2 shadow-2xl"
+          className="relative mx-auto max-w-xl rounded-xl p-2 shadow-2xl"
         >
           <div className="flex flex-col gap-2">
             <div className="relative flex flex-row items-center">

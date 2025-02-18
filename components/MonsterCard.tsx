@@ -43,7 +43,7 @@ export default async function MonsterCard({
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <GlassCard variant="link" className="h-full">
+    <GlassCard variant="link" className="h-full rounded-xl">
       <Link
         href={`/${species.name}`}
         className="group flex flex-col items-center justify-between px-2 py-3"
