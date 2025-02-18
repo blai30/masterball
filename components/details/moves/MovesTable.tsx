@@ -32,29 +32,29 @@ export default function MovesTable({
       <GlassCard className={clsx('inline-block min-w-full', className)}>
         <ul className="group flex w-full flex-col gap-0.5 p-4">
           <li className="flex h-8 w-full items-start rounded-l-xs rounded-tr-xs rounded-br-md">
-            <div className="flex h-full items-center min-w-16 px-2">
+            <div className="flex h-full min-w-16 items-center px-2">
               <p className="w-full text-xs font-semibold">
                 {variantColumnLabels[variant] ?? ''}
               </p>
             </div>
-            <div className="flex h-full items-center min-w-44 grow px-2">
-              <p className="w-full text-xs font-semibold">Name</p>
+            <div className="flex h-full min-w-44 grow items-center px-2">
+              <p className="w-full text-xs font-semibold">Move</p>
             </div>
-            <div className="flex h-full items-center min-w-32 px-2">
+            <div className="flex h-full min-w-20 items-center px-2">
               <p className="w-full text-xs font-semibold">Type</p>
             </div>
-            <div className="flex h-full items-center min-w-14 px-2">
+            {/* <div className="flex h-full min-w-14 items-center px-2">
               <p className="w-full text-center text-xs font-semibold">Class</p>
-            </div>
-            <div className="flex h-full items-center min-w-14 px-2">
+            </div> */}
+            <div className="flex h-full min-w-14 items-center px-2">
               <p className="w-full text-right text-xs font-semibold">Power</p>
             </div>
-            <div className="flex h-full items-center min-w-20 px-2">
+            <div className="flex h-full min-w-20 items-center px-2">
               <p className="w-full text-right text-xs font-semibold">
                 Accuracy
               </p>
             </div>
-            <div className="flex h-full items-center min-w-12 px-2">
+            <div className="flex h-full min-w-12 items-center px-2">
               <p className="w-full text-right text-xs font-semibold">PP</p>
             </div>
           </li>
@@ -79,12 +79,12 @@ export default function MovesTable({
               <li
                 key={resource.id}
                 className={clsx(
-                  'group inline-flex h-10 min-w-full flex-row items-center',
+                  'group inline-flex h-8 min-w-full flex-row items-center',
                   'rounded-md',
                   'transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75'
                 )}
               >
-                <div className="flex h-full items-center min-w-16 px-2">
+                <div className="flex h-full min-w-16 items-center px-2">
                   <p
                     className={clsx(
                       'font-num w-full text-right text-zinc-700 dark:text-zinc-300',
@@ -94,7 +94,7 @@ export default function MovesTable({
                     {rowLabel}
                   </p>
                 </div>
-                <div className="flex h-full items-center min-w-44 grow px-2">
+                <div className="flex h-full min-w-44 grow items-center px-2">
                   <Link href={`/move/${move.move.name}`} className="">
                     <p
                       title={`Learned at level ${rowLabel}: ${name}`}
@@ -104,16 +104,16 @@ export default function MovesTable({
                     </p>
                   </Link>
                 </div>
-                <div className="flex h-full items-center min-w-32 px-2">
-                  <TypePill variant={type} size="medium" />
+                <div className="flex h-full min-w-20 items-center justify-center px-2 gap-1">
+                  <TypePill variant={type} size="small" />
+                {/* </div>
+                <div className="flex h-full min-w-14 items-center justify-center px-2"> */}
+                  <DamageClassPill variant={damageClass} size="small" />
                 </div>
-                <div className="flex h-full items-center min-w-14 px-2">
-                  <DamageClassPill variant={damageClass} size="medium" />
-                </div>
-                <div className="flex h-full items-center min-w-14 px-2">
+                <div className="flex h-full min-w-14 items-center px-2">
                   <p className="font-num w-full text-right">{power}</p>
                 </div>
-                <div className="flex h-full items-center min-w-20 px-2">
+                <div className="flex h-full min-w-20 items-center px-2">
                   <p className="font-num w-full text-right">
                     {accuracy}
                     <span className="ml-0.5 text-zinc-600 dark:text-zinc-400">
@@ -121,7 +121,7 @@ export default function MovesTable({
                     </span>
                   </p>
                 </div>
-                <div className="flex h-full items-center min-w-12 px-2">
+                <div className="flex h-full min-w-12 items-center px-2">
                   <p className="font-num w-full text-right">{pp}</p>
                 </div>
               </li>

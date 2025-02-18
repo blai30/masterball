@@ -27,10 +27,8 @@ const variants = cva({
       [TypeName.Fairy]: 'bg-fairy',
     },
     size: {
-      small:
-        'size-6 rounded-xs',
-      medium:
-        'h-6 w-28 rounded-sm px-1 tracking-normal',
+      small: 'size-6 rounded-xs',
+      medium: 'h-6 w-28 rounded-sm px-1 tracking-normal',
       large: 'h-8 w-32 rounded-full px-2 font-medium tracking-wide',
     },
   },

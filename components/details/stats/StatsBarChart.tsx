@@ -43,13 +43,18 @@ export default async function StatsBarChart({
 
               {/* Progress bar visualization */}
               <div className="flex h-5 w-full flex-row items-center">
-                <div className="h-full max-w-full flex-grow rounded-xs inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
+                <div className="relative h-full max-w-full flex-grow rounded-xs inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
+                  {/* Tick marks */}
+                  <div className="absolute top-0 bottom-0 grid w-full grid-cols-5 divide-x-1 divide-zinc-300 dark:divide-zinc-700">
+                    {[...Array(5)].map((_, index) => (
+                      <div key={index} />
+                    ))}
+                  </div>
+                  {/* Background fill */}
                   <div
-                    className="h-full rounded-l-xs inset-ring-2 inset-ring-black dark:inset-ring-white bg-black/60 dark:bg-white/60"
-                    style={{
-                      width: `${fillPercentage}%`,
-                    }}
-                  ></div>
+                    className="absolute h-full rounded-l-xs bg-black/60 inset-ring-1 inset-ring-black dark:bg-white/60 dark:inset-ring-white"
+                    style={{ width: `${fillPercentage}%` }}
+                  />
                 </div>
               </div>
             </li>

@@ -13,10 +13,8 @@ const variants = cva({
       [DamageClassName.Status]: 'bg-status',
     },
     size: {
-      small:
-        'h-4 w-8 rounded-l-xs rounded-tr-xs rounded-br-md',
-      medium:
-        'h-6 w-10 rounded-l-xs rounded-tr-xs rounded-br-md',
+      small: 'h-6 w-9 rounded-md',
+      medium: 'h-6 w-10 rounded-md',
       large: 'h-8 w-12 rounded-full',
     },
   },
@@ -38,7 +36,7 @@ export default function DamageClassPill({
       title={name}
       className={clsx(
         // 'py-1',
-        ' relative',
+        'relative',
         variants({
           // variant: variant as DamageClassName,
           size,
@@ -58,7 +56,7 @@ export default function DamageClassPill({
         height={40}
         priority
         loading="eager"
-        className="object-contain p-1 dark:brightness-200 relative"
+        className="relative object-contain p-1 dark:brightness-200"
       />
     </Link>
   )
