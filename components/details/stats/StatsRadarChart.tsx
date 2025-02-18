@@ -54,7 +54,7 @@ export default function StatsRadarChart({
     .join(' ')
 
   return (
-    <div className="relative h-72 p-8 lg:h-64 xl:h-72">
+    <div className="relative h-full p-8">
       <svg viewBox="0 0 100 100" className="h-full w-full overflow-visible">
         {Array.from({ length: stats.length }, (_, i) => {
           const angle = (Math.PI / 3) * i - Math.PI / 2

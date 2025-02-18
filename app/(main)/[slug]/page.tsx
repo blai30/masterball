@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
+import clsx from 'clsx/lite'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
@@ -18,7 +19,6 @@ import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
 import GlassCard from '@/components/GlassCard'
-import clsx from 'clsx'
 
 export const dynamic = 'force-static'
 
@@ -142,7 +142,7 @@ export default async function Page({
             <EffortValueYieldMetadata stats={pokemon.stats} />
           </GlassCard>
         </section>
-        <div className="flex w-full flex-col gap-6 lg:grow lg:flex-row">
+        <div className="flex w-full flex-col gap-6 lg:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-6">
             <div className="flex w-full flex-col gap-2 sm:flex-row lg:flex-col xl:flex-row">
@@ -161,7 +161,7 @@ export default async function Page({
             </Suspense>
           </div>
           {/* Second column on large screens */}
-          <div className="flex w-full flex-col gap-6 lg:min-w-2xl">
+          <div className="flex w-full flex-col gap-6 lg:min-w-xl">
             <Suspense fallback={<LoadingSection />}>
               <MovesSection pokemon={pokemon} />
             </Suspense>

@@ -12,11 +12,11 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
   )
 
   return (
-    <section className="flex grow flex-col gap-4">
+    <section className="flex min-h-max flex-1 flex-col gap-4 sm:min-h-full lg:min-h-max xl:min-h-full">
       {/* <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2> */}
-      <div className="flex w-full flex-col items-start gap-2">
+      <div className="flex h-full w-full flex-col items-start gap-2">
         <GlassCard
           className={clsx(
             'w-full p-4',
@@ -26,9 +26,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
           <StatsBarChart pokemon={pokemon} stats={stats} />
         </GlassCard>
 
-        <GlassCard
-          className={clsx('flex w-full flex-col items-center px-8 py-10 rounded-bl-none sm:rounded-bl-2xl lg:rounded-bl-none xl:rounded-bl-2xl')}
-        >
+        <GlassCard className="flex h-full w-full flex-col items-center rounded-bl-none px-8 py-10 sm:rounded-bl-2xl lg:rounded-bl-none xl:rounded-bl-2xl">
           {/* Radar chart */}
           <StatsRadarChart pokemon={pokemon} stats={stats} />
         </GlassCard>

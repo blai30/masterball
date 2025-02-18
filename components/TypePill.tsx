@@ -1,10 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import clsx from 'clsx/lite'
 import { cva } from 'cva'
 import { TypeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: 'flex flex-row items-center',
+  base: '',
   variants: {
     variant: {
       [TypeName.Normal]: 'bg-normal',
@@ -28,8 +29,8 @@ const variants = cva({
     },
     size: {
       small: 'size-6 rounded-xs',
-      medium: 'h-6 w-28 rounded-sm px-1 tracking-normal',
-      large: 'h-8 w-32 rounded-full px-2 font-medium tracking-wide',
+      medium: 'w-28 rounded-sm p-0.5 text-sm font-medium tracking-wide',
+      large: 'w-36 rounded-md p-1 text-lg font-semibold tracking-wider',
     },
   },
 })
@@ -45,43 +46,43 @@ export default function TypePill({
 }) {
   const name = TypeLabels[variant as TypeName]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
+  const dimensions = {
+    small: 24,
+    medium: 24,
+    large: 32,
+  }
 
-  return link ? (
-    <Link
-      href={`/type/${variant}`}
-      className={variants({ variant: variant as TypeName, size })}
+  const Wrapper: React.ElementType = link ? Link : 'div'
+  const wrapperProps = link ? { href: `/type/${variant}` } : {}
+
+  return (
+    <Wrapper
+      {...wrapperProps}
+      className={clsx(
+        variants({ size }),
+        link &&
+          'transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700',
+        'flex flex-row items-center overflow-hidden',
+        'bg-zinc-200 dark:bg-zinc-800'
+      )}
     >
       <Image
         src={imageUrl}
         alt={name}
-        width={24}
-        height={24}
+        width={dimensions[size]}
+        height={dimensions[size]}
         priority
         loading="eager"
-        className="aspect-square bg-transparent object-contain"
+        className={clsx(
+          variants({ variant: variant as TypeName }),
+          'aspect-square rounded-xs object-contain'
+        )}
       />
       {size !== 'small' && (
-        <p className="w-full px-2 text-xs text-white uppercase dark:text-white">
+        <p className="inline-flex h-full w-full items-center px-2 text-white uppercase dark:text-white">
           {name}
         </p>
       )}
-    </Link>
-  ) : (
-    <div className={variants({ variant: variant as TypeName, size })}>
-      <Image
-        src={imageUrl}
-        alt={name}
-        width={24}
-        height={24}
-        priority
-        loading="eager"
-        className="aspect-square bg-transparent object-contain"
-      />
-      {size !== 'small' && (
-        <p className="w-full px-2 text-xs text-white uppercase dark:text-white">
-          {name}
-        </p>
-      )}
-    </div>
+    </Wrapper>
   )
 }

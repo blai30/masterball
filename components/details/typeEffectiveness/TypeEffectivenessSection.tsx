@@ -38,7 +38,7 @@ export default async function TypeEffectivenessSection({
       </h2> */}
       <GlassCard
         className={clsx(
-          'flex h-80 w-full flex-col flex-wrap items-center justify-center gap-2 p-4 sm:h-full',
+          'xs:h-[22rem] flex h-full w-full flex-col flex-wrap items-center justify-center gap-2 p-4 sm:h-full',
           'rounded-br-2xl rounded-bl-2xl sm:rounded-tr-2xl sm:rounded-bl-none lg:rounded-tr-none lg:rounded-bl-2xl xl:rounded-tr-2xl xl:rounded-bl-none'
         )}
       >
@@ -46,7 +46,10 @@ export default async function TypeEffectivenessSection({
           const effectiveness = relation.effectiveness
           const type = relation.type
           return (
-            <div key={type.id} className="flex flex-row items-center gap-1">
+            <div
+              key={type.id}
+              className="flex flex-row items-center justify-between gap-1"
+            >
               <TypePill variant={type.name} size="medium" />
               <EffectivenessMultiplier variant={effectiveness} />
             </div>
