@@ -19,7 +19,7 @@ export default function GenderRatioMetadata({
   const femaleRate = Math.fround((genderRate / 8) * 100).toFixed(1)
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg p-4">
+    <div className="flex flex-col gap-2 rounded-lg">
       <h2 className="text-sm/6 text-zinc-600 dark:text-zinc-400">{title}</h2>
       <div className="flex flex-col">
         {/* Progress bar visualization */}

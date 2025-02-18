@@ -95,29 +95,27 @@ export default async function Page({
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
 
   return (
-    <div className="container mx-auto flex flex-col gap-4 xl:gap-8">
+    <div className="container mx-auto flex flex-col gap-8 px-6">
       <div className="w-full">
         {/* Hero section */}
         <MonsterHero species={species} pokemon={pokemon} />
       </div>
-      <div className="flex w-full flex-col gap-4">
+      <div className="flex w-full flex-col gap-8">
         {/* Metadata section */}
-        <section className="flex w-full flex-col gap-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8">
-            <HeightMetadata height={pokemon.height} />
-            <WeightMetadata weight={pokemon.weight} />
-            <GenderRatioMetadata genderRate={species.gender_rate} />
-            <CaptureRateMetadata captureRate={species.capture_rate} />
-            <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
-            <EggGroupMetadata eggGroups={eggGroups} />
-            <GrowthRateMetadata growthRate={growthRate} />
-            <EffortValueYieldMetadata stats={pokemon.stats} />
-          </div>
+        <section className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-4">
+          <HeightMetadata height={pokemon.height} />
+          <WeightMetadata weight={pokemon.weight} />
+          <GenderRatioMetadata genderRate={species.gender_rate} />
+          <CaptureRateMetadata captureRate={species.capture_rate} />
+          <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
+          <EggGroupMetadata eggGroups={eggGroups} />
+          <GrowthRateMetadata growthRate={growthRate} />
+          <EffortValueYieldMetadata stats={pokemon.stats} />
         </section>
-        <div className="flex w-full flex-col lg:grow lg:flex-row">
+        <div className="flex w-full flex-col lg:grow lg:flex-row gap-8">
           {/* First column on large screens */}
-          <div className="flex w-full flex-col gap-4">
-            <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row">
+          <div className="flex w-full flex-col gap-8">
+            <div className="flex w-full flex-col sm:flex-row lg:flex-col xl:flex-row gap-8">
               <Suspense fallback={<LoadingSection />}>
                 <StatsSection pokemon={pokemon} />
               </Suspense>

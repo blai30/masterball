@@ -19,7 +19,7 @@ export default function MonsterHero({
   const significantDigits = imageId.slice(leadingZeros.length)
 
   return (
-    <section className="flex flex-col items-start gap-4 px-4 lg:flex-row lg:items-end lg:gap-12">
+    <section className="flex flex-col items-start gap-4 lg:flex-row lg:items-end lg:gap-12">
       <div className="flex flex-col items-start gap-4">
         {/* <div className="flex flex-row items-center gap-4"> */}
         <p className="font-num relative text-2xl sm:text-3xl">

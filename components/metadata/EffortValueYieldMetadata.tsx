@@ -10,7 +10,7 @@ export default function EffortValueYieldMetadata({
   const evStats = stats.filter((stat) => stat.effort > 0)
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg p-4">
+    <div className="flex flex-col gap-2 rounded-lg">
       <p className="text-sm/6 text-zinc-600 dark:text-zinc-400">{title}</p>
       <ul className="flex flex-col">
         {evStats.map((stat) => (

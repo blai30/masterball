@@ -43,7 +43,7 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="container mx-auto">
+    <nav className="container mx-auto px-6">
       <div className="flex flex-row flex-wrap items-center justify-between">
         <ul className="flex flex-row flex-wrap items-center gap-4">
           {navItems.map((item) => {
