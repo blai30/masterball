@@ -5,6 +5,7 @@ import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
+import TypePill from '@/components/TypePill'
 
 const typeClasses: Record<string, string> = {
   [TypeName.Normal]: 'bg-normal',
@@ -47,7 +48,7 @@ export default async function MonsterPill({
     <GlassCard variant="link">
       <Link
         href={`/${species.name}`}
-        className="group flex w-56 items-center gap-3 px-3 py-1"
+        className="group flex w-56 items-center gap-3 px-3 py-2"
       >
         <Image
           src={imageUrl}
@@ -57,22 +58,17 @@ export default async function MonsterPill({
           priority
           className="w-16 object-contain py-1"
         />
-        <div className="flex flex-col w-full h-full gap-2 justify-between">
-          <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
+        <div className="flex h-full w-full flex-col justify-between gap-1">
+          <h3 className="rounded-xs text-lg font-medium text-zinc-700 dark:text-zinc-300">
             {name}
           </h3>
           <div className="flex flex-row gap-2">
             {types.map((typeResource) => (
-              <Image
+              <TypePill
                 key={typeResource.id}
-                src={`${process.env.NEXT_PUBLIC_BASEPATH}/${typeResource.name}.png`}
-                alt={typeResource.name}
-                width={20}
-                height={20}
-                className={clsx(
-                  'rounded-xs object-contain',
-                  typeClasses[typeResource.name]
-                )}
+                variant={typeResource.name as TypeName}
+                size="small"
+                link={false}
               />
             ))}
           </div>

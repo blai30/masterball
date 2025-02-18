@@ -3,7 +3,7 @@ import clsx from 'clsx/lite'
 import { cva, type VariantProps } from 'cva'
 
 const variants = cva({
-  base: 'rounded-l-sm rounded-tr-sm rounded-br-xl bg-gradient-to-br to-75%',
+  base: 'rounded-xl bg-gradient-to-br to-75%',
   variants: {
     variant: {
       default: '',

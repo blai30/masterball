@@ -44,15 +44,15 @@ export default function Navigation() {
 
   return (
     <nav className="container mx-auto">
-      <div className="flex flex-row items-center justify-between">
-        <ul className="flex flex-row items-center gap-4">
+      <div className="flex flex-row flex-wrap items-center justify-between">
+        <ul className="flex flex-row flex-wrap items-center gap-4">
           {navItems.map((item) => {
             const active = isActiveRoute(item.url)
             return (
               <li
                 key={item.url}
                 className={clsx(
-                  'group inline-flex transition-colors hover:duration-0 rounded-lg',
+                  'group inline-flex rounded-lg transition-colors hover:duration-0',
                   active
                     ? 'bg-zinc-300 dark:bg-zinc-700'
                     : 'hover:bg-zinc-200 focus-visible:bg-zinc-200 dark:hover:bg-zinc-800 dark:focus-visible:bg-zinc-800'
@@ -61,7 +61,7 @@ export default function Navigation() {
                 <Link
                   href={item.url}
                   className={clsx(
-                    'inline-flex items-center gap-2 py-2 px-3',
+                    'inline-flex items-center gap-2 px-3 py-2',
                     'font-medium transition-colors group-hover:duration-0',
                     active
                       ? 'text-black dark:text-white'
@@ -75,7 +75,7 @@ export default function Navigation() {
             )
           })}
         </ul>
-        <ul className="flex flex-row items-center gap-4">
+        <ul className="flex flex-row flex-wrap items-center gap-4">
           <li>
             <GlobalIndexSearch />
           </li>

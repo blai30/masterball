@@ -14,6 +14,7 @@ import {
 } from '@radix-ui/react-dialog'
 import { useGlobalIndex } from '@/components/shared/GlobalIndexProvider'
 import GlassCard from '@/components/GlassCard'
+import { Search } from 'lucide-react'
 
 export default function GlobalIndexSearch() {
   const [open, setOpen] = useState(false)
@@ -57,42 +58,25 @@ export default function GlobalIndexSearch() {
     <>
       {/* Clickable button on the page to open command palette dialog */}
       <GlassCard variant="link">
-        <div className="relative flex flex-row items-center">
-          <svg
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="absolute ml-2 size-4 text-zinc-400 dark:text-zinc-600"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className={clsx(
+            'relative flex h-8 cursor-default items-center gap-2 py-1 pr-2 pl-7',
+            'rounded-md'
+          )}
+        >
+          <Search className="absolute left-0 ml-2 size-4 text-zinc-600 dark:text-zinc-400" />
+          <kbd
             className={clsx(
-              'flex h-8 w-48 cursor-default items-center gap-2 py-1 pr-1 pl-7',
-              'rounded-l-xs rounded-tr-xs rounded-br-md',
-              'text-md text-zinc-600 dark:text-zinc-400'
+              'ml-auto flex gap-1 px-1',
+              'text-sm text-zinc-800 dark:text-zinc-200'
             )}
           >
-            Search
-            <kbd
-              className={clsx(
-                'ml-auto flex gap-1 px-1',
-                'rounded-l-xs rounded-tr-xs rounded-br-lg',
-                'bg-white text-sm text-zinc-400 dark:bg-black dark:text-zinc-600'
-              )}
-            >
-              <kbd className="font-sans">{modifierKey}</kbd>
-              <kbd className="font-sans">K</kbd>
-            </kbd>
-          </button>
-        </div>
+            <kbd className="font-sans">{modifierKey}</kbd>
+            <kbd className="font-sans">K</kbd>
+          </kbd>
+        </button>
       </GlassCard>
 
       {/* Command palette dialog not displayed by default */}
@@ -144,7 +128,7 @@ export default function GlobalIndexSearch() {
                 onValueChange={setQuery}
                 autoFocus
                 placeholder="Search (↑↓ to navigate, ↵ to select)"
-                className="w-full rounded-l-xs rounded-tr-xs rounded-br-md bg-white/50 py-3 pr-4 pl-10.5 placeholder-zinc-400 focus:outline-none dark:bg-black/50 dark:text-white dark:placeholder-zinc-600"
+                className="w-full rounded-md bg-white/50 py-3 pr-4 pl-10.5 placeholder-zinc-400 focus:outline-none dark:bg-black/50 dark:text-white dark:placeholder-zinc-600"
               />
             </div>
             <Command.List className="max-h-[70vh] overflow-y-auto pr-1 *:flex *:flex-col *:gap-1 md:max-h-[32rem]">
@@ -167,13 +151,16 @@ export default function GlobalIndexSearch() {
                     }}
                     className={clsx(
                       'cursor-default p-2',
-                      'rounded-l-xs rounded-tr-xs rounded-br-md',
+                      'rounded-md',
                       'transition-colors data-[selected=true]:bg-zinc-300/75 data-[selected=true]:duration-0 dark:data-[selected=true]:bg-zinc-700/75'
                     )}
                   >
                     <div className="flex flex-row items-center justify-start gap-3">
                       <Image
-                        src={item.imageUrl ?? `${process.env.NEXT_PUBLIC_BASEPATH}/favicon.png`}
+                        src={
+                          item.imageUrl ??
+                          `${process.env.NEXT_PUBLIC_BASEPATH}/favicon.png`
+                        }
                         alt={item.title}
                         width={64}
                         height={64}
@@ -185,11 +172,14 @@ export default function GlobalIndexSearch() {
                           <span className="pointer-events-none text-black dark:text-white">
                             {item.title}
                           </span>
+                          <span className="pointer-events-none text-sm text-zinc-600 dark:text-zinc-400">
+                            {item.path}
+                          </span>
                           {/* {item.keywords.join(', ')} */}
                         </div>
-                        <span className="pointer-events-none text-sm text-zinc-600 dark:text-zinc-400">
+                        {/* <span className="pointer-events-none text-sm text-zinc-600 dark:text-zinc-400">
                           {item.path}
-                        </span>
+                        </span> */}
                       </div>
                     </div>
                   </Command.Item>

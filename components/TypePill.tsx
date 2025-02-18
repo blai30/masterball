@@ -28,9 +28,9 @@ const variants = cva({
     },
     size: {
       small:
-        'h-4 w-20 rounded-l-xs rounded-tr-xs rounded-br-md px-0.5 tracking-normal',
+        'size-6 rounded-xs',
       medium:
-        'h-6 w-28 rounded-l-xs rounded-tr-xs rounded-br-md px-1 tracking-normal',
+        'h-6 w-28 rounded-sm px-1 tracking-normal',
       large: 'h-8 w-32 rounded-full px-2 font-medium tracking-wide',
     },
   },
@@ -39,32 +39,51 @@ const variants = cva({
 export default function TypePill({
   variant,
   size = 'large',
+  link = true,
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
+  link?: boolean
 }) {
   const name = TypeLabels[variant as TypeName]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
 
-  return (
+  return link ? (
     <Link
       href={`/type/${variant}`}
       className={variants({ variant: variant as TypeName, size })}
     >
+      <Image
+        src={imageUrl}
+        alt={name}
+        width={24}
+        height={24}
+        priority
+        loading="eager"
+        className="aspect-square bg-transparent object-contain"
+      />
       {size !== 'small' && (
-        <Image
-          src={imageUrl}
-          alt={name}
-          width={24}
-          height={24}
-          priority
-          loading="eager"
-          className="aspect-square rounded-md bg-transparent object-contain"
-        />
+        <p className="w-full px-2 text-xs text-white uppercase dark:text-white">
+          {name}
+        </p>
       )}
-      <p className="w-full px-2 text-xs text-white uppercase dark:text-white">
-        {name}
-      </p>
     </Link>
+  ) : (
+    <div className={variants({ variant: variant as TypeName, size })}>
+      <Image
+        src={imageUrl}
+        alt={name}
+        width={24}
+        height={24}
+        priority
+        loading="eager"
+        className="aspect-square bg-transparent object-contain"
+      />
+      {size !== 'small' && (
+        <p className="w-full px-2 text-xs text-white uppercase dark:text-white">
+          {name}
+        </p>
+      )}
+    </div>
   )
 }
