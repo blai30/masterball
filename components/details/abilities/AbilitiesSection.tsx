@@ -43,7 +43,7 @@ export default async function AbilitiesSection({
                     <Link href={`/ability/${a.name}`} className="inline-block">
                       <h3
                         title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
-                        className="font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300"
+                        className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
                       >
                         {name}
                       </h3>

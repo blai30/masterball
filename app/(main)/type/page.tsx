@@ -19,7 +19,7 @@ export default async function Page() {
   const typeNames = Object.values(TypeName)
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-6">
       <ul className="flex flex-col gap-2">
         {typeNames.map((type) => (
           <li key={type}>

@@ -98,15 +98,15 @@ export default function MovesTable({
                   <Link href={`/move/${move.move.name}`} className="">
                     <p
                       title={`Learned at level ${rowLabel}: ${name}`}
-                      className="font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300"
+                      className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
                     >
                       {name}
                     </p>
                   </Link>
                 </div>
-                <div className="flex h-full min-w-20 items-center justify-center px-2 gap-1">
+                <div className="flex h-full min-w-20 items-center justify-center gap-1 px-2">
                   <TypePill variant={type} size="medium" />
-                {/* </div>
+                  {/* </div>
                 <div className="flex h-full min-w-14 items-center justify-center px-2"> */}
                   <DamageClassPill variant={damageClass} size="small" />
                 </div>

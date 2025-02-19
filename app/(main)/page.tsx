@@ -30,7 +30,7 @@ export default async function Home() {
   )
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-6">
       <ul className="2xs:grid-cols-2 xs:grid-cols-3 grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10">
         {species.map((specie: PokemonSpecies) => (
           <li key={specie.name} className="col-span-1">

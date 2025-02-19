@@ -5,17 +5,17 @@ import { cva } from 'cva'
 import { DamageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: 'flex flex-row items-center',
+  base: 'flex flex-row items-center justify-center transition-colors hover:duration-0',
   variants: {
     variant: {
-      [DamageClassName.Physical]: 'bg-physical',
-      [DamageClassName.Special]: 'bg-special',
-      [DamageClassName.Status]: 'bg-status',
+      [DamageClassName.Physical]: 'bg-physical hover:bg-physical-light',
+      [DamageClassName.Special]: 'bg-special hover:bg-special-light',
+      [DamageClassName.Status]: 'bg-status hover:bg-status-light',
     },
     size: {
-      small: 'h-6 w-9 rounded-sm',
-      medium: 'h-6 w-10 rounded-md',
-      large: 'h-8 w-12 rounded-full',
+      small: 'w-8 rounded-sm',
+      medium: 'w-10 rounded-md',
+      large: 'w-20 rounded-xl',
     },
   },
 })
@@ -35,7 +35,7 @@ export default function DamageClassPill({
       href={`/damage-class/${variant}`}
       title={name}
       className={clsx(
-        'py-1',
+        '',
         'relative',
         variants({
           variant: variant as DamageClassName,
@@ -56,7 +56,7 @@ export default function DamageClassPill({
         height={40}
         priority
         loading="eager"
-        className="relative object-contain p-1 dark:brightness-200"
+        className="relative object-contain p-0.5 dark:brightness-200"
       />
     </Link>
   )

@@ -25,7 +25,7 @@ export default async function Page() {
   )
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto px-6">
       <ul className="flex flex-col gap-2">
         {items.map((item) => {
           const name = getTranslation(item.names, 'name')
@@ -41,7 +41,7 @@ export default async function Page() {
                   width={64}
                   height={64}
                 />
-                <p className="font-medium text-blue-700 underline underline-offset-4 dark:text-blue-300">
+                <p className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
                   {name}
                 </p>
               </Link>
