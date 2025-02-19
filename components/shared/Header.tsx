@@ -1,4 +1,4 @@
-import { NamedAPIResource, type Pokemon } from 'pokedex-promise-v2'
+import { NamedAPIResource } from 'pokedex-promise-v2'
 import Navigation from '@/components/shared/Navigation'
 import {
   IndexItem,
@@ -12,8 +12,10 @@ import {
   pokeapi,
 } from '@/lib/providers'
 import {
+  DamageClassLabels,
   DamageClassName,
   getTranslation,
+  TypeLabels,
   TypeName,
 } from '@/lib/utils/pokeapiHelpers'
 
@@ -85,18 +87,18 @@ export default async function Header() {
   const typeItems: IndexItem[] = types.map((type) => {
     return {
       id: type.id,
-      title: getTranslation(type.names, 'name'),
+      title: TypeLabels[type.name as TypeName],
       slug: type.name,
       path: `/type/${type.name}`,
     } as IndexItem
   })
 
-  const damageClassItems: IndexItem[] = damageClass.map((type) => {
+  const damageClassItems: IndexItem[] = damageClass.map((damageClass) => {
     return {
-      id: type.id,
-      title: getTranslation(type.names, 'name'),
-      slug: type.name,
-      path: `/damage-class/${type.name}`,
+      id: damageClass.id,
+      title: DamageClassLabels[damageClass.name as DamageClassName],
+      slug: damageClass.name,
+      path: `/damage-class/${damageClass.name}`,
     } as IndexItem
   })
 
@@ -120,7 +122,7 @@ export default async function Header() {
   ]
 
   return (
-    <header className="w-full border-b border-zinc-100 dark:border-zinc-900">
+    <header className="sticky top-0 z-50 w-full bg-zinc-200/50 backdrop-blur-2xl dark:bg-zinc-800/50">
       <GlobalIndexProvider indexItems={allItems}>
         <Navigation />
       </GlobalIndexProvider>
