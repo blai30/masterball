@@ -6,15 +6,15 @@ import { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx/lite'
 import { Command } from 'cmdk'
 import Fuse from 'fuse.js'
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { Search } from 'lucide-react'
 import {
   DialogDescription,
   DialogOverlay,
   DialogTitle,
 } from '@radix-ui/react-dialog'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import { useGlobalIndex } from '@/components/shared/GlobalIndexProvider'
 import GlassCard from '@/components/GlassCard'
-import { Search } from 'lucide-react'
 
 export default function GlobalIndexSearch() {
   const [open, setOpen] = useState(false)
@@ -57,27 +57,26 @@ export default function GlobalIndexSearch() {
   return (
     <>
       {/* Clickable button on the page to open command palette dialog */}
-      <GlassCard variant="link" className="rounded-xl">
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className={clsx(
+          'relative flex h-8 cursor-default items-center gap-2 py-1 pr-2 pl-7',
+          'rounded-lg transition-colors hover:duration-0',
+          'bg-white/50 hover:bg-zinc-200 focus-visible:bg-zinc-200 dark:bg-black/50 dark:hover:bg-zinc-800 dark:focus-visible:bg-zinc-800'
+        )}
+      >
+        <Search className="absolute left-0 ml-2 size-4 text-zinc-600 dark:text-zinc-400" />
+        <kbd
           className={clsx(
-            'relative flex h-8 cursor-default items-center gap-2 py-1 pr-2 pl-7',
-            'rounded-md'
+            'ml-auto flex gap-1 px-1',
+            'text-sm text-zinc-800 dark:text-zinc-200'
           )}
         >
-          <Search className="absolute left-0 ml-2 size-4 text-zinc-600 dark:text-zinc-400" />
-          <kbd
-            className={clsx(
-              'ml-auto flex gap-1 px-1',
-              'text-sm text-zinc-800 dark:text-zinc-200'
-            )}
-          >
-            <kbd className="font-sans">{modifierKey}</kbd>
-            <kbd className="font-sans">K</kbd>
-          </kbd>
-        </button>
-      </GlassCard>
+          <kbd className="font-sans">{modifierKey}</kbd>
+          <kbd className="font-sans">K</kbd>
+        </kbd>
+      </button>
 
       {/* Command palette dialog not displayed by default */}
       <Command.Dialog
@@ -110,19 +109,7 @@ export default function GlobalIndexSearch() {
         >
           <div className="flex flex-col gap-2">
             <div className="relative flex flex-row items-center">
-              <svg
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="absolute ml-2.5 size-6 text-zinc-400 dark:text-zinc-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
+              <Search className="absolute ml-2.5 size-6 text-zinc-400 dark:text-zinc-600" />
               <Command.Input
                 value={query}
                 onValueChange={setQuery}
