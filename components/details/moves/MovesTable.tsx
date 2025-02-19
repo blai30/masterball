@@ -105,7 +105,7 @@ export default function MovesTable({
                   </Link>
                 </div>
                 <div className="flex h-full min-w-20 items-center justify-center px-2 gap-1">
-                  <TypePill variant={type} size="small" />
+                  <TypePill variant={type} size="medium" />
                 {/* </div>
                 <div className="flex h-full min-w-14 items-center justify-center px-2"> */}
                   <DamageClassPill variant={damageClass} size="small" />

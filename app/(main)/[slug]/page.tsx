@@ -145,7 +145,7 @@ export default async function Page({
         <div className="flex w-full flex-col gap-6 lg:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-6">
-            <div className="flex w-full flex-col gap-2 sm:flex-row lg:flex-col xl:flex-row">
+            <div className="flex w-full flex-col gap-2 sm:flex-row sm:gap-2 lg:flex-col lg:gap-2 xl:flex-row xl:gap-2">
               <Suspense fallback={<LoadingSection />}>
                 <StatsSection pokemon={pokemon} />
               </Suspense>
@@ -161,7 +161,7 @@ export default async function Page({
             </Suspense>
           </div>
           {/* Second column on large screens */}
-          <div className="flex w-full flex-col gap-6 lg:min-w-xl">
+          <div className="flex w-full flex-col gap-6 lg:min-w-2xl">
             <Suspense fallback={<LoadingSection />}>
               <MovesSection pokemon={pokemon} />
             </Suspense>

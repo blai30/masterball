@@ -5,7 +5,7 @@ import { cva } from 'cva'
 import { TypeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: '',
+  base: 'flex flex-row items-center',
   variants: {
     variant: {
       [TypeName.Normal]: 'bg-normal',
@@ -28,9 +28,9 @@ const variants = cva({
       [TypeName.Fairy]: 'bg-fairy',
     },
     size: {
-      small: 'size-6 rounded-xs',
+      small: 'w-6 rounded-xs',
       medium: 'w-28 rounded-sm p-0.5 text-sm font-medium tracking-wide',
-      large: 'w-36 rounded-md p-1 text-lg font-semibold tracking-wider',
+      large: 'w-40 gap-1 rounded-md p-1 text-lg font-semibold tracking-wider',
     },
   },
 })
@@ -62,8 +62,8 @@ export default function TypePill({
         variants({ size }),
         link &&
           'transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700',
-        'flex flex-row items-center overflow-hidden',
-        'bg-zinc-200 dark:bg-zinc-800'
+        'bg-zinc-200 dark:bg-zinc-800',
+        'overflow-hidden'
       )}
     >
       <Image

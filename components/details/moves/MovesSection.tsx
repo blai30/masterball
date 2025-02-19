@@ -71,9 +71,9 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
 
   return (
     <section className="flex flex-col gap-2">
-      {/* <h2 className="text-xl font-medium text-black dark:text-white">
+      <h2 className="sr-only text-xl font-medium text-black dark:text-white">
         {title}
-      </h2> */}
+      </h2>
       {levelUpMoves.length > 0 && (
         <MovesTable
           variant="level-up"

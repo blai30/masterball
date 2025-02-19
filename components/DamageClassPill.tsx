@@ -13,7 +13,7 @@ const variants = cva({
       [DamageClassName.Status]: 'bg-status',
     },
     size: {
-      small: 'h-6 w-9 rounded-md',
+      small: 'h-6 w-9 rounded-sm',
       medium: 'h-6 w-10 rounded-md',
       large: 'h-8 w-12 rounded-full',
     },
@@ -35,10 +35,10 @@ export default function DamageClassPill({
       href={`/damage-class/${variant}`}
       title={name}
       className={clsx(
-        // 'py-1',
+        'py-1',
         'relative',
         variants({
-          // variant: variant as DamageClassName,
+          variant: variant as DamageClassName,
           size,
         })
       )}

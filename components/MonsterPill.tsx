@@ -45,7 +45,7 @@ export default async function MonsterPill({
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <GlassCard variant="link">
+    <GlassCard variant="link" className="rounded-lg">
       <Link
         href={`/${species.name}`}
         className="group flex w-56 items-center gap-3 px-3 py-2"

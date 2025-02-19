@@ -2,7 +2,7 @@ import { cva } from 'cva'
 import { Effectiveness } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: 'font-nums w-14 rounded-md text-right text-sm font-semibold tabular-nums',
+  base: 'font-nums w-12 rounded-md text-right text-sm font-semibold tabular-nums',
   variants: {
     variant: {
       [Effectiveness.Immune]: 'text-purple-700 dark:text-purple-300',

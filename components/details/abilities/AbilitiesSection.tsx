@@ -29,9 +29,9 @@ export default async function AbilitiesSection({
 
   return (
     <section className="flex flex-col gap-4">
-      {/* <h2 className="text-xl font-medium text-black dark:text-white">
+      <h2 className="sr-only text-xl font-medium text-black dark:text-white">
         {title}
-      </h2> */}
+      </h2>
       <ul className="flex flex-col gap-2">
         {abilitiesMap.map((a) => {
           const name = getTranslation(a.resource.names, 'name')
