@@ -4,7 +4,7 @@ export default function LoadingCard() {
   const id = 0
 
   return (
-    <GlassCard variant="link" className="h-full">
+    <GlassCard variant="link" className="h-full rounded-xl">
       <div className="group flex h-full flex-col items-center justify-between px-2 py-3">
         <p
           aria-hidden="true"
