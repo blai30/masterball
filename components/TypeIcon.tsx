@@ -2,10 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx/lite'
 import { cva } from 'cva'
-import { TypeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
+import { TypeName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: 'flex flex-row items-center',
+  base: 'flex flex-row items-center justify-center',
   variants: {
     variant: {
       [TypeName.Normal]: 'bg-normal',
@@ -28,14 +28,14 @@ const variants = cva({
       [TypeName.Fairy]: 'bg-fairy',
     },
     size: {
-      small: 'w-24 gap-1.5 rounded-xs text-xs font-normal tracking-tight',
-      medium: 'w-28 gap-2 rounded-sm p-0.5 text-sm font-medium tracking-wide',
-      large: 'w-40 gap-3 rounded-md p-1 text-lg font-semibold tracking-wider',
+      small: 'size-5 rounded-xs',
+      medium: 'size-6 rounded-sm',
+      large: 'size-8 rounded-md',
     },
   },
 })
 
-export default function TypePill({
+export default function TypeIcon({
   variant,
   size = 'large',
   link = true,
@@ -44,11 +44,10 @@ export default function TypePill({
   size?: 'small' | 'medium' | 'large'
   link?: boolean
 }) {
-  const name = TypeLabels[variant as TypeName]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
   const dimensions = {
-    small: 24,
-    medium: 24,
+    small: 20,
+    medium: 28,
     large: 32,
   }
 
@@ -59,27 +58,20 @@ export default function TypePill({
     <Wrapper
       {...wrapperProps}
       className={clsx(
-        variants({ size }),
+        variants({ variant: variant as TypeName, size }),
         link &&
-          'transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700',
-        'bg-zinc-200 dark:bg-zinc-800'
+          'transition-(--tw-brightness) hover:brightness-125 hover:duration-0'
       )}
     >
       <Image
         src={imageUrl}
-        alt={name}
+        alt={variant}
         width={dimensions[size]}
         height={dimensions[size]}
         priority
         loading="eager"
-        className={clsx(
-          variants({ variant: variant as TypeName }),
-          'aspect-square rounded-xs object-contain'
-        )}
+        className="relative object-contain"
       />
-      <p className="inline-flex h-full w-full items-center text-white uppercase dark:text-white">
-        {name}
-      </p>
     </Wrapper>
   )
 }

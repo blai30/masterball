@@ -4,7 +4,7 @@ import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
-import TypePill from '@/components/TypePill'
+import TypeIcon from '@/components/TypeIcon'
 
 export default async function MonsterPill({
   species,
@@ -40,9 +40,9 @@ export default async function MonsterPill({
           <h3 className="rounded-xs text-lg font-medium text-zinc-700 dark:text-zinc-300">
             {name}
           </h3>
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-1">
             {types.map((typeResource) => (
-              <TypePill
+              <TypeIcon
                 key={typeResource.id}
                 variant={typeResource.name as TypeName}
                 size="small"

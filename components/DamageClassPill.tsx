@@ -56,7 +56,7 @@ export default function DamageClassPill({
         height={40}
         priority
         loading="eager"
-        className="relative object-contain p-0.5 dark:brightness-200"
+        className="relative object-contain p-0.5"
       />
     </Link>
   )

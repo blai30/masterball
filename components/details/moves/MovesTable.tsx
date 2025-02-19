@@ -8,7 +8,7 @@ import {
 } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 import DamageClassPill from '@/components/DamageClassPill'
-import TypePill from '@/components/TypePill'
+import TypeIcon from '@/components/TypeIcon'
 
 const variantColumnLabels: Record<string, string> = {
   'level-up': 'Level',
@@ -105,7 +105,7 @@ export default function MovesTable({
                   </Link>
                 </div>
                 <div className="flex h-full min-w-20 items-center justify-center gap-1 px-2">
-                  <TypePill variant={type} size="medium" />
+                  <TypeIcon variant={type} size="medium" />
                   {/* </div>
                 <div className="flex h-full min-w-14 items-center justify-center px-2"> */}
                   <DamageClassPill variant={damageClass} size="small" />
