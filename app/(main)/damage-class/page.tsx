@@ -6,7 +6,7 @@ export const dynamic = 'force-static'
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata: Metadata = {
-    title: 'Home',
+    title: 'Damage Classes',
     twitter: {
       card: 'summary',
     },

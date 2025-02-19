@@ -22,7 +22,7 @@ export async function generateMetadata({
   const translatedName = getTranslation(eggGroup.names, 'name')
 
   const metadata: Metadata = {
-    title: translatedName,
+    title: `${translatedName} | Egg Group`,
     twitter: {
       card: 'summary_large_image',
     },

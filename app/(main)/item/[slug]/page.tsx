@@ -22,7 +22,7 @@ export async function generateMetadata({
   const translatedName = getTranslation(item.names, 'name')
 
   const metadata: Metadata = {
-    title: translatedName,
+    title: `${translatedName} | Item`,
     twitter: {
       card: 'summary_large_image',
     },

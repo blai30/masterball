@@ -24,7 +24,7 @@ export async function generateMetadata({
   const translatedName = getTranslation(damageClass.names, 'name')
 
   const metadata: Metadata = {
-    title: translatedName,
+    title: `${translatedName} | Damage Class`,
     twitter: {
       card: 'summary_large_image',
     },

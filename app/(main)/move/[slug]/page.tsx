@@ -24,7 +24,7 @@ export async function generateMetadata({
   const translatedName = getTranslation(move.names, 'name')
 
   const metadata: Metadata = {
-    title: translatedName,
+    title: `${translatedName} | Move`,
     twitter: {
       card: 'summary_large_image',
     },

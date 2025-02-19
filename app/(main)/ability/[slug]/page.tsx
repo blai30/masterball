@@ -22,7 +22,7 @@ export async function generateMetadata({
   const translatedName = getTranslation(ability.names, 'name')
 
   const metadata: Metadata = {
-    title: translatedName,
+    title: `${translatedName} | Ability`,
     twitter: {
       card: 'summary_large_image',
     },
