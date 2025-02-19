@@ -122,7 +122,7 @@ export default async function Header() {
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-zinc-200/50 backdrop-blur-2xl dark:bg-zinc-800/50">
+    <header className="sticky top-0 z-40 w-full bg-zinc-200/50 backdrop-blur-2xl dark:bg-zinc-800/50">
       <GlobalIndexProvider indexItems={allItems}>
         <Navigation />
       </GlobalIndexProvider>
