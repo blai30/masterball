@@ -6,7 +6,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // Font applied in globals.css.
   return (
     <div className="flex min-h-screen flex-col gap-6">
       <Header />
