@@ -105,42 +105,30 @@ export default async function Page({
       <div className="flex w-full flex-col gap-6">
         {/* Metadata section */}
         <section className="grid grid-cols-2 gap-2 md:grid-cols-4 2xl:grid-cols-8">
-          <GlassCard
-            className={clsx('p-4', 'rounded-tl-2xl 2xl:rounded-bl-2xl')}
-          >
+          <div className="p-4">
             <HeightMetadata height={pokemon.height} />
-          </GlassCard>
-          <GlassCard
-            className={clsx('p-4', 'rounded-tr-2xl md:rounded-tr-none')}
-          >
+          </div>
+          <div className="p-4">
             <WeightMetadata weight={pokemon.weight} />
-          </GlassCard>
-          <GlassCard className={clsx('p-4')}>
+          </div>
+          <div className="p-4">
             <GenderRatioMetadata genderRate={species.gender_rate} />
-          </GlassCard>
-          <GlassCard
-            className={clsx('p-4', 'md:rounded-tr-2xl 2xl:rounded-tr-none')}
-          >
+          </div>
+          <div className="p-4">
             <CaptureRateMetadata captureRate={species.capture_rate} />
-          </GlassCard>
-          <GlassCard
-            className={clsx('p-4', 'md:rounded-bl-2xl 2xl:rounded-bl-none')}
-          >
+          </div>
+          <div className="p-4">
             <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
-          </GlassCard>
-          <GlassCard className={clsx('p-4')}>
+          </div>
+          <div className="p-4">
             <EggGroupMetadata eggGroups={eggGroups} />
-          </GlassCard>
-          <GlassCard
-            className={clsx('p-4', 'rounded-bl-2xl md:rounded-bl-none')}
-          >
+          </div>
+          <div className="p-4">
             <GrowthRateMetadata growthRate={growthRate} />
-          </GlassCard>
-          <GlassCard
-            className={clsx('p-4', 'rounded-br-2xl 2xl:rounded-tr-2xl')}
-          >
+          </div>
+          <div className="p-4">
             <EffortValueYieldMetadata stats={pokemon.stats} />
-          </GlassCard>
+          </div>
         </section>
         <div className="flex w-full flex-col gap-6 lg:flex-row">
           {/* First column on large screens */}
