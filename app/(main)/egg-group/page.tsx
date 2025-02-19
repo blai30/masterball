@@ -24,7 +24,7 @@ export default async function Page() {
   )
 
   return (
-    <div className="container mx-auto px-6">
+    <div className="container mx-auto px-4">
       <ul className="flex flex-col gap-2">
         {eggGroups.map((eggGroup) => {
           const name = getTranslation(eggGroup.names, 'name')

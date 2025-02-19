@@ -19,7 +19,7 @@ export default async function Page() {
   const damageClassNames = Object.values(DamageClassName)
 
   return (
-    <div className="container mx-auto px-6">
+    <div className="container mx-auto px-4">
       <ul className="flex flex-col gap-2">
         {damageClassNames.map((damageClass) => (
           <li key={damageClass}>
