@@ -26,10 +26,14 @@ const options = [
 export default function ThemeSwitch() {
   const { theme, setTheme } = useTheme()
 
+  const handleThemeChange = (value: string) => {
+    document.startViewTransition(() => setTheme(value))
+  }
+
   return (
     <RadioGroup
       value={theme}
-      onChange={setTheme}
+      onChange={handleThemeChange}
       title="Theme switch"
       className="relative inline-grid grid-cols-3 gap-0.5 rounded-full bg-white p-0.75 dark:bg-black"
     >
