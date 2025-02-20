@@ -1,9 +1,7 @@
 import Link from 'next/link'
-import clsx from 'clsx/lite'
 import { Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import GlassCard from '@/components/GlassCard'
 
 export default async function AbilitiesSection({
   pokemon,
@@ -29,16 +27,16 @@ export default async function AbilitiesSection({
 
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="sr-only text-xl font-medium text-black dark:text-white">
+      <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
       <ul className="flex flex-col gap-2">
         {abilitiesMap.map((a) => {
           const name = getTranslation(a.resource.names, 'name')
           return (
-            <li key={a.id} className="first:*:rounded-t-2xl last:*:rounded-b-2xl">
+            <li key={a.id} className="">
               <div className="">
-                <div className="flex flex-col gap-2 p-4">
+                <div className="flex flex-col gap-2">
                   <div className="flex flex-row items-baseline gap-2">
                     <Link href={`/ability/${a.name}`} className="inline-block">
                       <h3

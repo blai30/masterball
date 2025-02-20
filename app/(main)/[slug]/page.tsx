@@ -105,30 +105,14 @@ export default async function Page({
       <div className="flex w-full flex-col gap-6">
         {/* Metadata section */}
         <section className="grid grid-cols-2 gap-2 md:grid-cols-4 2xl:grid-cols-8">
-          <div className="p-4">
-            <HeightMetadata height={pokemon.height} />
-          </div>
-          <div className="p-4">
-            <WeightMetadata weight={pokemon.weight} />
-          </div>
-          <div className="p-4">
-            <GenderRatioMetadata genderRate={species.gender_rate} />
-          </div>
-          <div className="p-4">
-            <CaptureRateMetadata captureRate={species.capture_rate} />
-          </div>
-          <div className="p-4">
-            <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
-          </div>
-          <div className="p-4">
-            <EggGroupMetadata eggGroups={eggGroups} />
-          </div>
-          <div className="p-4">
-            <GrowthRateMetadata growthRate={growthRate} />
-          </div>
-          <div className="p-4">
-            <EffortValueYieldMetadata stats={pokemon.stats} />
-          </div>
+          <HeightMetadata height={pokemon.height} />
+          <WeightMetadata weight={pokemon.weight} />
+          <GenderRatioMetadata genderRate={species.gender_rate} />
+          <CaptureRateMetadata captureRate={species.capture_rate} />
+          <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
+          <EggGroupMetadata eggGroups={eggGroups} />
+          <GrowthRateMetadata growthRate={growthRate} />
+          <EffortValueYieldMetadata stats={pokemon.stats} />
         </section>
         <div className="flex w-full flex-col gap-6 lg:flex-row">
           {/* First column on large screens */}

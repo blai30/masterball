@@ -140,7 +140,7 @@ export default function MovesTable({
   return (
     <div className="overflow-x-scroll md:overflow-auto">
       <div className={clsx('inline-block min-w-full', className)}>
-        <table className="w-full p-4">
+        <table className="w-full">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="flex h-8 items-center">

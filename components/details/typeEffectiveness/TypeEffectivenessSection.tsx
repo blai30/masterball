@@ -1,4 +1,3 @@
-import clsx from 'clsx/lite'
 import { Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import {
@@ -6,7 +5,6 @@ import {
   TypeName,
   TypeRelation,
 } from '@/lib/utils/pokeapiHelpers'
-import GlassCard from '@/components/GlassCard'
 import TypePill from '@/components/TypePill'
 import EffectivenessMultiplier from '@/components/details/typeEffectiveness/EffectivenessMultiplier'
 
@@ -33,15 +31,10 @@ export default async function TypeEffectivenessSection({
 
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="sr-only text-xl font-medium text-black dark:text-white">
+      <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div
-        className={clsx(
-          'xs:h-80 flex h-full w-full flex-col flex-wrap items-center justify-center gap-1 p-4 sm:h-full',
-          'rounded-br-2xl rounded-bl-2xl sm:rounded-tr-2xl sm:rounded-bl-none lg:rounded-tr-none lg:rounded-bl-2xl xl:rounded-tr-2xl xl:rounded-bl-none'
-        )}
-      >
+      <div className="xs:h-80 flex h-full w-full flex-col flex-wrap items-center justify-center gap-1 sm:h-full">
         {allTypeRelations.map((relation) => {
           const effectiveness = relation.effectiveness
           const type = relation.type
