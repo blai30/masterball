@@ -44,7 +44,7 @@ export default function Navigation() {
 
   return (
     <nav className="container mx-auto px-4">
-      <div className="flex h-14 flex-row flex-wrap items-center justify-between">
+      <div className="flex flex-row flex-wrap items-center justify-between py-3 gap-4">
         <ul className="flex flex-row flex-wrap items-center gap-4">
           {navItems.map((item) => {
             const active = isActiveRoute(item.url)
