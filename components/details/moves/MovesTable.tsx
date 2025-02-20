@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useMemo } from 'react'
 import clsx from 'clsx/lite'
 import { Machine, Move, MoveElement } from 'pokedex-promise-v2'
 import {
@@ -46,90 +47,100 @@ export default function MovesTable({
 } & React.ComponentPropsWithoutRef<'div'>) {
   const columnHelper = createColumnHelper<MoveRow>()
 
-  const columns = [
-    columnHelper.accessor('rowLabel', {
-      header: variantColumnLabels[variant] ?? '',
-      cell: (info) => (
-        <p
-          className={clsx(
-            'font-num w-full text-right text-zinc-700 dark:text-zinc-300',
-            info.getValue() ? 'visible' : 'invisible'
-          )}
-        >
-          {info.getValue()}
-        </p>
-      ),
-    }),
-    columnHelper.accessor('type', {
-      header: 'Type',
-      cell: (info) => (
-        <div className="flex items-center justify-center gap-2">
-          <TypeIcon variant={info.getValue()} size="medium" />
-          <DamageClassPill
-            variant={info.row.original.damageClass}
-            size="medium"
-          />
-        </div>
-      ),
-    }),
-    columnHelper.accessor('name', {
-      header: 'Move',
-      cell: (info) => (
-        <Link href={`/move/${info.row.original.name}`} className="inline-flex">
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor('rowLabel', {
+        header: variantColumnLabels[variant] ?? '',
+        cell: (info) => (
           <p
-            title={`Move: ${info.getValue()}`}
-            className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
+            className={clsx(
+              'font-num w-full text-right text-zinc-700 dark:text-zinc-300',
+              info.getValue() ? 'visible' : 'invisible'
+            )}
           >
             {info.getValue()}
           </p>
-        </Link>
-      ),
-    }),
-    columnHelper.accessor('power', {
-      header: 'Power',
-      cell: (info) => (
-        <p className="font-num w-full text-right">{info.getValue()}</p>
-      ),
-    }),
-    columnHelper.accessor('accuracy', {
-      header: 'Accuracy',
-      cell: (info) => (
-        <p className="font-num w-full text-right">
-          {info.getValue()}
-          <span className="ml-0.5 text-zinc-600 dark:text-zinc-400">%</span>
-        </p>
-      ),
-    }),
-    columnHelper.accessor('pp', {
-      header: 'PP',
-      cell: (info) => (
-        <p className="font-num w-full text-right">{info.getValue()}</p>
-      ),
-    }),
-  ]
+        ),
+      }),
+      columnHelper.accessor('type', {
+        header: 'Type',
+        cell: (info) => (
+          <div className="flex items-center justify-center gap-2">
+            <TypeIcon variant={info.getValue()} size="medium" />
+            <DamageClassPill
+              variant={info.row.original.damageClass}
+              size="medium"
+            />
+          </div>
+        ),
+      }),
+      columnHelper.accessor('name', {
+        header: 'Move',
+        cell: (info) => (
+          <Link
+            href={`/move/${info.row.original.name}`}
+            className="inline-flex"
+          >
+            <p
+              title={`Move: ${info.getValue()}`}
+              className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
+            >
+              {info.getValue()}
+            </p>
+          </Link>
+        ),
+      }),
+      columnHelper.accessor('power', {
+        header: 'Power',
+        cell: (info) => (
+          <p className="font-num w-full text-right">{info.getValue()}</p>
+        ),
+      }),
+      columnHelper.accessor('accuracy', {
+        header: 'Accuracy',
+        cell: (info) => (
+          <p className="font-num w-full text-right">
+            {info.getValue()}
+            <span className="ml-0.5 text-zinc-600 dark:text-zinc-400">%</span>
+          </p>
+        ),
+      }),
+      columnHelper.accessor('pp', {
+        header: 'PP',
+        cell: (info) => (
+          <p className="font-num w-full text-right">{info.getValue()}</p>
+        ),
+      }),
+    ],
+    [columnHelper, variant]
+  )
 
-  const data = moves.map((move) => {
-    const resource = movesMap[move.move.name]
-    const name = getTranslation(resource.names, 'name')!
-    const rowLabel =
-      variant === 'level-up'
-        ? move.version_group_details[0].level_learned_at === 0
-          ? 'Evolve'
-          : move.version_group_details[0].level_learned_at.toString()
-        : variant === 'machine' && movesMap[move.move.name]?.machine
-          ? movesMap[move.move.name].machine.item.name.toUpperCase()
-          : ''
+  const data = useMemo(
+    () =>
+      moves.map((move) => {
+        const resource = movesMap[move.move.name]
+        const name = getTranslation(resource.names, 'name')!
+        const rowLabel =
+          variant === 'level-up'
+            ? move.version_group_details[0].level_learned_at === 0
+              ? 'Evolve'
+              : move.version_group_details[0].level_learned_at.toString()
+            : variant === 'machine' && movesMap[move.move.name]?.machine
+              ? movesMap[move.move.name].machine.item.name.toUpperCase()
+              : ''
 
-    return {
-      rowLabel,
-      type: resource.type.name as TypeName,
-      damageClass: resource.damage_class.name as DamageClassName,
-      name,
-      power: resource.power ?? '—',
-      accuracy: resource.accuracy ?? '—',
-      pp: resource.pp!,
-    }
-  })
+        return {
+          rowLabel,
+          type: resource.type.name as TypeName,
+          damageClass: resource.damage_class.name as DamageClassName,
+          name,
+          power: resource.power ?? '—',
+          accuracy: resource.accuracy ?? '—',
+          pp: resource.pp!,
+        }
+      }),
+    [moves, movesMap, variant]
+  )
 
   const table = useReactTable({
     data,
@@ -166,7 +177,7 @@ export default function MovesTable({
               </tr>
             ))}
           </thead>
-          <tbody>
+          <tbody className="flex flex-col gap-1">
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
