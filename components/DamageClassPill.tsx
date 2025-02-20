@@ -5,17 +5,17 @@ import { cva } from 'cva'
 import { DamageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: 'flex flex-row items-center justify-center transition-colors hover:duration-0',
+  base: 'flex flex-row items-center justify-center transition-(--tw-brightness) hover:brightness-125 hover:duration-0',
   variants: {
     variant: {
-      [DamageClassName.Physical]: 'bg-physical hover:bg-physical-light',
-      [DamageClassName.Special]: 'bg-special hover:bg-special-light',
-      [DamageClassName.Status]: 'bg-status hover:bg-status-light',
+      [DamageClassName.Physical]: 'bg-physical',
+      [DamageClassName.Special]: 'bg-special',
+      [DamageClassName.Status]: 'bg-status',
     },
     size: {
-      small: 'w-8 rounded-sm',
-      medium: 'w-10 rounded-md',
-      large: 'w-20 rounded-xl',
+      small: 'size-5 rounded-xs',
+      medium: 'size-6 rounded-sm',
+      large: 'size-8 rounded-md',
     },
   },
 })

@@ -37,11 +37,11 @@ export default function MovesTable({
                 {variantColumnLabels[variant] ?? ''}
               </p>
             </div>
-            <div className="flex h-full min-w-44 grow items-center px-2">
-              <p className="w-full text-xs font-semibold">Move</p>
-            </div>
             <div className="flex h-full min-w-20 items-center px-2">
               <p className="w-full text-xs font-semibold">Type</p>
+            </div>
+            <div className="flex h-full min-w-44 grow items-center px-2">
+              <p className="w-full text-xs font-semibold">Move</p>
             </div>
             {/* <div className="flex h-full min-w-14 items-center px-2">
               <p className="w-full text-center text-xs font-semibold">Class</p>
@@ -94,6 +94,12 @@ export default function MovesTable({
                     {rowLabel}
                   </p>
                 </div>
+                <div className="flex h-full min-w-20 items-center justify-center gap-1 px-2">
+                  <TypeIcon variant={type} size="medium" />
+                  {/* </div>
+                <div className="flex h-full min-w-14 items-center justify-center px-2"> */}
+                  <DamageClassPill variant={damageClass} size="medium" />
+                </div>
                 <div className="flex h-full min-w-44 grow items-center px-2">
                   <Link href={`/move/${move.move.name}`} className="">
                     <p
@@ -103,12 +109,6 @@ export default function MovesTable({
                       {name}
                     </p>
                   </Link>
-                </div>
-                <div className="flex h-full min-w-20 items-center justify-center gap-1 px-2">
-                  <TypeIcon variant={type} size="medium" />
-                  {/* </div>
-                <div className="flex h-full min-w-14 items-center justify-center px-2"> */}
-                  <DamageClassPill variant={damageClass} size="small" />
                 </div>
                 <div className="flex h-full min-w-14 items-center px-2">
                   <p className="font-num w-full text-right">{power}</p>
