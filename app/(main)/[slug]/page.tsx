@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
-import clsx from 'clsx/lite'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
@@ -18,7 +17,6 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
-import GlassCard from '@/components/GlassCard'
 
 export const dynamic = 'force-static'
 
@@ -97,27 +95,28 @@ export default async function Page({
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
 
   return (
-    <div className="container mx-auto flex flex-col gap-8 px-4">
-      <div className="w-full">
-        {/* Hero section */}
+    <div className="container mx-auto flex flex-col gap-12 px-4">
+      {/* Hero section */}
+      <section className="w-full">
         <MonsterHero species={species} pokemon={pokemon} />
-      </div>
-      <div className="flex w-full flex-col gap-6">
-        {/* Metadata section */}
-        <section className="grid grid-cols-2 gap-2 md:grid-cols-4 2xl:grid-cols-8">
-          <HeightMetadata height={pokemon.height} />
-          <WeightMetadata weight={pokemon.weight} />
-          <GenderRatioMetadata genderRate={species.gender_rate} />
-          <CaptureRateMetadata captureRate={species.capture_rate} />
-          <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
-          <EggGroupMetadata eggGroups={eggGroups} />
-          <GrowthRateMetadata growthRate={growthRate} />
-          <EffortValueYieldMetadata stats={pokemon.stats} />
-        </section>
+      </section>
+      {/* Metadata section */}
+      <section className="grid grid-cols-2 gap-2 md:grid-cols-4 2xl:grid-cols-8">
+        <HeightMetadata height={pokemon.height} />
+        <WeightMetadata weight={pokemon.weight} />
+        <GenderRatioMetadata genderRate={species.gender_rate} />
+        <CaptureRateMetadata captureRate={species.capture_rate} />
+        <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
+        <EggGroupMetadata eggGroups={eggGroups} />
+        <GrowthRateMetadata growthRate={growthRate} />
+        <EffortValueYieldMetadata stats={pokemon.stats} />
+      </section>
+      {/* Main details section */}
+      <section className="flex w-full flex-col gap-6">
         <div className="flex w-full flex-col gap-6 lg:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-6">
-            <div className="flex w-full flex-col gap-2 sm:flex-row sm:gap-2 lg:flex-col lg:gap-2 xl:flex-row xl:gap-2">
+            <div className="flex w-full flex-col gap-6 sm:flex-row lg:flex-col xl:flex-row">
               <Suspense fallback={<LoadingSection />}>
                 <StatsSection pokemon={pokemon} />
               </Suspense>
@@ -139,7 +138,7 @@ export default async function Page({
             </Suspense>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

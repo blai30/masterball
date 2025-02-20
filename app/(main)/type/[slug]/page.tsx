@@ -8,7 +8,6 @@ import {
   TypeRelation,
 } from '@/lib/utils/pokeapiHelpers'
 import EffectivenessMultiplier from '@/components/details/typeEffectiveness/EffectivenessMultiplier'
-import GlassCard from '@/components/GlassCard'
 import TypePill from '@/components/TypePill'
 
 export const dynamic = 'force-static'

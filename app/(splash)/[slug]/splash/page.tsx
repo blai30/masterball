@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import GlassCard from '@/components/GlassCard'
 import TypePill from '@/components/TypePill'
 import StatsRadarChart from '@/components/details/stats/StatsRadarChart'
 
