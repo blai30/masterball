@@ -1,6 +1,7 @@
 'use client'
 
 import { useTheme } from 'next-themes'
+import { motion } from 'motion/react'
 import { Monitor, Moon, Sun } from 'lucide-react'
 import { Radio, RadioGroup } from '@headlessui/react'
 
@@ -30,18 +31,30 @@ export default function ThemeSwitch() {
       value={theme}
       onChange={setTheme}
       title="Theme switch"
-      className="relative z-0 inline-grid grid-cols-3 gap-0.5 rounded-full bg-white/50 p-0.75 text-zinc-950 dark:bg-black/50 dark:text-white"
+      className="relative inline-grid grid-cols-3 gap-0.5 rounded-full bg-white p-0.75 dark:bg-black"
     >
-      {options.map((option) => (
-        <Radio
-          key={option.value}
-          value={option.value}
-          aria-label={option.label}
-          className="group relative flex size-7 cursor-default items-center justify-center rounded-full p-1 transition-colors data-checked:bg-black data-checked:text-white dark:data-checked:bg-white dark:data-checked:text-black"
-        >
-          {option.icon}
-        </Radio>
-      ))}
+      {options.map((option) => {
+        const current = theme === option.value
+
+        return (
+          <Radio
+            key={option.value}
+            value={option.value}
+            title={option.label}
+            aria-label={option.label}
+            aria-description={`Change theme to ${option.label}`}
+            className="group relative flex size-7 cursor-default items-center justify-center rounded-full p-1 text-black dark:text-white"
+          >
+            {option.icon}
+            {current && (
+              <motion.div
+                layoutId="current-indicator"
+                className="absolute inset-0 size-full rounded-full backdrop-invert-100"
+              />
+            )}
+          </Radio>
+        )
+      })}
     </RadioGroup>
   )
 }
