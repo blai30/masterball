@@ -77,7 +77,7 @@ export default function TypePill({
           'aspect-square rounded-xs object-contain'
         )}
       />
-      <p className="inline-flex h-full w-full items-center text-white uppercase dark:text-white">
+      <p className="inline-flex h-full w-full items-center text-black uppercase dark:text-white">
         {name}
       </p>
     </Wrapper>

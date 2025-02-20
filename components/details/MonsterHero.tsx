@@ -19,10 +19,9 @@ export default function MonsterHero({
   const significantDigits = imageId.slice(leadingZeros.length)
 
   return (
-    <section className="flex flex-col items-start gap-4 lg:flex-row lg:items-end lg:gap-12">
-      <div className="flex flex-col items-start gap-4">
-        {/* <div className="flex flex-row items-center gap-4"> */}
-        <p className="font-num relative text-2xl sm:text-3xl">
+    <section className="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-12">
+      <div className="flex flex-col items-start gap-2">
+        <p className="font-num text-xl sm:text-2xl">
           <span className="text-zinc-400 dark:text-zinc-600">
             {leadingZeros}
           </span>
@@ -30,21 +29,27 @@ export default function MonsterHero({
             {significantDigits}
           </span>
         </p>
-        {/* </div> */}
-        <div className="flex flex-col items-start gap-6">
-          <h1 className="text-4xl font-semibold tracking-tight text-black sm:text-5xl md:text-6xl dark:text-white">
-            {name}
-          </h1>
-          <ul className="flex flex-row gap-2">
-            {pokemon.types.map((type) => (
-              <li key={type.type.name}>
-                <TypePill variant={type.type.name} />
-              </li>
-            ))}
-          </ul>
-        </div>
+        <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl dark:text-white">
+          {name}
+        </h1>
+        <ul className="flex flex-row gap-2">
+          {pokemon.types.map((type) => (
+            <li key={type.type.name}>
+              <TypePill variant={type.type.name} />
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="flex">
+      <Image
+        src={imageUrl}
+        alt={`${species.name} sprite`}
+        width={128}
+        height={128}
+        priority
+        loading="eager"
+        className="object-scale-down"
+      />
+      {/* <div className="flex">
         <div className="grid w-full grid-cols-2 gap-8">
           <Image
             src={pokemon.sprites.other.home.front_default!}
@@ -67,7 +72,7 @@ export default function MonsterHero({
             className="object-scale-down"
           />
         </div>
-      </div>
+      </div> */}
     </section>
   )
 }
