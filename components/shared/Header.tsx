@@ -1,131 +1,89 @@
-import { NamedAPIResource } from 'pokedex-promise-v2'
-import Navigation from '@/components/shared/Navigation'
-import {
-  IndexItem,
-  GlobalIndexProvider,
-} from '@/components/shared/GlobalIndexProvider'
-import {
-  getTestAbilitiesList,
-  getTestItemsList,
-  getTestMovesList,
-  getTestSpeciesList,
-  pokeapi,
-} from '@/lib/providers'
-import {
-  DamageClassLabels,
-  DamageClassName,
-  getTranslation,
-  TypeLabels,
-  TypeName,
-} from '@/lib/utils/pokeapiHelpers'
+'use client'
 
-export default async function Header() {
-  const speciesList = await getTestSpeciesList()
-  const movesList = await getTestMovesList()
-  const abilitiesList = await getTestAbilitiesList()
-  const itemsList = await getTestItemsList()
-  const eggGroupsList = await pokeapi.getEggGroupsList()
+import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import clsx from 'clsx'
+import { motion } from 'motion/react'
+import { Accessibility, Backpack, Cat, Swords } from 'lucide-react'
 
-  const species = await pokeapi.getPokemonSpeciesByName(
-    speciesList.results.map((resource: NamedAPIResource) => resource.name)
-  )
-  const moves = await pokeapi.getMoveByName(
-    movesList.results.map((resource: NamedAPIResource) => resource.name)
-  )
-  const abilities = await pokeapi.getAbilityByName(
-    abilitiesList.results.map((resource: NamedAPIResource) => resource.name)
-  )
-  const items = await pokeapi.getItemByName(
-    itemsList.results.map((resource: NamedAPIResource) => resource.name)
-  )
-  const types = await pokeapi.getTypeByName(Object.values(TypeName))
-  const damageClass = await pokeapi.getMoveDamageClassByName(
-    Object.values(DamageClassName)
-  )
-  const eggGroups = await pokeapi.getEggGroupByName(
-    eggGroupsList.results.map((resource: NamedAPIResource) => resource.name)
-  )
+const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
+  ssr: false,
+})
 
-  const speciesItems: IndexItem[] = species.map((specie) => {
-    const imageId = specie.id.toString().padStart(4, '0')
-    return {
-      id: specie.id,
-      title: getTranslation(specie.names, 'name'),
-      slug: specie.name,
-      path: `/${specie.name}`,
-      imageUrl: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
-    } as IndexItem
-  })
+const GlobalIndexSearch = dynamic(
+  () => import('@/components/shared/GlobalIndexSearch'),
+  {
+    ssr: false,
+  }
+)
 
-  const movesItems: IndexItem[] = moves.map((move) => {
-    return {
-      id: move.id,
-      title: getTranslation(move.names, 'name'),
-      slug: move.name,
-      path: `/move/${move.name}`,
-    } as IndexItem
-  })
+const navItems = [
+  { label: 'Pokemon', url: '/', icon: <Cat size={20} /> },
+  { label: 'Items', url: '/item', icon: <Backpack size={20} /> },
+  { label: 'Moves', url: '/move', icon: <Swords size={20} /> },
+  { label: 'Abilities', url: '/ability', icon: <Accessibility size={20} /> },
+  // { label: 'Types', url: '/type' },
+  // { label: 'Egg Groups', url: '/egg-group' },
+  // { label: 'Damage Classes', url: '/damage-class' },
+]
 
-  const abilitiesItems: IndexItem[] = abilities.map((ability) => {
-    return {
-      id: ability.id,
-      title: getTranslation(ability.names, 'name'),
-      slug: ability.name,
-      path: `/ability/${ability.name}`,
-    } as IndexItem
-  })
+export default function Header() {
+  const pathname = usePathname()
 
-  const itemsItems: IndexItem[] = items.map((item) => {
-    return {
-      id: item.id,
-      title: getTranslation(item.names, 'name'),
-      slug: item.name,
-      path: `/item/${item.name}`,
-    } as IndexItem
-  })
+  const isActiveRoute = (url: string) => {
+    if (url === '/') {
+      return (
+        pathname === '/' ||
+        (pathname.startsWith('/') &&
+          !navItems.slice(1).some((item) => pathname.startsWith(item.url)))
+      )
+    }
 
-  const typeItems: IndexItem[] = types.map((type) => {
-    return {
-      id: type.id,
-      title: TypeLabels[type.name as TypeName],
-      slug: type.name,
-      path: `/type/${type.name}`,
-    } as IndexItem
-  })
-
-  const damageClassItems: IndexItem[] = damageClass.map((damageClass) => {
-    return {
-      id: damageClass.id,
-      title: DamageClassLabels[damageClass.name as DamageClassName],
-      slug: damageClass.name,
-      path: `/damage-class/${damageClass.name}`,
-    } as IndexItem
-  })
-
-  const eggGroupsItems: IndexItem[] = eggGroups.map((eggGroup) => {
-    return {
-      id: eggGroup.id,
-      title: getTranslation(eggGroup.names, 'name'),
-      slug: eggGroup.name,
-      path: `/egg-group/${eggGroup.name}`,
-    } as IndexItem
-  })
-
-  const allItems = [
-    ...speciesItems,
-    ...movesItems,
-    ...abilitiesItems,
-    ...itemsItems,
-    ...typeItems,
-    ...damageClassItems,
-    ...eggGroupsItems,
-  ]
+    return pathname.startsWith(url)
+  }
 
   return (
     <header className="sticky top-0 z-40 w-full bg-zinc-200/50 backdrop-blur-2xl dark:bg-zinc-800/50">
-      <GlobalIndexProvider indexItems={allItems}>
-        <Navigation />
-      </GlobalIndexProvider>
+      <nav className="container mx-auto">
+        <div className="flex flex-row flex-wrap items-center justify-between gap-4 py-3">
+          <ul className="flex flex-row flex-wrap items-center gap-4">
+            {navItems.map((item) => {
+              const active = isActiveRoute(item.url)
+              return (
+                <li key={item.url} className="relative">
+                  {active && (
+                    <motion.div
+                      layoutId="active-nav"
+                      className="absolute inset-0 -z-10 rounded-lg bg-white/50 dark:bg-black/50"
+                    />
+                  )}
+                  <Link
+                    href={item.url}
+                    className={clsx(
+                      'inline-flex items-center gap-2 rounded-lg px-3 py-2',
+                      'font-medium transition-colors hover:duration-0',
+                      !active &&
+                        'text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800 focus-visible:bg-zinc-200 focus-visible:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 dark:focus-visible:bg-zinc-800 dark:focus-visible:text-zinc-200'
+                    )}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+          <ul className="flex flex-row flex-wrap items-center gap-4">
+            <li>
+              <GlobalIndexSearch />
+            </li>
+            <li>
+              <ThemeSwitch />
+            </li>
+          </ul>
+        </div>
+      </nav>
     </header>
   )
 }

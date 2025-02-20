@@ -67,6 +67,7 @@ export default function GlobalIndexSearch() {
         )}
       >
         <Search className="absolute left-0 ml-2 size-4 text-zinc-600 dark:text-zinc-400" />
+        <span className="text-zinc-600 dark:text-zinc-400">Search</span>
         <kbd
           className={clsx(
             'ml-auto flex gap-1 px-1',

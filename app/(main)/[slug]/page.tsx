@@ -95,7 +95,7 @@ export default async function Page({
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
 
   return (
-    <div className="container mx-auto flex flex-col gap-12 px-4">
+    <div className="container mx-auto flex flex-col gap-12">
       {/* Hero section */}
       <section className="w-full">
         <MonsterHero species={species} pokemon={pokemon} />
