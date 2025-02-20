@@ -29,8 +29,8 @@ const variants = cva({
     },
     size: {
       small: 'w-24 gap-1.5 rounded-xs text-xs font-normal tracking-tight',
-      medium: 'w-28 gap-2 rounded-sm p-0.5 text-sm font-medium tracking-wide',
-      large: 'w-40 gap-3 rounded-md p-1 text-lg font-semibold tracking-wider',
+      medium: 'w-28 gap-2 rounded-sm p-0.5 text-xs font-semibold tracking-wide',
+      large: 'w-32 gap-2.5 rounded-md p-1 text-sm font-semibold tracking-wider',
     },
   },
 })
@@ -47,9 +47,9 @@ export default function TypePill({
   const name = TypeLabels[variant as TypeName]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
   const dimensions = {
-    small: 24,
+    small: 20,
     medium: 24,
-    large: 32,
+    large: 28,
   }
 
   const Wrapper: React.ElementType = link ? Link : 'div'

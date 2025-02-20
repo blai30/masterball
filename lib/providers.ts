@@ -142,6 +142,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/890/',
     },
     {
+      name: 'iron-hands',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/992/',
+    },
+    {
       name: 'roaring-moon',
       url: 'https://pokeapi.co/api/v2/pokemon-species/1005/',
     },
