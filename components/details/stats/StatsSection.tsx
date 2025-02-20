@@ -17,19 +17,19 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
         {title}
       </h2>
       <div className="flex h-full w-full flex-col items-start gap-2">
-        <GlassCard
+        <div
           className={clsx(
             'w-full p-4',
             'rounded-tl-2xl rounded-tr-2xl sm:rounded-tr-none lg:rounded-tr-2xl xl:rounded-tr-none'
           )}
         >
           <StatsBarChart pokemon={pokemon} stats={stats} />
-        </GlassCard>
+        </div>
 
-        <GlassCard className="flex h-full w-full flex-col items-center justify-center rounded-bl-none px-8 py-10 sm:rounded-bl-2xl lg:rounded-bl-none xl:rounded-bl-2xl">
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-bl-none px-8 py-10 sm:rounded-bl-2xl lg:rounded-bl-none xl:rounded-bl-2xl">
           {/* Radar chart */}
           <StatsRadarChart pokemon={pokemon} stats={stats} />
-        </GlassCard>
+        </div>
       </div>
     </section>
   )

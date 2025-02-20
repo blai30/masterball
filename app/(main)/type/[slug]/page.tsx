@@ -67,7 +67,7 @@ export default async function Page({
       <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-7xl">
         {name}
       </h1>
-      <GlassCard className="flex h-80 w-full flex-col flex-wrap items-center justify-center gap-2 p-4 sm:h-full">
+      <div className="flex h-80 w-full flex-col flex-wrap items-center justify-center gap-2 p-4 sm:h-full">
         {allTypeRelations.map((relation) => {
           const effectiveness = relation.effectiveness
           const type = relation.type
@@ -78,7 +78,7 @@ export default async function Page({
             </div>
           )
         })}
-      </GlassCard>
+      </div>
       <h2 className="text-xl font-medium text-black dark:text-white">
         Pokemon
       </h2>

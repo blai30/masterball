@@ -29,7 +29,7 @@ export default function MovesTable({
 } & React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div className="overflow-x-scroll md:overflow-auto">
-      <GlassCard className={clsx('inline-block min-w-full', className)}>
+      <div className={clsx('inline-block min-w-full', className)}>
         <ul className="group flex w-full flex-col gap-0.5 p-4">
           <li className="flex h-8 w-full items-start rounded-l-xs rounded-tr-xs rounded-br-md">
             <div className="flex h-full min-w-16 items-center px-2">
@@ -94,7 +94,7 @@ export default function MovesTable({
                     {rowLabel}
                   </p>
                 </div>
-                <div className="flex h-full min-w-20 items-center justify-center gap-1 px-2">
+                <div className="flex h-full min-w-20 items-center justify-center gap-2 px-2">
                   <TypeIcon variant={type} size="medium" />
                   {/* </div>
                 <div className="flex h-full min-w-14 items-center justify-center px-2"> */}
@@ -128,7 +128,7 @@ export default function MovesTable({
             )
           })}
         </ul>
-      </GlassCard>
+      </div>
     </div>
   )
 }

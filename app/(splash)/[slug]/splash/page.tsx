@@ -35,7 +35,7 @@ export default async function Page({
 
   return (
     <div className="h-[400px] w-[800px] bg-transparent">
-      <GlassCard className="h-full w-full p-10">
+      <div className="h-full w-full p-10">
         <div className="flex h-full flex-row justify-between">
           <div className="flex h-full flex-col items-start justify-between">
             <div className="flex flex-col items-start gap-6">
@@ -63,7 +63,7 @@ export default async function Page({
             <StatsRadarChart pokemon={pokemon} stats={stats} />
           </div>
         </div>
-      </GlassCard>
+      </div>
     </div>
   )
 }

@@ -37,7 +37,7 @@ export default async function AbilitiesSection({
           const name = getTranslation(a.resource.names, 'name')
           return (
             <li key={a.id} className="first:*:rounded-t-2xl last:*:rounded-b-2xl">
-              <GlassCard className="">
+              <div className="">
                 <div className="flex flex-col gap-2 p-4">
                   <div className="flex flex-row items-baseline gap-2">
                     <Link href={`/ability/${a.name}`} className="inline-block">
@@ -65,7 +65,7 @@ export default async function AbilitiesSection({
                       )}
                   </p>
                 </div>
-              </GlassCard>
+              </div>
             </li>
           )
         })}
