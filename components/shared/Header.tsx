@@ -46,7 +46,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 w-full bg-zinc-200/50 backdrop-blur-2xl dark:bg-zinc-800/50">
       <nav className="container mx-auto">
-        <div className="flex flex-row flex-wrap items-center justify-between gap-4 py-3">
+        <div className="flex flex-row flex-wrap items-center justify-center md:justify-between gap-4 py-2">
           <ul className="flex flex-row flex-wrap items-center gap-4">
             {navItems.map((item) => {
               const active = isActiveRoute(item.url)
@@ -61,8 +61,8 @@ export default function Header() {
                   <Link
                     href={item.url}
                     className={clsx(
-                      'inline-flex items-center gap-2 rounded-lg px-3 py-2',
-                      'font-medium transition-colors hover:duration-0',
+                      'inline-flex items-center gap-2 rounded-lg px-3 py-1.5',
+                      'text-sm font-medium transition-colors hover:duration-0',
                       !active &&
                         'text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800 focus-visible:bg-zinc-200 focus-visible:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 dark:focus-visible:bg-zinc-800 dark:focus-visible:text-zinc-200'
                     )}

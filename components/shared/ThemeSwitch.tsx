@@ -27,6 +27,7 @@ export default function ThemeSwitch() {
   const { theme, setTheme } = useTheme()
 
   const handleThemeChange = (value: string) => {
+    if (!document.startViewTransition) setTheme(value)
     document.startViewTransition(() => setTheme(value))
   }
 

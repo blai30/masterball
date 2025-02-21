@@ -27,6 +27,7 @@ const variantColumnLabels: Record<string, string> = {
 
 type MoveRow = {
   rowLabel: string
+  key: string
   type: TypeName
   damageClass: DamageClassName
   name: string
@@ -78,12 +79,12 @@ export default function MovesTable({
         header: 'Move',
         cell: (info) => (
           <Link
-            href={`/move/${info.row.original.name}`}
-            className="inline-flex"
+            href={`/move/${info.row.original.key}`}
+            className="inline-flex w-36"
           >
             <p
               title={`Move: ${info.getValue()}`}
-              className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
+              className="overflow-hidden font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
             >
               {info.getValue()}
             </p>
@@ -131,6 +132,7 @@ export default function MovesTable({
 
         return {
           rowLabel,
+          key: move.move.name,
           type: resource.type.name as TypeName,
           damageClass: resource.damage_class.name as DamageClassName,
           name,
@@ -162,7 +164,7 @@ export default function MovesTable({
                       'px-2 text-left text-xs font-semibold',
                       header.id === 'rowLabel' && 'min-w-16',
                       header.id === 'type' && 'min-w-20',
-                      header.id === 'name' && 'min-w-44 grow',
+                      header.id === 'name' && 'min-w-36 grow',
                       header.id === 'power' && 'min-w-14 text-right',
                       header.id === 'accuracy' && 'min-w-20 text-right',
                       header.id === 'pp' && 'min-w-12 text-right'
@@ -177,7 +179,7 @@ export default function MovesTable({
               </tr>
             ))}
           </thead>
-          <tbody className="flex flex-col gap-1">
+          <tbody className="flex flex-col gap-0.5">
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
@@ -192,7 +194,7 @@ export default function MovesTable({
                       'px-2',
                       cell.column.id === 'rowLabel' && 'min-w-16',
                       cell.column.id === 'type' && 'min-w-20',
-                      cell.column.id === 'name' && 'min-w-44 grow',
+                      cell.column.id === 'name' && 'min-w-36 grow',
                       cell.column.id === 'power' && 'min-w-14',
                       cell.column.id === 'accuracy' && 'min-w-20',
                       cell.column.id === 'pp' && 'min-w-12'
