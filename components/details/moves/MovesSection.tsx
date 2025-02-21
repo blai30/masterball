@@ -70,30 +70,32 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const eggMoves = filterByLearnMethod('egg')
 
   return (
-    <section className="flex flex-col gap-2">
+    <section className="flex flex-col gap-2 rounded-xl p-4 inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      {levelUpMoves.length > 0 && (
-        <MovesTable
-          variant="level-up"
-          moves={levelUpMoves}
-          movesMap={movesMap}
-        />
-      )}
-      {machineMoves.length > 0 && (
-        <MovesTable
-          variant="machine"
-          moves={machineMoves}
-          movesMap={movesMap}
-        />
-      )}
-      {tutorMoves.length > 0 && (
-        <MovesTable variant="tutor" moves={tutorMoves} movesMap={movesMap} />
-      )}
-      {eggMoves.length > 0 && (
-        <MovesTable variant="egg" moves={eggMoves} movesMap={movesMap} />
-      )}
+      <div className="flex flex-col gap-6 divide-y divide-zinc-300 dark:divide-zinc-700">
+        {levelUpMoves.length > 0 && (
+          <MovesTable
+            variant="level-up"
+            moves={levelUpMoves}
+            movesMap={movesMap}
+          />
+        )}
+        {machineMoves.length > 0 && (
+          <MovesTable
+            variant="machine"
+            moves={machineMoves}
+            movesMap={movesMap}
+          />
+        )}
+        {tutorMoves.length > 0 && (
+          <MovesTable variant="tutor" moves={tutorMoves} movesMap={movesMap} />
+        )}
+        {eggMoves.length > 0 && (
+          <MovesTable variant="egg" moves={eggMoves} movesMap={movesMap} />
+        )}
+      </div>
     </section>
   )
 }

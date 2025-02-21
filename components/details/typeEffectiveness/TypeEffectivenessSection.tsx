@@ -30,11 +30,11 @@ export default async function TypeEffectivenessSection({
   )
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex h-72 w-full flex-col flex-wrap items-center justify-center gap-y-1 gap-x-8 content-center">
+      <div className="flex h-72 w-full flex-col flex-wrap content-center items-center justify-center gap-x-8 gap-y-1">
         {allTypeRelations.map((relation) => {
           const effectiveness = relation.effectiveness
           const type = relation.type

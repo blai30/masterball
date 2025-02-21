@@ -95,25 +95,29 @@ export default async function Page({
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
 
   return (
-    <div className="container mx-auto flex flex-col gap-12">
+    <div className="flex w-full flex-col gap-12">
       {/* Hero section */}
-      <section className="w-full">
+      <section className="container mx-auto px-4">
         <MonsterHero species={species} pokemon={pokemon} />
       </section>
       {/* Metadata section */}
-      <section className="grid grid-cols-2 gap-6 md:grid-cols-4 2xl:grid-cols-8">
-        <HeightMetadata height={pokemon.height} />
-        <WeightMetadata weight={pokemon.weight} />
-        <GenderRatioMetadata genderRate={species.gender_rate} />
-        <CaptureRateMetadata captureRate={species.capture_rate} />
-        <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
-        <EggGroupMetadata eggGroups={eggGroups} />
-        <GrowthRateMetadata growthRate={growthRate} />
-        <EffortValueYieldMetadata stats={pokemon.stats} />
-      </section>
+      <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
+        <section className="container mx-auto px-4">
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 2xl:grid-cols-8">
+            <HeightMetadata height={pokemon.height} />
+            <WeightMetadata weight={pokemon.weight} />
+            <GenderRatioMetadata genderRate={species.gender_rate} />
+            <CaptureRateMetadata captureRate={species.capture_rate} />
+            <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
+            <EggGroupMetadata eggGroups={eggGroups} />
+            <GrowthRateMetadata growthRate={growthRate} />
+            <EffortValueYieldMetadata stats={pokemon.stats} />
+          </div>
+        </section>
+      </div>
       {/* Main details section */}
-      <section className="flex w-full flex-col gap-6">
-        <div className="flex w-full flex-col gap-8 lg:flex-row">
+      <section className="container mx-auto px-4">
+        <div className="flex w-full flex-col gap-6 lg:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-6">
             {/* <div className="flex w-full flex-col gap-6 sm:flex-row lg:flex-col xl:flex-row"> */}
@@ -132,7 +136,7 @@ export default async function Page({
             </Suspense>
           </div>
           {/* Second column on large screens */}
-          <div className="flex w-full flex-1 flex-col gap-6">
+          <div className="flex w-full flex-1 flex-col gap-6 md:min-w-xl">
             <Suspense fallback={<LoadingSection />}>
               <MovesSection pokemon={pokemon} />
             </Suspense>

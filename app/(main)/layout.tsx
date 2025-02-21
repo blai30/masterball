@@ -13,7 +13,7 @@ export default function RootLayout({
         <div className="px-4 sm:px-6 lg:px-8">{children}</div>
       </main> */}
       <Header />
-      <main className="flex grow flex-col items-center px-4">{children}</main>
+      <main className="flex grow flex-col items-center">{children}</main>
       <Footer />
     </div>
   )
