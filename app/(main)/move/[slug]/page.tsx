@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { getTestMovesList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import TypePill from '@/components/TypePill'
-import DamageClassPill from '@/components/DamageClassPill'
+import DamageClassIcon from '@/components/DamageClassIcon'
 
 export const dynamic = 'force-static'
 
@@ -75,7 +75,7 @@ export default async function Page({
           </dl>
         </div>
         <TypePill variant={move.type.name} />
-        <DamageClassPill variant={move.damage_class.name} />
+        <DamageClassIcon variant={move.damage_class.name} />
       </div>
     </div>
   )

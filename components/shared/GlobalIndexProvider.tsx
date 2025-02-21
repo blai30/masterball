@@ -9,6 +9,7 @@ export type IndexItem = {
   path: string
   keywords?: string[]
   imageUrl?: string
+  icon?: React.ReactNode
 }
 
 const SearchContext = createContext({

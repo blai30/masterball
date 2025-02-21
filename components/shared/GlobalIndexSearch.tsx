@@ -119,7 +119,7 @@ export default function GlobalIndexSearch() {
                 className="w-full rounded-md bg-white/50 py-3 pr-4 pl-10.5 placeholder-zinc-400 focus:outline-none dark:bg-black/50 dark:text-white dark:placeholder-zinc-600"
               />
             </div>
-            <Command.List className="max-h-[70vh] overflow-y-auto pr-1 *:flex *:flex-col *:gap-1 md:max-h-[32rem]">
+            <Command.List className="max-h-[70vh] overflow-y-auto pr-1 *:flex *:flex-col *:gap-1 md:max-h-[30rem]">
               <Command.Empty>
                 <div className="py-8 text-center text-zinc-600 dark:text-zinc-400">
                   {query
@@ -144,17 +144,9 @@ export default function GlobalIndexSearch() {
                     )}
                   >
                     <div className="flex flex-row items-center justify-start gap-3">
-                      <Image
-                        src={
-                          item.imageUrl ??
-                          `${process.env.NEXT_PUBLIC_BASEPATH}/favicon.png`
-                        }
-                        alt={item.title}
-                        width={64}
-                        height={64}
-                        priority
-                        className="pointer-events-none h-10 w-12 object-contain"
-                      />
+                      {item.icon ?? (
+                        <div className="size-12 bg-transparent" />
+                      )}
                       <div className="flex flex-1 flex-row items-center justify-between">
                         <div className="flex flex-col items-start justify-center">
                           <span className="pointer-events-none text-black dark:text-white">

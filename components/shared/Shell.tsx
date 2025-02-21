@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import Header from '@/components/shared/Header'
 import {
@@ -18,6 +19,9 @@ import {
   TypeLabels,
   TypeName,
 } from '@/lib/utils/pokeapiHelpers'
+import { Accessibility, Backpack, Swords } from 'lucide-react'
+import TypeIcon from '@/components/TypeIcon'
+import DamageClassIcon from '@/components/DamageClassIcon'
 
 export default async function Shell() {
   const speciesList = await getTestSpeciesList()
@@ -47,13 +51,24 @@ export default async function Shell() {
   )
 
   const speciesItems: IndexItem[] = species.map((specie) => {
+    const title = getTranslation(specie.names, 'name')!
     const imageId = specie.id.toString().padStart(4, '0')
+    const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
     return {
       id: specie.id,
-      title: getTranslation(specie.names, 'name'),
+      title,
       slug: specie.name,
       path: `/${specie.name}`,
-      imageUrl: `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`,
+      icon: (
+        <Image
+          src={imageUrl}
+          alt={title}
+          width={64}
+          height={64}
+          priority
+          className="pointer-events-none size-12 object-contain"
+        />
+      ),
     } as IndexItem
   })
 
@@ -63,6 +78,7 @@ export default async function Shell() {
       title: getTranslation(move.names, 'name'),
       slug: move.name,
       path: `/move/${move.name}`,
+      icon: <Swords size={20} className="size-12 p-2" />,
     } as IndexItem
   })
 
@@ -72,6 +88,7 @@ export default async function Shell() {
       title: getTranslation(ability.names, 'name'),
       slug: ability.name,
       path: `/ability/${ability.name}`,
+      icon: <Accessibility size={20} className="size-12 p-2" />,
     } as IndexItem
   })
 
@@ -81,6 +98,7 @@ export default async function Shell() {
       title: getTranslation(item.names, 'name'),
       slug: item.name,
       path: `/item/${item.name}`,
+      icon: <Backpack size={20} className="size-12 p-2" />,
     } as IndexItem
   })
 
@@ -90,6 +108,11 @@ export default async function Shell() {
       title: TypeLabels[type.name as TypeName],
       slug: type.name,
       path: `/type/${type.name}`,
+      icon: (
+        <div className="flex size-12 items-center justify-center">
+          <TypeIcon variant={type.name as TypeName} size="large" link={false} />
+        </div>
+      ),
     } as IndexItem
   })
 
@@ -99,15 +122,37 @@ export default async function Shell() {
       title: DamageClassLabels[damageClass.name as DamageClassName],
       slug: damageClass.name,
       path: `/damage-class/${damageClass.name}`,
+      icon: (
+        <div className="flex size-12 items-center justify-center">
+          <DamageClassIcon
+            variant={damageClass.name}
+            size="large"
+            link={false}
+          />
+        </div>
+      ),
     } as IndexItem
   })
 
   const eggGroupsItems: IndexItem[] = eggGroups.map((eggGroup) => {
+    const title = getTranslation(eggGroup.names, 'name')!
+    const imageUrl =
+      'https://resource.pokemon-home.com/battledata/img/pokei128/icon0000_f00_s0.png'
     return {
       id: eggGroup.id,
-      title: getTranslation(eggGroup.names, 'name'),
+      title,
       slug: eggGroup.name,
       path: `/egg-group/${eggGroup.name}`,
+      icon: (
+        <Image
+          src={imageUrl}
+          alt={title}
+          width={64}
+          height={64}
+          priority
+          className="pointer-events-none size-12 object-contain"
+        />
+      ),
     } as IndexItem
   })
 

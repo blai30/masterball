@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx/lite'
 import { cva } from 'cva'
-import { TypeName } from '@/lib/utils/pokeapiHelpers'
+import { TypeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
   base: 'flex flex-row items-center justify-center',
@@ -39,11 +39,14 @@ export default function TypeIcon({
   variant,
   size = 'large',
   link = true,
+  className,
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
   link?: boolean
+  className?: string
 }) {
+  const name = TypeLabels[variant as TypeName]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
   const dimensions = {
     small: 20,
@@ -57,15 +60,17 @@ export default function TypeIcon({
   return (
     <Wrapper
       {...wrapperProps}
+      title={name}
       className={clsx(
         variants({ variant: variant as TypeName, size }),
         link &&
-          'transition-(--tw-brightness) hover:brightness-125 hover:duration-0'
+          'transition-(--tw-brightness) hover:brightness-125 hover:duration-0',
+        className
       )}
     >
       <Image
         src={imageUrl}
-        alt={variant}
+        alt={name}
         width={dimensions[size]}
         height={dimensions[size]}
         priority

@@ -1,5 +1,5 @@
 import Footer from '@/components/shared/Footer'
-import Header from '@/components/shared/Header'
+import Shell from '@/components/shared/Shell'
 
 export default function RootLayout({
   children,
@@ -12,7 +12,7 @@ export default function RootLayout({
       <main className="py-10 lg:pl-56">
         <div className="px-4 sm:px-6 lg:px-8">{children}</div>
       </main> */}
-      <Header />
+      <Shell />
       <main className="flex grow flex-col items-center">{children}</main>
       <Footer />
     </div>

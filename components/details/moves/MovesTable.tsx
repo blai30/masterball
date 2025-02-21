@@ -15,7 +15,7 @@ import {
   DamageClassName,
   getTranslation,
 } from '@/lib/utils/pokeapiHelpers'
-import DamageClassPill from '@/components/DamageClassPill'
+import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
 
 const variantColumnLabels: Record<string, string> = {
@@ -68,7 +68,7 @@ export default function MovesTable({
         cell: (info) => (
           <div className="flex items-center justify-center gap-2">
             <TypeIcon variant={info.getValue()} size="medium" />
-            <DamageClassPill
+            <DamageClassIcon
               variant={info.row.original.damageClass}
               size="medium"
             />

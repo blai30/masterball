@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { DamageClassName } from '@/lib/utils/pokeapiHelpers'
-import DamageClassPill from '@/components/DamageClassPill'
+import DamageClassIcon from '@/components/DamageClassIcon'
 
 export const dynamic = 'force-static'
 
@@ -23,7 +23,7 @@ export default async function Page() {
       <ul className="flex flex-col gap-2">
         {damageClassNames.map((damageClass) => (
           <li key={damageClass}>
-            <DamageClassPill variant={damageClass} size="large" />
+            <DamageClassIcon variant={damageClass} size="large" />
           </li>
         ))}
       </ul>

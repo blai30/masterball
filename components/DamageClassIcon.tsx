@@ -5,7 +5,7 @@ import { cva } from 'cva'
 import { DamageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: 'flex flex-row items-center justify-center transition-(--tw-brightness) hover:brightness-125 hover:duration-0',
+  base: 'flex flex-row items-center justify-center',
   variants: {
     variant: {
       [DamageClassName.Physical]: 'bg-physical',
@@ -20,27 +20,36 @@ const variants = cva({
   },
 })
 
-export default function DamageClassPill({
+export default function DamageClassIcon({
   variant,
   size = 'large',
+  link = true,
+  className,
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
+  link?: boolean
+  className?: string
 }) {
   const name = DamageClassLabels[variant as DamageClassName]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
 
+  const Wrapper: React.ElementType = link ? Link : 'div'
+  const wrapperProps = link ? { href: `/damage-class/${variant}` } : {}
+
   return (
-    <Link
-      href={`/damage-class/${variant}`}
+    <Wrapper
+      {...wrapperProps}
       title={name}
       className={clsx(
-        '',
         'relative',
         variants({
           variant: variant as DamageClassName,
           size,
-        })
+        }),
+        link &&
+          'transition-(--tw-brightness) hover:brightness-125 hover:duration-0',
+        className
       )}
     >
       {/* <div
@@ -58,6 +67,6 @@ export default function DamageClassPill({
         loading="eager"
         className="relative object-contain px-0.5"
       />
-    </Link>
+    </Wrapper>
   )
 }
