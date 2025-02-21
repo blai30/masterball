@@ -74,7 +74,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex flex-col gap-6 divide-y divide-zinc-300 dark:divide-zinc-700">
+      <div className="flex flex-col gap-4">
         {levelUpMoves.length > 0 && (
           <MovesTable
             variant="level-up"
@@ -83,17 +83,30 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
           />
         )}
         {machineMoves.length > 0 && (
-          <MovesTable
-            variant="machine"
-            moves={machineMoves}
-            movesMap={movesMap}
-          />
+          <>
+            <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
+            <MovesTable
+              variant="machine"
+              moves={machineMoves}
+              movesMap={movesMap}
+            />
+          </>
         )}
         {tutorMoves.length > 0 && (
-          <MovesTable variant="tutor" moves={tutorMoves} movesMap={movesMap} />
+          <>
+            <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
+            <MovesTable
+              variant="tutor"
+              moves={tutorMoves}
+              movesMap={movesMap}
+            />
+          </>
         )}
         {eggMoves.length > 0 && (
-          <MovesTable variant="egg" moves={eggMoves} movesMap={movesMap} />
+          <>
+            <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
+            <MovesTable variant="egg" moves={eggMoves} movesMap={movesMap} />
+          </>
         )}
       </div>
     </section>
