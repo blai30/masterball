@@ -70,7 +70,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const eggMoves = filterByLearnMethod('egg')
 
   return (
-    <section className="flex flex-col gap-2 rounded-xl p-4 inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
+    <section className="flex flex-col gap-2 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
@@ -84,7 +84,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
         )}
         {machineMoves.length > 0 && (
           <>
-            <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
+            <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
             <MovesTable
               variant="machine"
               moves={machineMoves}
@@ -94,7 +94,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
         )}
         {tutorMoves.length > 0 && (
           <>
-            <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
+            <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
             <MovesTable
               variant="tutor"
               moves={tutorMoves}
@@ -104,7 +104,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
         )}
         {eggMoves.length > 0 && (
           <>
-            <div className="w-full border-t border-zinc-300 dark:border-zinc-700" />
+            <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
             <MovesTable variant="egg" moves={eggMoves} movesMap={movesMap} />
           </>
         )}

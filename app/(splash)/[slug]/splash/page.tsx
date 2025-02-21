@@ -33,7 +33,7 @@ export default async function Page({
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <div className="h-[400px] w-[800px] rounded-xl bg-transparent inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
+    <div className="h-[400px] w-[800px] rounded-xl bg-transparent inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
       <div className="h-full w-full p-10">
         <div className="flex h-full flex-row justify-between">
           <div className="flex h-full flex-col items-start justify-between">

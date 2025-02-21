@@ -64,7 +64,7 @@ export default async function EvolutionSection({
   )
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
+    <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
       <h2 className="text-xl font-medium text-black dark:text-white">
         Evolution
       </h2>
