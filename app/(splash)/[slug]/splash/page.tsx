@@ -33,18 +33,18 @@ export default async function Page({
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <div className="h-[400px] w-[800px] bg-transparent">
+    <div className="h-[400px] w-[800px] rounded-xl bg-transparent inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
       <div className="h-full w-full p-10">
         <div className="flex h-full flex-row justify-between">
           <div className="flex h-full flex-col items-start justify-between">
             <div className="flex flex-col items-start gap-6">
-              <h1 className="text-6xl font-semibold tracking-tight text-white">
+              <h1 className="text-5xl font-semibold tracking-tight text-white">
                 {label}
               </h1>
               <ul className="flex flex-row gap-2">
                 {pokemon.types.map((type) => (
                   <li key={type.type.name}>
-                    <TypePill variant={type.type.name} />
+                    <TypePill variant={type.type.name} link={false} />
                   </li>
                 ))}
               </ul>
