@@ -101,7 +101,7 @@ export default async function Page({
         <MonsterHero species={species} pokemon={pokemon} />
       </section>
       {/* Metadata section */}
-      <section className="grid grid-cols-2 gap-2 md:grid-cols-4 2xl:grid-cols-8">
+      <section className="grid grid-cols-2 gap-6 md:grid-cols-4 2xl:grid-cols-8">
         <HeightMetadata height={pokemon.height} />
         <WeightMetadata weight={pokemon.weight} />
         <GenderRatioMetadata genderRate={species.gender_rate} />
@@ -113,17 +113,17 @@ export default async function Page({
       </section>
       {/* Main details section */}
       <section className="flex w-full flex-col gap-6">
-        <div className="flex w-full flex-col gap-6 lg:flex-row">
+        <div className="flex w-full flex-col gap-8 lg:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-6">
-            <div className="flex w-full flex-col gap-6 sm:flex-row lg:flex-col xl:flex-row">
-              <Suspense fallback={<LoadingSection />}>
-                <StatsSection pokemon={pokemon} />
-              </Suspense>
-              <Suspense fallback={<LoadingSection />}>
-                <TypeEffectivenessSection pokemon={pokemon} />
-              </Suspense>
-            </div>
+            {/* <div className="flex w-full flex-col gap-6 sm:flex-row lg:flex-col xl:flex-row"> */}
+            <Suspense fallback={<LoadingSection />}>
+              <StatsSection pokemon={pokemon} />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <TypeEffectivenessSection pokemon={pokemon} />
+            </Suspense>
+            {/* </div> */}
             <Suspense fallback={<LoadingSection />}>
               <AbilitiesSection pokemon={pokemon} />
             </Suspense>
@@ -132,7 +132,7 @@ export default async function Page({
             </Suspense>
           </div>
           {/* Second column on large screens */}
-          <div className="flex w-full flex-col gap-6 lg:min-w-2xl">
+          <div className="flex w-full flex-1 flex-col gap-6">
             <Suspense fallback={<LoadingSection />}>
               <MovesSection pokemon={pokemon} />
             </Suspense>

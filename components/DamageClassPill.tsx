@@ -15,7 +15,7 @@ const variants = cva({
     size: {
       small: 'size-5 rounded-xs',
       medium: 'size-6 rounded-sm',
-      large: 'size-8 rounded-md',
+      large: 'h-7 w-10 rounded-sm',
     },
   },
 })
@@ -56,7 +56,7 @@ export default function DamageClassPill({
         height={40}
         priority
         loading="eager"
-        className="relative object-contain p-0.5"
+        className="relative object-contain px-0.5"
       />
     </Link>
   )

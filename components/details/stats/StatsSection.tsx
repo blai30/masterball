@@ -10,11 +10,11 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
   )
 
   return (
-    <section className="flex min-h-max flex-1 flex-col gap-4 sm:min-h-full lg:min-h-max xl:min-h-full">
+    <section className="flex flex-col gap-4">
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex h-full w-full flex-col items-start gap-2">
+      <div className="flex h-full w-full flex-col items-start gap-2 md:flex-row lg:flex-col xl:flex-row">
         <div className="w-full">
           <StatsBarChart pokemon={pokemon} stats={stats} />
         </div>
