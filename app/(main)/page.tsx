@@ -1,9 +1,8 @@
 import { Metadata } from 'next'
-import { Suspense } from 'react'
-import { NamedAPIResource, PokemonSpecies } from 'pokedex-promise-v2'
+import { NamedAPIResource, Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import LoadingCard from '@/components/LoadingCard'
-import MonsterCard from '@/components/MonsterCard'
+import MonsterCardGrid from '@/components/MonsterCardGrid'
+import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
 
 export const dynamic = 'force-static'
 
@@ -29,22 +28,26 @@ export default async function Home() {
     speciesList.results.map((resource: NamedAPIResource) => resource.name)
   )
 
+  const monsters: Monster[] = await Promise.all(
+    species.map(async (species) => {
+      const name = getTranslation(species.names, 'name')
+      const pokemon = await pokeapi.getPokemonByName(
+        species.varieties.find((variety) => variety.is_default)!.pokemon.name
+      )
+
+      return {
+        id: species.id,
+        key: species.name,
+        name,
+        species,
+        pokemon,
+      } as Monster
+    })
+  )
+
   return (
     <div className="container mx-auto">
-      <ul className="2xs:grid-cols-2 xs:grid-cols-3 grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10">
-        {species.map((specie: PokemonSpecies) => (
-          <li key={specie.name} className="col-span-1">
-            <Suspense fallback={<LoadingCard />}>
-              <MonsterCard key={specie.id} species={specie} />
-            </Suspense>
-          </li>
-        ))}
-        {Array.from({ length: 40 }).map((_, i) => (
-          <li key={i} className="col-span-1">
-            <LoadingCard />
-          </li>
-        ))}
-      </ul>
+      <MonsterCardGrid monsters={monsters} />
     </div>
   )
 }

@@ -35,7 +35,7 @@ export default function MonsterHero({
         <ul className="flex flex-row gap-2">
           {pokemon.types.map((type) => (
             <li key={type.type.name}>
-              <TypePill variant={type.type.name} />
+              <TypePill variant={type.type.name} size="medium" />
             </li>
           ))}
         </ul>

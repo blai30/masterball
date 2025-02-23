@@ -1,43 +1,16 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { PokemonSpecies } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
-import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 
-const typeClasses: Record<string, string> = {
-  [TypeName.Normal]: 'bg-normal',
-  [TypeName.Fighting]: 'bg-fighting',
-  [TypeName.Flying]: 'bg-flying',
-  [TypeName.Poison]: 'bg-poison',
-  [TypeName.Ground]: 'bg-ground',
-  [TypeName.Rock]: 'bg-rock',
-  [TypeName.Bug]: 'bg-bug',
-  [TypeName.Ghost]: 'bg-ghost',
-  [TypeName.Steel]: 'bg-steel',
-  [TypeName.Fire]: 'bg-fire',
-  [TypeName.Water]: 'bg-water',
-  [TypeName.Grass]: 'bg-grass',
-  [TypeName.Electric]: 'bg-electric',
-  [TypeName.Psychic]: 'bg-psychic',
-  [TypeName.Ice]: 'bg-ice',
-  [TypeName.Dragon]: 'bg-dragon',
-  [TypeName.Dark]: 'bg-dark',
-  [TypeName.Fairy]: 'bg-fairy',
-}
-
-export default async function MonsterCard({
+export default function MonsterCard({
   species,
 }: {
   species: PokemonSpecies
 }) {
-  // const pokemon = await pokeapi.getPokemonByName(
-  //   species.varieties.find((variety) => variety.is_default)!.pokemon.name
-  // )
-  // const types = await pokeapi.getTypeByName(
-  //   pokemon.types.map((type) => type.type.name)
-  // )
-
   const name = getTranslation(species.names, 'name')
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`

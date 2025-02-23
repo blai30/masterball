@@ -1,4 +1,4 @@
-import { Type } from 'pokedex-promise-v2'
+import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
 
 export function getTranslation<
   T extends {
@@ -14,6 +14,14 @@ export function getTranslation<
 
   if (!resource) return undefined
   return String(resource[field])
+}
+
+export type Monster = {
+  id: number
+  key: string,
+  name: string
+  species: PokemonSpecies
+  pokemon: Pokemon
 }
 
 export enum StatName {
