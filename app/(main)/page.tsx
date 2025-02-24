@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { NamedAPIResource } from 'pokedex-promise-v2'
+import { NamedAPIResource, Pokemon } from 'pokedex-promise-v2'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import MonsterCardGrid from '@/components/MonsterCardGrid'
 import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'

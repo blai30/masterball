@@ -12,11 +12,11 @@ import {
 export default function Pagination({
   currentPage,
   totalPages,
-  onPageChange,
+  onPageChangeAction,
 }: {
   currentPage: number
   totalPages: number
-  onPageChange: (page: number) => void
+  onPageChangeAction: (page: number) => void
 }) {
   const [showInput, setShowInput] = useState<number | null>(null)
 
@@ -68,7 +68,7 @@ export default function Pagination({
     if (e.key === 'Enter') {
       const value = parseInt(e.currentTarget.value)
       if (!isNaN(value) && value >= 1 && value <= totalPages) {
-        onPageChange(value)
+        onPageChangeAction(value)
         setShowInput(null)
       }
       e.currentTarget.blur()
@@ -88,7 +88,7 @@ export default function Pagination({
         <ChevronFirst />
       </button> */}
       <button
-        onClick={() => onPageChange(currentPage - 1)}
+        onClick={() => onPageChangeAction(currentPage - 1)}
         disabled={currentPage === 1}
         className="inline-flex size-8 items-center justify-center rounded bg-zinc-200 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
       >
@@ -126,7 +126,7 @@ export default function Pagination({
         return (
           <button
             key={`page-${page}-${index}`}
-            onClick={() => onPageChange(page)}
+            onClick={() => onPageChangeAction(page)}
             className={clsx(
               'inline-flex size-8 items-center justify-center rounded py-1 text-sm',
               page === currentPage
@@ -140,7 +140,7 @@ export default function Pagination({
       })}
 
       <button
-        onClick={() => onPageChange(currentPage + 1)}
+        onClick={() => onPageChangeAction(currentPage + 1)}
         disabled={currentPage === totalPages}
         className="inline-flex size-8 items-center justify-center rounded bg-zinc-200 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
       >

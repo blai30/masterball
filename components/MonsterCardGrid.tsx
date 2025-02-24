@@ -32,7 +32,6 @@ export default function MonsterCardGrid({ monsters }: { monsters: Monster[] }) {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
@@ -50,7 +49,7 @@ export default function MonsterCardGrid({ monsters }: { monsters: Monster[] }) {
             value={query}
             onChange={(e) => {
               setQuery(e.target.value)
-              setCurrentPage(1) // Reset to first page when filtering
+              setCurrentPage(1)
             }}
             className="appearance-none border-b-2 border-zinc-600 bg-transparent px-3 py-1.5 text-lg text-zinc-900 outline-hidden placeholder:text-zinc-500 focus:outline-none dark:border-zinc-400 dark:text-zinc-100 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden"
           />
@@ -59,7 +58,7 @@ export default function MonsterCardGrid({ monsters }: { monsters: Monster[] }) {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={handlePageChange}
+            onPageChangeAction={handlePageChange}
           />
           <ul className="2xs:grid-cols-2 xs:grid-cols-3 grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10">
             {paginatedItems.map((monster) => (
@@ -71,7 +70,7 @@ export default function MonsterCardGrid({ monsters }: { monsters: Monster[] }) {
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={handlePageChange}
+            onPageChangeAction={handlePageChange}
           />
         </div>
       </div>
