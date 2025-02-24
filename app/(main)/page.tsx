@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { NamedAPIResource, Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+import { NamedAPIResource } from 'pokedex-promise-v2'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import MonsterCardGrid from '@/components/MonsterCardGrid'
 import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
@@ -19,8 +19,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   // const speciesList = await pokeapi.getPokemonSpeciesList({
-  //   limit: 22,
-  //   offset: 718,
+  //   limit: 151,
+  //   offset: 0,
   // })
 
   const speciesList = await getTestSpeciesList()
@@ -31,8 +31,8 @@ export default async function Home() {
   const monsters: Monster[] = await Promise.all(
     species.map(async (species) => {
       const name = getTranslation(species.names, 'name')
-      const pokemon = await pokeapi.getPokemonByName(
-        species.varieties.find((variety) => variety.is_default)!.pokemon.name
+      const pokemon: Pokemon = await pokeapi.getResource(
+        species.varieties.find((variety) => variety.is_default)!.pokemon.url
       )
 
       return {
