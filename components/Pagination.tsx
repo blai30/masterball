@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import clsx from 'clsx/lite'
 import {
-  ChevronFirst,
-  ChevronLast,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
@@ -80,17 +78,10 @@ export default function Pagination({
 
   return (
     <div className="flex items-center justify-center gap-2">
-      {/* <button
-        onClick={() => onPageChange(1)}
-        disabled={currentPage === 1}
-        className="inline-flex size-8 items-center justify-center rounded bg-zinc-200 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-      >
-        <ChevronFirst />
-      </button> */}
       <button
         onClick={() => onPageChangeAction(currentPage - 1)}
         disabled={currentPage === 1}
-        className="inline-flex size-8 items-center justify-center rounded bg-zinc-200 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+        className="inline-flex size-8 items-center justify-center rounded py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-700"
       >
         <ChevronLeft />
       </button>
@@ -116,7 +107,7 @@ export default function Pagination({
             <button
               key={`ellipsis-${page}-${index}`}
               onClick={() => setShowInput(page)}
-              className="inline-flex size-8 items-center justify-center rounded bg-zinc-200 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              className="inline-flex size-8 items-center justify-center rounded py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700"
             >
               ...
             </button>
@@ -131,7 +122,7 @@ export default function Pagination({
               'inline-flex size-8 items-center justify-center rounded py-1 text-sm',
               page === currentPage
                 ? 'bg-black text-white dark:bg-white dark:text-black'
-                : 'bg-zinc-200 transition-colors hover:bg-zinc-300 hover:duration-0 dark:bg-zinc-800 dark:hover:bg-zinc-700'
+                : 'transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700'
             )}
           >
             {page}
@@ -142,17 +133,10 @@ export default function Pagination({
       <button
         onClick={() => onPageChangeAction(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="inline-flex size-8 items-center justify-center rounded bg-zinc-200 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+        className="inline-flex size-8 items-center justify-center rounded py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-700"
       >
         <ChevronRight />
       </button>
-      {/* <button
-        onClick={() => onPageChange(totalPages)}
-        disabled={currentPage === totalPages}
-        className="inline-flex size-8 items-center justify-center rounded bg-zinc-200 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-      >
-        <ChevronLast />
-      </button> */}
     </div>
   )
 }

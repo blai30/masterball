@@ -45,7 +45,7 @@ export default function MonsterCardGrid({ monsters }: { monsters: Monster[] }) {
             id="filter"
             name="filter"
             type="search"
-            placeholder="Filter by name"
+            placeholder="Filter by name or ID"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value)
