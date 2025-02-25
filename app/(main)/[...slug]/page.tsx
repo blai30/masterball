@@ -48,11 +48,15 @@ export async function generateMetadata({
   const { slug } = await params
   const [speciesKey, variantKey] = slug
   const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const variants = await pokeapi.getPokemonFormByName(
+    species.varieties.filter((v) => !v.is_default).map((v) => v.pokemon.name)
+  )
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties.find((variety) =>
       variantKey ? variety.pokemon.name === variantKey : variety.is_default
     )!.pokemon.name
   )
+  const form = variants.find((v) => v.name === pokemon.name)!
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
@@ -66,10 +70,13 @@ export async function generateMetadata({
   })
 
   const imageId = pokemon.id.toString().padStart(4, '0')
-  const translatedName = getTranslation(species.names, 'name')
+  const name =
+    getTranslation(form?.form_names, 'name') ??
+    getTranslation(form?.names, 'name') ??
+    getTranslation(species.names, 'name')!
 
   const metadata: Metadata = {
-    title: `${translatedName} #${imageId}`,
+    title: `${name} #${imageId}`,
     description: `${types.map((t) => t.typeName).join('/')}`,
     twitter: {
       card: 'summary_large_image',
@@ -78,10 +85,10 @@ export async function generateMetadata({
       images: [
         {
           // url: `/${speciesKey}/og.png`,
-          url: [speciesKey, variantKey].join('/') + '/og.png',
+          url: `/og/${[speciesKey, variantKey].join('/')}`,
           width: 800,
           height: 400,
-          alt: `${translatedName} splash image`,
+          alt: `${name} splash image`,
         },
       ],
     },

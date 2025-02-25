@@ -1,15 +1,22 @@
 import { NextResponse } from 'next/server'
 import playwright from 'playwright'
-import { getTestSpeciesList } from '@/lib/providers'
+import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
   const speciesList = await getTestSpeciesList()
+  const species = await pokeapi.getPokemonSpeciesByName(
+    speciesList.results.map((result) => result.name)
+  )
 
-  return speciesList.results.map((result) => ({
-    slug: result.name,
-  }))
+  const params = species.flatMap((specie) =>
+    specie.varieties.map((v) => ({
+      slug: v.is_default ? [specie.name] : [specie.name, v.pokemon.name],
+    }))
+  )
+
+  return params
 }
 
 export async function GET(
@@ -21,7 +28,9 @@ export async function GET(
   }
 ) {
   const { slug } = await params
-  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/${slug}/splash`
+  const [speciesKey, variantKey] = slug
+  const path = [speciesKey, variantKey].filter(Boolean).join('/')
+  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/splash/${path}`
 
   const browser = await playwright.chromium.launch({
     headless: true,

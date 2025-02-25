@@ -15,7 +15,7 @@ export default function MonsterHero({
   const name =
     getTranslation(form?.form_names, 'name') ??
     getTranslation(form?.names, 'name') ??
-    getTranslation(species.names, 'name')
+    getTranslation(species.names, 'name')!
 
   const imageId = species.id.toString().padStart(4, '0')
   // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
