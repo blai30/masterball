@@ -33,9 +33,11 @@ export default async function Page({
   const stats = await pokeapi.getStatByName(
     pokemon.stats.map((stat) => stat.stat.name)
   )
-  const name = form?.form_names?.length
-    ? `${getTranslation(species.names, 'name')} (${getTranslation(form.form_names, 'name') ?? getTranslation(form.names, 'name')})`
-    : getTranslation(species.names, 'name')!
+  const name = getTranslation(species.names, 'name')!
+  const formName =
+    getTranslation(form.form_names, 'name') ??
+    getTranslation(form.names, 'name') ??
+    'Base'
 
   const imageId = species.id.toString().padStart(4, '0')
   // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
@@ -46,10 +48,15 @@ export default async function Page({
       <div className="h-full w-full p-8">
         <div className="flex h-full flex-row justify-between">
           <div className="flex h-full flex-col items-start justify-between">
-            <div className="flex flex-col items-start gap-5">
-              <h1 className="max-w-lg text-5xl font-semibold tracking-tight text-white">
-                {name}
-              </h1>
+            <div className="flex max-w-lg flex-col items-start gap-5">
+              <div className="flex flex-col">
+                <h1 className="text-5xl font-semibold tracking-tight text-black dark:text-white">
+                  {name}
+                </h1>
+                <p className="text-3xl font-medium tracking-tight text-zinc-600 dark:text-zinc-400">
+                  {formName}
+                </p>
+              </div>
               <ul className="flex flex-row gap-2">
                 {pokemon.types.map((type) => (
                   <li key={type.type.name}>

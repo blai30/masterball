@@ -12,7 +12,7 @@ export default function MonsterHero({
   pokemon: Pokemon
   form: PokemonForm
 }) {
-  const name = getTranslation(species.names, 'name')
+  const name = getTranslation(species.names, 'name')!
   const formName =
     getTranslation(form.form_names, 'name') ??
     getTranslation(form.names, 'name') ??
@@ -38,12 +38,14 @@ export default function MonsterHero({
             {significantDigits}
           </span>
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl dark:text-white">
-          {name}
-        </h1>
-        <p className="text-lg font-medium tracking-tight text-zinc-600 sm:text-xl dark:text-zinc-400">
-          {formName}
-        </p>
+        <div className="flex flex-col">
+          <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl dark:text-white">
+            {name}
+          </h1>
+          <p className="text-lg font-medium tracking-tight text-zinc-600 sm:text-xl dark:text-zinc-400">
+            {formName}
+          </p>
+        </div>
         <ul className="flex flex-row gap-2">
           {pokemon.types.map((type) => (
             <li key={type.type.name}>
@@ -54,7 +56,7 @@ export default function MonsterHero({
       </div>
       <Image
         src={imageUrl}
-        alt={`${species.name} sprite`}
+        alt={`${name} sprite`}
         width={128}
         height={128}
         priority
