@@ -18,8 +18,10 @@ export default function MonsterHero({
     getTranslation(species.names, 'name')!
 
   const imageId = species.id.toString().padStart(4, '0')
-  // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
-  const imageUrl = pokemon.sprites.other.home.front_default!
+  const imageUrl =
+    pokemon.sprites.other.home.front_default ??
+    pokemon.sprites.front_default ??
+    `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   const leadingZeros = imageId.match(/^0+/)?.[0] || ''
   const significantDigits = imageId.slice(leadingZeros.length)

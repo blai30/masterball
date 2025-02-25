@@ -19,7 +19,7 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
           <StatsBarChart pokemon={pokemon} stats={stats} />
         </div>
 
-        <div className="flex h-full w-full flex-col items-center justify-center px-6 py-8">
+        <div className="flex h-full w-full flex-col items-center justify-center pb-8 pt-5 md:pt-0 lg:pt-5 2xl:pt-0">
           {/* Radar chart */}
           <StatsRadarChart pokemon={pokemon} stats={stats} />
         </div>

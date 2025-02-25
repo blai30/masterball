@@ -98,6 +98,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/663/',
     },
     {
+      name: 'meowstic',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/678/',
+    },
+    {
       name: 'aegislash',
       url: 'https://pokeapi.co/api/v2/pokemon-species/681/',
     },
@@ -136,6 +140,10 @@ const species: NamedAPIResourceList = {
     {
       name: 'hatterene',
       url: 'https://pokeapi.co/api/v2/pokemon-species/858/',
+    },
+    {
+      name: 'indeedee',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/876/',
     },
     {
       name: 'eternatus',
