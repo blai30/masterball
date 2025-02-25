@@ -12,14 +12,13 @@ export default function MonsterCard({
   species: PokemonSpecies
 }) {
   const name = getTranslation(species.names, 'name')
-  const defaultVariant = species.varieties.find((variant) => variant.is_default)!
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
     <GlassCard variant="link" className="h-full rounded-xl">
       <Link
-        href={`/${defaultVariant.pokemon.name}`}
+        href={`/${species.name}`}
         className="group flex flex-col items-center justify-between px-2 py-3"
       >
         <p

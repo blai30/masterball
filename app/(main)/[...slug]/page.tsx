@@ -33,7 +33,9 @@ export async function generateStaticParams() {
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({
-      slug: variant.pokemon.name,
+      slug: variant.is_default
+        ? [specie.name]
+        : [specie.name, variant.pokemon.name],
     }))
   )
 
@@ -46,9 +48,16 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const form = await pokeapi.getPokemonFormByName(slug)
-  const pokemon = await pokeapi.getPokemonByName(form.pokemon.name)
-  const species = await pokeapi.getPokemonSpeciesByName(pokemon.species.name)
+  const [speciesKey, variantKey] = slug
+  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const pokemon = await pokeapi.getPokemonByName(
+    species.varieties.find((v) =>
+      variantKey ? v.pokemon.name === variantKey : v.is_default
+    )!.pokemon.name
+  )
+  const form = variantKey
+    ? await pokeapi.getPokemonFormByName(variantKey)
+    : undefined
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
@@ -62,13 +71,18 @@ export async function generateMetadata({
   })
 
   const dexId = species.id.toString().padStart(4, '0')
-  const name =
-    getTranslation(form?.names, 'name') ??
-    getTranslation(species.names, 'name')!
+  const name = getTranslation(species.names, 'name')!
+  const formName = form
+    ? (getTranslation(form?.form_names, 'name') ??
+      getTranslation(form?.names, 'name') ??
+      'Base')
+    : 'Base'
+
+  const description = `${formName} - ${types.map((t) => t.typeName).join('/')}`
 
   const metadata: Metadata = {
     title: `${name} #${dexId}`,
-    description: `${types.map((t) => t.typeName).join('/')}`,
+    description,
     twitter: {
       card: 'summary_large_image',
     },
@@ -93,9 +107,16 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const form = await pokeapi.getPokemonFormByName(slug)
-  const pokemon = await pokeapi.getPokemonByName(form.pokemon.name)
-  const species = await pokeapi.getPokemonSpeciesByName(pokemon.species.name)
+  const [speciesKey, variantKey] = slug
+  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const pokemon = await pokeapi.getPokemonByName(
+    species.varieties.find((v) =>
+      variantKey ? v.pokemon.name === variantKey : v.is_default
+    )!.pokemon.name
+  )
+  const form = variantKey
+    ? await pokeapi.getPokemonFormByName(variantKey)
+    : undefined
   const variants = await pokeapi.getPokemonFormByName(
     species.varieties.filter((v) => !v.is_default).map((v) => v.pokemon.name)
   )
@@ -120,7 +141,7 @@ export default async function Page({
         {variants.map((variant) => (
           <Link
             key={variant.name}
-            href={`/${variant.name}`}
+            href={`/${species.name}/${variant.name}`}
             className="group rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
           >
             <p className="text-blue-700 underline underline-offset-4 transition-colors group-hover:text-blue-800 group-hover:duration-0 dark:text-blue-300 dark:group-hover:text-blue-200">

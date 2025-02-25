@@ -14,7 +14,9 @@ export async function generateStaticParams() {
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({
-      slug: variant.pokemon.name,
+      slug: variant.is_default
+        ? [specie.name]
+        : [specie.name, variant.pokemon.name],
     }))
   )
 
@@ -27,17 +29,25 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const form = await pokeapi.getPokemonFormByName(slug)
-  const pokemon = await pokeapi.getPokemonByName(form.pokemon.name)
-  const species = await pokeapi.getPokemonSpeciesByName(pokemon.species.name)
+  const [speciesKey, variantKey] = slug
+  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const pokemon = await pokeapi.getPokemonByName(
+    species.varieties.find((v) =>
+      variantKey ? v.pokemon.name === variantKey : v.is_default
+    )!.pokemon.name
+  )
+  const form = variantKey
+    ? await pokeapi.getPokemonFormByName(variantKey)
+    : undefined
   const stats = await pokeapi.getStatByName(
     pokemon.stats.map((stat) => stat.stat.name)
   )
   const name = getTranslation(species.names, 'name')!
-  const formName =
-    getTranslation(form.form_names, 'name') ??
-    getTranslation(form.names, 'name') ??
-    'Base'
+  const formName = form
+    ? (getTranslation(form?.form_names, 'name') ??
+      getTranslation(form?.names, 'name') ??
+      'Base')
+    : 'Base'
 
   const imageId = species.id.toString().padStart(4, '0')
   // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
@@ -49,7 +59,7 @@ export default async function Page({
         <div className="flex h-full flex-row justify-between">
           <div className="flex h-full flex-col items-start justify-between">
             <div className="flex max-w-lg flex-col items-start gap-5">
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-1">
                 <h1 className="text-5xl font-semibold tracking-tight text-black dark:text-white">
                   {name}
                 </h1>

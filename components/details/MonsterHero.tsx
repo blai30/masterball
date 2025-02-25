@@ -10,13 +10,14 @@ export default function MonsterHero({
 }: {
   species: PokemonSpecies
   pokemon: Pokemon
-  form: PokemonForm
+  form?: PokemonForm | undefined
 }) {
   const name = getTranslation(species.names, 'name')!
-  const formName =
-    getTranslation(form.form_names, 'name') ??
-    getTranslation(form.names, 'name') ??
-    'Base'
+  const formName = form
+    ? (getTranslation(form?.form_names, 'name') ??
+      getTranslation(form?.names, 'name') ??
+      'Base')
+    : 'Base'
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl =

@@ -12,7 +12,9 @@ export async function generateStaticParams() {
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({
-      slug: `${variant.pokemon.name}.png`,
+      slug: variant.is_default
+        ? `${specie.name}.png`
+        : `${specie.name}_${variant.pokemon.name}.png`,
     }))
   )
 
