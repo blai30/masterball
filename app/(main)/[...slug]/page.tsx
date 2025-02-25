@@ -106,6 +106,7 @@ export default async function Page({
       variantKey ? variety.pokemon.name === variantKey : variety.is_default
     )!.pokemon.name
   )
+  const form = variants.find((v) => v.name === pokemon.name)!
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
   )
@@ -117,7 +118,7 @@ export default async function Page({
         <Link
           key="default"
           href={`/${speciesKey}`}
-          className="rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
+          className="group rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
         >
           <p className="text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
             Base
@@ -127,9 +128,9 @@ export default async function Page({
           <Link
             key={variant.name}
             href={`/${speciesKey}/${variant.name}`}
-            className="rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
+            className="group rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
           >
-            <p className="text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
+            <p className="text-blue-700 underline underline-offset-4 transition-colors group-hover:text-blue-800 group-hover:duration-0 dark:text-blue-300 dark:group-hover:text-blue-200">
               {getTranslation(variant.form_names, 'name') ??
                 getTranslation(variant.names, 'name')}
             </p>
@@ -138,7 +139,7 @@ export default async function Page({
       </div>
       {/* Hero section */}
       <section className="container mx-auto px-4">
-        <MonsterHero species={species} pokemon={pokemon} />
+        <MonsterHero species={species} pokemon={pokemon} form={form} />
       </section>
       {/* Metadata section */}
       <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">

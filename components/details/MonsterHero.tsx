@@ -1,19 +1,25 @@
 import Image from 'next/image'
-import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+import { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import TypePill from '@/components/TypePill'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function MonsterHero({
   species,
   pokemon,
+  form,
 }: {
   species: PokemonSpecies
   pokemon: Pokemon
+  form: PokemonForm
 }) {
-  const name = getTranslation(species.names, 'name')
+  const name =
+    getTranslation(form?.form_names, 'name') ??
+    getTranslation(form?.names, 'name') ??
+    getTranslation(species.names, 'name')
 
   const imageId = species.id.toString().padStart(4, '0')
-  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  const imageUrl = pokemon.sprites.other.home.front_default!
 
   const leadingZeros = imageId.match(/^0+/)?.[0] || ''
   const significantDigits = imageId.slice(leadingZeros.length)

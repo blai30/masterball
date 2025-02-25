@@ -8,9 +8,10 @@ export function getTranslation<
   },
   K extends keyof T,
 >(resources: T[], field: K, language: string = 'en') {
+  if (!resources) return undefined
   const resource =
-    resources.find((r) => r.language.name === language) ??
-    resources.find((r) => r.language.name === 'en')
+    resources?.find((r) => r.language.name === language) ??
+    resources?.find((r) => r.language.name === 'en')
 
   if (!resource) return undefined
   return String(resource[field])
@@ -18,7 +19,7 @@ export function getTranslation<
 
 export type Monster = {
   id: number
-  key: string,
+  key: string
   name: string
   species: PokemonSpecies
   pokemon: Pokemon
