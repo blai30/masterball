@@ -19,6 +19,7 @@ import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
 
 const variantColumnLabels: Record<string, string> = {
+  'form-change': 'Form',
   'level-up': 'Level',
   machine: 'TM',
   tutor: 'Tutor',
@@ -42,7 +43,7 @@ export default function MovesTable({
   movesMap,
   className,
 }: {
-  variant: 'level-up' | 'machine' | 'tutor' | 'egg'
+  variant: 'form-change' | 'level-up' | 'machine' | 'tutor' | 'egg'
   moves: MoveElement[]
   movesMap: Record<string, Move & { machine: Machine }>
 } & React.ComponentPropsWithoutRef<'div'>) {
@@ -151,7 +152,7 @@ export default function MovesTable({
   })
 
   return (
-    <div className="overflow-x-scroll md:overflow-auto">
+    <div className={clsx('overflow-x-scroll md:overflow-auto', className)}>
       <div className={clsx('inline-block min-w-full', className)}>
         <table className="w-full">
           <thead>

@@ -86,6 +86,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/475/',
     },
     {
+      name: 'rotom',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/479/',
+    },
+    {
       name: 'chesnaught',
       url: 'https://pokeapi.co/api/v2/pokemon-species/652/',
     },

@@ -49,6 +49,8 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       ])
     )
 
+  const formChangeMoves = filterByLearnMethod('form-change')
+
   const levelUpMoves = filterByLearnMethod('level-up').toSorted((a, b) => {
     const levelA = a.version_group_details[0].level_learned_at
     const levelB = b.version_group_details[0].level_learned_at
@@ -74,39 +76,46 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
+        {formChangeMoves.length > 0 && (
+          <MovesTable
+            variant="form-change"
+            moves={formChangeMoves}
+            movesMap={movesMap}
+            className="py-2"
+          />
+        )}
         {levelUpMoves.length > 0 && (
           <MovesTable
             variant="level-up"
             moves={levelUpMoves}
             movesMap={movesMap}
+            className="py-2"
           />
         )}
         {machineMoves.length > 0 && (
-          <>
-            <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
-            <MovesTable
-              variant="machine"
-              moves={machineMoves}
-              movesMap={movesMap}
-            />
-          </>
+          <MovesTable
+            variant="machine"
+            moves={machineMoves}
+            movesMap={movesMap}
+            className="py-2"
+          />
         )}
         {tutorMoves.length > 0 && (
-          <>
-            <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
-            <MovesTable
-              variant="tutor"
-              moves={tutorMoves}
-              movesMap={movesMap}
-            />
-          </>
+          <MovesTable
+            variant="tutor"
+            moves={tutorMoves}
+            movesMap={movesMap}
+            className="py-2"
+          />
         )}
         {eggMoves.length > 0 && (
-          <>
-            <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
-            <MovesTable variant="egg" moves={eggMoves} movesMap={movesMap} />
-          </>
+          <MovesTable
+            variant="egg"
+            moves={eggMoves}
+            movesMap={movesMap}
+            className="py-2"
+          />
         )}
       </div>
     </section>
