@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
@@ -25,12 +26,18 @@ export async function generateStaticParams() {
   //   limit: 22,
   //   offset: 718,
   // })
-
   const speciesList = await getTestSpeciesList()
+  const species = await pokeapi.getPokemonSpeciesByName(
+    speciesList.results.map((result) => result.name)
+  )
 
-  return speciesList.results.map((result) => ({
-    slug: result.name,
-  }))
+  const params = species.flatMap((specie) =>
+    specie.varieties.map((v) => ({
+      slug: v.is_default ? [specie.name] : [specie.name, v.pokemon.name],
+    }))
+  )
+
+  return params
 }
 
 export async function generateMetadata({
@@ -39,9 +46,12 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const species = await pokeapi.getPokemonSpeciesByName(slug)
+  const [speciesKey, variantKey] = slug
+  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((variety) => variety.is_default)!.pokemon.name
+    species.varieties.find((variety) =>
+      variantKey ? variety.pokemon.name === variantKey : variety.is_default
+    )!.pokemon.name
   )
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
@@ -67,7 +77,8 @@ export async function generateMetadata({
     openGraph: {
       images: [
         {
-          url: `/${slug}/og.png`,
+          // url: `/${speciesKey}/og.png`,
+          url: [speciesKey, variantKey].join('/') + '/og.png',
           width: 800,
           height: 400,
           alt: `${translatedName} splash image`,
@@ -85,9 +96,15 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const species = await pokeapi.getPokemonSpeciesByName(slug)
+  const [speciesKey, variantKey] = slug
+  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const variants = await pokeapi.getPokemonFormByName(
+    species.varieties.filter((v) => !v.is_default).map((v) => v.pokemon.name)
+  )
   const pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((variety) => variety.is_default)!.pokemon.name
+    species.varieties.find((variety) =>
+      variantKey ? variety.pokemon.name === variantKey : variety.is_default
+    )!.pokemon.name
   )
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
@@ -96,6 +113,29 @@ export default async function Page({
 
   return (
     <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-row flex-wrap gap-4">
+        <Link
+          key="default"
+          href={`/${speciesKey}`}
+          className="rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
+        >
+          <p className="text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
+            Base
+          </p>
+        </Link>
+        {variants.map((variant) => (
+          <Link
+            key={variant.name}
+            href={`/${speciesKey}/${variant.name}`}
+            className="rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
+          >
+            <p className="text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
+              {getTranslation(variant.form_names, 'name') ??
+                getTranslation(variant.names, 'name')}
+            </p>
+          </Link>
+        ))}
+      </div>
       {/* Hero section */}
       <section className="container mx-auto px-4">
         <MonsterHero species={species} pokemon={pokemon} />
