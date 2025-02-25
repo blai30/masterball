@@ -12,10 +12,11 @@ export default function MonsterHero({
   pokemon: Pokemon
   form: PokemonForm
 }) {
-  const name =
-    getTranslation(form?.form_names, 'name') ??
-    getTranslation(form?.names, 'name') ??
-    getTranslation(species.names, 'name')!
+  const name = getTranslation(species.names, 'name')
+  const formName =
+    getTranslation(form.form_names, 'name') ??
+    getTranslation(form.names, 'name') ??
+    'Base'
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl =
@@ -40,6 +41,9 @@ export default function MonsterHero({
         <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl dark:text-white">
           {name}
         </h1>
+        <p className="text-lg font-medium tracking-tight text-zinc-600 sm:text-xl dark:text-zinc-400">
+          {formName}
+        </p>
         <ul className="flex flex-row gap-2">
           {pokemon.types.map((type) => (
             <li key={type.type.name}>

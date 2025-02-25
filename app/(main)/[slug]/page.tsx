@@ -32,8 +32,8 @@ export async function generateStaticParams() {
   )
 
   const params = species.flatMap((specie) =>
-    specie.varieties.map((v) => ({
-      slug: v.is_default ? [specie.name] : [specie.name, v.pokemon.name],
+    specie.varieties.map((variant) => ({
+      slug: variant.pokemon.name,
     }))
   )
 
@@ -46,17 +46,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const [speciesKey, variantKey] = slug
-  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
-  const variants = await pokeapi.getPokemonFormByName(
-    species.varieties.filter((v) => !v.is_default).map((v) => v.pokemon.name)
-  )
-  const pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((variety) =>
-      variantKey ? variety.pokemon.name === variantKey : variety.is_default
-    )!.pokemon.name
-  )
-  const form = variants.find((v) => v.name === pokemon.name)!
+  const form = await pokeapi.getPokemonFormByName(slug)
+  const pokemon = await pokeapi.getPokemonByName(form.pokemon.name)
+  const species = await pokeapi.getPokemonSpeciesByName(pokemon.species.name)
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
@@ -69,14 +61,13 @@ export async function generateMetadata({
     }
   })
 
-  const imageId = pokemon.id.toString().padStart(4, '0')
+  const dexId = species.id.toString().padStart(4, '0')
   const name =
-    getTranslation(form?.form_names, 'name') ??
     getTranslation(form?.names, 'name') ??
     getTranslation(species.names, 'name')!
 
   const metadata: Metadata = {
-    title: `${name} #${imageId}`,
+    title: `${name} #${dexId}`,
     description: `${types.map((t) => t.typeName).join('/')}`,
     twitter: {
       card: 'summary_large_image',
@@ -84,8 +75,7 @@ export async function generateMetadata({
     openGraph: {
       images: [
         {
-          // url: `/${speciesKey}/og.png`,
-          url: `/og/${[speciesKey, variantKey].join('/')}`,
+          url: `/og/${slug}.png`,
           width: 800,
           height: 400,
           alt: `${name} splash image`,
@@ -103,17 +93,13 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [speciesKey, variantKey] = slug
-  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const form = await pokeapi.getPokemonFormByName(slug)
+  const pokemon = await pokeapi.getPokemonByName(form.pokemon.name)
+  const species = await pokeapi.getPokemonSpeciesByName(pokemon.species.name)
   const variants = await pokeapi.getPokemonFormByName(
     species.varieties.filter((v) => !v.is_default).map((v) => v.pokemon.name)
   )
-  const pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((variety) =>
-      variantKey ? variety.pokemon.name === variantKey : variety.is_default
-    )!.pokemon.name
-  )
-  const form = variants.find((v) => v.name === pokemon.name)!
+  const base = species.varieties.find((v) => v.is_default)!
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
   )
@@ -124,7 +110,7 @@ export default async function Page({
       <div className="flex flex-row flex-wrap gap-4">
         <Link
           key="default"
-          href={`/${speciesKey}`}
+          href={`/${base.pokemon.name}`}
           className="group rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
         >
           <p className="text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
@@ -134,7 +120,7 @@ export default async function Page({
         {variants.map((variant) => (
           <Link
             key={variant.name}
-            href={`/${speciesKey}/${variant.name}`}
+            href={`/${variant.name}`}
             className="group rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
           >
             <p className="text-blue-700 underline underline-offset-4 transition-colors group-hover:text-blue-800 group-hover:duration-0 dark:text-blue-300 dark:group-hover:text-blue-200">

@@ -11,8 +11,8 @@ export async function generateStaticParams() {
   )
 
   const params = species.flatMap((specie) =>
-    specie.varieties.map((v) => ({
-      slug: v.is_default ? [specie.name] : [specie.name, v.pokemon.name],
+    specie.varieties.map((variant) => ({
+      slug: `${variant.pokemon.name}.png`,
     }))
   )
 
@@ -28,9 +28,7 @@ export async function GET(
   }
 ) {
   const { slug } = await params
-  const [speciesKey, variantKey] = slug
-  const path = [speciesKey, variantKey].filter(Boolean).join('/')
-  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/splash/${path}`
+  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/${slug.split('.png')[0]}/splash`
 
   const browser = await playwright.chromium.launch({
     headless: true,

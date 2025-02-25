@@ -13,8 +13,8 @@ export async function generateStaticParams() {
   )
 
   const params = species.flatMap((specie) =>
-    specie.varieties.map((v) => ({
-      slug: v.is_default ? [specie.name] : [specie.name, v.pokemon.name],
+    specie.varieties.map((variant) => ({
+      slug: variant.pokemon.name,
     }))
   )
 
@@ -27,24 +27,15 @@ export default async function Page({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [speciesKey, variantKey] = slug
-  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
-  const variants = await pokeapi.getPokemonFormByName(
-    species.varieties.filter((v) => !v.is_default).map((v) => v.pokemon.name)
-  )
-  const pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((variety) =>
-      variantKey ? variety.pokemon.name === variantKey : variety.is_default
-    )!.pokemon.name
-  )
-  const form = variants.find((v) => v.name === pokemon.name)!
+  const form = await pokeapi.getPokemonFormByName(slug)
+  const pokemon = await pokeapi.getPokemonByName(form.pokemon.name)
+  const species = await pokeapi.getPokemonSpeciesByName(pokemon.species.name)
   const stats = await pokeapi.getStatByName(
     pokemon.stats.map((stat) => stat.stat.name)
   )
-  const name =
-    getTranslation(form?.form_names, 'name') ??
-    getTranslation(form?.names, 'name') ??
-    getTranslation(species.names, 'name')!
+  const name = form?.form_names?.length
+    ? `${getTranslation(species.names, 'name')} (${getTranslation(form.form_names, 'name') ?? getTranslation(form.names, 'name')})`
+    : getTranslation(species.names, 'name')!
 
   const imageId = species.id.toString().padStart(4, '0')
   // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
