@@ -82,7 +82,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="form-change"
             moves={formChangeMoves}
             movesMap={movesMap}
-            className="py-2"
+            className="not-first:pt-2 not-last:pb-2"
           />
         )}
         {levelUpMoves.length > 0 && (
@@ -90,7 +90,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="level-up"
             moves={levelUpMoves}
             movesMap={movesMap}
-            className="py-2"
+            className="not-first:pt-2 not-last:pb-2"
           />
         )}
         {machineMoves.length > 0 && (
@@ -98,7 +98,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="machine"
             moves={machineMoves}
             movesMap={movesMap}
-            className="py-2"
+            className="not-first:pt-2 not-last:pb-2"
           />
         )}
         {tutorMoves.length > 0 && (
@@ -106,7 +106,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="tutor"
             moves={tutorMoves}
             movesMap={movesMap}
-            className="py-2"
+            className="not-first:pt-2 not-last:pb-2"
           />
         )}
         {eggMoves.length > 0 && (
@@ -114,7 +114,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="egg"
             moves={eggMoves}
             movesMap={movesMap}
-            className="py-2"
+            className="not-first:pt-2 not-last:pb-2"
           />
         )}
       </div>

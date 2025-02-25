@@ -16,8 +16,8 @@ export default function MonsterHero({
   const formName = form
     ? (getTranslation(form?.form_names, 'name') ??
       getTranslation(form?.names, 'name') ??
-      'Base')
-    : 'Base'
+      name)
+    : name
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl =
@@ -41,11 +41,8 @@ export default function MonsterHero({
         </p>
         <div className="flex flex-col">
           <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl dark:text-white">
-            {name}
-          </h1>
-          <p className="text-lg font-medium tracking-tight text-zinc-600 sm:text-xl dark:text-zinc-400">
             {formName}
-          </p>
+          </h1>
         </div>
         <ul className="flex flex-row gap-2">
           {pokemon.types.map((type) => (
@@ -55,15 +52,6 @@ export default function MonsterHero({
           ))}
         </ul>
       </div>
-      <Image
-        src={imageUrl}
-        alt={`${name} sprite`}
-        width={128}
-        height={128}
-        priority
-        loading="eager"
-        className="object-scale-down"
-      />
       {/* <div className="flex">
         <div className="grid w-full grid-cols-2 gap-8">
           <Image

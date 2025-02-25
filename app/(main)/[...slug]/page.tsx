@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Suspense } from 'react'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
@@ -125,35 +126,71 @@ export default async function Page({
   )
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
 
+  const imageId = species.id.toString().padStart(4, '0')
+  const imageUrl =
+    pokemon.sprites.other.home.front_default ??
+    pokemon.sprites.front_default ??
+    `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="flex flex-row flex-wrap gap-4">
-        <Link
-          key="default"
-          href={`/${species.name}`}
-          className="group rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
-        >
-          <p className="text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
-            Base
-          </p>
-        </Link>
-        {variants.map((variant) => (
-          <Link
-            key={variant.name}
-            href={`/${species.name}/${variant.name}`}
-            className="group rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
-          >
-            <p className="text-blue-700 underline underline-offset-4 transition-colors group-hover:text-blue-800 group-hover:duration-0 dark:text-blue-300 dark:group-hover:text-blue-200">
-              {getTranslation(variant.form_names, 'name') ??
-                getTranslation(variant.names, 'name')}
-            </p>
-          </Link>
-        ))}
-      </div>
       {/* Hero section */}
       <section className="container mx-auto px-4">
         <MonsterHero species={species} pokemon={pokemon} form={form} />
       </section>
+      {/* Variants section */}
+      <div className="container mx-auto px-4">
+        <div className="overflow-x-scroll">
+          <div className="flex flex-row gap-4">
+            <Link
+              key="default"
+              href={`/${species.name}`}
+              className="group min-w-60 rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
+            >
+              <p className="text-blue-700 underline underline-offset-4 transition-colors group-hover:text-blue-800 group-hover:duration-0 dark:text-blue-300 dark:group-hover:text-blue-200">
+                {getTranslation(species.names, 'name')!}
+              </p>
+              <Image
+                src={imageUrl}
+                alt={`${pokemon.name} sprite`}
+                width={128}
+                height={128}
+                priority
+                loading="eager"
+                className="object-contain"
+              />
+            </Link>
+            {variants.map((variant) => {
+              const variantImageUrl =
+                variant.sprites.other?.home?.front_default ??
+                variant.sprites.front_default ??
+                imageUrl
+
+              return (
+                <Link
+                  key={variant.name}
+                  href={`/${species.name}/${variant.name}`}
+                  className="group min-w-60 rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
+                >
+                  <p className="text-blue-700 underline underline-offset-4 transition-colors group-hover:text-blue-800 group-hover:duration-0 dark:text-blue-300 dark:group-hover:text-blue-200">
+                    {getTranslation(variant.form_names, 'name') ??
+                      getTranslation(variant.names, 'name')}
+                  </p>
+                  <Image
+                    src={variantImageUrl}
+                    alt={`${variant.name} sprite`}
+                    width={128}
+                    height={128}
+                    priority
+                    loading="eager"
+                    className="object-contain"
+                  />
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      </div>
       {/* Metadata section */}
       <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
         <section className="container mx-auto px-4">

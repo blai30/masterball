@@ -44,10 +44,6 @@
   --color-fairy: #ef70ef;
 }
 
-.scrollbar {
-  @apply [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-zinc-500 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-500 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-zinc-200 dark:[&::-webkit-scrollbar-track]:bg-zinc-800;
-}
-
 ::view-transition-new(root) {
   mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="40" cy="0" r="18" fill="white"/></svg>')
     top right / 0 no-repeat;
