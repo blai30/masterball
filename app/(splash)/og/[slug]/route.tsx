@@ -30,7 +30,8 @@ export async function GET(
   }
 ) {
   const { slug } = await params
-  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/${slug.split('.png')[0]}/splash`
+  const path = slug.split('.png')[0].replace('_', '/')
+  const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/splash/${path}`
 
   const browser = await playwright.chromium.launch({
     headless: true,
