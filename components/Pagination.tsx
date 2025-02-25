@@ -2,10 +2,7 @@
 
 import { useState } from 'react'
 import clsx from 'clsx/lite'
-import {
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export default function Pagination({
   currentPage,
@@ -81,7 +78,7 @@ export default function Pagination({
       <button
         onClick={() => onPageChangeAction(currentPage - 1)}
         disabled={currentPage === 1}
-        className="inline-flex size-8 items-center justify-center rounded py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-700"
+        className="inline-flex size-8 items-center justify-center rounded border border-zinc-300 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-700"
       >
         <ChevronLeft />
       </button>
@@ -107,7 +104,7 @@ export default function Pagination({
             <button
               key={`ellipsis-${page}-${index}`}
               onClick={() => setShowInput(page)}
-              className="inline-flex size-8 items-center justify-center rounded py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700"
+              className="inline-flex size-8 items-center justify-center rounded border border-zinc-300 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 dark:border-zinc-700 dark:hover:bg-zinc-700"
             >
               ...
             </button>
@@ -119,7 +116,7 @@ export default function Pagination({
             key={`page-${page}-${index}`}
             onClick={() => onPageChangeAction(page)}
             className={clsx(
-              'inline-flex size-8 items-center justify-center rounded py-1 text-sm',
+              'inline-flex size-8 items-center justify-center rounded border border-zinc-300 py-1 text-sm dark:border-zinc-700',
               page === currentPage
                 ? 'bg-black text-white dark:bg-white dark:text-black'
                 : 'transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700'
@@ -133,7 +130,7 @@ export default function Pagination({
       <button
         onClick={() => onPageChangeAction(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="inline-flex size-8 items-center justify-center rounded py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-700"
+        className="inline-flex size-8 items-center justify-center rounded border border-zinc-300 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-700"
       >
         <ChevronRight />
       </button>
