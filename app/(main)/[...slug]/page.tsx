@@ -120,7 +120,6 @@ export default async function Page({
   const variants = await pokeapi.getPokemonFormByName(
     species.varieties.filter((v) => !v.is_default).map((v) => v.pokemon.name)
   )
-  const base = species.varieties.find((v) => v.is_default)!
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
   )
@@ -131,7 +130,7 @@ export default async function Page({
       <div className="flex flex-row flex-wrap gap-4">
         <Link
           key="default"
-          href={`/${base.pokemon.name}`}
+          href={`/${species.name}`}
           className="group rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
         >
           <p className="text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
