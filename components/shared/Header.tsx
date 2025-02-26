@@ -30,20 +30,18 @@ const navItems = [
 
 export default function Header() {
   const pathname = usePathname()
-  console.log(pathname)
 
   const isActiveRoute = (url: string) => {
-    // Special case for Pokemon route
-    if (url === '/' || !navItems.some((item) => pathname.startsWith(item.url))) {
-      return true
+    if (url === '/') {
+      return (
+        pathname === '/' ||
+        !navItems.some(
+          (item) => item.url !== '/' && pathname.startsWith(item.url)
+        )
+      )
     }
 
-    // For other routes
-    if (url !== '/') {
-      return pathname.startsWith(url)
-    }
-
-    return false
+    return pathname.startsWith(url)
   }
 
   return (
@@ -53,6 +51,7 @@ export default function Header() {
           <ul className="flex flex-row flex-wrap items-center gap-4">
             {navItems.map((item) => {
               const active = isActiveRoute(item.url)
+
               return (
                 <li key={item.url} className="relative">
                   {active && (
