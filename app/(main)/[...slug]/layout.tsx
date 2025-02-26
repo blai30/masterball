@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
-import VariantCardGrid from '@/components/VariantCardGrid'
+import HorizontalScroller from '@/components/HorizontalScroller'
 import { Pokemon } from 'pokedex-promise-v2'
 
 export default async function RootLayout({
@@ -73,7 +73,7 @@ export default async function RootLayout({
       {/* Variants section */}
       <div className="container mx-auto px-4">
         <div className="overflow-x-auto">
-          <VariantCardGrid monsters={monsters} activeKey={pokemon.name} />
+          <HorizontalScroller monsters={monsters} activeKey={pokemon.name} />
         </div>
       </div>
       {children}

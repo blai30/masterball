@@ -4,7 +4,7 @@ import clsx from 'clsx/lite'
 import { Monster } from '@/lib/utils/pokeapiHelpers'
 import VariantCard from '@/components/VariantCard'
 
-export default function VariantCardGrid({
+export default function HorizontalScroller({
   monsters,
   activeKey,
   className,
