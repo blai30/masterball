@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
 import VariantCardGrid from '@/components/VariantCardGrid'
+import { Pokemon } from 'pokedex-promise-v2'
 
 export default async function RootLayout({
   children,
@@ -13,8 +14,8 @@ export default async function RootLayout({
   const { slug } = await params
   const [speciesKey, variantKey] = slug
   const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
-  const variants = await pokeapi.getPokemonByName(
-    species.varieties.map((v) => v.pokemon.name)
+  const variants: Pokemon[] = await pokeapi.getResource(
+    species.varieties.map((v) => v.pokemon.url)
   )
   const monsters: Record<string, Monster> = Object.fromEntries(
     await Promise.all(
@@ -30,7 +31,7 @@ export default async function RootLayout({
           : getTranslation(species.names, 'name')!
 
         return [
-          variant.name,
+          variant.is_default ? species.name : variant.name,
           {
             id: species.id,
             key: variant.name,
