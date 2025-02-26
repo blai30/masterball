@@ -30,17 +30,20 @@ const navItems = [
 
 export default function Header() {
   const pathname = usePathname()
+  console.log(pathname)
 
   const isActiveRoute = (url: string) => {
-    if (url === '/') {
-      return (
-        pathname === '/' ||
-        (pathname.startsWith('/') &&
-          !navItems.slice(1).some((item) => pathname.startsWith(item.url)))
-      )
+    // Special case for Pokemon route
+    if (url === '/' || !navItems.some((item) => pathname.startsWith(item.url))) {
+      return true
     }
 
-    return pathname.startsWith(url)
+    // For other routes
+    if (url !== '/') {
+      return pathname.startsWith(url)
+    }
+
+    return false
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
+import { Pokemon, PokemonForm, PokemonSpecies, Type } from 'pokedex-promise-v2'
 
 export function getTranslation<
   T extends {
@@ -23,6 +23,7 @@ export type Monster = {
   name: string
   species: PokemonSpecies
   pokemon: Pokemon
+  form?: PokemonForm | undefined
 }
 
 export enum StatName {

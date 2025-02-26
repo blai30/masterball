@@ -2,8 +2,9 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Suspense } from 'react'
+import clsx from 'clsx/lite'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
 import MonsterHero from '@/components/details/MonsterHero'
 import StatsSection from '@/components/details/stats/StatsSection'
@@ -19,6 +20,7 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
+import VariantCardGrid from '@/components/VariantCardGrid'
 
 export const dynamic = 'force-static'
 
@@ -118,77 +120,73 @@ export default async function Page({
   const form = variantKey
     ? await pokeapi.getPokemonFormByName(variantKey)
     : undefined
-  const variants = await pokeapi.getPokemonFormByName(
-    species.varieties.filter((v) => !v.is_default).map((v) => v.pokemon.name)
+  const variants = await pokeapi.getPokemonByName(
+    species.varieties.map((v) => v.pokemon.name)
   )
+  const monsters: Record<string, Monster> = Object.fromEntries(
+    await Promise.all(
+      variants.map(async (variant) => {
+        const form = variant.is_default
+          ? undefined
+          : ((await pokeapi.getPokemonFormByName(variant.name)) ?? undefined)
+        const name = form
+          ? (getTranslation(form.form_names, 'name') ??
+            getTranslation(form.names, 'name') ??
+            getTranslation(species.names, 'name')!)
+          : getTranslation(species.names, 'name')!
+
+        return [
+          variant.name,
+          {
+            id: species.id,
+            key: variant.name,
+            name,
+            species,
+            pokemon: variant,
+            form: variant.is_default ? undefined : form,
+          },
+        ] as const
+      })
+    )
+  )
+
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
   )
   const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
 
-  const imageId = species.id.toString().padStart(4, '0')
-  const imageUrl =
-    pokemon.sprites.other.home.front_default ??
-    pokemon.sprites.front_default ??
-    `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
-
   return (
     <div className="flex w-full flex-col gap-6">
       {/* Hero section */}
-      <section className="container mx-auto px-4">
+      {/* <section className="container mx-auto px-4">
         <MonsterHero species={species} pokemon={pokemon} form={form} />
+      </section> */}
+      {/* Breadcrumb */}
+      <section className="container mx-auto px-4">
+        <nav className="flex w-full flex-row items-center gap-2">
+          <Link
+            href={`/${species.name}`}
+            className="text-zinc-600 dark:text-zinc-400"
+          >
+            {getTranslation(species.names, 'name')}
+          </Link>
+          {variantKey && (
+            <>
+              <span className="text-zinc-600 dark:text-zinc-400">/</span>
+              <Link
+                href={`/${species.name}/${variantKey}`}
+                className="text-zinc-600 dark:text-zinc-400"
+              >
+                {monsters[variantKey].name}
+              </Link>
+            </>
+          )}
+        </nav>
       </section>
       {/* Variants section */}
       <div className="container mx-auto px-4">
-        <div className="overflow-x-scroll">
-          <div className="flex flex-row gap-4">
-            <Link
-              key="default"
-              href={`/${species.name}`}
-              className="group min-w-60 rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
-            >
-              <p className="text-blue-700 underline underline-offset-4 transition-colors group-hover:text-blue-800 group-hover:duration-0 dark:text-blue-300 dark:group-hover:text-blue-200">
-                {getTranslation(species.names, 'name')!}
-              </p>
-              <Image
-                src={imageUrl}
-                alt={`${pokemon.name} sprite`}
-                width={128}
-                height={128}
-                priority
-                loading="eager"
-                className="object-contain"
-              />
-            </Link>
-            {variants.map((variant) => {
-              const variantImageUrl =
-                variant.sprites.other?.home?.front_default ??
-                variant.sprites.front_default ??
-                imageUrl
-
-              return (
-                <Link
-                  key={variant.name}
-                  href={`/${species.name}/${variant.name}`}
-                  className="group min-w-60 rounded-xl bg-zinc-100 p-2 dark:bg-zinc-900"
-                >
-                  <p className="text-blue-700 underline underline-offset-4 transition-colors group-hover:text-blue-800 group-hover:duration-0 dark:text-blue-300 dark:group-hover:text-blue-200">
-                    {getTranslation(variant.form_names, 'name') ??
-                      getTranslation(variant.names, 'name')}
-                  </p>
-                  <Image
-                    src={variantImageUrl}
-                    alt={`${variant.name} sprite`}
-                    width={128}
-                    height={128}
-                    priority
-                    loading="eager"
-                    className="object-contain"
-                  />
-                </Link>
-              )
-            })}
-          </div>
+        <div className="overflow-x-auto">
+          <VariantCardGrid monsters={monsters} activeKey={pokemon.name} />
         </div>
       </div>
       {/* Metadata section */}
