@@ -28,7 +28,7 @@ export default function VariantCard({
       href={url}
       className={clsx(
         'flex flex-col items-center gap-2 rounded-xl p-4',
-        'inset-ring-1 inset-ring-zinc-200 transition-colors hover:bg-zinc-100 hover:duration-0 dark:inset-ring-zinc-800 dark:hover:bg-zinc-900',
+        'transition-colors hover:bg-zinc-100 hover:duration-0 dark:hover:bg-zinc-900',
         className
       )}
     >

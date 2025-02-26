@@ -18,11 +18,14 @@ export default function VariantCardGrid({
       {Object.entries(monsters).map(([key, monster]) => {
         const active = monster.key === activeKey
         return (
-          <li key={monster.key} className="w-66">
+          <li key={monster.key} className="min-w-66">
             <VariantCard
               monster={monster}
               className={clsx(
-                active ? 'pointer-events-none bg-zinc-200 dark:bg-zinc-800' : ''
+                'min-w-full',
+                active
+                  ? 'pointer-events-none inset-ring-1 inset-ring-zinc-600 dark:inset-ring-zinc-400'
+                  : 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800'
               )}
             />
           </li>
