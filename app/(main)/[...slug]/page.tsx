@@ -117,38 +117,6 @@ export default async function Page({
       variantKey ? v.pokemon.name === variantKey : v.is_default
     )!.pokemon.name
   )
-  const form = variantKey
-    ? await pokeapi.getPokemonFormByName(variantKey)
-    : undefined
-  const variants = await pokeapi.getPokemonByName(
-    species.varieties.map((v) => v.pokemon.name)
-  )
-  const monsters: Record<string, Monster> = Object.fromEntries(
-    await Promise.all(
-      variants.map(async (variant) => {
-        const form = variant.is_default
-          ? undefined
-          : ((await pokeapi.getPokemonFormByName(variant.name)) ?? undefined)
-        const name = form
-          ? (getTranslation(form.form_names, 'name') ??
-            getTranslation(form.names, 'name') ??
-            getTranslation(species.names, 'name')!)
-          : getTranslation(species.names, 'name')!
-
-        return [
-          variant.name,
-          {
-            id: species.id,
-            key: variant.name,
-            name,
-            species,
-            pokemon: variant,
-            form: variant.is_default ? undefined : form,
-          },
-        ] as const
-      })
-    )
-  )
 
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
@@ -161,34 +129,6 @@ export default async function Page({
       {/* <section className="container mx-auto px-4">
         <MonsterHero species={species} pokemon={pokemon} form={form} />
       </section> */}
-      {/* Breadcrumb */}
-      <section className="container mx-auto px-4">
-        <nav className="flex w-full flex-row items-center gap-2">
-          <Link
-            href={`/${species.name}`}
-            className="text-zinc-600 dark:text-zinc-400"
-          >
-            {getTranslation(species.names, 'name')}
-          </Link>
-          {variantKey && (
-            <>
-              <span className="text-zinc-600 dark:text-zinc-400">/</span>
-              <Link
-                href={`/${species.name}/${variantKey}`}
-                className="text-zinc-600 dark:text-zinc-400"
-              >
-                {monsters[variantKey].name}
-              </Link>
-            </>
-          )}
-        </nav>
-      </section>
-      {/* Variants section */}
-      <div className="container mx-auto px-4">
-        <div className="overflow-x-auto">
-          <VariantCardGrid monsters={monsters} activeKey={pokemon.name} />
-        </div>
-      </div>
       {/* Metadata section */}
       <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
         <section className="container mx-auto px-4">
