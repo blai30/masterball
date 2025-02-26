@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
-import HorizontalScroller from '@/components/HorizontalScroller'
 import { Pokemon } from 'pokedex-promise-v2'
+import VariantCardSelector from '@/components/VariantCardSelector'
 
 export default async function RootLayout({
   children,
@@ -17,34 +17,34 @@ export default async function RootLayout({
   const variants: Pokemon[] = await pokeapi.getResource(
     species.varieties.map((v) => v.pokemon.url)
   )
-  const monsters: Record<string, Monster> = Object.fromEntries(
-    await Promise.all(
-      variants.map(async (variant) => {
-        const form = await pokeapi
-          .getPokemonFormByName(variant.name)
-          .catch(() => undefined)
+  // const monsters: Record<string, Monster> = Object.fromEntries(
+  const monsters = await Promise.all(
+    variants.map(async (variant) => {
+      const form = await pokeapi
+        .getPokemonFormByName(variant.name)
+        .catch(() => undefined)
 
-        const name = form
-          ? getTranslation(form?.form_names, 'name') ||
-            getTranslation(form?.names, 'name') ||
-            getTranslation(species.names, 'name')!
-          : getTranslation(species.names, 'name')!
+      const name = form
+        ? getTranslation(form?.form_names, 'name') ||
+          getTranslation(form?.names, 'name') ||
+          getTranslation(species.names, 'name')!
+        : getTranslation(species.names, 'name')!
 
-        return [
-          variant.is_default ? species.name : variant.name,
-          {
-            id: species.id,
-            key: variant.name,
-            name,
-            species,
-            pokemon: variant,
-            form: variant.is_default ? undefined : form,
-          },
-        ] as const
-      })
-    )
+      return (
+        // variant.is_default ? species.name : variant.name,
+        {
+          id: species.id,
+          key: variant.name,
+          name,
+          species,
+          pokemon: variant,
+          form: variant.is_default ? undefined : form,
+        } as Monster
+      )
+    })
   )
-  const pokemon = monsters[variantKey ?? species.name].pokemon
+  // const pokemon = monsters[variantKey ?? species.name].pokemon
+  const pokemon = monsters.find((m) => m.key === variantKey)?.pokemon
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -64,7 +64,7 @@ export default async function RootLayout({
                 href={`/${species.name}/${variantKey}`}
                 className="text-zinc-600 dark:text-zinc-400"
               >
-                {monsters[variantKey].name}
+                {/* {monsters[variantKey].name} */}
               </Link>
             </>
           )}
@@ -73,7 +73,7 @@ export default async function RootLayout({
       {/* Variants section */}
       <div className="container mx-auto px-4">
         <div className="overflow-x-auto">
-          <HorizontalScroller monsters={monsters} activeKey={pokemon.name} />
+          <VariantCardSelector monsters={monsters} />
         </div>
       </div>
       {children}
