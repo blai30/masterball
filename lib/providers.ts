@@ -110,8 +110,16 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/681/',
     },
     {
+      name: 'xerneas',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/716/',
+    },
+    {
       name: 'yveltal',
       url: 'https://pokeapi.co/api/v2/pokemon-species/717/',
+    },
+    {
+      name: 'zygarde',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/718/',
     },
     {
       name: 'volcanion',

@@ -58,9 +58,9 @@ export async function generateMetadata({
       variantKey ? v.pokemon.name === variantKey : v.is_default
     )!.pokemon.name
   )
-  const form = variantKey
-    ? await pokeapi.getPokemonFormByName(variantKey)
-    : undefined
+  const form = await pokeapi
+    .getPokemonFormByName(variantKey)
+    .catch(() => undefined)
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )

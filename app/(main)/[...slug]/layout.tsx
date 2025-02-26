@@ -20,9 +20,9 @@ export default async function RootLayout({
   const monsters: Record<string, Monster> = Object.fromEntries(
     await Promise.all(
       variants.map(async (variant) => {
-        const form = !variant.is_default
-          ? (await pokeapi.getPokemonFormByName(variant.name)) || undefined
-          : undefined
+        const form = await pokeapi
+          .getPokemonFormByName(variant.name)
+          .catch(() => undefined)
 
         const name = form
           ? getTranslation(form?.form_names, 'name') ||

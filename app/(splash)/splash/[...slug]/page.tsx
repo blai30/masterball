@@ -36,9 +36,9 @@ export default async function Page({
       variantKey ? v.pokemon.name === variantKey : v.is_default
     )!.pokemon.name
   )
-  const form = variantKey
-    ? await pokeapi.getPokemonFormByName(variantKey)
-    : undefined
+  const form = await pokeapi
+    .getPokemonFormByName(variantKey)
+    .catch(() => undefined)
   const stats = await pokeapi.getStatByName(
     pokemon.stats.map((stat) => stat.stat.name)
   )
