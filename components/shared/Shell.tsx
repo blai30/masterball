@@ -78,7 +78,7 @@ export default async function Shell() {
       title: getTranslation(move.names, 'name'),
       slug: move.name,
       path: `/move/${move.name}`,
-      icon: <Swords size={20} className="size-12 p-2" />,
+      icon: <Swords size={20} className="size-12 p-2 text-zinc-700 dark:text-zinc-300" />,
     } as IndexItem
   })
 
@@ -88,7 +88,7 @@ export default async function Shell() {
       title: getTranslation(ability.names, 'name'),
       slug: ability.name,
       path: `/ability/${ability.name}`,
-      icon: <Accessibility size={20} className="size-12 p-2" />,
+      icon: <Accessibility size={20} className="size-12 p-2 text-zinc-700 dark:text-zinc-300" />,
     } as IndexItem
   })
 
@@ -98,7 +98,7 @@ export default async function Shell() {
       title: getTranslation(item.names, 'name'),
       slug: item.name,
       path: `/item/${item.name}`,
-      icon: <Backpack size={20} className="size-12 p-2" />,
+      icon: <Backpack size={20} className="size-12 p-2 text-zinc-700 dark:text-zinc-300" />,
     } as IndexItem
   })
 

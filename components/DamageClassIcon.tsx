@@ -15,7 +15,7 @@ const variants = cva({
     size: {
       small: 'size-5 rounded-xs',
       medium: 'size-6 rounded-sm',
-      large: 'h-7 w-10 rounded-sm',
+      large: 'h-7 w-10 rounded-sm px-1',
     },
   },
 })
