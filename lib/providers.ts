@@ -58,6 +58,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/265/',
     },
     {
+      name: 'shedinja',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/292/',
+    },
+    {
       name: 'aggron',
       url: 'https://pokeapi.co/api/v2/pokemon-species/306/',
     },
