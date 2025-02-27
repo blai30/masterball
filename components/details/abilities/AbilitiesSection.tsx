@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { EyeOff } from 'lucide-react'
 
 export default async function AbilitiesSection({
   pokemon,
@@ -37,7 +38,7 @@ export default async function AbilitiesSection({
             <li key={a.id} className="">
               <div className="">
                 <div className="flex flex-col gap-2">
-                  <div className="flex flex-row items-baseline gap-2">
+                  <div className="flex flex-row items-center gap-2">
                     <Link href={`/ability/${a.name}`} className="inline-block">
                       <h3
                         title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
@@ -47,8 +48,11 @@ export default async function AbilitiesSection({
                       </h3>
                     </Link>
                     {a.hidden && (
-                      <span className="rounded-md bg-zinc-300 px-1.5 py-0.5 text-xs dark:bg-zinc-700">
-                        Hidden
+                      <span
+                        title="Hidden ability"
+                        className="rounded-md bg-zinc-300 px-2 py-0.5 dark:bg-zinc-700"
+                      >
+                        <EyeOff size={16} className="text-zinc-200" />
                       </span>
                     )}
                   </div>
