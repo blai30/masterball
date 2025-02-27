@@ -76,6 +76,16 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
+      {moves.length === 0 && (
+        <p className="flex items-baseline gap-2">
+          <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
+            No moves available for version group:
+          </span>
+          <span className="rounded-sm bg-zinc-200 px-1.5 py-1 font-mono text-sm text-rose-800 dark:bg-zinc-800 dark:text-rose-200">
+            {versionGroup}
+          </span>
+        </p>
+      )}
       <div className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
         {formChangeMoves.length > 0 && (
           <MovesTable

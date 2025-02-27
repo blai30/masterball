@@ -21,10 +21,15 @@ export default function VariantCard({
     monster.pokemon.sprites.other['official-artwork'].front_default!
 
   return (
-    <div className={clsx('flex w-58 flex-col items-center gap-2', className)}>
+    <div
+      className={clsx(
+        'relative flex w-58 flex-col items-center gap-2',
+        className
+      )}
+    >
       <Image
         src={imageUrl}
-        alt={`${monster.name} front default`}
+        alt={monster.name}
         width={128}
         height={128}
         priority
