@@ -14,9 +14,8 @@ export async function generateStaticParams() {
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({
-      slug: variant.is_default
-        ? [specie.name]
-        : [specie.name, variant.pokemon.name],
+      slug: specie.name,
+      variant: variant.is_default ? undefined : [variant.pokemon.name],
     }))
   )
 
@@ -26,11 +25,11 @@ export async function generateStaticParams() {
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; variant: string[] | undefined }>
 }) {
-  const { slug } = await params
-  const [speciesKey, variantKey] = slug
-  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const { slug, variant } = await params
+  const [variantKey] = variant ?? []
+  const species = await pokeapi.getPokemonSpeciesByName(slug)
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties.find((v) =>
       variantKey ? v.pokemon.name === variantKey : v.is_default
@@ -43,11 +42,10 @@ export default async function Page({
     pokemon.stats.map((stat) => stat.stat.name)
   )
   const name = getTranslation(species.names, 'name')!
-  const formName = form
-    ? (getTranslation(form?.form_names, 'name') ??
-      getTranslation(form?.names, 'name') ??
-      'Base')
-    : 'Base'
+  const formName =
+    getTranslation(form?.form_names, 'name') ??
+    getTranslation(form?.names, 'name') ??
+    ''
 
   const imageId = species.id.toString().padStart(4, '0')
   // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
@@ -63,9 +61,11 @@ export default async function Page({
                 <h1 className="text-5xl font-semibold tracking-tight text-black dark:text-white">
                   {name}
                 </h1>
-                <p className="text-3xl font-medium tracking-tight text-zinc-600 dark:text-zinc-400">
-                  {formName}
-                </p>
+                {formName && (
+                  <p className="text-3xl font-medium tracking-tight text-zinc-600 dark:text-zinc-400">
+                    {formName}
+                  </p>
+                )}
               </div>
               <ul className="flex flex-row gap-2">
                 {pokemon.types.map((type) => (
