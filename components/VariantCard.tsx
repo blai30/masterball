@@ -13,13 +13,15 @@ export default function VariantCard({
   className?: string
 }) {
   const imageId = monster.species.id.toString().padStart(4, '0')
+  // const imageUrl =
+  //   monster.pokemon.sprites.other?.home?.front_default ??
+  //   monster.pokemon.sprites.front_default ??
+  //   `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
   const imageUrl =
-    monster.pokemon.sprites.other?.home?.front_default ??
-    monster.pokemon.sprites.front_default ??
-    `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+    monster.pokemon.sprites.other['official-artwork'].front_default!
 
   return (
-    <div className={clsx('flex flex-col items-center gap-2', className)}>
+    <div className={clsx('flex w-58 flex-col items-center gap-2', className)}>
       <Image
         src={imageUrl}
         alt={`${monster.name} front default`}
@@ -27,6 +29,7 @@ export default function VariantCard({
         height={128}
         priority
         loading="eager"
+        className="object-scale-down"
       />
       <h3 className="text-lg font-medium text-black dark:text-white">
         {monster.name}

@@ -38,8 +38,20 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/133/',
     },
     {
+      name: 'moltres',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/146/',
+    },
+    {
+      name: 'mewtwo',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/150/',
+    },
+    {
       name: 'mew',
       url: 'https://pokeapi.co/api/v2/pokemon-species/151/',
+    },
+    {
+      name: 'unown',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/201/',
     },
     {
       name: 'shuckle',
@@ -92,6 +104,10 @@ const species: NamedAPIResourceList = {
     {
       name: 'rotom',
       url: 'https://pokeapi.co/api/v2/pokemon-species/479/',
+    },
+    {
+      name: 'kyurem',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/646/',
     },
     {
       name: 'chesnaught',
@@ -164,6 +180,10 @@ const species: NamedAPIResourceList = {
     {
       name: 'eternatus',
       url: 'https://pokeapi.co/api/v2/pokemon-species/890/',
+    },
+    {
+      name: 'calyrex',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/898/',
     },
     {
       name: 'iron-hands',
