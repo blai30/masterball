@@ -85,7 +85,7 @@ export async function generateMetadata({
     openGraph: {
       images: [
         {
-          url: `/og/${slug}.png`,
+          url: variantKey ? `/og/${slug}_${variantKey}.png` : `/og/${slug}.png`,
           width: 800,
           height: 400,
           alt: `${name} splash image`,
