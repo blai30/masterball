@@ -65,7 +65,6 @@ export default async function Shell() {
           alt={title}
           width={64}
           height={64}
-          priority
           className="pointer-events-none size-12 object-contain"
         />
       ),
@@ -149,7 +148,6 @@ export default async function Shell() {
           alt={title}
           width={64}
           height={64}
-          priority
           className="pointer-events-none size-12 object-contain"
         />
       ),
