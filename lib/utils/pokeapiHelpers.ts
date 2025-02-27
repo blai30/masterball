@@ -7,7 +7,7 @@ export function getTranslation<
     }
   },
   K extends keyof T,
->(resources: T[], field: K, language: string = 'en') {
+>(resources: T[] | undefined, field: K, language: string = 'en') {
   if (!resources) return undefined
   const resource =
     resources?.find((r) => r.language.name === language) ??

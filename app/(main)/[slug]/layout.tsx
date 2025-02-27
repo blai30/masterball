@@ -12,6 +12,7 @@ export default async function RootLayout({
 }>) {
   const { slug } = await params
   const species = await pokeapi.getPokemonSpeciesByName(slug)
+  const name = getTranslation(species.names, 'name')!
   const variants: Pokemon[] = await pokeapi.getResource(
     species.varieties.map((v) => v.pokemon.url)
   )
@@ -22,11 +23,10 @@ export default async function RootLayout({
         .getPokemonFormByName(variant.name)
         .catch(() => undefined)
 
-      const name = form
-        ? getTranslation(form?.form_names, 'name') ||
-          getTranslation(form?.names, 'name') ||
-          getTranslation(species.names, 'name')!
-        : getTranslation(species.names, 'name')!
+      const name =
+        getTranslation(form?.form_names, 'name') ??
+        getTranslation(form?.names, 'name') ??
+        getTranslation(species.names, 'name')!
 
       return {
         id: species.id,
@@ -39,8 +39,29 @@ export default async function RootLayout({
     })
   )
 
+  const dexId = species.id.toString().padStart(4, '0')
+  const leadingZeros = dexId.match(/^0+/)?.[0] || ''
+  const significantDigits = dexId.slice(leadingZeros.length)
+
   return (
     <div className="flex w-full flex-col gap-6">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-row items-center gap-2.5">
+          <p className="font-num rounded-lg bg-zinc-200 px-2 text-lg font-bold dark:bg-zinc-800">
+            <span className="text-zinc-400 dark:text-zinc-600">
+              {leadingZeros}
+            </span>
+            <span className="text-black dark:text-white">
+              {significantDigits}
+            </span>
+          </p>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-semibold tracking-tight text-black dark:text-white">
+              {name}
+            </h1>
+          </div>
+        </div>
+      </div>
       {/* Variants section */}
       <div className="container mx-auto px-4">
         <div className="overflow-x-auto">

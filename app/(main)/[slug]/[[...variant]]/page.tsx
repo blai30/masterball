@@ -1,12 +1,8 @@
 import { Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
 import { Suspense } from 'react'
-import clsx from 'clsx/lite'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
-import MonsterHero from '@/components/details/MonsterHero'
 import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
 import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
@@ -56,9 +52,9 @@ export async function generateMetadata({
       variantKey ? v.pokemon.name === variantKey : v.is_default
     )!.pokemon.name
   )
-  const form = await pokeapi
-    .getPokemonFormByName(variantKey)
-    .catch(() => undefined)
+  const form = variant
+    ? await pokeapi.getPokemonFormByName(variantKey).catch(() => undefined)
+    : undefined
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
@@ -73,16 +69,15 @@ export async function generateMetadata({
 
   const dexId = species.id.toString().padStart(4, '0')
   const name = getTranslation(species.names, 'name')!
-  const formName = form
-    ? (getTranslation(form?.form_names, 'name') ??
-      getTranslation(form?.names, 'name') ??
-      'Base')
-    : 'Base'
+  const formName =
+    getTranslation(form?.form_names, 'name') ??
+    getTranslation(form?.names, 'name') ??
+    ''
 
-  const description = `${formName} - ${types.map((t) => t.typeName).join('/')}`
+  const description = types.map((t) => t.typeName).join('/')
 
   const metadata: Metadata = {
-    title: `${name} #${dexId}`,
+    title: form ? `${name} (${formName}) #${dexId}` : `${name} #${dexId}`,
     description,
     twitter: {
       card: 'summary_large_image',
@@ -123,10 +118,6 @@ export default async function Page({
 
   return (
     <div className="flex w-full flex-col gap-6">
-      {/* Hero section */}
-      {/* <section className="container mx-auto px-4">
-        <MonsterHero species={species} pokemon={pokemon} form={form} />
-      </section> */}
       {/* Metadata section */}
       <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
         <section className="container mx-auto px-4">
@@ -147,14 +138,12 @@ export default async function Page({
         <div className="flex w-full flex-col gap-6 lg:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-6">
-            {/* <div className="flex w-full flex-col gap-6 sm:flex-row lg:flex-col xl:flex-row"> */}
             <Suspense fallback={<LoadingSection />}>
               <StatsSection pokemon={pokemon} />
             </Suspense>
             <Suspense fallback={<LoadingSection />}>
               <TypeEffectivenessSection pokemon={pokemon} />
             </Suspense>
-            {/* </div> */}
             <Suspense fallback={<LoadingSection />}>
               <AbilitiesSection pokemon={pokemon} />
             </Suspense>

@@ -29,27 +29,24 @@ export default function VariantCardSelector({
       : `/${monster.species.name}`
 
   return (
-    <>
-      <p>{selectedVariant}</p>
-      <RadioGroup
-        value={selectedVariant}
-        onChange={handleVariantChange}
-        className="flex flex-row gap-4 py-2"
-      >
-        {monsters.map((monster) => (
-          <Radio
-            key={monster.key}
-            value={getUrl(monster)}
-            aria-label={monster.name}
-            className={clsx(
-              'group relative flex min-w-64 cursor-pointer justify-center rounded-xl p-4 focus:outline-offset-4 data-checked:pointer-events-none data-checked:cursor-default',
-              'bg-white inset-ring inset-ring-zinc-400 transition-colors hover:bg-zinc-100 hover:duration-0 data-checked:inset-ring-2 data-checked:inset-ring-zinc-700 dark:bg-black dark:inset-ring-zinc-600 dark:hover:bg-zinc-900 dark:data-checked:inset-ring-zinc-300'
-            )}
-          >
-            <VariantCard monster={monster} />
-          </Radio>
-        ))}
-      </RadioGroup>
-    </>
+    <RadioGroup
+      value={selectedVariant}
+      onChange={handleVariantChange}
+      className="flex flex-row gap-4 py-2"
+    >
+      {monsters.map((monster) => (
+        <Radio
+          key={monster.key}
+          value={getUrl(monster)}
+          aria-label={monster.name}
+          className={clsx(
+            'group relative flex min-w-64 cursor-pointer justify-center rounded-xl p-4 focus:outline-offset-4 data-checked:pointer-events-none data-checked:cursor-default',
+            'bg-white inset-ring inset-ring-zinc-200 transition-colors hover:bg-zinc-100 hover:duration-0 data-checked:inset-ring-2 data-checked:inset-ring-zinc-700 dark:bg-black dark:inset-ring-zinc-800 dark:hover:bg-zinc-900 dark:data-checked:inset-ring-zinc-300'
+          )}
+        >
+          <VariantCard monster={monster} />
+        </Radio>
+      ))}
+    </RadioGroup>
   )
 }
