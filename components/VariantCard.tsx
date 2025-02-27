@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx/lite'
 import { Monster } from '@/lib/utils/pokeapiHelpers'
@@ -13,10 +12,6 @@ export default function VariantCard({
   monster: Monster
   className?: string
 }) {
-  const url = monster.form
-    ? `/${monster.species.name}/${monster.form.name}`
-    : `/${monster.species.name}`
-
   const imageId = monster.species.id.toString().padStart(4, '0')
   const imageUrl =
     monster.pokemon.sprites.other?.home?.front_default ??
@@ -24,14 +19,7 @@ export default function VariantCard({
     `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
-    <Link
-      href={url}
-      className={clsx(
-        'flex flex-col items-center gap-2 rounded-xl p-4',
-        'transition-colors hover:bg-zinc-100 hover:duration-0 dark:hover:bg-zinc-900',
-        className
-      )}
-    >
+    <div className={clsx('flex flex-col items-center gap-2', className)}>
       <Image
         src={imageUrl}
         alt={`${monster.name} front default`}
@@ -50,6 +38,6 @@ export default function VariantCard({
           </li>
         ))}
       </ul>
-    </Link>
+    </div>
   )
 }

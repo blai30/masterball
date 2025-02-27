@@ -20,7 +20,6 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
-import HorizontalScroller from '@/components/HorizontalScroller'
 
 export const dynamic = 'force-static'
 
@@ -36,9 +35,8 @@ export async function generateStaticParams() {
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({
-      slug: variant.is_default
-        ? [specie.name]
-        : [specie.name, variant.pokemon.name],
+      slug: specie.name,
+      variant: variant.is_default ? undefined : [variant.pokemon.name],
     }))
   )
 
@@ -48,11 +46,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; variant: string[] | undefined }>
 }): Promise<Metadata> {
-  const { slug } = await params
-  const [speciesKey, variantKey] = slug
-  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const { slug, variant } = await params
+  const [variantKey] = variant ?? []
+  const species = await pokeapi.getPokemonSpeciesByName(slug)
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties.find((v) =>
       variantKey ? v.pokemon.name === variantKey : v.is_default
@@ -107,11 +105,11 @@ export async function generateMetadata({
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string; variant: string[] | undefined }>
 }) {
-  const { slug } = await params
-  const [speciesKey, variantKey] = slug
-  const species = await pokeapi.getPokemonSpeciesByName(speciesKey)
+  const { slug, variant } = await params
+  const [variantKey] = variant ?? []
+  const species = await pokeapi.getPokemonSpeciesByName(slug)
   const pokemon = await pokeapi.getPokemonByName(
     species.varieties.find((v) =>
       variantKey ? v.pokemon.name === variantKey : v.is_default

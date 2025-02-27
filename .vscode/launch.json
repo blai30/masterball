@@ -5,6 +5,7 @@
         "name": "Next.js: debug server-side",
         "type": "node-terminal",
         "request": "launch",
+        // "command": "$env:NODE_OPTIONS='--inspect'; bun --bun run dev"
         "command": "$env:NODE_OPTIONS='--inspect'; bun run dev"
       },
       {

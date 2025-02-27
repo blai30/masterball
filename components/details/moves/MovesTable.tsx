@@ -79,17 +79,19 @@ export default function MovesTable({
       columnHelper.accessor('name', {
         header: 'Move',
         cell: (info) => (
-          <Link
-            href={`/move/${info.row.original.key}`}
-            className="inline-flex w-36"
-          >
-            <p
-              title={`Move: ${info.getValue()}`}
-              className="overflow-hidden font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
+          <div className="@container/move">
+            <Link
+              href={`/move/${info.row.original.key}`}
+              className="inline-flex"
             >
-              {info.getValue()}
-            </p>
-          </Link>
+              <p
+                title={`Move: ${info.getValue()}`}
+                className="max-w-52 overflow-hidden font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 @max-[12rem]/move:max-w-32 @xs/move:max-w-86 dark:text-blue-300 dark:hover:text-blue-200"
+              >
+                {info.getValue()}
+              </p>
+            </Link>
+          </div>
         ),
       }),
       columnHelper.accessor('power', {
