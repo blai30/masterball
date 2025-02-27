@@ -40,6 +40,7 @@ export default async function Page() {
                   alt={name!}
                   width={64}
                   height={64}
+                  className="[image-rendering:pixelated]"
                 />
                 <p className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200">
                   {name}
