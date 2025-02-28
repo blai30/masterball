@@ -2,6 +2,7 @@ import { Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
 import VariantCardSelector from '@/components/VariantCardSelector'
+import HorizontalScroller from '@/components/HorizontalScroller'
 
 export default async function RootLayout({
   children,
@@ -64,9 +65,9 @@ export default async function RootLayout({
       </div>
       {/* Variants section */}
       <div className="container mx-auto px-4">
-        <div className="overflow-x-auto">
+        <HorizontalScroller>
           <VariantCardSelector monsters={monsters} />
-        </div>
+        </HorizontalScroller>
       </div>
       {children}
     </div>
