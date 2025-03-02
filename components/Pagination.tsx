@@ -22,35 +22,35 @@ export default function Pagination({
     let end = Math.min(totalPages, start + maxVisiblePages - 1)
 
     if (totalPages <= maxVisiblePages) {
-      // Show all pages if total is less than max visible
+      // Show all pages if total is less than max visible.
       return Array.from({ length: totalPages }, (_, i) => i + 1)
     }
 
-    // Always show first page
+    // Always show first page.
     pageNumbers.push(1)
 
-    // Show ellipsis or number after first page
+    // Show ellipsis or number after first page.
     if (start > 2) {
-      // -1 represents left ellipsis
+      // -1 represents left ellipsis.
       pageNumbers.push(-1)
     } else if (start === 2) {
       pageNumbers.push(2)
     }
 
-    // Push middle numbers
+    // Push middle numbers.
     for (let i = Math.max(start, 2); i <= Math.min(end, totalPages - 1); i++) {
       pageNumbers.push(i)
     }
 
-    // Show ellipsis or number before last page
+    // Show ellipsis or number before last page.
     if (end < totalPages - 1) {
-      // -2 represents right ellipsis
+      // -2 represents right ellipsis.
       pageNumbers.push(-2)
     } else if (end === totalPages - 1) {
       pageNumbers.push(totalPages - 1)
     }
 
-    // Always show last page
+    // Always show last page.
     if (totalPages > 1) {
       pageNumbers.push(totalPages)
     }
