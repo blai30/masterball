@@ -21,15 +21,15 @@ export default function VariantCard({
   return (
     <div
       className={clsx(
-        'relative flex w-58 flex-col items-center gap-2',
+        'relative flex w-58 flex-col items-center gap-4',
         className
       )}
     >
       <Image
         src={imageUrl}
         alt={monster.name}
-        width={128}
-        height={128}
+        width={200}
+        height={200}
         priority
         loading="eager"
         className="object-scale-down"

@@ -31,7 +31,8 @@ export default function Pagination({
 
     // Show ellipsis or number after first page
     if (start > 2) {
-      pageNumbers.push(-1) // -1 represents left ellipsis
+      // -1 represents left ellipsis
+      pageNumbers.push(-1)
     } else if (start === 2) {
       pageNumbers.push(2)
     }
@@ -43,7 +44,8 @@ export default function Pagination({
 
     // Show ellipsis or number before last page
     if (end < totalPages - 1) {
-      pageNumbers.push(-2) // -2 represents right ellipsis
+      // -2 represents right ellipsis
+      pageNumbers.push(-2)
     } else if (end === totalPages - 1) {
       pageNumbers.push(totalPages - 1)
     }
@@ -80,7 +82,7 @@ export default function Pagination({
         disabled={currentPage === 1}
         className="inline-flex size-8 items-center justify-center rounded border border-zinc-300 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-700"
       >
-        <ChevronLeft />
+        <ChevronLeft size={20} />
       </button>
 
       {getPageNumbers().map((page, index) => {
@@ -132,7 +134,7 @@ export default function Pagination({
         disabled={currentPage === totalPages}
         className="inline-flex size-8 items-center justify-center rounded border border-zinc-300 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:hover:bg-zinc-700"
       >
-        <ChevronRight />
+        <ChevronRight size={20} />
       </button>
     </div>
   )

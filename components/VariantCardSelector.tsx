@@ -32,7 +32,7 @@ export default function VariantCardSelector({
     <RadioGroup
       value={selectedVariant}
       onChange={handleVariantChange}
-      className="flex flex-row gap-4 py-2"
+      className="flex flex-row gap-4 py-4"
     >
       {monsters.map((monster) => (
         <Radio
