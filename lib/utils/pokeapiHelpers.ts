@@ -1,3 +1,4 @@
+import { pokeapi } from '@/lib/providers'
 import { Pokemon, PokemonForm, PokemonSpecies, Type } from 'pokedex-promise-v2'
 
 export function getTranslation<
@@ -24,6 +25,39 @@ export type Monster = {
   species: PokemonSpecies
   pokemon: Pokemon
   form?: PokemonForm | undefined
+}
+
+export const createMonster = async (
+  variant: Pokemon,
+  species: PokemonSpecies
+): Promise<Monster> => {
+  const form = await pokeapi
+    .getPokemonFormByName(variant.name)
+    .catch(() => undefined)
+
+  const name =
+    getTranslation(form?.form_names, 'name') ??
+    getTranslation(form?.names, 'name') ??
+    getTranslation(species.names, 'name')!
+
+  return {
+    id: species.id,
+    key: variant.name,
+    name,
+    species: species,
+    pokemon: variant,
+    form: variant.is_default ? undefined : form,
+  } as Monster
+}
+
+export const getMonstersBySpecies = async (
+  species: PokemonSpecies
+): Promise<Monster[]> => {
+  const variants: Pokemon[] = await pokeapi.getResource(
+    species.varieties.map((v) => v.pokemon.url)
+  )
+
+  return Promise.all(variants.map((variant) => createMonster(variant, species)))
 }
 
 export enum StatName {

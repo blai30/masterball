@@ -1,9 +1,9 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Item } from 'pokedex-promise-v2'
 import { getTestItemsList, pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import Image from 'next/image'
 
 export const dynamic = 'force-static'
 

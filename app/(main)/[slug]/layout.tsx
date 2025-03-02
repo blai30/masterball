@@ -1,6 +1,8 @@
-import { Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
-import { getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
+import {
+  getMonstersBySpecies,
+  getTranslation,
+} from '@/lib/utils/pokeapiHelpers'
 import VariantCardSelector from '@/components/VariantCardSelector'
 import HorizontalScroller from '@/components/HorizontalScroller'
 
@@ -14,31 +16,7 @@ export default async function RootLayout({
   const { slug } = await params
   const species = await pokeapi.getPokemonSpeciesByName(slug)
   const name = getTranslation(species.names, 'name')!
-  const variants: Pokemon[] = await pokeapi.getResource(
-    species.varieties.map((v) => v.pokemon.url)
-  )
-
-  const monsters = await Promise.all(
-    variants.map(async (variant) => {
-      const form = await pokeapi
-        .getPokemonFormByName(variant.name)
-        .catch(() => undefined)
-
-      const name =
-        getTranslation(form?.form_names, 'name') ??
-        getTranslation(form?.names, 'name') ??
-        getTranslation(species.names, 'name')!
-
-      return {
-        id: species.id,
-        key: variant.name,
-        name,
-        species,
-        pokemon: variant,
-        form: variant.is_default ? undefined : form,
-      } as Monster
-    })
-  )
+  const monsters = await getMonstersBySpecies(species)
 
   const dexId = species.id.toString().padStart(4, '0')
   const leadingZeros = dexId.match(/^0+/)?.[0] || ''
