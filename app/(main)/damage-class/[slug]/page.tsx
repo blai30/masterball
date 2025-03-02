@@ -2,14 +2,14 @@ import { Metadata } from 'next'
 import { pokeapi } from '@/lib/providers'
 import {
   DamageClassLabels,
-  DamageClassName,
+  DamageClassKey,
   getTranslation,
 } from '@/lib/utils/pokeapiHelpers'
 
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
-  return Object.values(DamageClassName).map((type) => ({
+  return Object.values(DamageClassKey).map((type) => ({
     slug: type,
   }))
 }
@@ -43,7 +43,7 @@ export default async function Page({
 }) {
   const { slug } = await params
   const damageClass = await pokeapi.getMoveDamageClassByName(slug)
-  const name = DamageClassLabels[slug as DamageClassName]
+  const name = DamageClassLabels[slug as DamageClassKey]
 
   return (
     <div className="flex w-full flex-col gap-8">

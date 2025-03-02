@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { DamageClassName } from '@/lib/utils/pokeapiHelpers'
+import { DamageClassKey } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 
 export const dynamic = 'force-static'
@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const damageClassNames = Object.values(DamageClassName)
+  const damageClassNames = Object.values(DamageClassKey)
 
   return (
     <div className="container mx-auto px-4">

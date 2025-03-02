@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import TypePill from '@/components/TypePill'
-import { TypeName } from '@/lib/utils/pokeapiHelpers'
+import { TypeKey } from '@/lib/utils/pokeapiHelpers'
 
 export const dynamic = 'force-static'
 
@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const typeNames = Object.values(TypeName)
+  const typeNames = Object.values(TypeKey)
 
   return (
     <div className="container mx-auto px-6">

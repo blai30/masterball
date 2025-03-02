@@ -1,4 +1,4 @@
-import { StatLabels, StatName } from '@/lib/utils/pokeapiHelpers'
+import { StatLabels, StatKey } from '@/lib/utils/pokeapiHelpers'
 import { StatElement } from 'pokedex-promise-v2'
 
 export default function EffortValueYieldMetadata({
@@ -19,7 +19,7 @@ export default function EffortValueYieldMetadata({
               {stat.effort}
             </span>
             <span className="text-base text-zinc-600 dark:text-zinc-400">
-              {StatLabels[stat.stat.name as StatName]}
+              {StatLabels[stat.stat.name as StatKey]}
             </span>
           </li>
         ))}

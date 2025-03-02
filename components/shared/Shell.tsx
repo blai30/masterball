@@ -14,11 +14,11 @@ import {
 } from '@/lib/providers'
 import {
   DamageClassLabels,
-  DamageClassName,
+  DamageClassKey,
   getMonstersBySpecies,
   getTranslation,
   TypeLabels,
-  TypeName,
+  TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
 import { Accessibility, Backpack, Swords } from 'lucide-react'
 import TypeIcon from '@/components/TypeIcon'
@@ -44,9 +44,9 @@ export default async function Shell() {
   const items = await pokeapi.getItemByName(
     itemsList.results.map((resource: NamedAPIResource) => resource.name)
   )
-  const types = await pokeapi.getTypeByName(Object.values(TypeName))
+  const types = await pokeapi.getTypeByName(Object.values(TypeKey))
   const damageClass = await pokeapi.getMoveDamageClassByName(
-    Object.values(DamageClassName)
+    Object.values(DamageClassKey)
   )
   const eggGroups = await pokeapi.getEggGroupByName(
     eggGroupsList.results.map((resource: NamedAPIResource) => resource.name)
@@ -130,12 +130,12 @@ export default async function Shell() {
 
   const typeItems: IndexItem[] = types.map((type) => ({
     id: type.id,
-    title: TypeLabels[type.name as TypeName],
+    title: TypeLabels[type.name as TypeKey],
     slug: type.name,
     path: `/type/${type.name}`,
     icon: (
       <div className="flex size-12 items-center justify-center">
-        <TypeIcon variant={type.name as TypeName} size="large" link={false} />
+        <TypeIcon variant={type.name as TypeKey} size="large" link={false} />
       </div>
     ),
   }))
@@ -143,7 +143,7 @@ export default async function Shell() {
   const damageClassItems: IndexItem[] = damageClass.map((damageClass) => {
     return {
       id: damageClass.id,
-      title: DamageClassLabels[damageClass.name as DamageClassName],
+      title: DamageClassLabels[damageClass.name as DamageClassKey],
       slug: damageClass.name,
       path: `/damage-class/${damageClass.name}`,
       icon: (

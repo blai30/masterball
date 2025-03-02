@@ -2,15 +2,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { clsx } from 'clsx/lite'
 import { cva } from 'cva'
-import { DamageClassLabels, DamageClassName } from '@/lib/utils/pokeapiHelpers'
+import { DamageClassLabels, DamageClassKey } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
   base: 'flex flex-row items-center justify-center',
   variants: {
     variant: {
-      [DamageClassName.Physical]: 'bg-physical',
-      [DamageClassName.Special]: 'bg-special',
-      [DamageClassName.Status]: 'bg-status',
+      [DamageClassKey.Physical]: 'bg-physical',
+      [DamageClassKey.Special]: 'bg-special',
+      [DamageClassKey.Status]: 'bg-status',
     },
     size: {
       small: 'size-5 rounded-xs',
@@ -31,7 +31,7 @@ export default function DamageClassIcon({
   link?: boolean
   className?: string
 }) {
-  const name = DamageClassLabels[variant as DamageClassName]
+  const name = DamageClassLabels[variant as DamageClassKey]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
 
   const Wrapper: React.ElementType = link ? Link : 'div'
@@ -44,7 +44,7 @@ export default function DamageClassIcon({
       className={clsx(
         'relative',
         variants({
-          variant: variant as DamageClassName,
+          variant: variant as DamageClassKey,
           size,
         }),
         link &&

@@ -11,8 +11,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import {
-  TypeName,
-  DamageClassName,
+  TypeKey,
+  DamageClassKey,
   getTranslation,
 } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
@@ -29,8 +29,8 @@ const variantColumnLabels: Record<string, string> = {
 type MoveRow = {
   rowLabel: string
   key: string
-  type: TypeName
-  damageClass: DamageClassName
+  type: TypeKey
+  damageClass: DamageClassKey
   name: string
   power: number | string
   accuracy: number | string
@@ -136,8 +136,8 @@ export default function MovesTable({
         return {
           rowLabel,
           key: move.move.name,
-          type: resource.type.name as TypeName,
-          damageClass: resource.damage_class.name as DamageClassName,
+          type: resource.type.name as TypeKey,
+          damageClass: resource.damage_class.name as DamageClassKey,
           name,
           power: resource.power ?? '—',
           accuracy: resource.accuracy ?? '—',

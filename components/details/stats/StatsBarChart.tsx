@@ -1,7 +1,7 @@
 import {
   getTranslation,
   StatLabels,
-  StatName,
+  StatKey,
 } from '@/lib/utils/pokeapiHelpers'
 import { Pokemon, Stat } from 'pokedex-promise-v2'
 
@@ -34,7 +34,7 @@ export default async function StatsBarChart({
                   aria-label={name}
                   className="min-w-16 font-normal text-zinc-700 no-underline sm:min-w-20 lg:min-w-16 xl:min-w-20 dark:text-zinc-300"
                 >
-                  {StatLabels[stat.name as StatName]}
+                  {StatLabels[stat.name as StatKey]}
                 </abbr>
                 <span className="font-num min-w-10 text-right text-black tabular-nums sm:min-w-12 lg:min-w-10 xl:min-w-12 dark:text-white">
                   {pokemonStat.base_stat.toLocaleString()}

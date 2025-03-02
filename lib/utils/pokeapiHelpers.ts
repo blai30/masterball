@@ -60,7 +60,7 @@ export const getMonstersBySpecies = async (
   return Promise.all(variants.map((variant) => createMonster(variant, species)))
 }
 
-export enum StatName {
+export enum StatKey {
   Hp = 'hp',
   Attack = 'attack',
   Defense = 'defense',
@@ -69,28 +69,28 @@ export enum StatName {
   Speed = 'speed',
 }
 
-export const StatLabels: Record<StatName, string> = {
-  [StatName.Hp]: 'HP',
-  [StatName.Attack]: 'Attack',
-  [StatName.Defense]: 'Defense',
-  [StatName.SpecialAttack]: 'Sp. Atk',
-  [StatName.SpecialDefense]: 'Sp. Def',
-  [StatName.Speed]: 'Speed',
+export const StatLabels: Record<StatKey, string> = {
+  [StatKey.Hp]: 'HP',
+  [StatKey.Attack]: 'Attack',
+  [StatKey.Defense]: 'Defense',
+  [StatKey.SpecialAttack]: 'Sp. Atk',
+  [StatKey.SpecialDefense]: 'Sp. Def',
+  [StatKey.Speed]: 'Speed',
 }
 
-export enum DamageClassName {
+export enum DamageClassKey {
   Physical = 'physical',
   Special = 'special',
   Status = 'status',
 }
 
-export const DamageClassLabels: Record<DamageClassName, string> = {
-  [DamageClassName.Physical]: 'Physical',
-  [DamageClassName.Special]: 'Special',
-  [DamageClassName.Status]: 'Status',
+export const DamageClassLabels: Record<DamageClassKey, string> = {
+  [DamageClassKey.Physical]: 'Physical',
+  [DamageClassKey.Special]: 'Special',
+  [DamageClassKey.Status]: 'Status',
 }
 
-export enum TypeName {
+export enum TypeKey {
   Normal = 'normal',
   Fighting = 'fighting',
   Flying = 'flying',
@@ -111,25 +111,70 @@ export enum TypeName {
   Fairy = 'fairy',
 }
 
-export const TypeLabels: Record<TypeName, string> = {
-  [TypeName.Normal]: 'Normal',
-  [TypeName.Fighting]: 'Fighting',
-  [TypeName.Flying]: 'Flying',
-  [TypeName.Poison]: 'Poison',
-  [TypeName.Ground]: 'Ground',
-  [TypeName.Rock]: 'Rock',
-  [TypeName.Bug]: 'Bug',
-  [TypeName.Ghost]: 'Ghost',
-  [TypeName.Steel]: 'Steel',
-  [TypeName.Fire]: 'Fire',
-  [TypeName.Water]: 'Water',
-  [TypeName.Grass]: 'Grass',
-  [TypeName.Electric]: 'Electric',
-  [TypeName.Psychic]: 'Psychic',
-  [TypeName.Ice]: 'Ice',
-  [TypeName.Dragon]: 'Dragon',
-  [TypeName.Dark]: 'Dark',
-  [TypeName.Fairy]: 'Fairy',
+export const TypeLabels: Record<TypeKey, string> = {
+  [TypeKey.Normal]: 'Normal',
+  [TypeKey.Fighting]: 'Fighting',
+  [TypeKey.Flying]: 'Flying',
+  [TypeKey.Poison]: 'Poison',
+  [TypeKey.Ground]: 'Ground',
+  [TypeKey.Rock]: 'Rock',
+  [TypeKey.Bug]: 'Bug',
+  [TypeKey.Ghost]: 'Ghost',
+  [TypeKey.Steel]: 'Steel',
+  [TypeKey.Fire]: 'Fire',
+  [TypeKey.Water]: 'Water',
+  [TypeKey.Grass]: 'Grass',
+  [TypeKey.Electric]: 'Electric',
+  [TypeKey.Psychic]: 'Psychic',
+  [TypeKey.Ice]: 'Ice',
+  [TypeKey.Dragon]: 'Dragon',
+  [TypeKey.Dark]: 'Dark',
+  [TypeKey.Fairy]: 'Fairy',
+}
+
+export enum VersionGroupKey {
+  RedBlue = 'red-blue',
+  Yellow = 'yellow',
+  GoldSilver = 'gold-silver',
+  Crystal = 'crystal',
+  RubySapphire = 'ruby-sapphire',
+  Emerald = 'emerald',
+  FireRedLeafGreen = 'firered-leafgreen',
+  DiamondPearl = 'diamond-pearl',
+  Platinum = 'platinum',
+  HeartGoldSoulSilver = 'heartgold-soulsilver',
+  BlackWhite = 'black-white',
+  Black2White2 = 'black-2-white-2',
+  Xy = 'x-y',
+  OmegaRubyAlphaSapphire = 'omega-ruby-alpha-sapphire',
+  SunMoon = 'sun-moon',
+  UltraSunUltraMoon = 'ultra-sun-ultra-moon',
+  SwordShield = 'sword-shield',
+  BrilliantDiamondShiningPearl = 'brilliant-diamond-shining-pearl',
+  ScarletViolet = 'scarlet-violet',
+}
+
+export const VersionGroupLabels: Record<VersionGroupKey, string> = {
+  [VersionGroupKey.RedBlue]: 'Red/Blue',
+  [VersionGroupKey.Yellow]: 'Yellow',
+  [VersionGroupKey.GoldSilver]: 'Gold/Silver',
+  [VersionGroupKey.Crystal]: 'Crystal',
+  [VersionGroupKey.RubySapphire]: 'Ruby/Sapphire',
+  [VersionGroupKey.Emerald]: 'Emerald',
+  [VersionGroupKey.FireRedLeafGreen]: 'FireRed/LeafGreen',
+  [VersionGroupKey.DiamondPearl]: 'Diamond/Pearl',
+  [VersionGroupKey.Platinum]: 'Platinum',
+  [VersionGroupKey.HeartGoldSoulSilver]: 'HeartGold/SoulSilver',
+  [VersionGroupKey.BlackWhite]: 'Black/White',
+  [VersionGroupKey.Black2White2]: 'Black2/White2',
+  [VersionGroupKey.Xy]: 'XY',
+  [VersionGroupKey.OmegaRubyAlphaSapphire]: 'Omega Ruby/Alpha Sapphire',
+  [VersionGroupKey.SunMoon]: 'Sun/Moon',
+  [VersionGroupKey.UltraSunUltraMoon]: 'Ultra Sun/Ultra Moon',
+  [VersionGroupKey.SwordShield]: 'Sword/Shield',
+  [VersionGroupKey.BrilliantDiamondShiningPearl]:
+    'Brilliant Diamond/Shining Pearl',
+  [VersionGroupKey.ScarletViolet]: 'Scarlet/Violet',
 }
 
 export enum Effectiveness {
@@ -141,7 +186,7 @@ export enum Effectiveness {
   Quadruple = 4.0,
 }
 
-export type TypeEffectiveness = Record<TypeName, Effectiveness>
+export type TypeEffectiveness = Record<TypeKey, Effectiveness>
 
 export type TypeRelation = {
   type: Type
@@ -151,18 +196,18 @@ export type TypeRelation = {
 export function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
   // Initialize all types with neutral effectiveness.
   const effectiveness = Object.fromEntries(
-    Object.values(TypeName).map((type) => [type, 1])
+    Object.values(TypeKey).map((type) => [type, 1])
   ) as TypeEffectiveness
 
   typeResources.forEach((type) => {
     // Process immunities first.
     type.damage_relations.no_damage_from.forEach((t) => {
-      effectiveness[t.name as TypeName] = 0
+      effectiveness[t.name as TypeKey] = 0
     })
 
     // Process resistances (if not immune).
     type.damage_relations.half_damage_from.forEach((t) => {
-      const typeName = t.name as TypeName
+      const typeName = t.name as TypeKey
       if (effectiveness[typeName] !== 0) {
         effectiveness[typeName] *= 0.5
       }
@@ -170,7 +215,7 @@ export function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
 
     // Process weaknesses (if not immune).
     type.damage_relations.double_damage_from.forEach((t) => {
-      const typeName = t.name as TypeName
+      const typeName = t.name as TypeKey
       if (effectiveness[typeName] !== 0) {
         effectiveness[typeName] *= 2
       }

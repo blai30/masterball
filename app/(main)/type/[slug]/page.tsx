@@ -4,7 +4,7 @@ import {
   getEffectiveness,
   getTranslation,
   TypeLabels,
-  TypeName,
+  TypeKey,
   TypeRelation,
 } from '@/lib/utils/pokeapiHelpers'
 import EffectivenessMultiplier from '@/components/details/typeEffectiveness/EffectivenessMultiplier'
@@ -13,7 +13,7 @@ import TypePill from '@/components/TypePill'
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
-  return Object.values(TypeName).map((type) => ({
+  return Object.values(TypeKey).map((type) => ({
     slug: type,
   }))
 }
@@ -47,17 +47,17 @@ export default async function Page({
 }) {
   const { slug } = await params
   const type = await pokeapi.getTypeByName(slug)
-  const name = TypeLabels[slug as TypeName]
+  const name = TypeLabels[slug as TypeKey]
 
   const allTypeResources = await pokeapi.getTypeByName(
-    Object.values(TypeName).map((t) => t)
+    Object.values(TypeKey).map((t) => t)
   )
   const typeEffectiveness = getEffectiveness(type)
   const allTypeRelations = allTypeResources.map(
     (typeResource) =>
       ({
         type: typeResource,
-        effectiveness: typeEffectiveness[typeResource.name as TypeName],
+        effectiveness: typeEffectiveness[typeResource.name as TypeKey],
       }) as TypeRelation
   )
 

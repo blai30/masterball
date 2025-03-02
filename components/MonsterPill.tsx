@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
-import { getTranslation, TypeName } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 
@@ -44,7 +44,7 @@ export default async function MonsterPill({
             {types.map((typeResource) => (
               <TypeIcon
                 key={typeResource.id}
-                variant={typeResource.name as TypeName}
+                variant={typeResource.name as TypeKey}
                 size="small"
                 link={false}
               />

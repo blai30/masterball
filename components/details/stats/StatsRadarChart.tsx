@@ -3,7 +3,7 @@ import { Pokemon, Stat } from 'pokedex-promise-v2'
 import {
   getTranslation,
   StatLabels,
-  StatName,
+  StatKey,
 } from '@/lib/utils/pokeapiHelpers'
 
 const statAngleMap: Record<string, number> = {
@@ -136,7 +136,7 @@ export default function StatsRadarChart({
                   angleIndex === 5 && 'text-right'
                 )}
               >
-                {StatLabels[stat.name as StatName]}
+                {StatLabels[stat.name as StatKey]}
               </abbr>
               <p
                 className={clsx(

@@ -2,30 +2,30 @@ import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx/lite'
 import { cva } from 'cva'
-import { TypeLabels, TypeName } from '@/lib/utils/pokeapiHelpers'
+import { TypeLabels, TypeKey } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
   base: 'flex flex-row items-center',
   variants: {
     variant: {
-      [TypeName.Normal]: 'bg-normal',
-      [TypeName.Fighting]: 'bg-fighting',
-      [TypeName.Flying]: 'bg-flying',
-      [TypeName.Poison]: 'bg-poison',
-      [TypeName.Ground]: 'bg-ground',
-      [TypeName.Rock]: 'bg-rock',
-      [TypeName.Bug]: 'bg-bug',
-      [TypeName.Ghost]: 'bg-ghost',
-      [TypeName.Steel]: 'bg-steel',
-      [TypeName.Fire]: 'bg-fire',
-      [TypeName.Water]: 'bg-water',
-      [TypeName.Grass]: 'bg-grass',
-      [TypeName.Electric]: 'bg-electric',
-      [TypeName.Psychic]: 'bg-psychic',
-      [TypeName.Ice]: 'bg-ice',
-      [TypeName.Dragon]: 'bg-dragon',
-      [TypeName.Dark]: 'bg-dark',
-      [TypeName.Fairy]: 'bg-fairy',
+      [TypeKey.Normal]: 'bg-normal',
+      [TypeKey.Fighting]: 'bg-fighting',
+      [TypeKey.Flying]: 'bg-flying',
+      [TypeKey.Poison]: 'bg-poison',
+      [TypeKey.Ground]: 'bg-ground',
+      [TypeKey.Rock]: 'bg-rock',
+      [TypeKey.Bug]: 'bg-bug',
+      [TypeKey.Ghost]: 'bg-ghost',
+      [TypeKey.Steel]: 'bg-steel',
+      [TypeKey.Fire]: 'bg-fire',
+      [TypeKey.Water]: 'bg-water',
+      [TypeKey.Grass]: 'bg-grass',
+      [TypeKey.Electric]: 'bg-electric',
+      [TypeKey.Psychic]: 'bg-psychic',
+      [TypeKey.Ice]: 'bg-ice',
+      [TypeKey.Dragon]: 'bg-dragon',
+      [TypeKey.Dark]: 'bg-dark',
+      [TypeKey.Fairy]: 'bg-fairy',
     },
     size: {
       small: 'w-24 gap-1.5 rounded-xs text-xs font-normal tracking-tight',
@@ -44,7 +44,7 @@ export default function TypePill({
   size?: 'small' | 'medium' | 'large'
   link?: boolean
 }) {
-  const name = TypeLabels[variant as TypeName]
+  const name = TypeLabels[variant as TypeKey]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
   const dimensions = {
     small: 20,
@@ -73,7 +73,7 @@ export default function TypePill({
         priority
         loading="eager"
         className={clsx(
-          variants({ variant: variant as TypeName }),
+          variants({ variant: variant as TypeKey }),
           'aspect-square rounded-xs object-contain'
         )}
       />
