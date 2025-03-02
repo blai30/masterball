@@ -13,12 +13,10 @@ export default function VariantCard({
   className?: string
 }) {
   const imageId = monster.species.id.toString().padStart(4, '0')
-  // const imageUrl =
-  //   monster.pokemon.sprites.other?.home?.front_default ??
-  //   monster.pokemon.sprites.front_default ??
-  //   `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
   const imageUrl =
-    monster.pokemon.sprites.other['official-artwork'].front_default!
+    monster.pokemon.sprites.other?.home?.front_default ??
+    monster.pokemon.sprites.other['official-artwork'].front_default ??
+    `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
 
   return (
     <div

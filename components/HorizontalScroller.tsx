@@ -19,7 +19,6 @@ export default function HorizontalScroller({
     const scrollContainer = scrollContainerRef.current
     if (!scrollContainer) return
 
-    // Check if arrows should be shown
     const checkScrollPosition = () => {
       setShowLeftArrow(scrollContainer.scrollLeft > 0)
       setShowRightArrow(
@@ -28,14 +27,17 @@ export default function HorizontalScroller({
       )
     }
 
-    // TODO use abort signal controller
     checkScrollPosition()
-    scrollContainer.addEventListener('scroll', checkScrollPosition)
-    window.addEventListener('resize', checkScrollPosition)
+    const controller = new AbortController()
+    scrollContainer.addEventListener('scroll', checkScrollPosition, {
+      signal: controller.signal,
+    })
+    window.addEventListener('resize', checkScrollPosition, {
+      signal: controller.signal,
+    })
 
     return () => {
-      scrollContainer.removeEventListener('scroll', checkScrollPosition)
-      window.removeEventListener('resize', checkScrollPosition)
+      controller.abort()
     }
   }, [])
 
@@ -43,7 +45,7 @@ export default function HorizontalScroller({
     const scrollContainer = scrollContainerRef.current
     if (!scrollContainer) return
 
-    const scrollAmount = 278 // Adjust as needed
+    const scrollAmount = 278
     const newScrollLeft =
       direction === 'left'
         ? scrollContainer.scrollLeft - scrollAmount
