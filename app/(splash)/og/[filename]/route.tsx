@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server'
 import playwright from 'playwright'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 
@@ -48,11 +47,7 @@ export async function GET(
   })
   await browser.close()
 
-  return new NextResponse(screenshot, {
+  return new Response(screenshot, {
     status: 200,
-    headers: {
-      'Content-Type': 'image/png',
-      'Cache-Control': 'public, max-age=31536000, immutable',
-    },
   })
 }
