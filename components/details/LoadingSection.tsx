@@ -2,7 +2,7 @@ export default async function LoadingSection() {
   const title = 'Loading section'
 
   return (
-    <section className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
       <div className="h-6 w-60 animate-pulse rounded-xs bg-zinc-300 dark:bg-zinc-700">
         <span className="sr-only">{title}</span>
       </div>

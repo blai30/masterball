@@ -1,39 +1,27 @@
 import { Machine, Move, Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import MovesTable from '@/components/details/moves/MovesTable'
+import VersionGroupSelector from '@/components/shared/VersionGroupSelector'
 
 export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const title = 'Moves'
-  const versionGroup = 'scarlet-violet'
-
-  const moves = pokemon.moves.filter((move) =>
-    move.version_group_details.some(
-      (v) => v.version_group.name === versionGroup
-    )
-  )
 
   const movesData = await pokeapi.getMoveByName(
-    moves.map((move) => move.move.name)
+    pokemon.moves.map((move) => move.move.name)
   )
 
   const filterByLearnMethod = (method: string) =>
-    moves.filter((move) =>
+    pokemon.moves.filter((move) =>
       move.version_group_details.some(
-        (v) =>
-          v.move_learn_method.name === method &&
-          v.version_group.name === versionGroup
+        (v) => v.move_learn_method.name === method
       )
     )
 
-  const movesWithMachines = movesData.filter((move) =>
-    move.machines.some((m) => m.version_group.name === versionGroup)
-  )
+  const movesWithMachines = movesData.filter((move) => move.machines)
 
-  const machinesData = await pokeapi.getResource(
-    movesWithMachines.map(
-      (move) =>
-        move.machines.find((m) => m.version_group.name === versionGroup)!
-          .machine.url
+  const machinesData: Machine[] = await pokeapi.getResource(
+    movesWithMachines.flatMap((move) =>
+      move.machines.map((machine) => machine.machine.url)
     )
   )
 
@@ -72,11 +60,12 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const eggMoves = filterByLearnMethod('egg')
 
   return (
-    <section className="flex flex-col gap-2 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
+    <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      {moves.length === 0 && (
+      <VersionGroupSelector />
+      {/* {pokemon.moves.length === 0 && (
         <p className="flex items-baseline gap-2">
           <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
             No moves available for version group:
@@ -85,14 +74,14 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             {versionGroup}
           </span>
         </p>
-      )}
+      )} */}
       <div className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
         {formChangeMoves.length > 0 && (
           <MovesTable
             variant="form-change"
             moves={formChangeMoves}
             movesMap={movesMap}
-            className="not-first:pt-2 not-last:pb-2"
+            className="not-first:pt-4 not-last:pb-4"
           />
         )}
         {levelUpMoves.length > 0 && (
@@ -100,7 +89,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="level-up"
             moves={levelUpMoves}
             movesMap={movesMap}
-            className="not-first:pt-2 not-last:pb-2"
+            className="not-first:pt-4 not-last:pb-4"
           />
         )}
         {machineMoves.length > 0 && (
@@ -108,7 +97,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="machine"
             moves={machineMoves}
             movesMap={movesMap}
-            className="not-first:pt-2 not-last:pb-2"
+            className="not-first:pt-4 not-last:pb-4"
           />
         )}
         {tutorMoves.length > 0 && (
@@ -116,7 +105,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="tutor"
             moves={tutorMoves}
             movesMap={movesMap}
-            className="not-first:pt-2 not-last:pb-2"
+            className="not-first:pt-4 not-last:pb-4"
           />
         )}
         {eggMoves.length > 0 && (
@@ -124,7 +113,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
             variant="egg"
             moves={eggMoves}
             movesMap={movesMap}
-            className="not-first:pt-2 not-last:pb-2"
+            className="not-first:pt-4 not-last:pb-4"
           />
         )}
       </div>

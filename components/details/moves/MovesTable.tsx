@@ -17,6 +17,7 @@ import {
 } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
+import { useVersionGroup } from '@/components/shared/VersionGroupProvider'
 
 const variantColumnLabels: Record<string, string> = {
   'form-change': 'Form',
@@ -47,6 +48,7 @@ export default function MovesTable({
   moves: MoveElement[]
   movesMap: Record<string, Move & { machine: Machine }>
 } & React.ComponentPropsWithoutRef<'div'>) {
+  const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
 
   const columns = useMemo(
@@ -119,9 +121,21 @@ export default function MovesTable({
     [columnHelper, variant]
   )
 
+  const filteredMoves = useMemo(
+    () =>
+      moves.filter((move) =>
+        move.version_group_details.some(
+          (v) =>
+            v.move_learn_method.name === variant &&
+            v.version_group.name === versionGroup
+        )
+      ),
+    [moves, variant, versionGroup]
+  )
+
   const data = useMemo(
     () =>
-      moves.map((move) => {
+      filteredMoves.map((move) => {
         const resource = movesMap[move.move.name]
         const name = getTranslation(resource.names, 'name')!
         const rowLabel =
@@ -144,7 +158,7 @@ export default function MovesTable({
           pp: resource.pp!,
         }
       }),
-    [moves, movesMap, variant]
+    [filteredMoves, movesMap, variant]
   )
 
   const table = useReactTable({
@@ -153,63 +167,89 @@ export default function MovesTable({
     getCoreRowModel: getCoreRowModel(),
   })
 
+  const tableName = {
+    'form-change': 'Form Change',
+    'level-up': 'Level-Up',
+    machine: 'Machine',
+    tutor: 'Tutor',
+    egg: 'Egg',
+  }
+
+  if (!data.length) {
+    return (
+      <div className={clsx('flex flex-col gap-2', className)}>
+        <h3 className="text-lg">{tableName[variant]}</h3>
+        <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
+          No {tableName[variant].toLocaleLowerCase()} moves available for this
+          version group.
+        </span>
+      </div>
+    )
+  }
+
   return (
-    <div className={clsx('overflow-x-scroll md:overflow-auto', className)}>
-      <div className={clsx('inline-block min-w-full', className)}>
-        <table className="w-full">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="flex h-8 items-center">
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className={clsx(
-                      'px-2 text-left text-xs font-semibold',
-                      header.id === 'rowLabel' && 'min-w-16',
-                      header.id === 'type' && 'min-w-20',
-                      header.id === 'name' && 'min-w-36 grow',
-                      header.id === 'power' && 'min-w-14 text-right',
-                      header.id === 'accuracy' && 'min-w-20 text-right',
-                      header.id === 'pp' && 'min-w-12 text-right'
-                    )}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="flex flex-col gap-0.5">
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className={clsx(
-                  'group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75'
-                )}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className={clsx(
-                      'px-2',
-                      cell.column.id === 'rowLabel' && 'min-w-16',
-                      cell.column.id === 'type' && 'min-w-20',
-                      cell.column.id === 'name' && 'min-w-36 grow',
-                      cell.column.id === 'power' && 'min-w-14',
-                      cell.column.id === 'accuracy' && 'min-w-20',
-                      cell.column.id === 'pp' && 'min-w-12'
-                    )}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className={clsx('flex flex-col gap-2', className)}>
+      <h3 className="text-lg">{tableName[variant]}</h3>
+      <div className="overflow-x-scroll md:overflow-auto">
+        <div className="inline-block min-w-full">
+          <table className="w-full">
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id} className="flex h-8 items-center">
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className={clsx(
+                        'px-2 text-left text-xs font-semibold',
+                        header.id === 'rowLabel' && 'min-w-16',
+                        header.id === 'type' && 'min-w-20',
+                        header.id === 'name' && 'min-w-36 grow',
+                        header.id === 'power' && 'min-w-14 text-right',
+                        header.id === 'accuracy' && 'min-w-20 text-right',
+                        header.id === 'pp' && 'min-w-12 text-right'
+                      )}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="flex flex-col gap-0.5">
+              {table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className={clsx(
+                    'group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75'
+                  )}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className={clsx(
+                        'px-2',
+                        cell.column.id === 'rowLabel' && 'min-w-16',
+                        cell.column.id === 'type' && 'min-w-20',
+                        cell.column.id === 'name' && 'min-w-36 grow',
+                        cell.column.id === 'power' && 'min-w-14',
+                        cell.column.id === 'accuracy' && 'min-w-20',
+                        cell.column.id === 'pp' && 'min-w-12'
+                      )}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
