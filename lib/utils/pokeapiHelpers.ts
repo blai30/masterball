@@ -132,6 +132,7 @@ export const TypeLabels: Record<TypeKey, string> = {
   [TypeKey.Fairy]: 'Fairy',
 }
 
+// prettier-ignore
 export enum VersionGroupKey {
   RedBlue = 'red-blue',
   Yellow = 'yellow',
@@ -154,27 +155,27 @@ export enum VersionGroupKey {
   ScarletViolet = 'scarlet-violet',
 }
 
+// prettier-ignore
 export const VersionGroupLabels: Record<VersionGroupKey, string> = {
-  [VersionGroupKey.RedBlue]: 'Red/Blue',
+  [VersionGroupKey.RedBlue]: 'Red & Blue',
   [VersionGroupKey.Yellow]: 'Yellow',
-  [VersionGroupKey.GoldSilver]: 'Gold/Silver',
+  [VersionGroupKey.GoldSilver]: 'Gold & Silver',
   [VersionGroupKey.Crystal]: 'Crystal',
-  [VersionGroupKey.RubySapphire]: 'Ruby/Sapphire',
+  [VersionGroupKey.RubySapphire]: 'Ruby & Sapphire',
   [VersionGroupKey.Emerald]: 'Emerald',
-  [VersionGroupKey.FireRedLeafGreen]: 'FireRed/LeafGreen',
-  [VersionGroupKey.DiamondPearl]: 'Diamond/Pearl',
+  [VersionGroupKey.FireRedLeafGreen]: 'FireRed & LeafGreen',
+  [VersionGroupKey.DiamondPearl]: 'Diamond & Pearl',
   [VersionGroupKey.Platinum]: 'Platinum',
-  [VersionGroupKey.HeartGoldSoulSilver]: 'HeartGold/SoulSilver',
-  [VersionGroupKey.BlackWhite]: 'Black/White',
-  [VersionGroupKey.Black2White2]: 'Black2/White2',
+  [VersionGroupKey.HeartGoldSoulSilver]: 'HeartGold & SoulSilver',
+  [VersionGroupKey.BlackWhite]: 'Black & White',
+  [VersionGroupKey.Black2White2]: 'Black 2 & White 2',
   [VersionGroupKey.Xy]: 'XY',
-  [VersionGroupKey.OmegaRubyAlphaSapphire]: 'Omega Ruby/Alpha Sapphire',
-  [VersionGroupKey.SunMoon]: 'Sun/Moon',
-  [VersionGroupKey.UltraSunUltraMoon]: 'Ultra Sun/Ultra Moon',
-  [VersionGroupKey.SwordShield]: 'Sword/Shield',
-  [VersionGroupKey.BrilliantDiamondShiningPearl]:
-    'Brilliant Diamond/Shining Pearl',
-  [VersionGroupKey.ScarletViolet]: 'Scarlet/Violet',
+  [VersionGroupKey.OmegaRubyAlphaSapphire]: 'Omega Ruby & Alpha Sapphire',
+  [VersionGroupKey.SunMoon]: 'Sun & Moon',
+  [VersionGroupKey.UltraSunUltraMoon]: 'Ultra Sun & Ultra Moon',
+  [VersionGroupKey.SwordShield]: 'Sword & Shield',
+  [VersionGroupKey.BrilliantDiamondShiningPearl]: 'Brilliant Diamond & Shining Pearl',
+  [VersionGroupKey.ScarletViolet]: 'Scarlet & Violet',
 }
 
 export enum Effectiveness {
