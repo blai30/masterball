@@ -150,9 +150,14 @@ export enum VersionGroupKey {
   OmegaRubyAlphaSapphire = 'omega-ruby-alpha-sapphire',
   SunMoon = 'sun-moon',
   UltraSunUltraMoon = 'ultra-sun-ultra-moon',
+  LetsGoPikachuLetsGoEevee = 'lets-go-pikachu-lets-go-eevee',
   SwordShield = 'sword-shield',
+  // TheIsleOfArmor = 'the-isle-of-armor',
+  // TheCrownTundra = 'the-crown-tundra',
   BrilliantDiamondShiningPearl = 'brilliant-diamond-shining-pearl',
   ScarletViolet = 'scarlet-violet',
+  // TheTealMask = 'the-teal-mask',
+  // TheIndigoDisk = 'the-indigo-disk',
 }
 
 // prettier-ignore
@@ -173,9 +178,14 @@ export const VersionGroupLabels: Record<VersionGroupKey, string> = {
   [VersionGroupKey.OmegaRubyAlphaSapphire]: 'Omega Ruby & Alpha Sapphire',
   [VersionGroupKey.SunMoon]: 'Sun & Moon',
   [VersionGroupKey.UltraSunUltraMoon]: 'Ultra Sun & Ultra Moon',
+  [VersionGroupKey.LetsGoPikachuLetsGoEevee]: 'Let\'s Go Pikachu & Let\'s Go Eevee',
   [VersionGroupKey.SwordShield]: 'Sword & Shield',
+  // [VersionGroupKey.TheIsleOfArmor]: 'Sword & Shield: The Isle of Armor',
+  // [VersionGroupKey.TheCrownTundra]: 'Sword & Shield: The Crown Tundra',
   [VersionGroupKey.BrilliantDiamondShiningPearl]: 'Brilliant Diamond & Shining Pearl',
   [VersionGroupKey.ScarletViolet]: 'Scarlet & Violet',
+  // [VersionGroupKey.TheTealMask]: 'Scarlet & Violet: The Teal Mask',
+  // [VersionGroupKey.TheIndigoDisk]: 'Scarlet & Violet: The Indigo Disk',
 }
 
 export enum Effectiveness {

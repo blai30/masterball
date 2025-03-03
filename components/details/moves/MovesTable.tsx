@@ -8,6 +8,7 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 import {
@@ -19,12 +20,20 @@ import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
 import { useVersionGroup } from '@/components/shared/VersionGroupProvider'
 
-const variantColumnLabels: Record<string, string> = {
-  'form-change': 'Form',
-  'level-up': 'Level',
-  machine: 'TM',
+const tableName = {
+  'form-change': 'Form Change',
+  'level-up': 'Level-Up',
+  machine: 'Technical Machine',
   tutor: 'Tutor',
   egg: 'Egg',
+}
+
+const variantColumnLabels = {
+  'form-change': 'Form',
+  'level-up': 'Level',
+  machine: 'Item',
+  tutor: '',
+  egg: '',
 }
 
 type MoveRow = {
@@ -46,7 +55,7 @@ export default function MovesTable({
 }: {
   variant: 'form-change' | 'level-up' | 'machine' | 'tutor' | 'egg'
   moves: MoveElement[]
-  movesMap: Record<string, Move & { machine: Machine }>
+  movesMap: Record<string, Move & { machineItems: Machine[] }>
 } & React.ComponentPropsWithoutRef<'div'>) {
   const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
@@ -140,11 +149,17 @@ export default function MovesTable({
         const name = getTranslation(resource.names, 'name')!
         const rowLabel =
           variant === 'level-up'
-            ? move.version_group_details[0].level_learned_at === 0
+            ? move.version_group_details.find(
+                (m) => m.version_group.name === versionGroup
+              )!.level_learned_at === 0
               ? 'Evolve'
-              : move.version_group_details[0].level_learned_at.toString()
-            : variant === 'machine' && movesMap[move.move.name]?.machine
-              ? movesMap[move.move.name].machine.item.name.toUpperCase()
+              : move.version_group_details
+                  .find((m) => m.version_group.name === versionGroup)!
+                  .level_learned_at.toString()
+            : variant === 'machine' && movesMap[move.move.name]?.machineItems
+              ? movesMap[move.move.name].machineItems
+                  .find((m) => m.version_group.name === versionGroup)!
+                  .item.name.toLocaleUpperCase()
               : ''
 
         return {
@@ -158,22 +173,23 @@ export default function MovesTable({
           pp: resource.pp!,
         }
       }),
-    [filteredMoves, movesMap, variant]
+    [filteredMoves, movesMap, variant, versionGroup]
   )
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      sorting: [
+        {
+          id: 'rowLabel',
+          desc: false,
+        },
+      ],
+    },
   })
-
-  const tableName = {
-    'form-change': 'Form Change',
-    'level-up': 'Level-Up',
-    machine: 'Machine',
-    tutor: 'Tutor',
-    egg: 'Egg',
-  }
 
   if (!data.length) {
     return (
@@ -199,6 +215,7 @@ export default function MovesTable({
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
+                      colSpan={header.colSpan}
                       className={clsx(
                         'px-2 text-left text-xs font-semibold',
                         header.id === 'rowLabel' && 'min-w-16',
