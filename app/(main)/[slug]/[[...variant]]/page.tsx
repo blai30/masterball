@@ -25,7 +25,7 @@ export async function generateStaticParams() {
     process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
       ? await getTestSpeciesList()
       : await pokeapi.getPokemonSpeciesList({
-          limit: 1025,
+          limit: 151,
           offset: 0,
         })
 
