@@ -9,7 +9,7 @@ import Pagination from '@/components/Pagination'
 export default function MonsterCardGrid({ monsters }: { monsters: Monster[] }) {
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 30
+  const itemsPerPage = 60
 
   const fuse = new Fuse(monsters, {
     keys: ['id', 'key', 'name'],

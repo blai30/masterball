@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { batchFetch, getTranslation } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
@@ -16,18 +16,24 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
+import { PokemonSpecies } from 'pokedex-promise-v2'
 
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
-  // const speciesList = await pokeapi.getPokemonSpeciesList({
-  //   limit: 22,
-  //   offset: 718,
-  // })
-  const speciesList = await getTestSpeciesList()
-  const species = await pokeapi.getPokemonSpeciesByName(
-    speciesList.results.map((result) => result.name)
-  )
+  const speciesList = await pokeapi.getPokemonSpeciesList({
+    limit: 1025,
+    offset: 0,
+  })
+  // const speciesList = await getTestSpeciesList()
+  // const species = await pokeapi.getPokemonSpeciesByName(
+  //   speciesList.results.map((result) => result.name)
+  // )
+  const species = (await batchFetch(
+    speciesList.results.map((result) => result.url),
+    (url) => pokeapi.getResource(url),
+    10
+  )) as PokemonSpecies[]
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({

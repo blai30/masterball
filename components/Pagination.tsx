@@ -4,6 +4,19 @@ import { useState } from 'react'
 import clsx from 'clsx/lite'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
+const getPageNumbers = (current: number, total: number) => {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+  if (current <= 3) {
+    return [1, 2, 3, 4, '...', total]
+  }
+  if (current >= total - 2) {
+    return [1, '...', total - 3, total - 2, total - 1, total]
+  }
+  return [1, '...', current - 1, current, current + 1, '...', total]
+}
+
 export default function Pagination({
   currentPage,
   totalPages,
@@ -14,49 +27,6 @@ export default function Pagination({
   onPageChangeAction: (page: number) => void
 }) {
   const [showInput, setShowInput] = useState<number | null>(null)
-
-  const getPageNumbers = () => {
-    const pageNumbers = []
-    const maxVisiblePages = 3
-    let start = Math.max(1, currentPage - 2)
-    let end = Math.min(totalPages, start + maxVisiblePages - 1)
-
-    if (totalPages <= maxVisiblePages) {
-      // Show all pages if total is less than max visible.
-      return Array.from({ length: totalPages }, (_, i) => i + 1)
-    }
-
-    // Always show first page.
-    pageNumbers.push(1)
-
-    // Show ellipsis or number after first page.
-    if (start > 2) {
-      // -1 represents left ellipsis.
-      pageNumbers.push(-1)
-    } else if (start === 2) {
-      pageNumbers.push(2)
-    }
-
-    // Push middle numbers.
-    for (let i = Math.max(start, 2); i <= Math.min(end, totalPages - 1); i++) {
-      pageNumbers.push(i)
-    }
-
-    // Show ellipsis or number before last page.
-    if (end < totalPages - 1) {
-      // -2 represents right ellipsis.
-      pageNumbers.push(-2)
-    } else if (end === totalPages - 1) {
-      pageNumbers.push(totalPages - 1)
-    }
-
-    // Always show last page.
-    if (totalPages > 1) {
-      pageNumbers.push(totalPages)
-    }
-
-    return pageNumbers
-  }
 
   const handleInputChange = (
     e: React.KeyboardEvent<HTMLInputElement>,
@@ -85,10 +55,10 @@ export default function Pagination({
         <ChevronLeft size={20} />
       </button>
 
-      {getPageNumbers().map((page, index) => {
-        if (page < 0) {
+      {getPageNumbers(currentPage, totalPages).map((page, index) => {
+        if (page === '...') {
           // Ellipsis
-          if (showInput === page) {
+          if (typeof page === 'number' && showInput === page) {
             return (
               <input
                 key={`input-${page}-${index}`}
@@ -105,7 +75,7 @@ export default function Pagination({
           return (
             <button
               key={`ellipsis-${page}-${index}`}
-              onClick={() => setShowInput(page)}
+              onClick={() => typeof page === 'number' && setShowInput(page)}
               className="inline-flex size-8 items-center justify-center rounded border border-zinc-300 py-1 text-sm transition-colors hover:bg-zinc-300 hover:duration-0 dark:border-zinc-700 dark:hover:bg-zinc-700"
             >
               ...
@@ -116,7 +86,7 @@ export default function Pagination({
         return (
           <button
             key={`page-${page}-${index}`}
-            onClick={() => onPageChangeAction(page)}
+            onClick={() => typeof page === 'number' && onPageChangeAction(page)}
             className={clsx(
               'inline-flex size-8 items-center justify-center rounded border border-zinc-300 py-1 text-sm dark:border-zinc-700',
               page === currentPage
