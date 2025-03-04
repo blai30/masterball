@@ -32,7 +32,7 @@ export default function MonsterCard({
           alt={species.name}
           width={128}
           height={128}
-          priority
+          loading="lazy"
           className="min-w-full object-scale-down py-1"
         />
         {/* <div className="flex flex-row gap-2 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">

@@ -3,6 +3,7 @@ import { Geist, Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
 import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
+import { Analytics } from '@vercel/analytics/react'
 
 const geist = Geist({
   variable: '--font-geist',
@@ -106,6 +107,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )

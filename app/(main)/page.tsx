@@ -22,7 +22,7 @@ export default async function Home() {
     process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
       ? await getTestSpeciesList()
       : await pokeapi.getPokemonSpeciesList({
-          limit: 151,
+          limit: 1025,
           offset: 0,
         })
 

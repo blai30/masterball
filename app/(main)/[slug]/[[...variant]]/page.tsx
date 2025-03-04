@@ -25,7 +25,7 @@ export async function generateStaticParams() {
     process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
       ? await getTestSpeciesList()
       : await pokeapi.getPokemonSpeciesList({
-          limit: 151,
+          limit: 1025,
           offset: 0,
         })
 
@@ -61,9 +61,6 @@ export async function generateMetadata({
       variantKey ? v.pokemon.name === variantKey : v.is_default
     )!.pokemon.name
   )
-  const form = variant
-    ? await pokeapi.getPokemonFormByName(variantKey).catch(() => undefined)
-    : undefined
   const typeResources = await pokeapi.getTypeByName(
     pokemon.types.map((type) => type.type.name)
   )
@@ -76,28 +73,31 @@ export async function generateMetadata({
     }
   })
 
-  const dexId = species.id.toString().padStart(4, '0')
+  const imageId = species.id.toString().padStart(4, '0')
+  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
   const name = getTranslation(species.names, 'name')!
-  const formName =
-    getTranslation(form?.form_names, 'name') ??
-    getTranslation(form?.names, 'name') ??
-    ''
-
   const description = types.map((t) => t.typeName).join('/')
 
   const metadata: Metadata = {
-    title: form ? `${name} (${formName}) #${dexId}` : `${name} #${dexId}`,
+    title: `${name} #${imageId}`,
     description,
     twitter: {
-      card: 'summary_large_image',
+      // card: 'summary_large_image',
+      card: 'summary',
     },
     openGraph: {
       images: [
+        // {
+        //   url: variantKey ? `/og/${slug}_${variantKey}.png` : `/og/${slug}.png`,
+        //   width: 800,
+        //   height: 400,
+        //   alt: `${name} splash image`,
+        // },
         {
-          url: variantKey ? `/og/${slug}_${variantKey}.png` : `/og/${slug}.png`,
-          width: 800,
-          height: 400,
-          alt: `${name} splash image`,
+          url: imageUrl,
+          width: 128,
+          height: 128,
+          alt: `${name} sprite`,
         },
       ],
     },

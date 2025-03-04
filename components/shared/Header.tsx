@@ -11,10 +11,10 @@ const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
   ssr: false,
 })
 
-const GlobalIndexSearch = dynamic(
-  () => import('@/components/shared/GlobalIndexSearch'),
-  { ssr: false }
-)
+// const GlobalIndexSearch = dynamic(
+//   () => import('@/components/shared/GlobalIndexSearch'),
+//   { ssr: false }
+// )
 
 const VersionGroupSelector = dynamic(
   () => import('@/components/shared/VersionGroupSelector'),
@@ -23,9 +23,9 @@ const VersionGroupSelector = dynamic(
 
 const navItems = [
   { label: 'Pokemon', url: '/', icon: Cat },
-  { label: 'Items', url: '/item', icon: Backpack },
-  { label: 'Moves', url: '/move', icon: Swords },
-  { label: 'Abilities', url: '/ability', icon: Accessibility },
+  // { label: 'Items', url: '/item', icon: Backpack },
+  // { label: 'Moves', url: '/move', icon: Swords },
+  // { label: 'Abilities', url: '/ability', icon: Accessibility },
   // { label: 'Types', url: '/type' },
   // { label: 'Egg Groups', url: '/egg-group' },
   // { label: 'Damage Classes', url: '/damage-class' },
@@ -80,9 +80,9 @@ export default function Header() {
             })}
           </ul>
           <ul className="flex flex-row flex-wrap items-center gap-4">
-            <li>
+            {/* <li>
               <GlobalIndexSearch />
-            </li>
+            </li> */}
             <li>
               <VersionGroupSelector />
             </li>
