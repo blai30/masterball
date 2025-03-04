@@ -1,4 +1,12 @@
-import { NamedAPIResource } from 'pokedex-promise-v2'
+import {
+  Ability,
+  EggGroup,
+  Item,
+  Move,
+  MoveDamageClass,
+  NamedAPIResource,
+  Type,
+} from 'pokedex-promise-v2'
 import Header from '@/components/shared/Header'
 import {
   IndexItem,
@@ -20,6 +28,21 @@ import {
   TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
 
+// Process data in smaller chunks to avoid memory issues
+async function fetchInChunks(
+  items: NamedAPIResource[],
+  fetchFn: Function,
+  chunkSize: number = 50
+) {
+  const results = []
+  for (let i = 0; i < items.length; i += chunkSize) {
+    const chunk = items.slice(i, i + chunkSize)
+    const chunkResults = await fetchFn(chunk.map((item) => item.name))
+    results.push(...chunkResults)
+  }
+  return results
+}
+
 export default async function Shell() {
   const speciesList = await getTestSpeciesList()
   const movesList = await getTestMovesList()
@@ -27,25 +50,38 @@ export default async function Shell() {
   const itemsList = await getTestItemsList()
   const eggGroupsList = await pokeapi.getEggGroupsList()
 
-  const species = await pokeapi.getPokemonSpeciesByName(
-    speciesList.results.map((resource: NamedAPIResource) => resource.name)
+  // Process data in chunks to prevent memory issues
+  const species = await fetchInChunks(
+    speciesList.results,
+    pokeapi.getPokemonSpeciesByName,
+    20
   )
+
+  // Limit number of monsters for development if needed
+  // const limitedSpecies = species.slice(0, 50); // Uncomment to limit species
+  // const monsters = (await Promise.all(limitedSpecies.map(getMonstersBySpecies))).flat();
   const monsters = (await Promise.all(species.map(getMonstersBySpecies))).flat()
-  const moves = await pokeapi.getMoveByName(
-    movesList.results.map((resource: NamedAPIResource) => resource.name)
+
+  const moves: Move[] = await fetchInChunks(
+    movesList.results,
+    pokeapi.getMoveByName
   )
-  const abilities = await pokeapi.getAbilityByName(
-    abilitiesList.results.map((resource: NamedAPIResource) => resource.name)
+  const abilities: Ability[] = await fetchInChunks(
+    abilitiesList.results,
+    pokeapi.getAbilityByName
   )
-  const items = await pokeapi.getItemByName(
-    itemsList.results.map((resource: NamedAPIResource) => resource.name)
+  const items: Item[] = await fetchInChunks(
+    itemsList.results,
+    pokeapi.getItemByName
   )
-  const types = await pokeapi.getTypeByName(Object.values(TypeKey))
-  const damageClass = await pokeapi.getMoveDamageClassByName(
+
+  const types: Type[] = await pokeapi.getTypeByName(Object.values(TypeKey))
+  const damageClass: MoveDamageClass[] = await pokeapi.getMoveDamageClassByName(
     Object.values(DamageClassKey)
   )
-  const eggGroups = await pokeapi.getEggGroupByName(
-    eggGroupsList.results.map((resource: NamedAPIResource) => resource.name)
+  const eggGroups: EggGroup[] = await fetchInChunks(
+    eggGroupsList.results,
+    pokeapi.getEggGroupByName
   )
 
   const monsterItems: IndexItem[] = await Promise.all(
