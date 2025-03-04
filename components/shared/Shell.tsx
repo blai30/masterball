@@ -22,12 +22,14 @@ import {
 } from '@/lib/utils/pokeapiHelpers'
 
 export default async function Shell() {
-  const speciesList = await pokeapi.getPokemonSpeciesList({
-    limit: 1025,
-    offset: 0,
-  })
+  const speciesList =
+    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+      ? await getTestSpeciesList()
+      : await pokeapi.getPokemonSpeciesList({
+          limit: 1025,
+          offset: 0,
+        })
 
-  // const speciesList = await getTestSpeciesList()
   const movesList = await getTestMovesList()
   const abilitiesList = await getTestAbilitiesList()
   const itemsList = await getTestItemsList()

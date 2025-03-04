@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
+import { PokemonSpecies } from 'pokedex-promise-v2'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import { batchFetch, getTranslation } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
@@ -16,16 +17,18 @@ import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
 import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
 import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
 import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
-import { PokemonSpecies } from 'pokedex-promise-v2'
 
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
-  const speciesList = await pokeapi.getPokemonSpeciesList({
-    limit: 1025,
-    offset: 0,
-  })
-  // const speciesList = await getTestSpeciesList()
+  const speciesList =
+    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+      ? await getTestSpeciesList()
+      : await pokeapi.getPokemonSpeciesList({
+          limit: 1025,
+          offset: 0,
+        })
+
   // const species = await pokeapi.getPokemonSpeciesByName(
   //   speciesList.results.map((result) => result.name)
   // )

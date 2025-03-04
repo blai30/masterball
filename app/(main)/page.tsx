@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { NamedAPIResource, Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import MonsterCardGrid from '@/components/MonsterCardGrid'
 import { batchFetch, getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
@@ -18,12 +18,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const speciesList = await pokeapi.getPokemonSpeciesList({
-    limit: 1025,
-    offset: 0,
-  })
+  const speciesList =
+    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+      ? await getTestSpeciesList()
+      : await pokeapi.getPokemonSpeciesList({
+          limit: 1025,
+          offset: 0,
+        })
 
-  // const speciesList = await getTestSpeciesList()
   // const species = await pokeapi.getPokemonSpeciesByName(
   //   speciesList.results.map((resource: NamedAPIResource) => resource.name)
   // )
@@ -35,15 +37,16 @@ export default async function Home() {
 
   // Extract all Pokemon URLs for batch fetching.
   const pokemonUrls = species.map(
-    (species) => species.varieties.find((variety) => variety.is_default)!.pokemon.url
+    (species) =>
+      species.varieties.find((variety) => variety.is_default)!.pokemon.url
   )
 
   // Batch fetch all Pokemon data.
-  const pokemonData = await batchFetch(
+  const pokemonData = (await batchFetch(
     pokemonUrls,
     (url) => pokeapi.getResource(url),
     10
-  ) as Pokemon[]
+  )) as Pokemon[]
 
   // Create a lookup map to connect Pokemon data with their species.
   const pokemonByUrl = new Map<string, Pokemon>()
@@ -54,10 +57,11 @@ export default async function Home() {
   // Create monsters with the pre-fetched data.
   const monsters: Monster[] = species.map((species) => {
     const name = getTranslation(species.names, 'name')
-    const pokemon = pokemonByUrl.get(species.url) || pokemonData.find(
-      p => p.species.url === species.url || 
-          p.species.name === species.name
-    )!
+    const pokemon =
+      pokemonByUrl.get(species.url) ||
+      pokemonData.find(
+        (p) => p.species.url === species.url || p.species.name === species.name
+      )!
 
     return {
       id: species.id,
