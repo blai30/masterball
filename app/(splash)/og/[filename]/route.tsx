@@ -49,5 +49,8 @@ export async function GET(
 
   return new Response(screenshot, {
     status: 200,
+    headers: {
+      'Content-Type': 'image/png',
+    },
   })
 }

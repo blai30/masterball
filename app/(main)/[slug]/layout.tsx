@@ -3,8 +3,8 @@ import {
   getMonstersBySpecies,
   getTranslation,
 } from '@/lib/utils/pokeapiHelpers'
-import VariantCardSelector from '@/components/VariantCardSelector'
 import HorizontalScroller from '@/components/HorizontalScroller'
+import VariantCardSelector from '@/components/VariantCardSelector'
 
 export default async function RootLayout({
   children,

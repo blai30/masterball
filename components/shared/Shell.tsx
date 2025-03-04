@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { NamedAPIResource } from 'pokedex-promise-v2'
 import Header from '@/components/shared/Header'
 import {
@@ -20,9 +19,6 @@ import {
   TypeLabels,
   TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
-import { Accessibility, Backpack, Swords } from 'lucide-react'
-import TypeIcon from '@/components/TypeIcon'
-import DamageClassIcon from '@/components/DamageClassIcon'
 
 export default async function Shell() {
   const speciesList = await getTestSpeciesList()
@@ -54,20 +50,13 @@ export default async function Shell() {
 
   const monsterItems: IndexItem[] = await Promise.all(
     monsters.map(async (monster) => {
-      const { id, key, name: monsterName, species, pokemon, form } = monster
-      const name = getTranslation(species.names, 'name')!
-      const formName =
-        getTranslation(form?.form_names, 'name') ??
-        getTranslation(form?.names, 'name') ??
-        ''
+      const { id, key, name, species, pokemon, form } = monster
       const imageId = id.toString().padStart(4, '0')
       const imageUrl =
         pokemon.sprites.other?.home?.front_default ??
         pokemon.sprites.other?.['official-artwork'].front_default ??
         `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
-      const title = form
-        ? `${name} (${formName}) #${imageId}`
-        : `${name} #${imageId}`
+      const title = `${name} #${imageId}`
       const path = form ? `/${species.name}/${form.name}` : `/${species.name}`
 
       return {
@@ -75,31 +64,16 @@ export default async function Shell() {
         title,
         slug: key,
         path,
-        icon: (
-          <Image
-            src={imageUrl}
-            alt={monsterName}
-            width={64}
-            height={64}
-            className="pointer-events-none size-12 object-contain"
-          />
-        ),
+        // imageUrl,
       } as IndexItem
     })
   )
 
-  // Create all item arrays using a more consistent pattern
   const moveItems: IndexItem[] = moves.map((move) => ({
     id: move.id,
     title: getTranslation(move.names, 'name')!,
     slug: move.name,
     path: `/move/${move.name}`,
-    icon: (
-      <Swords
-        size={20}
-        className="size-12 p-2 text-zinc-700 dark:text-zinc-300"
-      />
-    ),
   }))
 
   const abilityItems: IndexItem[] = abilities.map((ability) => ({
@@ -107,12 +81,6 @@ export default async function Shell() {
     title: getTranslation(ability.names, 'name')!,
     slug: ability.name,
     path: `/ability/${ability.name}`,
-    icon: (
-      <Accessibility
-        size={20}
-        className="size-12 p-2 text-zinc-700 dark:text-zinc-300"
-      />
-    ),
   }))
 
   const itemItems: IndexItem[] = items.map((item) => ({
@@ -120,12 +88,6 @@ export default async function Shell() {
     title: getTranslation(item.names, 'name')!,
     slug: item.name,
     path: `/item/${item.name}`,
-    icon: (
-      <Backpack
-        size={20}
-        className="size-12 p-2 text-zinc-700 dark:text-zinc-300"
-      />
-    ),
   }))
 
   const typeItems: IndexItem[] = types.map((type) => ({
@@ -133,11 +95,6 @@ export default async function Shell() {
     title: TypeLabels[type.name as TypeKey],
     slug: type.name,
     path: `/type/${type.name}`,
-    icon: (
-      <div className="flex size-12 items-center justify-center">
-        <TypeIcon variant={type.name as TypeKey} size="large" link={false} />
-      </div>
-    ),
   }))
 
   const damageClassItems: IndexItem[] = damageClass.map((damageClass) => {
@@ -146,15 +103,6 @@ export default async function Shell() {
       title: DamageClassLabels[damageClass.name as DamageClassKey],
       slug: damageClass.name,
       path: `/damage-class/${damageClass.name}`,
-      icon: (
-        <div className="flex size-12 items-center justify-center">
-          <DamageClassIcon
-            variant={damageClass.name}
-            size="large"
-            link={false}
-          />
-        </div>
-      ),
     } as IndexItem
   })
 
@@ -167,15 +115,7 @@ export default async function Shell() {
       title,
       slug: eggGroup.name,
       path: `/egg-group/${eggGroup.name}`,
-      icon: (
-        <Image
-          src={imageUrl}
-          alt={title}
-          width={64}
-          height={64}
-          className="pointer-events-none size-12 object-contain"
-        />
-      ),
+      // imageUrl,
     } as IndexItem
   })
 

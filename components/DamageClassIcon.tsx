@@ -63,8 +63,6 @@ export default function DamageClassIcon({
         alt={name}
         width={50}
         height={40}
-        priority
-        loading="eager"
         className="relative object-contain px-0.5"
       />
     </Wrapper>
