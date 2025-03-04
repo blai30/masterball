@@ -73,8 +73,6 @@ export default function TypeIcon({
         alt={name}
         width={dimensions[size]}
         height={dimensions[size]}
-        priority
-        loading="eager"
         className="relative object-contain"
       />
     </Wrapper>

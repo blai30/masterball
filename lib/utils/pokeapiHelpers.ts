@@ -44,7 +44,7 @@ export const createMonster = async (
     id: species.id,
     key: variant.name,
     name,
-    species: species,
+    species,
     pokemon: variant,
     form: variant.is_default ? undefined : form,
   } as Monster

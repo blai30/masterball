@@ -13,9 +13,12 @@ const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
 
 const GlobalIndexSearch = dynamic(
   () => import('@/components/shared/GlobalIndexSearch'),
-  {
-    ssr: false,
-  }
+  { ssr: false }
+)
+
+const VersionGroupSelector = dynamic(
+  () => import('@/components/shared/VersionGroupSelector'),
+  { ssr: false }
 )
 
 const navItems = [
@@ -79,6 +82,9 @@ export default function Header() {
           <ul className="flex flex-row flex-wrap items-center gap-4">
             <li>
               <GlobalIndexSearch />
+            </li>
+            <li>
+              <VersionGroupSelector />
             </li>
             <li>
               <ThemeSwitch />

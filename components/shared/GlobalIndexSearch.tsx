@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx/lite'
@@ -144,9 +143,20 @@ export default function GlobalIndexSearch() {
                     )}
                   >
                     <div className="flex flex-row items-center justify-start gap-3">
-                      {item.icon ?? (
+                      {/* {item.imageUrl ? (
+                        <Image
+                          src={item.imageUrl}
+                          alt={item.title}
+                          width={48}
+                          height={48}
+                          loading="lazy"
+                          priority={false}
+                          quality={60}
+                          className="pointer-events-none size-12 object-contain"
+                        />
+                      ) : ( */}
                         <div className="size-12 bg-transparent" />
-                      )}
+                      {/* )} */}
                       <div className="flex flex-1 flex-row items-center justify-between">
                         <div className="flex flex-col items-start justify-center">
                           <span className="pointer-events-none text-black dark:text-white">

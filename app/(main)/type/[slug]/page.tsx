@@ -66,7 +66,7 @@ export default async function Page({
       <h1 className="text-5xl font-semibold tracking-tight text-white sm:text-7xl">
         {name}
       </h1>
-      <div className="flex h-80 w-full flex-col flex-wrap items-center justify-center gap-2 p-4 sm:h-full">
+      <div className="xs:h-72 flex h-full w-full flex-col flex-wrap content-evenly items-center justify-center gap-x-6 gap-y-1">
         {allTypeRelations.map((relation) => {
           const effectiveness = relation.effectiveness
           const type = relation.type
