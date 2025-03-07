@@ -33,7 +33,8 @@ export default function MonsterCard({
           alt={slug}
           width={128}
           height={128}
-          loading="lazy"
+          loading="eager"
+          priority
           className="min-w-full object-scale-down py-1"
         />
         <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">

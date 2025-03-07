@@ -8,6 +8,8 @@ import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
 import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
 import EvolutionSection from '@/components/details/evolution/EvolutionSection'
+import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection'
+import LocalizationSection from '@/components/details/localization/LocalizationSection'
 import MovesSection from '@/components/details/moves/MovesSection'
 import HeightMetadata from '@/components/metadata/HeightMetadata'
 import WeightMetadata from '@/components/metadata/WeightMetadata'
@@ -109,6 +111,9 @@ export default async function Page({
       variantKey ? v.pokemon.name === variantKey : v.is_default
     )!.pokemon.name
   )
+  const forms = (
+    await pokeapi.getPokemonFormByName(pokemon.forms.map((form) => form.name))
+  ).filter((form) => form.form_names?.length && form.name !== pokemon.name)
 
   const eggGroups = await pokeapi.getEggGroupByName(
     species.egg_groups.map((group) => group.name)
@@ -148,6 +153,12 @@ export default async function Page({
             </Suspense>
             <Suspense fallback={<LoadingSection />}>
               <EvolutionSection species={species} />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <CosmeticsSection pokemon={pokemon} forms={forms} />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <LocalizationSection species={species} />
             </Suspense>
           </div>
           {/* Second column on large screens */}

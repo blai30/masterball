@@ -106,6 +106,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/479/',
     },
     {
+      name: 'arceus',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/493/',
+    },
+    {
       name: 'kyurem',
       url: 'https://pokeapi.co/api/v2/pokemon-species/646/',
     },
@@ -120,6 +124,10 @@ const species: NamedAPIResourceList = {
     {
       name: 'talonflame',
       url: 'https://pokeapi.co/api/v2/pokemon-species/663/',
+    },
+    {
+      name: 'vivillon',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/666/',
     },
     {
       name: 'meowstic',
