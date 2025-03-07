@@ -192,7 +192,15 @@ export default function MovesTable({
   })
 
   if (filteredMoves.length === 0) {
-    return null
+    return (
+      <div className={clsx('flex flex-col gap-2', className)}>
+        <h3 className="text-lg">{tableName[variant]}</h3>
+        <p className="text-zinc-500 dark:text-zinc-400">
+          No {tableName[variant].toLocaleLowerCase()} moves available for this
+          version group.
+        </p>
+      </div>
+    )
   }
 
   return (
