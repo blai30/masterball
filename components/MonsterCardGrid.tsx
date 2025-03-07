@@ -19,7 +19,7 @@ export default function MonsterCardGrid({
   const itemsPerPage = 60
 
   const fuse = new Fuse(speciesData, {
-    keys: ['id', 'key', 'name'],
+    keys: ['id', 'slug', 'name'],
     threshold: 0.4,
   })
 

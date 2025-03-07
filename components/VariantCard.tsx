@@ -12,11 +12,8 @@ export default function VariantCard({
   monster: Monster
   className?: string
 }) {
-  const imageId = monster.species.id.toString().padStart(4, '0')
-  const imageUrl =
-    monster.pokemon.sprites.other?.home?.front_default ??
-    monster.pokemon.sprites.other['official-artwork'].front_default ??
-    `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  const { id, key, name, speciesSlug, pokemonSlug, formSlug, types, imageUrl } =
+    monster
 
   return (
     <div
@@ -26,7 +23,7 @@ export default function VariantCard({
       )}
     >
       <Image
-        src={imageUrl}
+        src={imageUrl || ''}
         alt={monster.name}
         width={200}
         height={200}
@@ -37,13 +34,15 @@ export default function VariantCard({
       <h3 className="text-lg font-medium text-black dark:text-white">
         {monster.name}
       </h3>
-      <ul className="flex flex-row gap-2">
-        {monster.pokemon.types.map((type) => (
-          <li key={type.type.name}>
-            <TypePill variant={type.type.name} size="medium" link={false} />
-          </li>
-        ))}
-      </ul>
+      {types && (
+        <ul className="flex flex-row gap-2">
+          {types.map((type) => (
+            <li key={type}>
+              <TypePill variant={type} size="medium" link={false} />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }

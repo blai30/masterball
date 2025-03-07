@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
-import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+import { PokemonSpecies } from 'pokedex-promise-v2'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import MonsterCardGrid from '@/components/MonsterCardGrid'
-import { batchFetch, getTranslation, Monster } from '@/lib/utils/pokeapiHelpers'
+import { batchFetch, getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export const dynamic = 'force-static'
 
@@ -37,39 +37,6 @@ export default async function Home() {
     slug: specie.name,
     name: getTranslation(specie.names, 'name')!,
   }))
-
-  // // Extract all Pokemon URLs for batch fetching.
-  // const pokemonSlugs = species.map(
-  //   (species) =>
-  //     species.varieties.find((variety) => variety.is_default)!.pokemon.name
-  // )
-
-  // // Batch fetch all Pokemon data.
-  // const pokemonData = (await batchFetch(
-  //   pokemonSlugs,
-  //   (slug) => pokeapi.getPokemonByName(slug),
-  //   10
-  // )) as Pokemon[]
-
-  // // Create a lookup map to connect Pokemon data with their species.
-  // const pokemonBySpeciesSlug: Record<string, Pokemon> = {}
-  // pokemonData.forEach((pokemon) => {
-  //   pokemonBySpeciesSlug[pokemon.species.name] = pokemon
-  // })
-
-  // // Create monsters with the pre-fetched data.
-  // const monsters: Monster[] = species.map((species) => {
-  //   const name = getTranslation(species.names, 'name')!
-  //   const pokemon = pokemonBySpeciesSlug[species.name]
-
-  //   return {
-  //     id: species.id,
-  //     key: species.name,
-  //     name,
-  //     species,
-  //     pokemon,
-  //   } as Monster
-  // })
 
   return (
     <div className="container mx-auto">

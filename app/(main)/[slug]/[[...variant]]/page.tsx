@@ -29,9 +29,6 @@ export async function generateStaticParams() {
           offset: 0,
         })
 
-  // const species = await pokeapi.getPokemonSpeciesByName(
-  //   speciesList.results.map((result) => result.name)
-  // )
   const species = (await batchFetch(
     speciesList.results.map((result) => result.url),
     (url) => pokeapi.getResource(url),
@@ -82,17 +79,10 @@ export async function generateMetadata({
     title: `${name} #${imageId}`,
     description,
     twitter: {
-      // card: 'summary_large_image',
       card: 'summary',
     },
     openGraph: {
       images: [
-        // {
-        //   url: variantKey ? `/og/${slug}_${variantKey}.png` : `/og/${slug}.png`,
-        //   width: 800,
-        //   height: 400,
-        //   alt: `${name} splash image`,
-        // },
         {
           url: imageUrl,
           width: 128,
