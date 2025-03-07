@@ -2,23 +2,30 @@
 
 import { useState, useMemo } from 'react'
 import Fuse from 'fuse.js'
-import { Monster } from '@/lib/utils/pokeapiHelpers'
 import MonsterCard from '@/components/MonsterCard'
 import Pagination from '@/components/Pagination'
 
-export default function MonsterCardGrid({ monsters }: { monsters: Monster[] }) {
+export default function MonsterCardGrid({
+  speciesData,
+}: {
+  speciesData: {
+    id: number
+    slug: string
+    name: string
+  }[]
+}) {
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 60
 
-  const fuse = new Fuse(monsters, {
-    keys: ['id', 'key', 'name'],
+  const fuse = new Fuse(speciesData, {
+    keys: ['id', 'slug', 'name'],
     threshold: 0.4,
   })
 
   const filteredItems = useMemo(() => {
-    return query ? fuse.search(query).map((result) => result.item) : monsters
-  }, [query, fuse, monsters])
+    return query ? fuse.search(query).map((result) => result.item) : speciesData
+  }, [query, fuse, speciesData])
 
   const totalPages = useMemo(() => {
     return Math.ceil(filteredItems.length / itemsPerPage)
@@ -61,9 +68,9 @@ export default function MonsterCardGrid({ monsters }: { monsters: Monster[] }) {
             onPageChangeAction={handlePageChange}
           />
           <ul className="2xs:grid-cols-2 xs:grid-cols-3 grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10">
-            {paginatedItems.map((monster) => (
-              <li key={monster.id} className="col-span-1">
-                <MonsterCard species={monster.species} />
+            {paginatedItems.map((object) => (
+              <li key={object.id} className="col-span-1">
+                <MonsterCard id={object.id} slug={object.slug} name={object.name} />
               </li>
             ))}
           </ul>

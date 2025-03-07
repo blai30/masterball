@@ -22,9 +22,11 @@ export type Monster = {
   id: number
   key: string
   name: string
-  species: PokemonSpecies
-  pokemon: Pokemon
-  form?: PokemonForm | undefined
+  speciesSlug: string
+  pokemonSlug?: string | undefined
+  formSlug?: string | undefined
+  types?: TypeKey[] | undefined
+  imageUrl?: string | undefined
 }
 
 export const createMonster = async (
@@ -40,13 +42,21 @@ export const createMonster = async (
     getTranslation(form?.names, 'name') ??
     getTranslation(species.names, 'name')!
 
+  const imageId = species.id.toString().padStart(4, '0')
+
   return {
     id: species.id,
     key: variant.name,
     name,
-    species,
-    pokemon: variant,
-    form: variant.is_default ? undefined : form,
+    speciesSlug: species.name,
+    pokemonSlug: variant.name ?? undefined,
+    formSlug: form?.name ?? undefined,
+    types: variant.types.map((t) => t.type.name as TypeKey) ?? undefined,
+    imageUrl:
+      variant?.sprites?.other?.home?.front_default ??
+      variant?.sprites?.other['official-artwork']?.front_default ??
+      `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png` ??
+      undefined,
   } as Monster
 }
 
@@ -258,7 +268,7 @@ export async function batchFetch<T, R>(
 
     // Fetch each batch in parallel and get all outcomes.
     const batchResults = await Promise.allSettled(
-      batch.map(identifier => fetchFunction(identifier))
+      batch.map((identifier) => fetchFunction(identifier))
     )
 
     // Filter fulfilled promises and extract their values.
