@@ -26,9 +26,6 @@ export default async function Home() {
           offset: 0,
         })
 
-  // const species = await pokeapi.getPokemonSpeciesByName(
-  //   speciesList.results.map((resource: NamedAPIResource) => resource.name)
-  // )
   const species = (await batchFetch(
     speciesList.results.map((result) => result.url),
     (url) => pokeapi.getResource(url),
@@ -36,32 +33,28 @@ export default async function Home() {
   )) as PokemonSpecies[]
 
   // Extract all Pokemon URLs for batch fetching.
-  const pokemonUrls = species.map(
+  const pokemonSlugs = species.map(
     (species) =>
-      species.varieties.find((variety) => variety.is_default)!.pokemon.url
+      species.varieties.find((variety) => variety.is_default)!.pokemon.name
   )
 
   // Batch fetch all Pokemon data.
   const pokemonData = (await batchFetch(
-    pokemonUrls,
-    (url) => pokeapi.getResource(url),
+    pokemonSlugs,
+    (slug) => pokeapi.getPokemonByName(slug),
     10
   )) as Pokemon[]
 
   // Create a lookup map to connect Pokemon data with their species.
-  const pokemonByUrl = new Map<string, Pokemon>()
+  const pokemonBySpeciesSlug: Record<string, Pokemon> = {}
   pokemonData.forEach((pokemon) => {
-    pokemonByUrl.set(pokemon.species.url, pokemon)
+    pokemonBySpeciesSlug[pokemon.species.name] = pokemon
   })
 
   // Create monsters with the pre-fetched data.
   const monsters: Monster[] = species.map((species) => {
-    const name = getTranslation(species.names, 'name')
-    const pokemon =
-      pokemonByUrl.get(species.url) ||
-      pokemonData.find(
-        (p) => p.species.url === species.url || p.species.name === species.name
-      )!
+    const name = getTranslation(species.names, 'name')!
+    const pokemon = pokemonBySpeciesSlug[species.name]
 
     return {
       id: species.id,
