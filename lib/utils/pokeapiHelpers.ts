@@ -33,9 +33,10 @@ export const createMonster = async (
   variant: Pokemon,
   species: PokemonSpecies
 ): Promise<Monster> => {
-  const form = await pokeapi
-    .getPokemonFormByName(variant.name)
-    .catch(() => undefined)
+  const form =
+    variant.is_default || species.name === variant.name
+      ? undefined
+      : await pokeapi.getPokemonFormByName(variant.name).catch(() => undefined)
 
   const name =
     getTranslation(form?.form_names, 'name') ??
