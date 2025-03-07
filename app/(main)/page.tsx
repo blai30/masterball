@@ -32,42 +32,48 @@ export default async function Home() {
     10
   )) as PokemonSpecies[]
 
-  // Extract all Pokemon URLs for batch fetching.
-  const pokemonSlugs = species.map(
-    (species) =>
-      species.varieties.find((variety) => variety.is_default)!.pokemon.name
-  )
+  const speciesData = species.map((specie) => ({
+    id: specie.id,
+    slug: specie.name,
+    name: getTranslation(specie.names, 'name')!,
+  }))
 
-  // Batch fetch all Pokemon data.
-  const pokemonData = (await batchFetch(
-    pokemonSlugs,
-    (slug) => pokeapi.getPokemonByName(slug),
-    10
-  )) as Pokemon[]
+  // // Extract all Pokemon URLs for batch fetching.
+  // const pokemonSlugs = species.map(
+  //   (species) =>
+  //     species.varieties.find((variety) => variety.is_default)!.pokemon.name
+  // )
 
-  // Create a lookup map to connect Pokemon data with their species.
-  const pokemonBySpeciesSlug: Record<string, Pokemon> = {}
-  pokemonData.forEach((pokemon) => {
-    pokemonBySpeciesSlug[pokemon.species.name] = pokemon
-  })
+  // // Batch fetch all Pokemon data.
+  // const pokemonData = (await batchFetch(
+  //   pokemonSlugs,
+  //   (slug) => pokeapi.getPokemonByName(slug),
+  //   10
+  // )) as Pokemon[]
 
-  // Create monsters with the pre-fetched data.
-  const monsters: Monster[] = species.map((species) => {
-    const name = getTranslation(species.names, 'name')!
-    const pokemon = pokemonBySpeciesSlug[species.name]
+  // // Create a lookup map to connect Pokemon data with their species.
+  // const pokemonBySpeciesSlug: Record<string, Pokemon> = {}
+  // pokemonData.forEach((pokemon) => {
+  //   pokemonBySpeciesSlug[pokemon.species.name] = pokemon
+  // })
 
-    return {
-      id: species.id,
-      key: species.name,
-      name,
-      species,
-      pokemon,
-    } as Monster
-  })
+  // // Create monsters with the pre-fetched data.
+  // const monsters: Monster[] = species.map((species) => {
+  //   const name = getTranslation(species.names, 'name')!
+  //   const pokemon = pokemonBySpeciesSlug[species.name]
+
+  //   return {
+  //     id: species.id,
+  //     key: species.name,
+  //     name,
+  //     species,
+  //     pokemon,
+  //   } as Monster
+  // })
 
   return (
     <div className="container mx-auto">
-      <MonsterCardGrid monsters={monsters} />
+      <MonsterCardGrid speciesData={speciesData} />
     </div>
   )
 }
