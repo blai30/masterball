@@ -1,7 +1,8 @@
 'use client'
 
 import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapiHelpers'
-import { useVersionGroup } from '@/components/shared/VersionGroupProvider'
+// import { useVersionGroup } from '@/components/shared/VersionGroupProvider'
+import { useVersionGroup } from '@/lib/stores/version-group'
 
 export default function VersionGroupSelector() {
   const { versionGroup, setVersionGroup } = useVersionGroup()

@@ -18,7 +18,8 @@ import {
 } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
-import { useVersionGroup } from '@/components/shared/VersionGroupProvider'
+// import { useVersionGroup } from '@/components/shared/VersionGroupProvider'
+import { useVersionGroup } from '@/lib/stores/version-group'
 
 const tableName = {
   'form-change': 'Form Change',
