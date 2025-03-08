@@ -115,10 +115,12 @@ export default async function Page({
     await pokeapi.getPokemonFormByName(pokemon.forms.map((form) => form.name))
   ).filter((form) => form.form_names?.length && form.name !== pokemon.name)
 
-  const eggGroups = await pokeapi.getEggGroupByName(
-    species.egg_groups.map((group) => group.name)
-  )
-  const growthRate = await pokeapi.getGrowthRateByName(species.growth_rate.name)
+  const [eggGroups, growthRate] = await Promise.all([
+    pokeapi.getEggGroupByName(
+      species?.egg_groups?.map((group) => group.name) || []
+    ),
+    pokeapi.getGrowthRateByName(species?.growth_rate?.name || ''),
+  ])
 
   return (
     <div className="flex w-full flex-col gap-6">

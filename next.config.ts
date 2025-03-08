@@ -8,13 +8,6 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   staticPageGenerationTimeout: 60000,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['clsx', 'clsx/lite', '@tanstack/react-table'],
-  },
 }
 
 export default nextConfig

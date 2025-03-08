@@ -35,7 +35,7 @@ export default function MonsterCard({
           height={128}
           loading="eager"
           priority
-          className="min-w-full object-scale-down py-1"
+          className="min-w-full object-contain py-1"
         />
         <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
           {name}
