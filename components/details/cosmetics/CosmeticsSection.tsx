@@ -20,7 +20,7 @@ export default async function CosmeticsSection({
       {!forms || forms.length === 0 ? (
         <p className="flex items-baseline gap-2">
           <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
-            No cosmetic forms available for this Pokémon variant.
+            No cosmetic forms available for this Pokémon.
           </span>
         </p>
       ) : (
@@ -33,19 +33,21 @@ export default async function CosmeticsSection({
                 key={form.name}
                 className={clsx(
                   'flex w-44 flex-col items-center gap-2',
-                  'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
+                  // 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
                   'rounded-lg p-2'
                 )}
               >
-                <span title={name} className="">
+                <span title={name} className="text-sm">
                   {name}
                 </span>
                 <Image
-                  src={form.sprites.front_default || pokemon.sprites.front_default!}
+                  src={
+                    form.sprites.front_default || pokemon.sprites.front_default!
+                  }
                   alt={name}
                   width={100}
                   height={100}
-                  className="object-cover"
+                  className="object-contain"
                 />
               </li>
             )

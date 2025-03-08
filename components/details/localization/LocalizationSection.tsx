@@ -9,11 +9,11 @@ export default async function LocalizationSection({
   const title = 'Localization'
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
+    <section className="@container flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <ul className="flex flex-col gap-4">
+      <ul className="grid max-w-lg grid-cols-1 gap-2 @md:grid-cols-2">
         {species.names
           .toSorted((a, b) => a.language.name.localeCompare(b.language.name))
           .map((name) => {
@@ -22,17 +22,19 @@ export default async function LocalizationSection({
             return (
               <li
                 key={language.name}
-                className={clsx('flex flex-row items-center gap-4')}
+                className="flex w-full flex-col items-center"
               >
-                <span
-                  title={language.name}
-                  className="w-20 text-right font-medium"
-                >
-                  {language.name}
-                </span>
-                <span className="text-zinc-700 dark:text-zinc-300">
-                  {localizedName}
-                </span>
+                <p className="flex w-full items-center gap-3">
+                  <span
+                    title={language.name}
+                    className="w-1/3 text-right font-medium"
+                  >
+                    {language.name}
+                  </span>
+                  <span className="text-zinc-700 dark:text-zinc-300">
+                    {localizedName}
+                  </span>
+                </p>
               </li>
             )
           })}

@@ -44,23 +44,38 @@
   --color-fairy: #ef70ef;
 }
 
+::view-transition-group(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: var(--expo-out);
+}
+
 ::view-transition-new(root) {
-  mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="40" cy="0" r="18" fill="white"/></svg>')
-    top right / 0 no-repeat;
-  mask-origin: content-box;
-  animation: scale 0.6s;
-  transform-origin: top right;
+  animation-name: reveal-light;
 }
 
 ::view-transition-old(root),
 .dark::view-transition-old(root) {
-  animation: scale 0.6s;
-  transform-origin: top right;
+  animation: none;
   z-index: -1;
 }
+.dark::view-transition-new(root) {
+  animation-name: reveal-dark;
+}
 
-@keyframes scale {
+@keyframes reveal-dark {
+  from {
+    clip-path: polygon(50% -50%, 150% 50%, 150% 50%, 50% -50%);
+  }
   to {
-    mask-size: 350vmax;
+    clip-path: polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%);
+  }
+}
+
+@keyframes reveal-light {
+  from {
+    clip-path: polygon(50% -50%, 150% 50%, 150% 50%, 50% -50%);
+  }
+  to {
+    clip-path: polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%);
   }
 }
