@@ -1,7 +1,6 @@
 'use client'
 
 import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapiHelpers'
-// import { useVersionGroup } from '@/components/shared/VersionGroupProvider'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { ChevronDown } from 'lucide-react'
 
@@ -29,8 +28,7 @@ export default function VersionGroupSelector() {
       </select>
       <ChevronDown
         aria-hidden="true"
-        size={20}
-        className="pointer-events-none absolute right-0 h-[1lh] w-8 text-zinc-800 dark:text-zinc-200"
+        className="pointer-events-none absolute right-2 h-[1lh] w-4 text-zinc-600 dark:text-zinc-400"
       />
     </div>
   )

@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import Fuse from 'fuse.js'
 import MonsterCard from '@/components/MonsterCard'
 import Pagination from '@/components/Pagination'
+import { Search } from 'lucide-react'
 
 export default function MonsterCardGrid({
   speciesData,
@@ -16,7 +17,7 @@ export default function MonsterCardGrid({
 }) {
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 6
+  const itemsPerPage = 60
 
   const fuse = new Fuse(speciesData, {
     keys: ['id', 'slug', 'name'],
@@ -47,18 +48,24 @@ export default function MonsterCardGrid({
         <label htmlFor="filter" className="sr-only">
           Filter
         </label>
-        <input
-          id="filter"
-          name="filter"
-          type="search"
-          placeholder="Filter by name or ID"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value)
-            setCurrentPage(1)
-          }}
-          className="appearance-none border-b-2 border-zinc-600 bg-transparent px-3 py-1.5 text-lg text-zinc-900 outline-hidden placeholder:text-zinc-500 focus:outline-none dark:border-zinc-400 dark:text-zinc-100 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden"
-        />
+        <div className="relative flex flex-row items-center text-lg/10">
+          <input
+            id="filter"
+            name="filter"
+            type="search"
+            placeholder="Filter by name or ID"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value)
+              setCurrentPage(1)
+            }}
+            className="appearance-none border-b-2 border-zinc-600 bg-transparent pr-10 pl-3 text-zinc-900 outline-hidden transition-colors placeholder:text-zinc-500 focus:border-zinc-900 focus:duration-0 focus:outline-none dark:border-zinc-400 dark:text-zinc-100 dark:focus:border-zinc-100 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden"
+          />
+          <Search
+            size={24}
+            className="absolute top-1/2 right-2 h-[1lh] -translate-y-1/2 text-zinc-500 dark:text-zinc-500"
+          />
+        </div>
       </div>
       <div className="xs:gap-8 flex flex-col gap-4">
         <Pagination

@@ -48,7 +48,7 @@ export default function ThemeSwitch() {
             title={option.label}
             aria-label={option.label}
             aria-description={`Change theme to ${option.label}`}
-            className="group relative flex size-7 cursor-default items-center justify-center rounded-full p-1 text-black dark:text-white"
+            className="group relative flex size-7 cursor-default items-center justify-center rounded-full p-1 text-black transition-shadow hover:inset-ring-2 hover:inset-ring-black hover:duration-0 data-checked:inset-ring-0 dark:text-white dark:hover:inset-ring-white"
           >
             {option.icon}
             {current && (
