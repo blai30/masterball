@@ -10,7 +10,7 @@ export default async function CosmeticsSection({
   pokemon: Pokemon
   forms: PokemonForm[]
 }) {
-  const title = 'Cosmetic Forms'
+  const title = 'Cosmetic forms'
 
   return (
     <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">

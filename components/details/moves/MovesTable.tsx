@@ -206,9 +206,9 @@ export default function MovesTable({
   return (
     <div className={clsx('flex flex-col gap-2', className)}>
       <h3 className="text-lg">{tableName[variant]}</h3>
-      <div className="overflow-x-scroll md:overflow-auto">
-        <div className="inline-block min-w-full">
-          <table className="w-full">
+      <div className="-mx-4 flex overflow-x-auto">
+        <div className="grow px-4">
+          <table className="min-w-full">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id} className="flex h-8 items-center">
