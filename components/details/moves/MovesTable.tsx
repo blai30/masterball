@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { useMemo, memo } from 'react'
 import clsx from 'clsx/lite'
 import { Machine, Move, MoveElement } from 'pokedex-promise-v2'
 import {
@@ -11,16 +11,17 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import {
-  TypeKey,
-  DamageClassKey,
-  getTranslation,
-} from '@/lib/utils/pokeapiHelpers'
+import { TypeKey, DamageClassKey } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
-import { useVersionGroup } from '@/lib/stores/version-group'
+import {
+  MoveCategory,
+  MoveRow,
+  usePokemonMoves,
+} from '@/lib/hooks/usePokemonMoves'
 
-const tableName = {
+// Moved outside component to avoid recreation
+const tableName: Record<MoveCategory, string> = {
   'form-change': 'Form Change',
   'level-up': 'Level-Up',
   machine: 'Technical Machine',
@@ -28,7 +29,7 @@ const tableName = {
   egg: 'Egg',
 }
 
-const variantColumnLabels = {
+const variantColumnLabels: Record<MoveCategory, string> = {
   'form-change': 'Form',
   'level-up': 'Level',
   machine: 'Item',
@@ -36,28 +37,67 @@ const variantColumnLabels = {
   egg: '',
 }
 
-type MoveRow = {
-  rowLabel: string
-  key: string
-  type: TypeKey
-  damageClass: DamageClassKey
-  name: string
-  power: number | string
-  accuracy: number | string
-  pp: number
+// Column class mappings
+const COLUMN_CLASSES = {
+  rowLabel: 'min-w-16',
+  type: 'min-w-20',
+  name: 'min-w-36 grow',
+  power: 'min-w-14 text-right',
+  accuracy: 'min-w-20 text-right',
+  pp: 'min-w-12 text-right',
 }
 
-export default function MovesTable({
+// Memoized components for table cells
+const MoveNameCell = memo(
+  ({ name, moveKey }: { name: string; moveKey: string }) => (
+    <div className="@container/move">
+      <Link href={`/move/${moveKey}`} className="inline-flex">
+        <p
+          title={`Move: ${name}`}
+          className="max-w-52 overflow-hidden font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 @max-[12rem]/move:max-w-32 @xs/move:max-w-86 dark:text-blue-300 dark:hover:text-blue-200"
+        >
+          {name}
+        </p>
+      </Link>
+    </div>
+  )
+)
+
+const TypeCell = memo(
+  ({ type, damageClass }: { type: TypeKey; damageClass: DamageClassKey }) => (
+    <div className="flex items-center justify-center gap-2">
+      <TypeIcon variant={type} size="medium" />
+      <DamageClassIcon variant={damageClass} size="medium" />
+    </div>
+  )
+)
+
+// Standalone component for empty state to avoid re-renders
+const EmptyMovesList = memo(
+  ({ variant, className }: { variant: MoveCategory; className?: string }) => (
+    <div className={clsx('flex flex-col gap-2', className)}>
+      <h3 className="text-lg">{tableName[variant]}</h3>
+      <p className="text-zinc-500 dark:text-zinc-400">
+        No {tableName[variant].toLocaleLowerCase()} moves available for this
+        version group.
+      </p>
+    </div>
+  )
+)
+
+function MovesTable({
   variant,
   moves,
   movesMap,
   className,
 }: {
-  variant: 'form-change' | 'level-up' | 'machine' | 'tutor' | 'egg'
+  variant: MoveCategory
   moves: MoveElement[]
   movesMap: Record<string, Move & { machineItems: Machine[] }>
 } & React.ComponentPropsWithoutRef<'div'>) {
-  const { versionGroup } = useVersionGroup()
+  // Use the optimized hook to process moves
+  const data = usePokemonMoves(variant, moves, movesMap)
+
   const columnHelper = createColumnHelper<MoveRow>()
 
   const columns = useMemo(
@@ -78,31 +118,19 @@ export default function MovesTable({
       columnHelper.accessor('type', {
         header: 'Type',
         cell: (info) => (
-          <div className="flex items-center justify-center gap-2">
-            <TypeIcon variant={info.getValue()} size="medium" />
-            <DamageClassIcon
-              variant={info.row.original.damageClass}
-              size="medium"
-            />
-          </div>
+          <TypeCell
+            type={info.getValue()}
+            damageClass={info.row.original.damageClass}
+          />
         ),
       }),
       columnHelper.accessor('name', {
         header: 'Move',
         cell: (info) => (
-          <div className="@container/move">
-            <Link
-              href={`/move/${info.row.original.key}`}
-              className="inline-flex"
-            >
-              <p
-                title={`Move: ${info.getValue()}`}
-                className="max-w-52 overflow-hidden font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 @max-[12rem]/move:max-w-32 @xs/move:max-w-86 dark:text-blue-300 dark:hover:text-blue-200"
-              >
-                {info.getValue()}
-              </p>
-            </Link>
-          </div>
+          <MoveNameCell
+            name={info.getValue()}
+            moveKey={info.row.original.key}
+          />
         ),
       }),
       columnHelper.accessor('power', {
@@ -130,52 +158,6 @@ export default function MovesTable({
     [columnHelper, variant]
   )
 
-  const filteredMoves = useMemo(
-    () =>
-      moves.filter((move) =>
-        move.version_group_details.some(
-          (v) =>
-            v.move_learn_method.name === variant &&
-            v.version_group.name === versionGroup
-        )
-      ),
-    [moves, variant, versionGroup]
-  )
-
-  const data = useMemo(
-    () =>
-      filteredMoves.map((move) => {
-        const resource = movesMap[move.move.name]
-        const name = getTranslation(resource.names, 'name')!
-        const rowLabel =
-          variant === 'level-up'
-            ? move.version_group_details.find(
-                (m) => m.version_group.name === versionGroup
-              )!.level_learned_at === 0
-              ? 'Evolve'
-              : move.version_group_details
-                  .find((m) => m.version_group.name === versionGroup)!
-                  .level_learned_at.toString()
-            : variant === 'machine' && movesMap[move.move.name]?.machineItems
-              ? movesMap[move.move.name].machineItems
-                  .find((m) => m.version_group.name === versionGroup)!
-                  .item.name.toLocaleUpperCase()
-              : ''
-
-        return {
-          rowLabel,
-          key: move.move.name,
-          type: resource.type.name as TypeKey,
-          damageClass: resource.damage_class.name as DamageClassKey,
-          name,
-          power: resource.power ?? '—',
-          accuracy: resource.accuracy ?? '—',
-          pp: resource.pp!,
-        }
-      }),
-    [filteredMoves, movesMap, variant, versionGroup]
-  )
-
   const table = useReactTable({
     data,
     columns,
@@ -191,16 +173,8 @@ export default function MovesTable({
     },
   })
 
-  if (filteredMoves.length === 0) {
-    return (
-      <div className={clsx('flex flex-col gap-2', className)}>
-        <h3 className="text-lg">{tableName[variant]}</h3>
-        <p className="text-zinc-500 dark:text-zinc-400">
-          No {tableName[variant].toLocaleLowerCase()} moves available for this
-          version group.
-        </p>
-      </div>
-    )
+  if (data.length === 0) {
+    return <EmptyMovesList variant={variant} className={className} />
   }
 
   return (
@@ -218,12 +192,7 @@ export default function MovesTable({
                       colSpan={header.colSpan}
                       className={clsx(
                         'px-2 text-left text-xs font-semibold',
-                        header.id === 'rowLabel' && 'min-w-16',
-                        header.id === 'type' && 'min-w-20',
-                        header.id === 'name' && 'min-w-36 grow',
-                        header.id === 'power' && 'min-w-14 text-right',
-                        header.id === 'accuracy' && 'min-w-20 text-right',
-                        header.id === 'pp' && 'min-w-12 text-right'
+                        COLUMN_CLASSES[header.id as keyof typeof COLUMN_CLASSES]
                       )}
                     >
                       {flexRender(
@@ -239,21 +208,16 @@ export default function MovesTable({
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className={clsx(
-                    'group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75'
-                  )}
+                  className="group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
                       className={clsx(
                         'px-2',
-                        cell.column.id === 'rowLabel' && 'min-w-16',
-                        cell.column.id === 'type' && 'min-w-20',
-                        cell.column.id === 'name' && 'min-w-36 grow',
-                        cell.column.id === 'power' && 'min-w-14',
-                        cell.column.id === 'accuracy' && 'min-w-20',
-                        cell.column.id === 'pp' && 'min-w-12'
+                        COLUMN_CLASSES[
+                          cell.column.id as keyof typeof COLUMN_CLASSES
+                        ]
                       )}
                     >
                       {flexRender(
@@ -271,3 +235,6 @@ export default function MovesTable({
     </div>
   )
 }
+
+// Memoize the component to prevent unnecessary rerenders
+export default memo(MovesTable)
