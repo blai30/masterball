@@ -71,6 +71,14 @@ export const getMonstersBySpecies = async (
   return Promise.all(variants.map((variant) => createMonster(variant, species)))
 }
 
+export enum LearnMethodKey {
+  FormChange = 'form-change',
+  LevelUp = 'level-up',
+  Machine = 'machine',
+  Tutor = 'tutor',
+  Egg = 'egg',
+}
+
 export enum StatKey {
   Hp = 'hp',
   Attack = 'attack',

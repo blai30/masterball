@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import clsx from 'clsx/lite'
 import { Machine, Move, MoveElement } from 'pokedex-promise-v2'
 import {
@@ -11,29 +11,30 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { useVersionGroup } from '@/lib/stores/version-group'
 import {
   TypeKey,
   DamageClassKey,
   getTranslation,
+  LearnMethodKey,
 } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
-import { useVersionGroup } from '@/lib/stores/version-group'
 
-const tableName = {
-  'form-change': 'Form Change',
-  'level-up': 'Level-Up',
-  machine: 'Technical Machine',
-  tutor: 'Tutor',
-  egg: 'Egg',
+const tableName: Record<LearnMethodKey, string> = {
+  [LearnMethodKey.FormChange]: 'Form Change',
+  [LearnMethodKey.LevelUp]: 'Level-Up',
+  [LearnMethodKey.Machine]: 'Technical Machine',
+  [LearnMethodKey.Tutor]: 'Tutor',
+  [LearnMethodKey.Egg]: 'Egg',
 }
 
-const variantColumnLabels = {
-  'form-change': 'Form',
-  'level-up': 'Level',
-  machine: 'Item',
-  tutor: '',
-  egg: '',
+const variantColumnLabels: Record<LearnMethodKey, string> = {
+  [LearnMethodKey.FormChange]: 'Form',
+  [LearnMethodKey.LevelUp]: 'Level',
+  [LearnMethodKey.Machine]: 'Item',
+  [LearnMethodKey.Tutor]: '',
+  [LearnMethodKey.Egg]: '',
 }
 
 type MoveRow = {
@@ -47,13 +48,13 @@ type MoveRow = {
   pp: number
 }
 
-export default function MovesTable({
+function MovesTable({
   variant,
   moves,
   movesMap,
   className,
 }: {
-  variant: 'form-change' | 'level-up' | 'machine' | 'tutor' | 'egg'
+  variant: LearnMethodKey
   moves: MoveElement[]
   movesMap: Record<string, Move & { machineItems: Machine[] }>
 } & React.ComponentPropsWithoutRef<'div'>) {
@@ -271,3 +272,5 @@ export default function MovesTable({
     </div>
   )
 }
+
+export default memo(MovesTable)

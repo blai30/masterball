@@ -13,12 +13,11 @@ export default async function LocalizationSection({
       <h2 className="text-xl font-medium text-black dark:text-white">
         {title}
       </h2>
-      <ul className="grid max-w-lg grid-flow-col grid-cols-1 gap-2 @md:grid-cols-2">
+      <ul className="grid max-w-lg grid-flow-col grid-cols-1 grid-rows-11 gap-2 @md:grid-cols-2 @md:grid-rows-6">
         {species.names
           .toSorted((a, b) => a.language.name.localeCompare(b.language.name))
           .map((name) => {
             const { language, name: localizedName } = name
-
             return (
               <li
                 key={language.name}
