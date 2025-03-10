@@ -11,17 +11,17 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { TypeKey, DamageClassKey } from '@/lib/utils/pokeapiHelpers'
-import DamageClassIcon from '@/components/DamageClassIcon'
-import TypeIcon from '@/components/TypeIcon'
 import {
-  MoveCategory,
+  LearnMethod,
   MoveRow,
   usePokemonMoves,
 } from '@/lib/hooks/usePokemonMoves'
+import { TypeKey, DamageClassKey } from '@/lib/utils/pokeapiHelpers'
+import DamageClassIcon from '@/components/DamageClassIcon'
+import TypeIcon from '@/components/TypeIcon'
 
 // Moved outside component to avoid recreation
-const tableName: Record<MoveCategory, string> = {
+const tableName: Record<LearnMethod, string> = {
   'form-change': 'Form Change',
   'level-up': 'Level-Up',
   machine: 'Technical Machine',
@@ -29,7 +29,7 @@ const tableName: Record<MoveCategory, string> = {
   egg: 'Egg',
 }
 
-const variantColumnLabels: Record<MoveCategory, string> = {
+const variantColumnLabels: Record<LearnMethod, string> = {
   'form-change': 'Form',
   'level-up': 'Level',
   machine: 'Item',
@@ -74,7 +74,7 @@ const TypeCell = memo(
 
 // Standalone component for empty state to avoid re-renders
 const EmptyMovesList = memo(
-  ({ variant, className }: { variant: MoveCategory; className?: string }) => (
+  ({ variant, className }: { variant: LearnMethod; className?: string }) => (
     <div className={clsx('flex flex-col gap-2', className)}>
       <h3 className="text-lg">{tableName[variant]}</h3>
       <p className="text-zinc-500 dark:text-zinc-400">
@@ -91,7 +91,7 @@ function MovesTable({
   movesMap,
   className,
 }: {
-  variant: MoveCategory
+  variant: LearnMethod
   moves: MoveElement[]
   movesMap: Record<string, Move & { machineItems: Machine[] }>
 } & React.ComponentPropsWithoutRef<'div'>) {

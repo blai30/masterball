@@ -7,7 +7,7 @@ import {
   DamageClassKey,
 } from '@/lib/utils/pokeapiHelpers'
 
-export type MoveCategory =
+export type LearnMethod =
   | 'form-change'
   | 'level-up'
   | 'machine'
@@ -26,7 +26,7 @@ export type MoveRow = {
 }
 
 export function usePokemonMoves(
-  variant: MoveCategory,
+  variant: LearnMethod,
   moves: MoveElement[],
   movesMap: Record<string, Move & { machineItems: Machine[] }>
 ) {
