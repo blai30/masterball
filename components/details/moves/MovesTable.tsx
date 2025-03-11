@@ -205,9 +205,9 @@ function MovesTable({
   }
 
   return (
-    <div className={clsx('flex flex-col gap-2', className)}>
+    <div className={clsx(className)}>
       <h3 className="text-lg">{tableName[variant]}</h3>
-      <div className="-mx-4 flex overflow-x-auto">
+      <div className="-mx-4 mt-2 flex overflow-x-auto">
         <div className="grow px-4">
           <table className="min-w-full">
             <thead>
