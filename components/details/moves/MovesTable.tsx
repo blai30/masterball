@@ -21,7 +21,7 @@ import {
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
 
-const tableName: Record<LearnMethodKey, string> = {
+const tableNames = {
   [LearnMethodKey.FormChange]: 'Form Change',
   [LearnMethodKey.LevelUp]: 'Level-Up',
   [LearnMethodKey.Machine]: 'Technical Machine',
@@ -29,12 +29,21 @@ const tableName: Record<LearnMethodKey, string> = {
   [LearnMethodKey.Egg]: 'Egg',
 }
 
-const variantColumnLabels: Record<LearnMethodKey, string> = {
+const firstColumnLabels = {
   [LearnMethodKey.FormChange]: 'Form',
   [LearnMethodKey.LevelUp]: 'Level',
   [LearnMethodKey.Machine]: 'Item',
   [LearnMethodKey.Tutor]: '',
   [LearnMethodKey.Egg]: '',
+}
+
+const columnWidths: Record<string, string> = {
+  rowLabel: 'min-w-16',
+  type: 'min-w-20',
+  name: 'min-w-36 grow',
+  power: 'min-w-14 text-right',
+  accuracy: 'min-w-20 text-right',
+  pp: 'min-w-12 text-right',
 }
 
 type MoveRow = {
@@ -64,7 +73,7 @@ function MovesTable({
   const columns = useMemo(
     () => [
       columnHelper.accessor('rowLabel', {
-        header: variantColumnLabels[variant] ?? '',
+        header: firstColumnLabels[variant] ?? '',
         cell: (info) => (
           <p
             className={clsx(
@@ -145,33 +154,34 @@ function MovesTable({
 
   const data = useMemo(
     () =>
-      filteredMoves.map((move) => {
-        const resource = movesMap[move.move.name]
-        const name = getTranslation(resource.names, 'name')!
-        const rowLabel =
-          variant === 'level-up'
-            ? move.version_group_details.find(
-                (m) => m.version_group.name === versionGroup
-              )!.level_learned_at === 0
+      filteredMoves.map((m) => {
+        const move = movesMap[m.move.name]
+        const versionGroupDetail = m.version_group_details.find(
+          (m) => m.version_group.name === versionGroup
+        )!
+
+        let rowLabel = ''
+        if (variant === LearnMethodKey.LevelUp) {
+          rowLabel =
+            versionGroupDetail.level_learned_at === 0
               ? 'Evolve'
-              : move.version_group_details
-                  .find((m) => m.version_group.name === versionGroup)!
-                  .level_learned_at.toString()
-            : variant === 'machine' && movesMap[move.move.name]?.machineItems
-              ? movesMap[move.move.name].machineItems
-                  .find((m) => m.version_group.name === versionGroup)!
-                  .item.name.toLocaleUpperCase()
-              : ''
+              : versionGroupDetail.level_learned_at.toString()
+        } else if (variant === LearnMethodKey.Machine && move.machineItems) {
+          const machine = move.machineItems.find(
+            (m) => m.version_group.name === versionGroup
+          )
+          rowLabel = machine?.item.name.toUpperCase() || ''
+        }
 
         return {
           rowLabel,
-          key: move.move.name,
-          type: resource.type.name as TypeKey,
-          damageClass: resource.damage_class.name as DamageClassKey,
-          name,
-          power: resource.power ?? '—',
-          accuracy: resource.accuracy ?? '—',
-          pp: resource.pp!,
+          key: m.move.name,
+          type: move.type.name as TypeKey,
+          damageClass: move.damage_class.name as DamageClassKey,
+          name: getTranslation(move.names, 'name')!,
+          power: move.power ?? '—',
+          accuracy: move.accuracy ?? '—',
+          pp: move.pp!,
         }
       }),
     [filteredMoves, movesMap, variant, versionGroup]
@@ -183,21 +193,16 @@ function MovesTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     initialState: {
-      sorting: [
-        {
-          id: 'rowLabel',
-          desc: false,
-        },
-      ],
+      sorting: [{ id: 'rowLabel', desc: false }],
     },
   })
 
   if (filteredMoves.length === 0) {
     return (
       <div className={clsx('flex flex-col gap-2', className)}>
-        <h3 className="text-lg">{tableName[variant]}</h3>
+        <h3 className="text-lg">{tableNames[variant]}</h3>
         <p className="text-zinc-500 dark:text-zinc-400">
-          No {tableName[variant].toLocaleLowerCase()} moves available for this
+          No {tableNames[variant].toLocaleLowerCase()} moves available for this
           version group.
         </p>
       </div>
@@ -205,8 +210,8 @@ function MovesTable({
   }
 
   return (
-    <div className={clsx(className)}>
-      <h3 className="text-lg">{tableName[variant]}</h3>
+    <div className={className}>
+      <h3 className="text-lg">{tableNames[variant]}</h3>
       <div className="-mx-4 mt-2 flex overflow-x-auto">
         <div className="grow px-4">
           <table className="min-w-full">
@@ -219,12 +224,7 @@ function MovesTable({
                       colSpan={header.colSpan}
                       className={clsx(
                         'px-2 text-left text-xs font-semibold',
-                        header.id === 'rowLabel' && 'min-w-16',
-                        header.id === 'type' && 'min-w-20',
-                        header.id === 'name' && 'min-w-36 grow',
-                        header.id === 'power' && 'min-w-14 text-right',
-                        header.id === 'accuracy' && 'min-w-20 text-right',
-                        header.id === 'pp' && 'min-w-12 text-right'
+                        columnWidths[header.id as keyof typeof columnWidths]
                       )}
                     >
                       {flexRender(
@@ -240,22 +240,12 @@ function MovesTable({
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className={clsx(
-                    'group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75'
-                  )}
+                  className="group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className={clsx(
-                        'px-2',
-                        cell.column.id === 'rowLabel' && 'min-w-16',
-                        cell.column.id === 'type' && 'min-w-20',
-                        cell.column.id === 'name' && 'min-w-36 grow',
-                        cell.column.id === 'power' && 'min-w-14',
-                        cell.column.id === 'accuracy' && 'min-w-20',
-                        cell.column.id === 'pp' && 'min-w-12'
-                      )}
+                      className={clsx('px-2', columnWidths[cell.column.id])}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
