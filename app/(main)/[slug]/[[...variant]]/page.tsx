@@ -156,9 +156,11 @@ export default async function Page({
             <Suspense fallback={<LoadingSection />}>
               <EvolutionSection species={species} />
             </Suspense>
-            <Suspense fallback={<LoadingSection />}>
-              <CosmeticsSection pokemon={pokemon} forms={forms} />
-            </Suspense>
+            {forms?.length > 0 && (
+              <Suspense fallback={<LoadingSection />}>
+                <CosmeticsSection pokemon={pokemon} forms={forms} />
+              </Suspense>
+            )}
             <Suspense fallback={<LoadingSection />}>
               <LocalizationSection species={species} />
             </Suspense>

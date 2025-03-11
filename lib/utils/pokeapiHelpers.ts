@@ -64,8 +64,9 @@ export const createMonster = async (
 export const getMonstersBySpecies = async (
   species: PokemonSpecies
 ): Promise<Monster[]> => {
-  const variants: Pokemon[] = await pokeapi.getResource(
-    species.varieties.map((v) => v.pokemon.url)
+  const variants: Pokemon[] = await batchFetch(
+    species.varieties.map((v) => v.pokemon.url),
+    (url) => pokeapi.getResource(url)
   )
 
   return Promise.all(variants.map((variant) => createMonster(variant, species)))
