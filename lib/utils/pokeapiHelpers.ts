@@ -1,5 +1,46 @@
 import { pokeapi } from '@/lib/providers'
-import { Pokemon, PokemonForm, PokemonSpecies, Type } from 'pokedex-promise-v2'
+import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
+
+/**
+ * Generic function to batch PokeAPI requests to avoid hitting rate limits
+ * and improve performance when fetching multiple resources.
+ *
+ * @param identifiers Array of names, IDs, or URLs to fetch.
+ * @param fetchFunction Function that fetches a single resource.
+ * @param batchSize Max number of requests to make in parallel (default: 20).
+ * @returns Promise with array of results in the same order as identifiers.
+ */
+export async function batchFetch<T, R>(
+  identifiers: T[],
+  fetchFunction: (identifier: T) => Promise<R>,
+  batchSize: number = 20
+): Promise<R[]> {
+  const results: R[] = []
+
+  // Process in batches.
+  for (let i = 0; i < identifiers.length; i += batchSize) {
+    const batch = identifiers.slice(i, i + batchSize)
+
+    // Fetch each batch in parallel and get all outcomes.
+    const batchResults = await Promise.allSettled(
+      batch.map((identifier) => fetchFunction(identifier))
+    )
+
+    // Filter fulfilled promises and extract their values.
+    batchResults.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        results.push(result.value)
+      } else {
+        console.error(
+          `Error fetching resource for ${String(batch[index])}:`,
+          result.reason
+        )
+      }
+    })
+  }
+
+  return results
+}
 
 export function getTranslation<
   T extends {
@@ -254,45 +295,4 @@ export function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
   })
 
   return effectiveness
-}
-
-/**
- * Generic function to batch PokeAPI requests to avoid hitting rate limits
- * and improve performance when fetching multiple resources.
- *
- * @param identifiers Array of names, IDs, or URLs to fetch.
- * @param fetchFunction Function that fetches a single resource.
- * @param batchSize Max number of requests to make in parallel (default: 20).
- * @returns Promise with array of results in the same order as identifiers.
- */
-export async function batchFetch<T, R>(
-  identifiers: T[],
-  fetchFunction: (identifier: T) => Promise<R>,
-  batchSize: number = 20
-): Promise<R[]> {
-  const results: R[] = []
-
-  // Process in batches.
-  for (let i = 0; i < identifiers.length; i += batchSize) {
-    const batch = identifiers.slice(i, i + batchSize)
-
-    // Fetch each batch in parallel and get all outcomes.
-    const batchResults = await Promise.allSettled(
-      batch.map((identifier) => fetchFunction(identifier))
-    )
-
-    // Filter fulfilled promises and extract their values.
-    batchResults.forEach((result, index) => {
-      if (result.status === 'fulfilled') {
-        results.push(result.value)
-      } else {
-        console.error(
-          `Error fetching resource for ${String(batch[index])}:`,
-          result.reason
-        )
-      }
-    })
-  }
-
-  return results
 }
