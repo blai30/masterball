@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { memo, useMemo } from 'react'
+import { memo, useMemo, useState } from 'react'
 import clsx from 'clsx/lite'
 import { Machine, Move, MoveElement } from 'pokedex-promise-v2'
 import {
@@ -9,6 +9,7 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
 } from '@tanstack/react-table'
 import { useVersionGroup } from '@/lib/stores/version-group'
@@ -20,6 +21,7 @@ import {
 } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
 const tableNames = {
   [LearnMethodKey.FormChange]: 'Form Change',
@@ -29,7 +31,7 @@ const tableNames = {
   [LearnMethodKey.Egg]: 'Egg',
 }
 
-const firstColumnLabels = {
+const idColumnLabels = {
   [LearnMethodKey.FormChange]: 'Form',
   [LearnMethodKey.LevelUp]: 'Level',
   [LearnMethodKey.Machine]: 'Item',
@@ -69,11 +71,14 @@ function MovesTable({
 } & React.ComponentPropsWithoutRef<'div'>) {
   const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'rowLabel', desc: false },
+  ])
 
   const columns = useMemo(
     () => [
       columnHelper.accessor('rowLabel', {
-        header: firstColumnLabels[variant] ?? '',
+        header: idColumnLabels[variant] ?? '',
         cell: (info) => (
           <p
             className={clsx(
@@ -190,11 +195,12 @@ function MovesTable({
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      sorting: [{ id: 'rowLabel', desc: false }],
-    },
   })
 
   if (filteredMoves.length === 0) {
@@ -222,15 +228,24 @@ function MovesTable({
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
+                      onClick={header.column.getToggleSortingHandler()}
                       className={clsx(
                         'px-2 text-left text-xs font-semibold',
-                        columnWidths[header.id as keyof typeof columnWidths]
+                        columnWidths[header.id],
+                        header.column.getCanSort() &&
+                          'cursor-pointer select-none'
                       )}
                     >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      <div className="flex items-center gap-1">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: <ChevronUp className="h-3 w-3" />,
+                          desc: <ChevronDown className="h-3 w-3" />,
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
                     </th>
                   ))}
                 </tr>
