@@ -5,7 +5,7 @@ import { cva } from 'cva'
 import { DamageClassLabels, DamageClassKey } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: 'flex flex-row items-center justify-center',
+  base: '',
   variants: {
     variant: {
       [DamageClassKey.Physical]: 'bg-physical',
@@ -13,9 +13,9 @@ const variants = cva({
       [DamageClassKey.Status]: 'bg-status',
     },
     size: {
-      small: 'size-5 rounded-xs',
-      medium: 'size-6 rounded-sm',
-      large: 'h-7 w-10 rounded-sm px-1',
+      small: 'h-6 w-8 rounded-xs',
+      medium: 'h-7 w-10 rounded-sm px-1 py-0.5',
+      large: 'h-8 w-12 rounded-sm px-1',
     },
   },
 })
@@ -42,7 +42,7 @@ export default function DamageClassIcon({
       {...wrapperProps}
       title={name}
       className={clsx(
-        'relative',
+        '',
         variants({
           variant: variant as DamageClassKey,
           size,
@@ -63,7 +63,7 @@ export default function DamageClassIcon({
         alt={name}
         width={50}
         height={40}
-        className="relative object-contain px-0.5"
+        className="size-full object-contain"
       />
     </Wrapper>
   )

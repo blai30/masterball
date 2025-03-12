@@ -145,7 +145,7 @@ export default async function Page({
       </div>
       {/* Main details section */}
       <section className="container mx-auto px-4">
-        <div className="flex w-full flex-col gap-6 lg:flex-row">
+        <div className="flex w-full flex-col gap-6 xl:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-6">
             <Suspense fallback={<LoadingSection />}>
@@ -170,7 +170,7 @@ export default async function Page({
             </Suspense>
           </div>
           {/* Second column on large screens */}
-          <div className="flex w-full flex-1 flex-col gap-6 md:min-w-xl">
+          <div className="flex w-full flex-col gap-6">
             <Suspense fallback={<LoadingSection />}>
               <MovesSection pokemon={pokemon} />
             </Suspense>

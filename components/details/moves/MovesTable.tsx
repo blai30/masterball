@@ -16,6 +16,7 @@ import { useVersionGroup } from '@/lib/stores/version-group'
 import { LearnMethodKey, MoveRow } from '@/lib/utils/pokeapiHelpers'
 import TypeIcon from '@/components/TypeIcon'
 import DamageClassIcon from '@/components/DamageClassIcon'
+import TypePill from '@/components/TypePill'
 
 const tableNames = {
   [LearnMethodKey.LevelUp]: 'Level-Up',
@@ -33,13 +34,13 @@ const idColumnLabels = {
   [LearnMethodKey.FormChange]: '',
 }
 
-const columnWidths: Record<string, string> = {
-  id: 'min-w-16',
-  type: 'min-w-20',
-  name: 'min-w-36 grow',
-  power: 'min-w-14 text-right',
-  accuracy: 'min-w-20 text-right',
-  pp: 'min-w-12 text-right',
+const columnClasses: Record<string, string> = {
+  id: 'min-w-16 text-left',
+  name: 'min-w-44 grow text-left',
+  type: 'min-w-20 text-center',
+  power: 'min-w-10 text-right',
+  accuracy: 'min-w-10 text-right',
+  pp: 'min-w-10 text-right',
 }
 
 function MovesTable({
@@ -72,18 +73,6 @@ function MovesTable({
           </p>
         ),
       }),
-      columnHelper.accessor('type', {
-        header: 'Type',
-        cell: (info) => (
-          <div className="flex items-center justify-center gap-2">
-            <TypeIcon variant={info.getValue()} size="medium" />
-            <DamageClassIcon
-              variant={info.row.original.damageClass}
-              size="medium"
-            />
-          </div>
-        ),
-      }),
       columnHelper.accessor('name', {
         header: 'Move',
         cell: (info) => (
@@ -99,6 +88,18 @@ function MovesTable({
                 {info.getValue()}
               </p>
             </Link>
+          </div>
+        ),
+      }),
+      columnHelper.accessor('type', {
+        header: 'Type',
+        cell: (info) => (
+          <div className="flex items-center justify-center gap-2">
+            <TypePill variant={info.getValue()} size="medium" />
+            <DamageClassIcon
+              variant={info.row.original.damageClass}
+              size="medium"
+            />
           </div>
         ),
       }),
@@ -163,20 +164,18 @@ function MovesTable({
           <table className="min-w-full">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="flex h-8 items-center">
+                <tr key={headerGroup.id} className="h-8 items-center">
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
                       onClick={header.column.getToggleSortingHandler()}
                       className={clsx(
-                        'px-2 text-left text-xs font-semibold',
-                        columnWidths[header.id],
-                        header.column.getCanSort() &&
-                          'cursor-pointer select-none'
+                        'px-2 text-xs font-semibold',
+                        columnClasses[header.id]
                       )}
                     >
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center">
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
@@ -191,16 +190,13 @@ function MovesTable({
                 </tr>
               ))}
             </thead>
-            <tbody className="flex flex-col gap-0.5">
+            <tbody className="">
               {table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75"
-                >
+                <tr key={row.id} className="group h-8 items-center rounded-md">
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className={clsx('px-2', columnWidths[cell.column.id])}
+                      className={clsx('px-2', columnClasses[cell.column.id])}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
