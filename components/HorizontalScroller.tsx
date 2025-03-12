@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import clsx from 'clsx/lite'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -14,6 +14,7 @@ export default function HorizontalScroller({
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
+  const checkPositionRef = useRef<number | null>(null)
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current
@@ -27,17 +28,41 @@ export default function HorizontalScroller({
       )
     }
 
+    // Run initial check
     checkScrollPosition()
+
+    // Use passive listener to tell browser we don't prevent default
     const controller = new AbortController()
-    scrollContainer.addEventListener('scroll', checkScrollPosition, {
+
+    // Throttle scroll events by using requestAnimationFrame
+    const handleScroll = () => {
+      if (checkPositionRef.current === null) {
+        checkPositionRef.current = requestAnimationFrame(() => {
+          checkScrollPosition()
+          checkPositionRef.current = null
+        })
+      }
+    }
+
+    scrollContainer.addEventListener('scroll', handleScroll, {
       signal: controller.signal,
+      passive: true,
     })
-    window.addEventListener('resize', checkScrollPosition, {
+
+    const handleResize = () => {
+      checkScrollPosition()
+    }
+
+    window.addEventListener('resize', handleResize, {
       signal: controller.signal,
+      passive: true,
     })
 
     return () => {
       controller.abort()
+      if (checkPositionRef.current !== null) {
+        cancelAnimationFrame(checkPositionRef.current)
+      }
     }
   }, [])
 
@@ -59,7 +84,6 @@ export default function HorizontalScroller({
 
   return (
     <div className={clsx('relative w-full', className)}>
-      {/* Left scroll button */}
       {showLeftArrow && (
         <button
           onClick={() => scroll('left')}
@@ -74,7 +98,6 @@ export default function HorizontalScroller({
         {children}
       </div>
 
-      {/* Right scroll button */}
       {showRightArrow && (
         <button
           onClick={() => scroll('right')}
