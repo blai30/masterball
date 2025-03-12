@@ -1,6 +1,6 @@
 'use client'
 
-import { HTMLAttributes } from 'react'
+import { HTMLAttributes, memo } from 'react'
 
 const navigation = [
   {
@@ -18,7 +18,7 @@ const navigation = [
   },
 ]
 
-export default function Footer() {
+function Footer() {
   const year = new Date().getFullYear()
 
   return (
@@ -43,3 +43,5 @@ export default function Footer() {
     </footer>
   )
 }
+
+export default memo(Footer)

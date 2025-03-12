@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { memo, useMemo, useState } from 'react'
 import clsx from 'clsx/lite'
 import { Machine, Move, MoveElement } from 'pokedex-promise-v2'
 import {
@@ -9,31 +9,43 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
 } from '@tanstack/react-table'
+import { useVersionGroup } from '@/lib/stores/version-group'
 import {
   TypeKey,
   DamageClassKey,
   getTranslation,
+  LearnMethodKey,
 } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
-import { useVersionGroup } from '@/lib/stores/version-group'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
-const tableName = {
-  'form-change': 'Form Change',
-  'level-up': 'Level-Up',
-  machine: 'Technical Machine',
-  tutor: 'Tutor',
-  egg: 'Egg',
+const tableNames = {
+  [LearnMethodKey.FormChange]: 'Form Change',
+  [LearnMethodKey.LevelUp]: 'Level-Up',
+  [LearnMethodKey.Machine]: 'Technical Machine',
+  [LearnMethodKey.Tutor]: 'Tutor',
+  [LearnMethodKey.Egg]: 'Egg',
 }
 
-const variantColumnLabels = {
-  'form-change': 'Form',
-  'level-up': 'Level',
-  machine: 'Item',
-  tutor: '',
-  egg: '',
+const idColumnLabels = {
+  [LearnMethodKey.FormChange]: 'Form',
+  [LearnMethodKey.LevelUp]: 'Level',
+  [LearnMethodKey.Machine]: 'Item',
+  [LearnMethodKey.Tutor]: '',
+  [LearnMethodKey.Egg]: '',
+}
+
+const columnWidths: Record<string, string> = {
+  rowLabel: 'min-w-16',
+  type: 'min-w-20',
+  name: 'min-w-36 grow',
+  power: 'min-w-14 text-right',
+  accuracy: 'min-w-20 text-right',
+  pp: 'min-w-12 text-right',
 }
 
 type MoveRow = {
@@ -47,23 +59,26 @@ type MoveRow = {
   pp: number
 }
 
-export default function MovesTable({
+function MovesTable({
   variant,
   moves,
   movesMap,
   className,
 }: {
-  variant: 'form-change' | 'level-up' | 'machine' | 'tutor' | 'egg'
+  variant: LearnMethodKey
   moves: MoveElement[]
   movesMap: Record<string, Move & { machineItems: Machine[] }>
 } & React.ComponentPropsWithoutRef<'div'>) {
   const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'rowLabel', desc: false },
+  ])
 
   const columns = useMemo(
     () => [
       columnHelper.accessor('rowLabel', {
-        header: variantColumnLabels[variant] ?? '',
+        header: idColumnLabels[variant] ?? '',
         cell: (info) => (
           <p
             className={clsx(
@@ -144,33 +159,34 @@ export default function MovesTable({
 
   const data = useMemo(
     () =>
-      filteredMoves.map((move) => {
-        const resource = movesMap[move.move.name]
-        const name = getTranslation(resource.names, 'name')!
-        const rowLabel =
-          variant === 'level-up'
-            ? move.version_group_details.find(
-                (m) => m.version_group.name === versionGroup
-              )!.level_learned_at === 0
+      filteredMoves.map((m) => {
+        const move = movesMap[m.move.name]
+        const versionGroupDetail = m.version_group_details.find(
+          (m) => m.version_group.name === versionGroup
+        )!
+
+        let rowLabel = ''
+        if (variant === LearnMethodKey.LevelUp) {
+          rowLabel =
+            versionGroupDetail.level_learned_at === 0
               ? 'Evolve'
-              : move.version_group_details
-                  .find((m) => m.version_group.name === versionGroup)!
-                  .level_learned_at.toString()
-            : variant === 'machine' && movesMap[move.move.name]?.machineItems
-              ? movesMap[move.move.name].machineItems
-                  .find((m) => m.version_group.name === versionGroup)!
-                  .item.name.toLocaleUpperCase()
-              : ''
+              : versionGroupDetail.level_learned_at.toString()
+        } else if (variant === LearnMethodKey.Machine && move.machineItems) {
+          const machine = move.machineItems.find(
+            (m) => m.version_group.name === versionGroup
+          )
+          rowLabel = machine?.item.name.toUpperCase() || ''
+        }
 
         return {
           rowLabel,
-          key: move.move.name,
-          type: resource.type.name as TypeKey,
-          damageClass: resource.damage_class.name as DamageClassKey,
-          name,
-          power: resource.power ?? '—',
-          accuracy: resource.accuracy ?? '—',
-          pp: resource.pp!,
+          key: m.move.name,
+          type: move.type.name as TypeKey,
+          damageClass: move.damage_class.name as DamageClassKey,
+          name: getTranslation(move.names, 'name')!,
+          power: move.power ?? '—',
+          accuracy: move.accuracy ?? '—',
+          pp: move.pp!,
         }
       }),
     [filteredMoves, movesMap, variant, versionGroup]
@@ -179,24 +195,20 @@ export default function MovesTable({
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    initialState: {
-      sorting: [
-        {
-          id: 'rowLabel',
-          desc: false,
-        },
-      ],
-    },
   })
 
   if (filteredMoves.length === 0) {
     return (
       <div className={clsx('flex flex-col gap-2', className)}>
-        <h3 className="text-lg">{tableName[variant]}</h3>
+        <h3 className="text-lg">{tableNames[variant]}</h3>
         <p className="text-zinc-500 dark:text-zinc-400">
-          No {tableName[variant].toLocaleLowerCase()} moves available for this
+          No {tableNames[variant].toLocaleLowerCase()} moves available for this
           version group.
         </p>
       </div>
@@ -204,9 +216,9 @@ export default function MovesTable({
   }
 
   return (
-    <div className={clsx('flex flex-col gap-2', className)}>
-      <h3 className="text-lg">{tableName[variant]}</h3>
-      <div className="-mx-4 flex overflow-x-auto">
+    <div className={className}>
+      <h3 className="text-lg">{tableNames[variant]}</h3>
+      <div className="-mx-4 mt-2 flex overflow-x-auto">
         <div className="grow px-4">
           <table className="min-w-full">
             <thead>
@@ -216,20 +228,24 @@ export default function MovesTable({
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
+                      onClick={header.column.getToggleSortingHandler()}
                       className={clsx(
                         'px-2 text-left text-xs font-semibold',
-                        header.id === 'rowLabel' && 'min-w-16',
-                        header.id === 'type' && 'min-w-20',
-                        header.id === 'name' && 'min-w-36 grow',
-                        header.id === 'power' && 'min-w-14 text-right',
-                        header.id === 'accuracy' && 'min-w-20 text-right',
-                        header.id === 'pp' && 'min-w-12 text-right'
+                        columnWidths[header.id],
+                        header.column.getCanSort() &&
+                          'cursor-pointer select-none'
                       )}
                     >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      <div className="flex items-center gap-1">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: <ChevronUp className="h-3 w-3" />,
+                          desc: <ChevronDown className="h-3 w-3" />,
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
                     </th>
                   ))}
                 </tr>
@@ -239,22 +255,12 @@ export default function MovesTable({
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className={clsx(
-                    'group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75'
-                  )}
+                  className="group flex h-8 items-center rounded-md transition-colors hover:bg-zinc-300/75 hover:duration-0 dark:hover:bg-zinc-700/75"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className={clsx(
-                        'px-2',
-                        cell.column.id === 'rowLabel' && 'min-w-16',
-                        cell.column.id === 'type' && 'min-w-20',
-                        cell.column.id === 'name' && 'min-w-36 grow',
-                        cell.column.id === 'power' && 'min-w-14',
-                        cell.column.id === 'accuracy' && 'min-w-20',
-                        cell.column.id === 'pp' && 'min-w-12'
-                      )}
+                      className={clsx('px-2', columnWidths[cell.column.id])}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -271,3 +277,5 @@ export default function MovesTable({
     </div>
   )
 }
+
+export default memo(MovesTable)

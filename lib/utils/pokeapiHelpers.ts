@@ -1,5 +1,46 @@
 import { pokeapi } from '@/lib/providers'
-import { Pokemon, PokemonForm, PokemonSpecies, Type } from 'pokedex-promise-v2'
+import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
+
+/**
+ * Generic function to batch PokeAPI requests to avoid hitting rate limits
+ * and improve performance when fetching multiple resources.
+ *
+ * @param identifiers Array of names, IDs, or URLs to fetch.
+ * @param fetchFunction Function that fetches a single resource.
+ * @param batchSize Max number of requests to make in parallel (default: 20).
+ * @returns Promise with array of results in the same order as identifiers.
+ */
+export async function batchFetch<T, R>(
+  identifiers: T[],
+  fetchFunction: (identifier: T) => Promise<R>,
+  batchSize: number = 20
+): Promise<R[]> {
+  const results: R[] = []
+
+  // Process in batches.
+  for (let i = 0; i < identifiers.length; i += batchSize) {
+    const batch = identifiers.slice(i, i + batchSize)
+
+    // Fetch each batch in parallel and get all outcomes.
+    const batchResults = await Promise.allSettled(
+      batch.map((identifier) => fetchFunction(identifier))
+    )
+
+    // Filter fulfilled promises and extract their values.
+    batchResults.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        results.push(result.value)
+      } else {
+        console.error(
+          `Error fetching resource for ${String(batch[index])}:`,
+          result.reason
+        )
+      }
+    })
+  }
+
+  return results
+}
 
 export function getTranslation<
   T extends {
@@ -64,11 +105,20 @@ export const createMonster = async (
 export const getMonstersBySpecies = async (
   species: PokemonSpecies
 ): Promise<Monster[]> => {
-  const variants: Pokemon[] = await pokeapi.getResource(
-    species.varieties.map((v) => v.pokemon.url)
+  const variants: Pokemon[] = await batchFetch(
+    species.varieties.map((v) => v.pokemon.url),
+    (url) => pokeapi.getResource(url)
   )
 
   return Promise.all(variants.map((variant) => createMonster(variant, species)))
+}
+
+export enum LearnMethodKey {
+  FormChange = 'form-change',
+  LevelUp = 'level-up',
+  Machine = 'machine',
+  Tutor = 'tutor',
+  Egg = 'egg',
 }
 
 export enum StatKey {
@@ -245,45 +295,4 @@ export function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
   })
 
   return effectiveness
-}
-
-/**
- * Generic function to batch PokeAPI requests to avoid hitting rate limits
- * and improve performance when fetching multiple resources.
- *
- * @param identifiers Array of names, IDs, or URLs to fetch.
- * @param fetchFunction Function that fetches a single resource.
- * @param batchSize Max number of requests to make in parallel (default: 20).
- * @returns Promise with array of results in the same order as identifiers.
- */
-export async function batchFetch<T, R>(
-  identifiers: T[],
-  fetchFunction: (identifier: T) => Promise<R>,
-  batchSize: number = 20
-): Promise<R[]> {
-  const results: R[] = []
-
-  // Process in batches.
-  for (let i = 0; i < identifiers.length; i += batchSize) {
-    const batch = identifiers.slice(i, i + batchSize)
-
-    // Fetch each batch in parallel and get all outcomes.
-    const batchResults = await Promise.allSettled(
-      batch.map((identifier) => fetchFunction(identifier))
-    )
-
-    // Filter fulfilled promises and extract their values.
-    batchResults.forEach((result, index) => {
-      if (result.status === 'fulfilled') {
-        results.push(result.value)
-      } else {
-        console.error(
-          `Error fetching resource for ${String(batch[index])}:`,
-          result.reason
-        )
-      }
-    })
-  }
-
-  return results
 }

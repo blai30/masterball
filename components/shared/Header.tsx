@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { memo } from 'react'
 import clsx from 'clsx'
 import { motion } from 'motion/react'
 import { Accessibility, Backpack, Cat, Swords } from 'lucide-react'
@@ -32,7 +33,7 @@ const navItems = [
   // { label: 'Damage Classes', url: '/damage-class' },
 ]
 
-export default function Header() {
+function Header() {
   const pathname = usePathname()
 
   const isActiveRoute = (url: string) => {
@@ -96,3 +97,5 @@ export default function Header() {
     </header>
   )
 }
+
+export default memo(Header)
