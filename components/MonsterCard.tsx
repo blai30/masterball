@@ -36,7 +36,7 @@ const MonsterCard = memo(function MonsterCard({
           height={128}
           className="min-w-full object-contain py-1"
         />
-        <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
+        <h3 className="rounded-xs text-base font-base text-zinc-700 dark:text-zinc-300">
           {name}
         </h3>
       </Link>
