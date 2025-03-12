@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import Fuse from 'fuse.js'
+import { Search } from 'lucide-react'
 import MonsterCard from '@/components/MonsterCard'
 import Pagination from '@/components/Pagination'
-import { Search } from 'lucide-react'
 
 export default function MonsterCardGrid({
   speciesData,
@@ -19,10 +19,15 @@ export default function MonsterCardGrid({
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 60
 
-  const fuse = new Fuse(speciesData, {
-    keys: ['id', 'slug', 'name'],
-    threshold: 0.4,
-  })
+  // Memoize the Fuse instance to prevent recreation on every render
+  const fuse = useMemo(
+    () =>
+      new Fuse(speciesData, {
+        keys: ['id', 'slug', 'name'],
+        threshold: 0.4,
+      }),
+    [speciesData]
+  )
 
   const filteredItems = useMemo(() => {
     return query ? fuse.search(query).map((result) => result.item) : speciesData
@@ -38,9 +43,17 @@ export default function MonsterCardGrid({
     return filteredItems.slice(startIndex, endIndex)
   }, [filteredItems, currentPage])
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page)
-  }
+  }, [])
+
+  const handleQueryChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setQuery(e.target.value)
+      setCurrentPage(1)
+    },
+    []
+  )
 
   return (
     <div className="xs:gap-8 flex flex-col gap-4">
@@ -55,10 +68,7 @@ export default function MonsterCardGrid({
             type="search"
             placeholder="Filter by name or ID"
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value)
-              setCurrentPage(1)
-            }}
+            onChange={handleQueryChange}
             className="appearance-none border-b-2 border-zinc-600 bg-transparent pr-10 pl-3 text-zinc-900 outline-hidden transition-colors placeholder:text-zinc-500 focus:border-zinc-900 focus:duration-0 focus:outline-none dark:border-zinc-400 dark:text-zinc-100 dark:focus:border-zinc-100 [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden"
           />
           <Search

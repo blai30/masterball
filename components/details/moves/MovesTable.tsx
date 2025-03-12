@@ -2,45 +2,39 @@
 
 import Link from 'next/link'
 import { memo, useMemo, useState } from 'react'
-import clsx from 'clsx/lite'
-import { Machine, Move, MoveElement } from 'pokedex-promise-v2'
+import clsx from 'clsx'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  SortingState,
+  createColumnHelper,
   useReactTable,
+  SortingState,
 } from '@tanstack/react-table'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import {
-  TypeKey,
-  DamageClassKey,
-  getTranslation,
-  LearnMethodKey,
-} from '@/lib/utils/pokeapiHelpers'
-import DamageClassIcon from '@/components/DamageClassIcon'
+import { LearnMethodKey, MoveRow } from '@/lib/utils/pokeapiHelpers'
 import TypeIcon from '@/components/TypeIcon'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import DamageClassIcon from '@/components/DamageClassIcon'
 
 const tableNames = {
-  [LearnMethodKey.FormChange]: 'Form Change',
   [LearnMethodKey.LevelUp]: 'Level-Up',
   [LearnMethodKey.Machine]: 'Technical Machine',
   [LearnMethodKey.Tutor]: 'Tutor',
   [LearnMethodKey.Egg]: 'Egg',
+  [LearnMethodKey.FormChange]: 'Form Change',
 }
 
 const idColumnLabels = {
-  [LearnMethodKey.FormChange]: 'Form',
   [LearnMethodKey.LevelUp]: 'Level',
   [LearnMethodKey.Machine]: 'Item',
   [LearnMethodKey.Tutor]: '',
   [LearnMethodKey.Egg]: '',
+  [LearnMethodKey.FormChange]: '',
 }
 
 const columnWidths: Record<string, string> = {
-  rowLabel: 'min-w-16',
+  id: 'min-w-16',
   type: 'min-w-20',
   name: 'min-w-36 grow',
   power: 'min-w-14 text-right',
@@ -48,42 +42,30 @@ const columnWidths: Record<string, string> = {
   pp: 'min-w-12 text-right',
 }
 
-type MoveRow = {
-  rowLabel: string
-  key: string
-  type: TypeKey
-  damageClass: DamageClassKey
-  name: string
-  power: number | string
-  accuracy: number | string
-  pp: number
-}
-
 function MovesTable({
   variant,
-  moves,
-  movesMap,
+  moveRows,
   className,
 }: {
   variant: LearnMethodKey
-  moves: MoveElement[]
-  movesMap: Record<string, Move & { machineItems: Machine[] }>
-} & React.ComponentPropsWithoutRef<'div'>) {
+  moveRows: MoveRow[]
+  className?: string
+}) {
   const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
   const [sorting, setSorting] = useState<SortingState>([
-    { id: 'rowLabel', desc: false },
+    { id: 'id', desc: false },
   ])
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor('rowLabel', {
+      columnHelper.accessor('id', {
         header: idColumnLabels[variant] ?? '',
         cell: (info) => (
           <p
             className={clsx(
               'font-num w-full text-right text-zinc-700 dark:text-zinc-300',
-              info.getValue() ? 'visible' : 'invisible'
+              idColumnLabels[variant] ? 'visible' : 'invisible'
             )}
           >
             {info.getValue()}
@@ -107,7 +89,7 @@ function MovesTable({
         cell: (info) => (
           <div className="@container/move">
             <Link
-              href={`/move/${info.row.original.key}`}
+              href={`/move/${info.row.original.slug}`}
               className="inline-flex"
             >
               <p
@@ -123,14 +105,14 @@ function MovesTable({
       columnHelper.accessor('power', {
         header: 'Power',
         cell: (info) => (
-          <p className="font-num w-full text-right">{info.getValue()}</p>
+          <p className="font-num w-full text-right">{info.getValue() ?? '—'}</p>
         ),
       }),
       columnHelper.accessor('accuracy', {
         header: 'Accuracy',
         cell: (info) => (
           <p className="font-num w-full text-right">
-            {info.getValue()}
+            {info.getValue() ?? '—'}
             <span className="ml-0.5 text-zinc-600 dark:text-zinc-400">%</span>
           </p>
         ),
@@ -145,55 +127,13 @@ function MovesTable({
     [columnHelper, variant]
   )
 
-  const filteredMoves = useMemo(
-    () =>
-      moves.filter((move) =>
-        move.version_group_details.some(
-          (v) =>
-            v.move_learn_method.name === variant &&
-            v.version_group.name === versionGroup
-        )
-      ),
-    [moves, variant, versionGroup]
-  )
-
-  const data = useMemo(
-    () =>
-      filteredMoves.map((m) => {
-        const move = movesMap[m.move.name]
-        const versionGroupDetail = m.version_group_details.find(
-          (m) => m.version_group.name === versionGroup
-        )!
-
-        let rowLabel = ''
-        if (variant === LearnMethodKey.LevelUp) {
-          rowLabel =
-            versionGroupDetail.level_learned_at === 0
-              ? 'Evolve'
-              : versionGroupDetail.level_learned_at.toString()
-        } else if (variant === LearnMethodKey.Machine && move.machineItems) {
-          const machine = move.machineItems.find(
-            (m) => m.version_group.name === versionGroup
-          )
-          rowLabel = machine?.item.name.toUpperCase() || ''
-        }
-
-        return {
-          rowLabel,
-          key: m.move.name,
-          type: move.type.name as TypeKey,
-          damageClass: move.damage_class.name as DamageClassKey,
-          name: getTranslation(move.names, 'name')!,
-          power: move.power ?? '—',
-          accuracy: move.accuracy ?? '—',
-          pp: move.pp!,
-        }
-      }),
-    [filteredMoves, movesMap, variant, versionGroup]
+  const filteredMoveRows = useMemo(
+    () => moveRows.filter((row) => row.versionGroup === versionGroup),
+    [moveRows, versionGroup]
   )
 
   const table = useReactTable({
-    data,
+    data: filteredMoveRows,
     columns,
     state: {
       sorting,
@@ -203,7 +143,7 @@ function MovesTable({
     getSortedRowModel: getSortedRowModel(),
   })
 
-  if (filteredMoves.length === 0) {
+  if (filteredMoveRows.length === 0) {
     return (
       <div className={clsx('flex flex-col gap-2', className)}>
         <h3 className="text-lg">{tableNames[variant]}</h3>

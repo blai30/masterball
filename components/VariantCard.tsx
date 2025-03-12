@@ -27,8 +27,6 @@ export default function VariantCard({
         alt={monster.name}
         width={200}
         height={200}
-        priority
-        loading="eager"
         className="object-scale-down"
       />
       <h3 className="text-lg font-medium text-black dark:text-white">
