@@ -3,8 +3,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import GlassCard from '@/components/GlassCard'
+import { memo } from 'react'
 
-export default function MonsterCard({
+const MonsterCard = memo(function MonsterCard({
   id,
   slug,
   name,
@@ -33,7 +34,6 @@ export default function MonsterCard({
           alt={slug}
           width={128}
           height={128}
-          priority
           className="min-w-full object-contain py-1"
         />
         <h3 className="rounded-xs text-base font-medium text-zinc-700 dark:text-zinc-300">
@@ -42,4 +42,6 @@ export default function MonsterCard({
       </Link>
     </GlassCard>
   )
-}
+})
+
+export default MonsterCard
