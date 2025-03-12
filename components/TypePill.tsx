@@ -70,8 +70,6 @@ export default function TypePill({
         alt={name}
         width={dimensions[size]}
         height={dimensions[size]}
-        priority
-        loading="eager"
         className={clsx(
           variants({ variant: variant as TypeKey }),
           'aspect-square rounded-xs object-contain'

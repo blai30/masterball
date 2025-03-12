@@ -33,7 +33,6 @@ export default async function MonsterPill({
           alt={species.name}
           width={64}
           height={64}
-          priority
           className="w-16 object-contain py-1"
         />
         <div className="flex h-full w-full flex-col justify-between gap-1">

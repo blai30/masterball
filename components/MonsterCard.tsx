@@ -33,7 +33,6 @@ export default function MonsterCard({
           alt={slug}
           width={128}
           height={128}
-          loading="eager"
           priority
           className="min-w-full object-contain py-1"
         />
