@@ -1,10 +1,11 @@
 'use client'
 
+import { memo } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapiHelpers'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { ChevronDown } from 'lucide-react'
 
-export default function VersionGroupSelector() {
+function VersionGroupSelector() {
   const { versionGroup, setVersionGroup } = useVersionGroup()
 
   return (
@@ -33,3 +34,5 @@ export default function VersionGroupSelector() {
     </div>
   )
 }
+
+export default memo(VersionGroupSelector)

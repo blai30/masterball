@@ -110,6 +110,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/493/',
     },
     {
+      name: 'jellicent',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/593/',
+    },
+    {
       name: 'kyurem',
       url: 'https://pokeapi.co/api/v2/pokemon-species/646/',
     },
@@ -192,6 +196,10 @@ const species: NamedAPIResourceList = {
     {
       name: 'calyrex',
       url: 'https://pokeapi.co/api/v2/pokemon-species/898/',
+    },
+    {
+      name: 'oinkologne',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/916/',
     },
     {
       name: 'iron-hands',
