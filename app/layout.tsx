@@ -37,13 +37,14 @@ export const metadata: Metadata = {
   description:
     'Statically rendered and hosted web app for a modern Pokémon database.',
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_BASEPATH || 'http://localhost:3000'
+    process.env.NEXT_PUBLIC_FULL_URL || 'http://localhost:3000'
   ),
   openGraph: {
     title: 'Masterball',
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_BASEPATH,
+    siteName: 'Masterball',
+    url: process.env.NEXT_PUBLIC_FULL_URL,
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_BASEPATH}/favicon.png`,

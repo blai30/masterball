@@ -30,7 +30,7 @@ export async function GET(
 ) {
   // const { filename } = await params
   // const path = filename.split('.png')[0].replace('_', '/')
-  // const url = `${process.env.NEXT_PUBLIC_BASEPATH || 'localhost:3000'}/splash/${path}`
+  // const url = `${process.env.NEXT_PUBLIC_FULL_URL || 'localhost:3000'}/splash/${path}`
 
   // const browser = await playwright.chromium.launch({
   //   headless: true,
