@@ -40,7 +40,6 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_FULL_URL || 'http://localhost:3000'
   ),
   openGraph: {
-    title: 'Masterball',
     type: 'website',
     locale: 'en_US',
     siteName: 'Masterball',

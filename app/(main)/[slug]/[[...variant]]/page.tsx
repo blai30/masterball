@@ -84,6 +84,10 @@ export async function generateMetadata({
       card: 'summary',
     },
     openGraph: {
+      type: 'website',
+      locale: 'en_US',
+      siteName: 'Masterball',
+      url: process.env.NEXT_PUBLIC_FULL_URL,
       images: [
         {
           url: imageUrl,
