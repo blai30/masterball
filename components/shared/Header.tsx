@@ -7,6 +7,7 @@ import { memo } from 'react'
 import clsx from 'clsx'
 import { motion } from 'motion/react'
 import { Accessibility, Backpack, Cat, Swords } from 'lucide-react'
+import VersionGroupSelector from '@/components/shared/VersionGroupSelector'
 
 const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
   ssr: false,
@@ -17,10 +18,10 @@ const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
 //   { ssr: false }
 // )
 
-const VersionGroupSelector = dynamic(
-  () => import('@/components/shared/VersionGroupSelector'),
-  { ssr: false }
-)
+// const VersionGroupSelector = dynamic(
+//   () => import('@/components/shared/VersionGroupSelector'),
+//   { ssr: false }
+// )
 
 const navItems = [
   { label: 'Pokemon', url: '/', icon: Cat },
