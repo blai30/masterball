@@ -1,6 +1,8 @@
 import Header from '@/components/shared/Header'
 import Footer from '@/components/shared/Footer'
 
+export const dynamic = 'force-static'
+
 export default function RootLayout({
   children,
 }: Readonly<{

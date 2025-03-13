@@ -30,9 +30,9 @@ export default async function Shell() {
   //         offset: 0,
   //       })
 
-  // const movesList = await getTestMovesList()
-  // const abilitiesList = await getTestAbilitiesList()
-  // const itemsList = await getTestItemsList()
+  // const movesList = getTestMovesList()
+  // const abilitiesList = getTestAbilitiesList()
+  // const itemsList = getTestItemsList()
   // const eggGroupsList = await pokeapi.getEggGroupsList()
 
   // const species = (await batchFetch(

@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { Pokemon } from 'pokedex-promise-v2'
+import { EyeOff } from 'lucide-react'
 import { pokeapi } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import { EyeOff } from 'lucide-react'
 
 export default async function AbilitiesSection({
   pokemon,

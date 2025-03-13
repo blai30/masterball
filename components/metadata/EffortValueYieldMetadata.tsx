@@ -1,5 +1,5 @@
-import { StatLabels, StatKey } from '@/lib/utils/pokeapiHelpers'
 import { StatElement } from 'pokedex-promise-v2'
+import { StatLabels, StatKey } from '@/lib/utils/pokeapiHelpers'
 
 export default function EffortValueYieldMetadata({
   stats,

@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import {
@@ -9,7 +10,6 @@ import {
   TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
 import MovesTable from '@/components/details/moves/MovesTable'
-import { cache } from 'react'
 
 function createMoveRows(
   moves: MoveElement[],
