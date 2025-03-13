@@ -6,8 +6,6 @@ import {
 import HorizontalScroller from '@/components/HorizontalScroller'
 import VariantCardSelector from '@/components/VariantCardSelector'
 
-export const dynamic = 'force-static'
-
 export default async function RootLayout({
   children,
   params,
