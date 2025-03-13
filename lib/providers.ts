@@ -407,14 +407,17 @@ export const getTestSpeciesList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))
   return species
 }
+
 export const getTestMovesList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))
   return moves
 }
+
 export const getTestAbilitiesList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))
   return abilities
 }
+
 export const getTestItemsList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))
   return items

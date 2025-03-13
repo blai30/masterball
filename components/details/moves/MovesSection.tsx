@@ -9,6 +9,7 @@ import {
   TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
 import MovesTable from '@/components/details/moves/MovesTable'
+import { cache } from 'react'
 
 function createMoveRows(
   moves: MoveElement[],
@@ -77,9 +78,11 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const uniqueMoveNames = [
     ...new Set(pokemon.moves.map((move) => move.move.name)),
   ]
-  const movesData = await batchFetch(uniqueMoveNames, (name) =>
-    pokeapi.getMoveByName(name)
+  const fetchMoves = cache(
+    async () =>
+      await batchFetch(uniqueMoveNames, (name) => pokeapi.getMoveByName(name))
   )
+  const movesData = await fetchMoves()
 
   // Process moves with machines
   const movesWithMachines = movesData.filter(
@@ -92,9 +95,13 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       )
     ),
   ]
-  const machinesData = (await batchFetch(uniqueMachinesUrls, (url) =>
-    pokeapi.getResource(url)
-  )) as Machine[]
+
+  const fetchMachines = cache(async () =>
+    uniqueMachinesUrls.length > 0
+      ? await batchFetch(uniqueMachinesUrls, (url) => pokeapi.getResource(url))
+      : []
+  )
+  const machinesData = await fetchMachines()
 
   // Create optimized maps
   const machinesMap = new Map()
