@@ -25,7 +25,7 @@ export const dynamic = 'force-static'
 export async function generateStaticParams() {
   const speciesList =
     process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-      ? getTestSpeciesList()
+      ? await getTestSpeciesList()
       : await pokeapi.getPokemonSpeciesList({
           limit: 1025,
           offset: 0,
