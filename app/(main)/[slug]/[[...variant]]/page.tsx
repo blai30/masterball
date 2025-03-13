@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 import { PokemonSpecies } from 'pokedex-promise-v2'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import { batchFetch, getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
@@ -31,10 +31,8 @@ export async function generateStaticParams() {
           offset: 0,
         })
 
-  const species = (await batchFetch(
-    speciesList.results.map((result) => result.url),
-    (url) => pokeapi.getResource(url),
-    10
+  const species = (await pokeapi.getResource(
+    speciesList.results.map((result) => result.url)
   )) as PokemonSpecies[]
 
   const params = species.flatMap((specie) =>

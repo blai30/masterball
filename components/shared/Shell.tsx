@@ -18,7 +18,6 @@ import {
   getTranslation,
   TypeLabels,
   TypeKey,
-  batchFetch,
 } from '@/lib/utils/pokeapiHelpers'
 
 export default async function Shell() {
@@ -35,15 +34,12 @@ export default async function Shell() {
   // const itemsList = await getTestItemsList()
   // const eggGroupsList = await pokeapi.getEggGroupsList()
 
-  // const species = (await batchFetch(
-  //   speciesList.results.map((result) => result.url),
-  //   (url) => pokeapi.getResource(url),
-  //   10
-  // )) as PokemonSpecies[]
+  // const species = await 
+  //   pokeapi.getResource(speciesList.results.map((result) => result.url)) as PokemonSpecies[]
   // // const species = await pokeapi.getPokemonSpeciesByName(
   // //   speciesList.results.map((resource: NamedAPIResource) => resource.name)
   // // )
-  // const monsters = (await batchFetch(species, getMonstersBySpecies, 10)).flat()
+  // const monsters = await getMonstersBySpecies(species).flat()
   // const moves = await pokeapi.getMoveByName(
   //   movesList.results.map((resource: NamedAPIResource) => resource.name)
   // )

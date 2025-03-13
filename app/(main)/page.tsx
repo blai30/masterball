@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { PokemonSpecies } from 'pokedex-promise-v2'
 import { getTestSpeciesList, pokeapi } from '@/lib/providers'
 import MonsterCardGrid from '@/components/MonsterCardGrid'
-import { batchFetch, getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export const dynamic = 'force-static'
 
@@ -26,10 +26,8 @@ export default async function Home() {
           offset: 0,
         })
 
-  const species = (await batchFetch(
-    speciesList.results.map((result) => result.url),
-    (url) => pokeapi.getResource(url),
-    10
+  const species = (await pokeapi.getResource(
+    speciesList.results.map((result) => result.url)
   )) as PokemonSpecies[]
 
   const speciesData = species.map((specie) => ({

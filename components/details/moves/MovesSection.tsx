@@ -2,7 +2,6 @@ import { cache } from 'react'
 import { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import {
-  batchFetch,
   LearnMethodKey,
   getTranslation,
   MoveRow,
@@ -77,8 +76,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
     ...new Set(pokemon.moves.map((move) => move.move.name)),
   ]
   const fetchMoves = cache(
-    async () =>
-      await batchFetch(uniqueMoveNames, (name) => pokeapi.getMoveByName(name))
+    async () => await pokeapi.getMoveByName(uniqueMoveNames)
   )
   const movesData = await fetchMoves()
 
@@ -96,7 +94,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
 
   const fetchMachines = cache(async () =>
     uniqueMachinesUrls.length > 0
-      ? await batchFetch(uniqueMachinesUrls, (url) => pokeapi.getResource(url))
+      ? await pokeapi.getResource(uniqueMachinesUrls)
       : []
   )
   const machinesData = await fetchMachines()
