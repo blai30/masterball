@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import {
@@ -9,7 +10,6 @@ import {
   TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
 import MovesTable from '@/components/details/moves/MovesTable'
-import { cache } from 'react'
 
 function createMoveRows(
   moves: MoveElement[],
@@ -21,18 +21,16 @@ function createMoveRows(
   moves.forEach((m) => {
     const move = movesMap[m.move.name]
 
-    m.version_group_details.forEach((vgd) => {
-      if (vgd.move_learn_method.name === variant) {
+    m.version_group_details.forEach((v) => {
+      if (v.move_learn_method.name === variant) {
         let id = move.id.toString()
 
         if (variant === LearnMethodKey.LevelUp) {
           id =
-            vgd.level_learned_at === 0
-              ? 'Evolve'
-              : vgd.level_learned_at.toString()
+            v.level_learned_at === 0 ? 'Evolve' : v.level_learned_at.toString()
         } else if (variant === LearnMethodKey.Machine && move.machineItems) {
           const machine = move.machineItems.find(
-            (m: Machine) => m.version_group.name === vgd.version_group.name
+            (m: Machine) => m.version_group.name === v.version_group.name
           )
           if (machine) {
             id = machine.item.name.toUpperCase()
@@ -42,7 +40,7 @@ function createMoveRows(
         moveRows.push({
           id,
           slug: m.move.name,
-          versionGroup: vgd.version_group.name,
+          versionGroup: v.version_group.name,
           type: move.type.name as TypeKey,
           damageClass: move.damage_class.name as DamageClassKey,
           name: getTranslation(move.names, 'name')!,
