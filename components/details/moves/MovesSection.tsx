@@ -1,4 +1,3 @@
-import { cache } from 'react'
 import { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import {
@@ -75,10 +74,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const uniqueMoveNames = [
     ...new Set(pokemon.moves.map((move) => move.move.name)),
   ]
-  const fetchMoves = cache(
-    async () => await pokeapi.getMoveByName(uniqueMoveNames)
-  )
-  const movesData = await fetchMoves()
+  const movesData = await pokeapi.getMoveByName(uniqueMoveNames)
 
   // Process moves with machines
   const movesWithMachines = movesData.filter(
@@ -91,13 +87,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       )
     ),
   ]
-
-  const fetchMachines = cache(async () =>
-    uniqueMachinesUrls.length > 0
-      ? await pokeapi.getResource(uniqueMachinesUrls)
-      : []
-  )
-  const machinesData = (await fetchMachines()) as Machine[]
+  const machinesData = await pokeapi.getResource(uniqueMachinesUrls) as Machine[]
 
   // Create optimized maps
   const machinesMap = new Map()
