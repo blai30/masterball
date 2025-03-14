@@ -1,4 +1,5 @@
-import { Machine, Pokemon } from 'pokedex-promise-v2'
+import { cache } from 'react'
+import { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 import { pokeapi } from '@/lib/providers'
 import {
   LearnMethodKey,
@@ -9,12 +10,58 @@ import {
 } from '@/lib/utils/pokeapiHelpers'
 import MovesTable from '@/components/details/moves/MovesTable'
 
+function createMoveRows(
+  moves: MoveElement[],
+  movesMap: Record<string, Move>,
+  variant: LearnMethodKey
+): MoveRow[] {
+  const moveRows: MoveRow[] = []
+
+  moves.forEach((m) => {
+    const move = movesMap[m.move.name]
+
+    m.version_group_details.forEach((v) => {
+      if (v.move_learn_method.name === variant) {
+        let id = move.id.toString()
+
+        if (variant === LearnMethodKey.LevelUp) {
+          id =
+            v.level_learned_at === 0 ? 'Evolve' : v.level_learned_at.toString()
+        } else if (variant === LearnMethodKey.Machine && move.machineItems) {
+          const machine = move.machineItems.find(
+            (m: Machine) => m.version_group.name === v.version_group.name
+          )
+          if (machine) {
+            id = machine.item.name.toUpperCase()
+          }
+        }
+
+        moveRows.push({
+          id,
+          slug: m.move.name,
+          versionGroup: v.version_group.name,
+          type: move.type.name as TypeKey,
+          damageClass: move.damage_class.name as DamageClassKey,
+          name: getTranslation(move.names, 'name')!,
+          power: move.power,
+          accuracy: move.accuracy,
+          pp: move.pp!,
+        })
+      }
+    })
+  })
+
+  return moveRows
+}
+
 export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
+  const title = 'Moves'
+
   if (pokemon.moves.length === 0) {
     return (
       <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
         <h2 className="text-xl font-medium text-black dark:text-white">
-          Moves
+          {title}
         </h2>
         <p className="flex items-baseline gap-2">
           <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
@@ -25,118 +72,72 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
     )
   }
 
-  // Fetch all required data in parallel
   const uniqueMoveNames = [
     ...new Set(pokemon.moves.map((move) => move.move.name)),
   ]
-  const [movesData] = await Promise.all([
-    pokeapi.getMoveByName(uniqueMoveNames),
-  ])
+  const fetchMoves = cache(
+    async () => await pokeapi.getMoveByName(uniqueMoveNames)
+  )
+  const movesData = await fetchMoves()
 
-  // Create moves lookup map for quick access
-  const movesMap = new Map(movesData.map((move) => [move.name, move]))
+  // Process moves with machines
+  const movesWithMachines = movesData.filter(
+    (move) => move.machines?.length > 0
+  )
+  const uniqueMachinesUrls = [
+    ...new Set(
+      movesWithMachines.flatMap((move) =>
+        move.machines.map((machine) => machine.machine.url)
+      )
+    ),
+  ]
 
-  // Create a map of all version groups a move appears in
-  const moveVersionGroups = new Map<string, Set<string>>()
-  pokemon.moves.forEach((move) => {
-    const moveDetails = new Set<string>()
-    move.version_group_details.forEach((detail) => {
-      moveDetails.add(detail.version_group.name)
-    })
-    moveVersionGroups.set(move.move.name, moveDetails)
+  const fetchMachines = cache(async () =>
+    uniqueMachinesUrls.length > 0
+      ? await pokeapi.getResource(uniqueMachinesUrls)
+      : []
+  )
+  const machinesData = (await fetchMachines()) as Machine[]
+
+  // Create optimized maps
+  const machinesMap = new Map()
+  movesWithMachines.forEach((move) => {
+    machinesMap.set(
+      move.name,
+      machinesData.filter((m) => m.move.name === move.name)
+    )
   })
 
-  // Fetch machine data for moves that use machines
-  const machineUrls = movesData.flatMap(
-    (move) =>
-      move.machines
-        ?.filter((m) => {
-          const versionGroup = m.version_group.url.split('/').slice(-2, -1)[0]
-          const moveVersions = moveVersionGroups.get(move.name)
-          return moveVersions?.has(versionGroup)
-        })
-        .map((m) => m.machine.url) || []
+  const movesMap = Object.fromEntries(
+    movesData.map((move) => [
+      move.name,
+      { ...move, machineItems: machinesMap.get(move.name) || [] },
+    ])
   )
 
-  const machinesData =
-    machineUrls.length > 0
-      ? ((await pokeapi.getResource(machineUrls)) as Machine[])
-      : []
+  // Group moves by their learn method and prepare MoveRow objects
+  const moveRowsByMethod: Record<LearnMethodKey, MoveRow[]> = {
+    [LearnMethodKey.FormChange]: [],
+    [LearnMethodKey.LevelUp]: [],
+    [LearnMethodKey.Machine]: [],
+    [LearnMethodKey.Tutor]: [],
+    [LearnMethodKey.Egg]: [],
+  }
 
-  // Create machine lookup map
-  const machinesByMoveAndVersion = new Map<string, Map<string, Machine>>()
-  machinesData.forEach((machine) => {
-    const moveName = machine.move.name
-    const versionGroup = machine.version_group.name
+  // For each learn method, create MoveRow objects
+  Object.keys(moveRowsByMethod).forEach((method) => {
+    const methodKey = method as LearnMethodKey
+    const methodMoves = pokemon.moves.filter((move) =>
+      move.version_group_details.some(
+        (vgd) => vgd.move_learn_method.name === methodKey
+      )
+    )
 
-    if (!machinesByMoveAndVersion.has(moveName)) {
-      machinesByMoveAndVersion.set(moveName, new Map())
-    }
-
-    machinesByMoveAndVersion.get(moveName)?.set(versionGroup, machine)
-  })
-
-  // Process moves directly into final structure in a single pass
-  const moveRowsByMethod: Record<LearnMethodKey, MoveRow[]> =
-    Object.fromEntries(
-      Object.values(LearnMethodKey).map((method) => [method, [] as MoveRow[]])
-    ) as Record<LearnMethodKey, MoveRow[]>
-
-  // Track processed moves to avoid duplicates (move name + method combination)
-  const processedMoves = new Map<string, Set<string>>()
-
-  pokemon.moves.forEach((moveElement) => {
-    const moveName = moveElement.move.name
-    const moveData = movesMap.get(moveName)
-
-    if (!moveData) return
-
-    moveElement.version_group_details.forEach((detail) => {
-      const method = detail.move_learn_method.name as LearnMethodKey
-      const versionGroup = detail.version_group.name
-      const moveMethodKey = `${moveName}-${method}`
-
-      // Skip if we don't support this method
-      if (!moveRowsByMethod[method]) return
-
-      // Initialize the set if it doesn't exist
-      if (!processedMoves.has(moveMethodKey)) {
-        processedMoves.set(moveMethodKey, new Set())
-      }
-
-      // Skip if this version has already been processed
-      const processedVersions = processedMoves.get(moveMethodKey)!
-      if (processedVersions.has(versionGroup)) return
-      processedVersions.add(versionGroup)
-
-      // Create the move row
-      let id = moveData.id.toString()
-
-      if (method === LearnMethodKey.LevelUp) {
-        id =
-          detail.level_learned_at === 0
-            ? 'Evolve'
-            : detail.level_learned_at.toString()
-      } else if (method === LearnMethodKey.Machine) {
-        const moveMachines = machinesByMoveAndVersion.get(moveName)
-        const machine = moveMachines?.get(versionGroup)
-        if (machine) {
-          id = machine.item.name.toUpperCase()
-        }
-      }
-
-      moveRowsByMethod[method].push({
-        id,
-        slug: moveName,
-        versionGroup,
-        type: moveData.type.name as TypeKey,
-        damageClass: moveData.damage_class.name as DamageClassKey,
-        name: getTranslation(moveData.names, 'name')!,
-        power: moveData.power,
-        accuracy: moveData.accuracy,
-        pp: moveData.pp!,
-      })
-    })
+    moveRowsByMethod[methodKey] = createMoveRows(
+      methodMoves,
+      movesMap,
+      methodKey
+    )
   })
 
   return (
