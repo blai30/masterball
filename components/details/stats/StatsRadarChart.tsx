@@ -75,14 +75,14 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
           />
           {/* Add dots at stat points */}
           {pokemon.stats.map((stat) => {
-            const angleIndex = statAngleMap[stat.name]
+            const angleIndex = statAngleMap[stat.stat.name]
             const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
             const statX = 50 + (stat.base_stat / 255) * 50 * Math.cos(angle)
             const statY = 50 + (stat.base_stat / 255) * 50 * Math.sin(angle)
 
             return (
               <circle
-                key={`dot-${stat.name}`}
+                key={`dot-${stat.stat.name}`}
                 cx={statX}
                 cy={statY}
                 r="1.2"
@@ -94,14 +94,14 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
         {/* Stat labels and their values */}
         {pokemon.stats.map((stat) => {
           const fullLabel = StatLabelsFull[stat.stat.name as StatKey]
-          const angleIndex = statAngleMap[stat.name]
+          const angleIndex = statAngleMap[stat.stat.name]
           const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
           const x = 50 + 56 * Math.cos(angle)
           const y = 50 + 50 * Math.sin(angle)
 
           return (
             <div
-              key={`label-${stat.id}`}
+              key={`label-${stat.stat.name}`}
               className="absolute top-0 left-0 flex w-14 -translate-x-1/2 -translate-y-1/2 flex-col"
               style={{ left: `${x}%`, top: `${y}%` }}
             >
@@ -118,7 +118,7 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
                   angleIndex === 5 && 'text-right'
                 )}
               >
-                {StatLabels[stat.name as StatKey]}
+                {StatLabels[stat.stat.name as StatKey]}
               </abbr>
               <p
                 className={clsx(

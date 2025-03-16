@@ -22,7 +22,7 @@ export default async function TypeEffectivenessSection({
       )
       return typeResource
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
   const allTypeResources = await pMap(
     Object.values(TypeKey).map((t) => `https://pokeapi.co/api/v2/type/${t}`),
@@ -32,7 +32,7 @@ export default async function TypeEffectivenessSection({
       )
       return typeResource
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
   const typeEffectiveness = getEffectiveness(...typeResources)
   const allTypeRelations = allTypeResources.map(

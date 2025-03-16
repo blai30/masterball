@@ -18,7 +18,7 @@ export default async function AbilitiesSection({
       ).then((response) => response.json() as Promise<Ability>)
       return ability
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
 
   const abilitiesMap = pokemon.abilities.map((ability) => {

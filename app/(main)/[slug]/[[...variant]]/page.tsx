@@ -46,7 +46,7 @@ export async function generateStaticParams() {
       )
       return species
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
 
   const params = species.flatMap((specie) =>
@@ -133,7 +133,7 @@ export default async function Page({
       )
       return formData
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
 
   const eggGroups = await pMap(
@@ -144,7 +144,7 @@ export default async function Page({
       )
       return groupData
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
   const growthRate = await fetch(species.growth_rate.url).then(
     (response) => response.json() as Promise<GrowthRate>

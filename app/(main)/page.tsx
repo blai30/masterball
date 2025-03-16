@@ -34,7 +34,7 @@ export default async function Home() {
       )
       return species
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
 
   const speciesData = species.map((specie) => ({

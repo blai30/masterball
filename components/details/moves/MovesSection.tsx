@@ -82,7 +82,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       )
       return move
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
 
   // Process moves with machines
@@ -104,7 +104,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       )
       return machine
     },
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
 
   // Create optimized maps

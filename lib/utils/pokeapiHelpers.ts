@@ -78,13 +78,13 @@ export const getMonstersBySpecies = async (
       fetch(variant.pokemon.url).then(
         (response) => response.json() as Promise<Pokemon>
       ),
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
 
   const monsters = await pMap(
     variants,
     async (variant) => createMonster(variant, species),
-    { concurrency: 4 }
+    { concurrency: 16 }
   )
   return monsters
 }
