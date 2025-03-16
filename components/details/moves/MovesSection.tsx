@@ -1,5 +1,5 @@
-import { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
+import pMap from 'p-map'
+import type { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 import {
   LearnMethodKey,
   getTranslation,
@@ -74,7 +74,17 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const uniqueMoveNames = [
     ...new Set(pokemon.moves.map((move) => move.move.name)),
   ]
-  const movesData = await pokeapi.getMoveByName(uniqueMoveNames)
+  // const movesData = await pokeapi.getMoveByName(uniqueMoveNames)
+  const movesData = await pMap(
+    uniqueMoveNames,
+    async (name) => {
+      const move = await fetch(`https://pokeapi.co/api/v2/move/${name}`).then(
+        (response) => response.json() as Promise<Move>
+      )
+      return move
+    },
+    { concurrency: 4 }
+  )
 
   // Process moves with machines
   const movesWithMachines = movesData.filter(
@@ -87,7 +97,19 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       )
     ),
   ]
-  const machinesData = await pokeapi.getResource(uniqueMachinesUrls) as Machine[]
+  // const machinesData = (await pokeapi.getResource(
+  //   uniqueMachinesUrls
+  // )) as Machine[]
+  const machinesData = await pMap(
+    uniqueMachinesUrls,
+    async (url) => {
+      const machine = await fetch(url).then(
+        (response) => response.json() as Promise<Machine>
+      )
+      return machine
+    },
+    { concurrency: 4 }
+  )
 
   // Create optimized maps
   const machinesMap = new Map()

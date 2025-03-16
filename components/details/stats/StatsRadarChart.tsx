@@ -1,10 +1,6 @@
 import clsx from 'clsx/lite'
-import { Pokemon, Stat } from 'pokedex-promise-v2'
-import {
-  getTranslation,
-  StatLabels,
-  StatKey,
-} from '@/lib/utils/pokeapiHelpers'
+import type { Pokemon } from 'pokedex-promise-v2'
+import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapiHelpers'
 
 const statAngleMap: Record<string, number> = {
   hp: 0, // top
@@ -15,13 +11,7 @@ const statAngleMap: Record<string, number> = {
   'special-attack': 5, // bottom left
 }
 
-export default function StatsRadarChart({
-  pokemon,
-  stats,
-}: {
-  pokemon: Pokemon
-  stats: Stat[]
-}) {
+export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
   const generateSubdivisions = (length: number) => {
     return Array.from({ length }, (_, i) => Math.ceil((i + 1) * (50 / length)))
   }
@@ -57,7 +47,7 @@ export default function StatsRadarChart({
     <div className="relative p-8">
       <div className="max-w-56">
         <svg viewBox="0 0 100 100" className="w-full overflow-visible">
-          {Array.from({ length: stats.length }, (_, i) => {
+          {Array.from({ length: pokemon.stats.length }, (_, i) => {
             const angle = (Math.PI / 3) * i - Math.PI / 2
             const x = 50 + 50 * Math.cos(angle)
             const y = 50 + 50 * Math.sin(angle)
@@ -84,16 +74,11 @@ export default function StatsRadarChart({
             className="fill-black/60 stroke-black stroke-1 dark:fill-white/60 dark:stroke-white"
           />
           {/* Add dots at stat points */}
-          {stats.map((stat) => {
-            const pokemonStat = pokemon.stats.find(
-              (s) => s.stat.name === stat.name
-            )!
+          {pokemon.stats.map((stat) => {
             const angleIndex = statAngleMap[stat.name]
             const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
-            const statX =
-              50 + (pokemonStat.base_stat / 255) * 50 * Math.cos(angle)
-            const statY =
-              50 + (pokemonStat.base_stat / 255) * 50 * Math.sin(angle)
+            const statX = 50 + (stat.base_stat / 255) * 50 * Math.cos(angle)
+            const statY = 50 + (stat.base_stat / 255) * 50 * Math.sin(angle)
 
             return (
               <circle
@@ -107,11 +92,8 @@ export default function StatsRadarChart({
           })}
         </svg>
         {/* Stat labels and their values */}
-        {stats.map((stat) => {
-          const name = getTranslation(stat.names, 'name')
-          const pokemonStat = pokemon.stats.find(
-            (s) => s.stat.name === stat.name
-          )!
+        {pokemon.stats.map((stat) => {
+          const fullLabel = StatLabelsFull[stat.stat.name as StatKey]
           const angleIndex = statAngleMap[stat.name]
           const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
           const x = 50 + 56 * Math.cos(angle)
@@ -124,8 +106,8 @@ export default function StatsRadarChart({
               style={{ left: `${x}%`, top: `${y}%` }}
             >
               <abbr
-                title={name}
-                aria-label={name}
+                title={fullLabel}
+                aria-label={fullLabel}
                 className={clsx(
                   'text-xs font-normal text-zinc-700 no-underline dark:text-zinc-300',
                   angleIndex === 0 && 'text-center',
@@ -149,7 +131,7 @@ export default function StatsRadarChart({
                   angleIndex === 5 && 'text-right'
                 )}
               >
-                {pokemonStat.base_stat}
+                {stat.base_stat}
               </p>
             </div>
           )

@@ -1,4 +1,4 @@
-import Pokedex, { type NamedAPIResourceList } from 'pokedex-promise-v2'
+import type { NamedAPIResourceList } from 'pokedex-promise-v2'
 
 const species: NamedAPIResourceList = {
   count: 1025,
@@ -396,12 +396,12 @@ const items: NamedAPIResourceList = {
   ],
 }
 
-export const pokeapi = new Pokedex({
-  // 3 months
-  cacheLimit: 1000 * 60 * 60 * 24 * 30 * 3,
-  // 5 minutes
-  timeout: 300000,
-})
+// export const pokeapi = new Pokedex({
+//   // 3 months
+//   cacheLimit: 1000 * 60 * 60 * 24 * 30 * 3,
+//   // 5 minutes
+//   timeout: 300000,
+// })
 
 export const getTestSpeciesList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))

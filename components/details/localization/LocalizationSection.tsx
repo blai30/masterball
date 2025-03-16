@@ -1,4 +1,4 @@
-import { PokemonSpecies } from 'pokedex-promise-v2'
+import type { PokemonSpecies } from 'pokedex-promise-v2'
 
 export default async function LocalizationSection({
   species,

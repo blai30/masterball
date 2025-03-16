@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
+import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { getTranslation, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
@@ -11,12 +10,11 @@ export default async function MonsterPill({
 }: {
   species: PokemonSpecies
 }) {
-  const pokemon: Pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((variety) => variety.is_default)!.pokemon.name
-  )
-  const types = await pokeapi.getTypeByName(
-    pokemon.types.map((type) => type.type.name)
-  )
+  const slug = species.varieties.find((variety) => variety.is_default)!.pokemon
+    .name
+  const pokemon: Pokemon = await fetch(
+    `https://pokeapi.co/api/v2/pokemon/${slug}`
+  ).then((response) => response.json() as Promise<Pokemon>)
 
   const name = getTranslation(species.names, 'name')
   const imageId = species.id.toString().padStart(4, '0')
@@ -40,10 +38,10 @@ export default async function MonsterPill({
             {name}
           </h3>
           <div className="flex flex-row gap-1">
-            {types.map((typeResource) => (
+            {pokemon.types.map((type) => (
               <TypeIcon
-                key={typeResource.id}
-                variant={typeResource.name as TypeKey}
+                key={type.type.name}
+                variant={type.type.name as TypeKey}
                 size="small"
                 link={false}
               />

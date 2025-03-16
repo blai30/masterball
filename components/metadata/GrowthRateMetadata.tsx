@@ -1,4 +1,4 @@
-import { GrowthRate } from 'pokedex-promise-v2'
+import type { GrowthRate } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function GrowthRateMetadata({

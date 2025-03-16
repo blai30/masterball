@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
-import { PokemonSpecies } from 'pokedex-promise-v2'
-import { getTestSpeciesList, pokeapi } from '@/lib/providers'
+import pMap from 'p-map'
+import type { NamedAPIResourceList, PokemonSpecies } from 'pokedex-promise-v2'
+import { getTestSpeciesList } from '@/lib/providers'
 import MonsterCardGrid from '@/components/MonsterCardGrid'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
@@ -21,14 +22,24 @@ export default async function Home() {
   const speciesList =
     process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
       ? await getTestSpeciesList()
-      : await pokeapi.getPokemonSpeciesList({
-          limit: 1025,
-          offset: 0,
-        })
+      : await fetch(
+          'https://pokeapi.co/api/v2/pokemon-species?limit=1025&offset=0'
+        ).then((response) => response.json() as Promise<NamedAPIResourceList>)
+  // : await pokeapi.getPokemonSpeciesList({
+  //     limit: 1025,
+  //     offset: 0,
+  //   })
 
-  const species = (await pokeapi.getResource(
-    speciesList.results.map((result) => result.url)
-  )) as PokemonSpecies[]
+  const species = await pMap(
+    speciesList.results,
+    async (result) => {
+      const species = await fetch(result.url).then(
+        (response) => response.json() as Promise<PokemonSpecies>
+      )
+      return species
+    },
+    { concurrency: 4 }
+  )
 
   const speciesData = species.map((specie) => ({
     id: specie.id,

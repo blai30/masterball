@@ -1,8 +1,16 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
-import { PokemonSpecies } from 'pokedex-promise-v2'
-import { getTestSpeciesList, pokeapi } from '@/lib/providers'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import pMap from 'p-map'
+import type {
+  EggGroup,
+  GrowthRate,
+  NamedAPIResourceList,
+  Pokemon,
+  PokemonForm,
+  PokemonSpecies,
+} from 'pokedex-promise-v2'
+import { getTestSpeciesList } from '@/lib/providers'
+import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
@@ -26,14 +34,27 @@ export async function generateStaticParams() {
   const speciesList =
     process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
       ? await getTestSpeciesList()
-      : await pokeapi.getPokemonSpeciesList({
-          limit: 1025,
-          offset: 0,
-        })
+      : await fetch(
+          'https://pokeapi.co/api/v2/pokemon-species?limit=1025&offset=0'
+        ).then((response) => response.json() as Promise<NamedAPIResourceList>)
+  // : await pokeapi.getPokemonSpeciesList({
+  //     limit: 1025,
+  //     offset: 0,
+  //   })
 
-  const species = (await pokeapi.getResource(
-    speciesList.results.map((result) => result.url)
-  )) as PokemonSpecies[]
+  // const species = (await pokeapi.getResource(
+  //   speciesList.results.map((result) => result.url)
+  // )) as PokemonSpecies[]
+  const species = await pMap(
+    speciesList.results,
+    async (result) => {
+      const species = await fetch(result.url).then(
+        (response) => response.json() as Promise<PokemonSpecies>
+      )
+      return species
+    },
+    { concurrency: 4 }
+  )
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({
@@ -52,28 +73,31 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug, variant } = await params
   const [variantKey] = variant ?? []
-  const species = await pokeapi.getPokemonSpeciesByName(slug)
-  const pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((v) =>
-      variantKey ? v.pokemon.name === variantKey : v.is_default
-    )!.pokemon.name
+  // const species = await pokeapi.getPokemonSpeciesByName(slug)
+  // const pokemon = await pokeapi.getPokemonByName(
+  //   species.varieties.find((v) =>
+  //     variantKey ? v.pokemon.name === variantKey : v.is_default
+  //   )!.pokemon.name
+  // )
+  const species = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${slug}`
+  ).then((response) => response.json() as Promise<PokemonSpecies>)
+  const pokemonUrl = species.varieties.find((v) =>
+    variantKey ? v.pokemon.name === variantKey : v.is_default
+  )!.pokemon.url
+  const pokemon = await fetch(pokemonUrl).then(
+    (response) => response.json() as Promise<Pokemon>
   )
-  const typeResources = await pokeapi.getTypeByName(
-    pokemon.types.map((type) => type.type.name)
-  )
-  const types = typeResources.map((resource) => {
-    const typeName = getTranslation(resource.names, 'name')!
-    return {
-      id: resource.id,
-      key: resource.name,
-      typeName,
-    }
-  })
+  // const typeResources = await pokeapi.getTypeByName(
+  //   pokemon.types.map((type) => type.type.name)
+  // )
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
   const name = getTranslation(species.names, 'name')!
-  const description = types.map((t) => t.typeName).join('/')
+  const description = pokemon.types
+    .map((t) => TypeLabels[t.type.name as TypeKey])
+    .join('/')
 
   const metadata: Metadata = {
     title: `${name} #${imageId}`,
@@ -107,22 +131,56 @@ export default async function Page({
 }) {
   const { slug, variant } = await params
   const [variantKey] = variant ?? []
-  const species = await pokeapi.getPokemonSpeciesByName(slug)
-  const pokemon = await pokeapi.getPokemonByName(
-    species.varieties.find((v) =>
-      variantKey ? v.pokemon.name === variantKey : v.is_default
-    )!.pokemon.name
+  // const species = await pokeapi.getPokemonSpeciesByName(slug)
+  // const pokemon = await pokeapi.getPokemonByName(
+  //   species.varieties.find((v) =>
+  //     variantKey ? v.pokemon.name === variantKey : v.is_default
+  //   )!.pokemon.name
+  // )
+  const species = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${slug}`
+  ).then((response) => response.json() as Promise<PokemonSpecies>)
+  const pokemonUrl = species.varieties.find((v) =>
+    variantKey ? v.pokemon.name === variantKey : v.is_default
+  )!.pokemon.url
+  const pokemon = await fetch(pokemonUrl).then(
+    (response) => response.json() as Promise<Pokemon>
   )
-  const forms = (
-    await pokeapi.getPokemonFormByName(pokemon.forms.map((form) => form.name))
-  ).filter((form) => form.form_names?.length && form.name !== pokemon.name)
+  // const forms = (
+  //   await pokeapi.getPokemonFormByName(pokemon.forms.map((form) => form.name))
+  // ).filter((form) => form.form_names?.length && form.name !== pokemon.name)
 
-  const [eggGroups, growthRate] = await Promise.all([
-    pokeapi.getEggGroupByName(
-      species?.egg_groups?.map((group) => group.name) || []
-    ),
-    pokeapi.getGrowthRateByName(species?.growth_rate?.name || ''),
-  ])
+  // const [eggGroups, growthRate] = await Promise.all([
+  //   pokeapi.getEggGroupByName(
+  //     species?.egg_groups?.map((group) => group.name) || []
+  //   ),
+  //   pokeapi.getGrowthRateByName(species?.growth_rate?.name || ''),
+  // ])
+
+  const forms = await pMap(
+    pokemon.forms,
+    async (form) => {
+      const formData = await fetch(form.url).then(
+        (response) => response.json() as Promise<PokemonForm>
+      )
+      return formData
+    },
+    { concurrency: 4 }
+  )
+
+  const eggGroups = await pMap(
+    species.egg_groups,
+    async (group) => {
+      const groupData = await fetch(group.url).then(
+        (response) => response.json() as Promise<EggGroup>
+      )
+      return groupData
+    },
+    { concurrency: 4 }
+  )
+  const growthRate = await fetch(species.growth_rate.url).then(
+    (response) => response.json() as Promise<GrowthRate>
+  )
 
   return (
     <div className="flex w-full flex-col gap-6">

@@ -1,5 +1,10 @@
-import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
+import pMap from 'p-map'
+import type {
+  Pokemon,
+  PokemonForm,
+  PokemonSpecies,
+  Type,
+} from 'pokedex-promise-v2'
 
 export function getTranslation<
   T extends {
@@ -36,7 +41,10 @@ export const createMonster = async (
   const form =
     variant.is_default || species.name === variant.name
       ? undefined
-      : await pokeapi.getPokemonFormByName(variant.name).catch(() => undefined)
+      : // : await pokeapi.getPokemonFormByName(variant.name).catch(() => undefined)
+        await fetch(`https://pokeapi.co/api/v2/pokemon-form/${variant.name}`)
+          .then((response) => response.json() as Promise<PokemonForm>)
+          .catch(() => undefined)
 
   const name =
     getTranslation(form?.form_names, 'name') ??
@@ -64,11 +72,25 @@ export const createMonster = async (
 export const getMonstersBySpecies = async (
   species: PokemonSpecies
 ): Promise<Monster[]> => {
-  const variants: Pokemon[] = await pokeapi.getResource(
-    species.varieties.map((v) => v.pokemon.url)
+  // const variants: Pokemon[] = await pokeapi.getResource(
+  //   species.varieties.map((v) => v.pokemon.url)
+  // )
+  const variants: Pokemon[] = await pMap(
+    species.varieties,
+    async (variant) =>
+      fetch(variant.pokemon.url).then(
+        (response) => response.json() as Promise<Pokemon>
+      ),
+    { concurrency: 4 }
   )
 
-  return Promise.all(variants.map((variant) => createMonster(variant, species)))
+  // return Promise.all(variants.map((variant) => createMonster(variant, species)))
+  const monsters = await pMap(
+    variants,
+    async (variant) => createMonster(variant, species),
+    { concurrency: 4 }
+  )
+  return monsters
 }
 
 export enum LearnMethodKey {
@@ -94,6 +116,15 @@ export const StatLabels: Record<StatKey, string> = {
   [StatKey.Defense]: 'Defense',
   [StatKey.SpecialAttack]: 'Sp. Atk',
   [StatKey.SpecialDefense]: 'Sp. Def',
+  [StatKey.Speed]: 'Speed',
+}
+
+export const StatLabelsFull: Record<StatKey, string> = {
+  [StatKey.Hp]: 'HP',
+  [StatKey.Attack]: 'Attack',
+  [StatKey.Defense]: 'Defense',
+  [StatKey.SpecialAttack]: 'Special Attack',
+  [StatKey.SpecialDefense]: 'Special Defense',
   [StatKey.Speed]: 'Speed',
 }
 

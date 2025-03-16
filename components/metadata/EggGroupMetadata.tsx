@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { EggGroup } from 'pokedex-promise-v2'
+import type { EggGroup } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function EggGroupMetadata({
