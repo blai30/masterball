@@ -12,8 +12,7 @@ export default function VariantCard({
   monster: Monster
   className?: string
 }) {
-  const { id, key, name, speciesSlug, pokemonSlug, formSlug, types, imageUrl } =
-    monster
+  const { name, types, imageUrl } = monster
 
   return (
     <div
@@ -24,14 +23,12 @@ export default function VariantCard({
     >
       <Image
         src={imageUrl || ''}
-        alt={monster.name}
+        alt={name}
         width={200}
         height={200}
         className="object-scale-down"
       />
-      <h3 className="text-lg font-medium text-black dark:text-white">
-        {monster.name}
-      </h3>
+      <h3 className="text-lg font-medium text-black dark:text-white">{name}</h3>
       {types && (
         <ul className="flex flex-row gap-2">
           {types.map((type) => (

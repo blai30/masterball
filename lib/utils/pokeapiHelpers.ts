@@ -1,5 +1,5 @@
-import { pokeapi } from '@/lib/providers'
 import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
+import { pokeapi } from '@/lib/providers'
 
 export function getTranslation<
   T extends {

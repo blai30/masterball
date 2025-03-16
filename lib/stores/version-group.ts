@@ -1,22 +1,13 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Store } from '@tanstack/store'
-import { useStore } from '@tanstack/react-store'
+import { Store, useStore } from '@tanstack/react-store'
 import { VersionGroupKey } from '@/lib/utils/pokeapiHelpers'
 
 const versionGroupStore = new Store<{ versionGroup: VersionGroupKey }>({
   // Default value
   versionGroup: VersionGroupKey.ScarletViolet,
 })
-
-const loadInitialVersionGroup = () => {
-  if (typeof window === 'undefined') {
-    return undefined
-  }
-  const initialVersionGroup = localStorage.getItem('version_group') || undefined
-  return initialVersionGroup as VersionGroupKey
-}
 
 const setVersionGroup = (versionGroup: VersionGroupKey) => {
   versionGroupStore.setState(() => ({ versionGroup }))
