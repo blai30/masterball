@@ -14,12 +14,6 @@ export default async function TypeEffectivenessSection({
   pokemon: Pokemon
 }) {
   const title = 'Type effectiveness'
-  // const typeResources = await pokeapi.getTypeByName(
-  //   pokemon.types.map((type) => type.type.name)
-  // )
-  // const allTypeResources = await pokeapi.getTypeByName(
-  //   Object.values(TypeKey).map((t) => t)
-  // )
   const typeResources = await pMap(
     pokemon.types.map((type) => type.type.url),
     async (url) => {

@@ -37,14 +37,7 @@ export async function generateStaticParams() {
       : await fetch(
           'https://pokeapi.co/api/v2/pokemon-species?limit=1025&offset=0'
         ).then((response) => response.json() as Promise<NamedAPIResourceList>)
-  // : await pokeapi.getPokemonSpeciesList({
-  //     limit: 1025,
-  //     offset: 0,
-  //   })
 
-  // const species = (await pokeapi.getResource(
-  //   speciesList.results.map((result) => result.url)
-  // )) as PokemonSpecies[]
   const species = await pMap(
     speciesList.results,
     async (result) => {
@@ -73,12 +66,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug, variant } = await params
   const [variantKey] = variant ?? []
-  // const species = await pokeapi.getPokemonSpeciesByName(slug)
-  // const pokemon = await pokeapi.getPokemonByName(
-  //   species.varieties.find((v) =>
-  //     variantKey ? v.pokemon.name === variantKey : v.is_default
-  //   )!.pokemon.name
-  // )
   const species = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${slug}`
   ).then((response) => response.json() as Promise<PokemonSpecies>)
@@ -88,9 +75,6 @@ export async function generateMetadata({
   const pokemon = await fetch(pokemonUrl).then(
     (response) => response.json() as Promise<Pokemon>
   )
-  // const typeResources = await pokeapi.getTypeByName(
-  //   pokemon.types.map((type) => type.type.name)
-  // )
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
@@ -131,12 +115,6 @@ export default async function Page({
 }) {
   const { slug, variant } = await params
   const [variantKey] = variant ?? []
-  // const species = await pokeapi.getPokemonSpeciesByName(slug)
-  // const pokemon = await pokeapi.getPokemonByName(
-  //   species.varieties.find((v) =>
-  //     variantKey ? v.pokemon.name === variantKey : v.is_default
-  //   )!.pokemon.name
-  // )
   const species = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${slug}`
   ).then((response) => response.json() as Promise<PokemonSpecies>)
@@ -146,16 +124,6 @@ export default async function Page({
   const pokemon = await fetch(pokemonUrl).then(
     (response) => response.json() as Promise<Pokemon>
   )
-  // const forms = (
-  //   await pokeapi.getPokemonFormByName(pokemon.forms.map((form) => form.name))
-  // ).filter((form) => form.form_names?.length && form.name !== pokemon.name)
-
-  // const [eggGroups, growthRate] = await Promise.all([
-  //   pokeapi.getEggGroupByName(
-  //     species?.egg_groups?.map((group) => group.name) || []
-  //   ),
-  //   pokeapi.getGrowthRateByName(species?.growth_rate?.name || ''),
-  // ])
 
   const forms = await pMap(
     pokemon.forms,

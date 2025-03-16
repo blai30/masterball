@@ -72,9 +72,6 @@ export const createMonster = async (
 export const getMonstersBySpecies = async (
   species: PokemonSpecies
 ): Promise<Monster[]> => {
-  // const variants: Pokemon[] = await pokeapi.getResource(
-  //   species.varieties.map((v) => v.pokemon.url)
-  // )
   const variants: Pokemon[] = await pMap(
     species.varieties,
     async (variant) =>
@@ -84,7 +81,6 @@ export const getMonstersBySpecies = async (
     { concurrency: 4 }
   )
 
-  // return Promise.all(variants.map((variant) => createMonster(variant, species)))
   const monsters = await pMap(
     variants,
     async (variant) => createMonster(variant, species),
@@ -202,12 +198,8 @@ export enum VersionGroupKey {
   UltraSunUltraMoon = 'ultra-sun-ultra-moon',
   LetsGoPikachuLetsGoEevee = 'lets-go-pikachu-lets-go-eevee',
   SwordShield = 'sword-shield',
-  // TheIsleOfArmor = 'the-isle-of-armor',
-  // TheCrownTundra = 'the-crown-tundra',
   BrilliantDiamondShiningPearl = 'brilliant-diamond-shining-pearl',
   ScarletViolet = 'scarlet-violet',
-  // TheTealMask = 'the-teal-mask',
-  // TheIndigoDisk = 'the-indigo-disk',
 }
 
 // prettier-ignore
@@ -230,12 +222,8 @@ export const VersionGroupLabels: Record<VersionGroupKey, string> = {
   [VersionGroupKey.UltraSunUltraMoon]: 'Ultra Sun & Ultra Moon',
   [VersionGroupKey.LetsGoPikachuLetsGoEevee]: 'Let\'s Go Pikachu & Let\'s Go Eevee',
   [VersionGroupKey.SwordShield]: 'Sword & Shield',
-  // [VersionGroupKey.TheIsleOfArmor]: 'Sword & Shield: The Isle of Armor',
-  // [VersionGroupKey.TheCrownTundra]: 'Sword & Shield: The Crown Tundra',
   [VersionGroupKey.BrilliantDiamondShiningPearl]: 'Brilliant Diamond & Shining Pearl',
   [VersionGroupKey.ScarletViolet]: 'Scarlet & Violet',
-  // [VersionGroupKey.TheTealMask]: 'Scarlet & Violet: The Teal Mask',
-  // [VersionGroupKey.TheIndigoDisk]: 'Scarlet & Violet: The Indigo Disk',
 }
 
 export enum Effectiveness {

@@ -74,7 +74,6 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const uniqueMoveNames = [
     ...new Set(pokemon.moves.map((move) => move.move.name)),
   ]
-  // const movesData = await pokeapi.getMoveByName(uniqueMoveNames)
   const movesData = await pMap(
     uniqueMoveNames,
     async (name) => {
@@ -97,9 +96,6 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       )
     ),
   ]
-  // const machinesData = (await pokeapi.getResource(
-  //   uniqueMachinesUrls
-  // )) as Machine[]
   const machinesData = await pMap(
     uniqueMachinesUrls,
     async (url) => {

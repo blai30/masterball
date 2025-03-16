@@ -8,9 +8,6 @@ export default function RootLayout({
 }>) {
   return (
     <div className="flex min-h-screen flex-col gap-6">
-      {/* <Suspense>
-          <Shell />
-        </Suspense> */}
       <Header />
       <main className="flex grow flex-col items-center">{children}</main>
       <Footer />

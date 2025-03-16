@@ -14,7 +14,6 @@ import {
 } from '@tanstack/react-table'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { LearnMethodKey, MoveRow } from '@/lib/utils/pokeapiHelpers'
-import TypeIcon from '@/components/TypeIcon'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypePill from '@/components/TypePill'
 

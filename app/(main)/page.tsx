@@ -25,10 +25,6 @@ export default async function Home() {
       : await fetch(
           'https://pokeapi.co/api/v2/pokemon-species?limit=1025&offset=0'
         ).then((response) => response.json() as Promise<NamedAPIResourceList>)
-  // : await pokeapi.getPokemonSpeciesList({
-  //     limit: 1025,
-  //     offset: 0,
-  //   })
 
   const species = await pMap(
     speciesList.results,

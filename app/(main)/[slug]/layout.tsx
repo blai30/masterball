@@ -14,7 +14,6 @@ export default async function RootLayout({
   params: Promise<{ slug: string }>
 }>) {
   const { slug } = await params
-  // const species = await pokeapi.getPokemonSpeciesByName(slug)
   const species = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${slug}`
   ).then((response) => response.json() as Promise<PokemonSpecies>)

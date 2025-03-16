@@ -10,9 +10,6 @@ export default async function AbilitiesSection({
   pokemon: Pokemon
 }) {
   const title = 'Abilities'
-  // const abilities = await pokeapi.getAbilityByName(
-  //   pokemon.abilities.map((ability) => ability.ability.name)
-  // )
   const abilities = await pMap(
     pokemon.abilities.map((ability) => ability.ability.name),
     async (name) => {
