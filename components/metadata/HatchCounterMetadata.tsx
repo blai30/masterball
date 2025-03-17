@@ -1,13 +1,12 @@
 export default function HatchCounterMetadata({
   hatchCounter,
 }: {
-  hatchCounter: number | undefined
+  hatchCounter: number | null
 }) {
   const title = 'Hatch counter'
 
   // Multiply hatch cycles by number of steps in a cycle.
-  const hatchSteps =
-    hatchCounter !== undefined ? (hatchCounter * 128).toLocaleString() : ''
+  const hatchSteps = hatchCounter ? (hatchCounter * 128).toLocaleString() : ''
 
   if (!hatchCounter) {
     return (

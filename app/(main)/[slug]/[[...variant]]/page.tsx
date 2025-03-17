@@ -126,7 +126,9 @@ export default async function Page({
   )
 
   const forms = await pMap(
-    pokemon.forms,
+    pokemon.forms.filter(
+      (form) => form.form_names?.length && form.name !== pokemon.name
+    ),
     async (form) => {
       const formData = await fetch(form.url).then(
         (response) => response.json() as Promise<PokemonForm>
@@ -160,7 +162,7 @@ export default async function Page({
             <WeightMetadata weight={pokemon.weight} />
             <GenderRatioMetadata genderRate={species.gender_rate} />
             <CaptureRateMetadata captureRate={species.capture_rate} />
-            <HatchCounterMetadata hatchCounter={species.hatch_counter!} />
+            <HatchCounterMetadata hatchCounter={species.hatch_counter} />
             <EggGroupMetadata eggGroups={eggGroups} />
             <GrowthRateMetadata growthRate={growthRate} />
             <EffortValueYieldMetadata stats={pokemon.stats} />
