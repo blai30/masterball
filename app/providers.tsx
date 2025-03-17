@@ -16,6 +16,8 @@ function makeQueryClient() {
         // above 0 to avoid refetching immediately on the client
         // 3 months
         staleTime: 1000 * 60 * 60 * 24 * 30 * 3,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
       },
     },
   })

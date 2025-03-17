@@ -1,6 +1,8 @@
 import Header from '@/components/shared/Header'
 import Footer from '@/components/shared/Footer'
 
+export const fetchCache = 'only-cache'
+
 export default function RootLayout({
   children,
 }: Readonly<{

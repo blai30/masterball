@@ -4,6 +4,7 @@ import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
 import { Analytics } from '@vercel/analytics/react'
+import Providers from '@/app/providers'
 
 const geist = Geist({
   variable: '--font-geist',
@@ -75,6 +76,8 @@ export const viewport: Viewport = {
   themeColor: '#A25C7E',
 }
 
+export const fetchCache = 'only-cache'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -99,14 +102,16 @@ export default function RootLayout({
         </head>
       )}
       <body className="h-full bg-white text-black antialiased dark:bg-black dark:text-white">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </Providers>
         <Analytics />
       </body>
     </html>

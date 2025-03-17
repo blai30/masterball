@@ -127,7 +127,7 @@ export default async function Page({
 
   const forms = await pMap(
     pokemon.forms.filter(
-      (form) => form.form_names?.length && form.name !== pokemon.name
+      (form) => form.name !== pokemon.name
     ),
     async (form) => {
       const formData = await fetch(form.url).then(

@@ -1,4 +1,3 @@
-import path from 'path'
 import type { NamedAPIResourceList } from 'pokedex-promise-v2'
 
 const BASE_URL = 'https://pokeapi.co/api/v2'
@@ -16,25 +15,24 @@ const pokeapi = {
       limit: limit.toString(),
       offset: offset.toString(),
     })
-    return fetch(path.join(BASE_URL, endpoint, `?${params.toString()}`)).then(
-      (res) => {
-        if (!res.ok) {
-          throw new Error(`Failed to fetch ${endpoint}: ${res.statusText}`)
-        }
-        return res.json()
+    const url = new URL(endpoint, BASE_URL)
+    url.search = params.toString()
+    return fetch(url.toString()).then((res) => {
+      if (!res.ok) {
+        throw new Error(`Failed to fetch ${endpoint}: ${res.statusText}`)
       }
-    )
+      return res.json()
+    })
   },
 
   /**
    * Gets a resource by name or ID
    */
   get: async <T>(endpoint: string, nameOrId?: string | number): Promise<T> => {
-    const url = path.join(
-      BASE_URL,
-      endpoint,
-      nameOrId !== undefined ? `${nameOrId}` : ''
-    )
+    const url = new URL(endpoint, BASE_URL)
+    if (nameOrId) {
+      url.pathname += `/${nameOrId}`
+    }
     return fetch(url).then((res) => {
       if (!res.ok) {
         throw new Error(`Failed to fetch ${endpoint}: ${res.statusText}`)
