@@ -15,7 +15,8 @@ function makeQueryClient() {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
         // 3 months
-        staleTime: 1000 * 60 * 60 * 24 * 30 * 3,
+        // staleTime: 1000 * 60 * 60 * 24 * 30 * 3,
+        staleTime: Infinity,
         refetchOnReconnect: false,
         refetchOnWindowFocus: false,
       },

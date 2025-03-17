@@ -4,12 +4,12 @@ import pMap from 'p-map'
 import type {
   EggGroup,
   GrowthRate,
-  NamedAPIResourceList,
   Pokemon,
   PokemonForm,
   PokemonSpecies,
 } from 'pokedex-promise-v2'
-import { getTestSpeciesList } from '@/lib/providers'
+import pokeapi from '@/lib/api/pokeapi'
+import { getSpeciesData } from '@/lib/api/query-fetchers'
 import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
@@ -31,23 +31,7 @@ import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMeta
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
-  const speciesList =
-    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-      ? await getTestSpeciesList()
-      : await fetch(
-          'https://pokeapi.co/api/v2/pokemon-species?limit=1025&offset=0'
-        ).then((response) => response.json() as Promise<NamedAPIResourceList>)
-
-  const species = await pMap(
-    speciesList.results,
-    async (result) => {
-      const species = await fetch(result.url).then(
-        (response) => response.json() as Promise<PokemonSpecies>
-      )
-      return species
-    },
-    { concurrency: 16 }
-  )
+  const species = await getSpeciesData()
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({
@@ -66,15 +50,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug, variant } = await params
   const [variantKey] = variant ?? []
-  const species = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${slug}`
-  ).then((response) => response.json() as Promise<PokemonSpecies>)
+  const species = await pokeapi.getByName<PokemonSpecies>(
+    'pokemon-species',
+    slug
+  )
   const pokemonUrl = species.varieties.find((v) =>
     variantKey ? v.pokemon.name === variantKey : v.is_default
   )!.pokemon.url
-  const pokemon = await fetch(pokemonUrl).then(
-    (response) => response.json() as Promise<Pokemon>
-  )
+  const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
@@ -115,41 +98,29 @@ export default async function Page({
 }) {
   const { slug, variant } = await params
   const [variantKey] = variant ?? []
-  const species = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${slug}`
-  ).then((response) => response.json() as Promise<PokemonSpecies>)
+  const species = await pokeapi.getByName<PokemonSpecies>(
+    'pokemon-species',
+    slug
+  )
   const pokemonUrl = species.varieties.find((v) =>
     variantKey ? v.pokemon.name === variantKey : v.is_default
   )!.pokemon.url
-  const pokemon = await fetch(pokemonUrl).then(
-    (response) => response.json() as Promise<Pokemon>
-  )
+  const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const forms = await pMap(
-    pokemon.forms.filter(
-      (form) => form.name !== pokemon.name
-    ),
-    async (form) => {
-      const formData = await fetch(form.url).then(
-        (response) => response.json() as Promise<PokemonForm>
-      )
-      return formData
-    },
+    pokemon.forms.filter((form) => form.name !== pokemon.name),
+    async (form) =>
+      await pokeapi.getByName<PokemonForm>('pokemon-form', form.name),
     { concurrency: 16 }
   )
 
   const eggGroups = await pMap(
     species.egg_groups,
-    async (group) => {
-      const groupData = await fetch(group.url).then(
-        (response) => response.json() as Promise<EggGroup>
-      )
-      return groupData
-    },
+    async (eggGroup) => await pokeapi.getResource<EggGroup>(eggGroup.url),
     { concurrency: 16 }
   )
-  const growthRate = await fetch(species.growth_rate.url).then(
-    (response) => response.json() as Promise<GrowthRate>
+  const growthRate = await pokeapi.getResource<GrowthRate>(
+    species.growth_rate.url
   )
 
   return (
