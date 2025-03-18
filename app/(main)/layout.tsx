@@ -1,6 +1,7 @@
 import Header from '@/components/shared/Header'
 import Footer from '@/components/shared/Footer'
 
+export const dynamicParams = false
 export const fetchCache = 'only-cache'
 
 export default function RootLayout({

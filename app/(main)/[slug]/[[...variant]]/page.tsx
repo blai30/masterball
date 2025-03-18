@@ -17,6 +17,7 @@ import LocalizationSection from '@/components/details/localization/LocalizationS
 import MovesSection from '@/components/details/moves/MovesSection'
 
 export const dynamic = 'force-static'
+export const dynamicParams = false
 
 export async function generateStaticParams() {
   const speciesList =

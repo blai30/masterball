@@ -6,6 +6,7 @@ import HorizontalScroller from '@/components/HorizontalScroller'
 import VariantCardSelector from '@/components/VariantCardSelector'
 import type { PokemonSpecies } from 'pokedex-promise-v2'
 
+export const dynamicParams = false
 export const fetchCache = 'only-cache'
 
 export default async function RootLayout({

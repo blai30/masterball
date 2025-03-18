@@ -7,6 +7,7 @@ import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import MonsterCardGrid from '@/components/MonsterCardGrid'
 
 export const dynamic = 'force-static'
+export const dynamicParams = false
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata: Metadata = {
