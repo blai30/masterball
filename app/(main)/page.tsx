@@ -31,7 +31,7 @@ export default async function Home() {
       const species = await pokeapi.getResource<PokemonSpecies>(result.url)
       return species
     },
-    { concurrency: 16 }
+    { concurrency: 4 }
   )
 
   const speciesData = species.map((specie) => ({

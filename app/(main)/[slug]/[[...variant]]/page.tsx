@@ -1,17 +1,13 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import pMap from 'p-map'
-import type {
-  EggGroup,
-  GrowthRate,
-  Pokemon,
-  PokemonForm,
-  PokemonSpecies,
-} from 'pokedex-promise-v2'
+import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
+import LoadingMetadata from '@/components/details/LoadingMetadata'
+import MonsterMetadata from '@/components/details/MonsterMetadata'
 import StatsSection from '@/components/details/stats/StatsSection'
 import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
 import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
@@ -19,14 +15,6 @@ import EvolutionSection from '@/components/details/evolution/EvolutionSection'
 import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection'
 import LocalizationSection from '@/components/details/localization/LocalizationSection'
 import MovesSection from '@/components/details/moves/MovesSection'
-import HeightMetadata from '@/components/metadata/HeightMetadata'
-import WeightMetadata from '@/components/metadata/WeightMetadata'
-import GenderRatioMetadata from '@/components/metadata/GenderRatioMetadata'
-import CaptureRateMetadata from '@/components/metadata/CaptureRateMetadata'
-import HatchCounterMetadata from '@/components/metadata/HatchCounterMetadata'
-import EggGroupMetadata from '@/components/metadata/EggGroupMetadata'
-import GrowthRateMetadata from '@/components/metadata/GrowthRateMetadata'
-import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMetadata'
 
 export const dynamic = 'force-static'
 
@@ -42,7 +30,7 @@ export async function generateStaticParams() {
       const species = await pokeapi.getResource<PokemonSpecies>(result.url)
       return species
     },
-    { concurrency: 16 }
+    { concurrency: 4 }
   )
 
   const params = species.flatMap((specie) =>
@@ -123,16 +111,7 @@ export default async function Page({
     pokemon.forms.filter((form) => form.name !== pokemon.name),
     async (form) =>
       await pokeapi.getByName<PokemonForm>('pokemon-form', form.name),
-    { concurrency: 16 }
-  )
-
-  const eggGroups = await pMap(
-    species.egg_groups,
-    async (eggGroup) => await pokeapi.getResource<EggGroup>(eggGroup.url),
-    { concurrency: 16 }
-  )
-  const growthRate = await pokeapi.getResource<GrowthRate>(
-    species.growth_rate.url
+    { concurrency: 4 }
   )
 
   return (
@@ -140,16 +119,9 @@ export default async function Page({
       {/* Metadata section */}
       <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
         <section className="container mx-auto px-4">
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 2xl:grid-cols-8">
-            <HeightMetadata height={pokemon.height} />
-            <WeightMetadata weight={pokemon.weight} />
-            <GenderRatioMetadata genderRate={species.gender_rate} />
-            <CaptureRateMetadata captureRate={species.capture_rate} />
-            <HatchCounterMetadata hatchCounter={species.hatch_counter} />
-            <EggGroupMetadata eggGroups={eggGroups} />
-            <GrowthRateMetadata growthRate={growthRate} />
-            <EffortValueYieldMetadata stats={pokemon.stats} />
-          </div>
+          <Suspense fallback={<LoadingMetadata />}>
+            <MonsterMetadata species={species} pokemon={pokemon} />
+          </Suspense>
         </section>
       </div>
       {/* Main details section */}
