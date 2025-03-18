@@ -9,7 +9,7 @@ import type {
   PokemonSpecies,
 } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { getSpeciesData } from '@/lib/api/query-fetchers'
+import { getTestSpeciesList } from '@/lib/providers'
 import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
 import LoadingSection from '@/components/details/LoadingSection'
 import StatsSection from '@/components/details/stats/StatsSection'
@@ -31,7 +31,19 @@ import EffortValueYieldMetadata from '@/components/metadata/EffortValueYieldMeta
 export const dynamic = 'force-static'
 
 export async function generateStaticParams() {
-  const species = await getSpeciesData()
+  const speciesList =
+    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+      ? await getTestSpeciesList()
+      : await pokeapi.getList('pokemon-species', 1025, 0)
+
+  const species = await pMap(
+    speciesList.results,
+    async (result) => {
+      const species = await pokeapi.getResource<PokemonSpecies>(result.url)
+      return species
+    },
+    { concurrency: 16 }
+  )
 
   const params = species.flatMap((specie) =>
     specie.varieties.map((variant) => ({

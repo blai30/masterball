@@ -3,33 +3,18 @@
 import { useState, useMemo, useCallback } from 'react'
 import Fuse from 'fuse.js'
 import { Search } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
 import MonsterCard from '@/components/MonsterCard'
 import Pagination from '@/components/Pagination'
-import { getSpeciesData } from '@/lib/api/query-fetchers'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
-// export default function MonsterCardGrid({
-//   speciesData,
-// }: {
-//   speciesData: {
-//     id: number
-//     slug: string
-//     name: string
-//   }[]
-// }) {
-export default function MonsterCardGrid() {
-  const { data } = useQuery({
-    queryKey: ['species-list'],
-    queryFn: getSpeciesData,
-  })
-
-  const speciesData = data!.map((specie) => ({
-    id: specie.id,
-    slug: specie.name,
-    name: getTranslation(specie.names, 'name')!,
-  }))
-
+export default function MonsterCardGrid({
+  speciesData,
+}: {
+  speciesData: {
+    id: number
+    slug: string
+    name: string
+  }[]
+}) {
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 60
