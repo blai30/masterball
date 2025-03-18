@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { Pokemon } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import pMap from 'p-map'
+import type { Ability, Pokemon } from 'pokedex-promise-v2'
 import { EyeOff } from 'lucide-react'
+import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default async function AbilitiesSection({
   pokemon,
@@ -10,8 +10,15 @@ export default async function AbilitiesSection({
   pokemon: Pokemon
 }) {
   const title = 'Abilities'
-  const abilities = await pokeapi.getAbilityByName(
-    pokemon.abilities.map((ability) => ability.ability.name)
+  const abilities = await pMap(
+    pokemon.abilities.map((ability) => ability.ability.name),
+    async (name) => {
+      const ability = await fetch(
+        `https://pokeapi.co/api/v2/ability/${name}`
+      ).then((response) => response.json() as Promise<Ability>)
+      return ability
+    },
+    { concurrency: 4 }
   )
 
   const abilitiesMap = pokemon.abilities.map((ability) => {

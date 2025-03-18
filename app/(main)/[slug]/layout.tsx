@@ -1,10 +1,12 @@
-import { pokeapi } from '@/lib/providers'
 import {
   getMonstersBySpecies,
   getTranslation,
 } from '@/lib/utils/pokeapiHelpers'
 import HorizontalScroller from '@/components/HorizontalScroller'
 import VariantCardSelector from '@/components/VariantCardSelector'
+import type { PokemonSpecies } from 'pokedex-promise-v2'
+
+export const fetchCache = 'only-cache'
 
 export default async function RootLayout({
   children,
@@ -14,7 +16,9 @@ export default async function RootLayout({
   params: Promise<{ slug: string }>
 }>) {
   const { slug } = await params
-  const species = await pokeapi.getPokemonSpeciesByName(slug)
+  const species = await fetch(
+    `https://pokeapi.co/api/v2/pokemon-species/${slug}`
+  ).then((response) => response.json() as Promise<PokemonSpecies>)
   const name = getTranslation(species.names, 'name')!
   const monsters = await getMonstersBySpecies(species)
 

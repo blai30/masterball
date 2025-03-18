@@ -1,15 +1,21 @@
-import { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
+import dynamic from 'next/dynamic'
+import pMap from 'p-map'
+import type { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 import {
-  batchFetch,
   LearnMethodKey,
   getTranslation,
   MoveRow,
   DamageClassKey,
   TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
-import MovesTable from '@/components/details/moves/MovesTable'
-import { cache } from 'react'
+import LoadingSection from '@/components/details/LoadingSection'
+
+const MovesTable = dynamic(
+  () => import('@/components/details/moves/MovesTable'),
+  {
+    loading: () => <LoadingSection />,
+  }
+)
 
 function createMoveRows(
   moves: MoveElement[],
@@ -21,18 +27,16 @@ function createMoveRows(
   moves.forEach((m) => {
     const move = movesMap[m.move.name]
 
-    m.version_group_details.forEach((vgd) => {
-      if (vgd.move_learn_method.name === variant) {
+    m.version_group_details.forEach((v) => {
+      if (v.move_learn_method.name === variant) {
         let id = move.id.toString()
 
         if (variant === LearnMethodKey.LevelUp) {
           id =
-            vgd.level_learned_at === 0
-              ? 'Evolve'
-              : vgd.level_learned_at.toString()
+            v.level_learned_at === 0 ? 'Evolve' : v.level_learned_at.toString()
         } else if (variant === LearnMethodKey.Machine && move.machineItems) {
           const machine = move.machineItems.find(
-            (m: Machine) => m.version_group.name === vgd.version_group.name
+            (m: Machine) => m.version_group.name === v.version_group.name
           )
           if (machine) {
             id = machine.item.name.toUpperCase()
@@ -42,7 +46,7 @@ function createMoveRows(
         moveRows.push({
           id,
           slug: m.move.name,
-          versionGroup: vgd.version_group.name,
+          versionGroup: v.version_group.name,
           type: move.type.name as TypeKey,
           damageClass: move.damage_class.name as DamageClassKey,
           name: getTranslation(move.names, 'name')!,
@@ -78,11 +82,16 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const uniqueMoveNames = [
     ...new Set(pokemon.moves.map((move) => move.move.name)),
   ]
-  const fetchMoves = cache(
-    async () =>
-      await batchFetch(uniqueMoveNames, (name) => pokeapi.getMoveByName(name))
+  const movesData = await pMap(
+    uniqueMoveNames,
+    async (name) => {
+      const move = await fetch(`https://pokeapi.co/api/v2/move/${name}`).then(
+        (response) => response.json() as Promise<Move>
+      )
+      return move
+    },
+    { concurrency: 4 }
   )
-  const movesData = await fetchMoves()
 
   // Process moves with machines
   const movesWithMachines = movesData.filter(
@@ -95,13 +104,16 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       )
     ),
   ]
-
-  const fetchMachines = cache(async () =>
-    uniqueMachinesUrls.length > 0
-      ? await batchFetch(uniqueMachinesUrls, (url) => pokeapi.getResource(url))
-      : []
+  const machinesData = await pMap(
+    uniqueMachinesUrls,
+    async (url) => {
+      const machine = await fetch(url).then(
+        (response) => response.json() as Promise<Machine>
+      )
+      return machine
+    },
+    { concurrency: 4 }
   )
-  const machinesData = await fetchMachines()
 
   // Create optimized maps
   const machinesMap = new Map()

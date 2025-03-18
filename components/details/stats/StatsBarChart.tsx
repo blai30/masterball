@@ -1,43 +1,31 @@
-import {
-  getTranslation,
-  StatLabels,
-  StatKey,
-} from '@/lib/utils/pokeapiHelpers'
-import { Pokemon, Stat } from 'pokedex-promise-v2'
+import type { Pokemon } from 'pokedex-promise-v2'
+import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapiHelpers'
 
-export default async function StatsBarChart({
-  pokemon,
-  stats,
-}: {
-  pokemon: Pokemon
-  stats: Stat[]
-}) {
+export default async function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
 
   return (
     <div className="w-full">
       {/* Bar chart */}
       <ul className="flex flex-col">
-        {stats.map((stat) => {
-          const name = getTranslation(stat.names, 'name')
-          const pokemonStat = pokemon.stats.find(
-            (s) => s.stat.name === stat.name
-          )!
-          const fillPercentage = ((pokemonStat.base_stat / 255) * 100).toFixed(
-            4
-          )
+        {pokemon.stats.map((stat) => {
+          const fullLabel = StatLabelsFull[stat.stat.name as StatKey]
+          const fillPercentage = ((stat.base_stat / 255) * 100).toFixed(4)
           return (
-            <li key={stat.id} className="flex flex-row items-center gap-3">
+            <li
+              key={stat.stat.name}
+              className="flex flex-row items-center gap-3"
+            >
               <p className="flex flex-row items-center justify-between">
                 <abbr
-                  title={name}
-                  aria-label={name}
+                  title={fullLabel}
+                  aria-label={fullLabel}
                   className="min-w-16 font-normal text-zinc-700 no-underline sm:min-w-20 lg:min-w-16 xl:min-w-20 dark:text-zinc-300"
                 >
-                  {StatLabels[stat.name as StatKey]}
+                  {StatLabels[stat.stat.name as StatKey]}
                 </abbr>
                 <span className="font-num min-w-10 text-right text-black tabular-nums sm:min-w-12 lg:min-w-10 xl:min-w-12 dark:text-white">
-                  {pokemonStat.base_stat.toLocaleString()}
+                  {stat.base_stat.toLocaleString()}
                 </span>
               </p>
 

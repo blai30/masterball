@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { memo } from 'react'
 import clsx from 'clsx'
-import { motion } from 'motion/react'
 import { Accessibility, Backpack, Cat, Swords } from 'lucide-react'
 import VersionGroupSelector from '@/components/shared/VersionGroupSelector'
 
@@ -59,17 +58,12 @@ function Header() {
 
               return (
                 <li key={item.url} className="relative">
-                  {active && (
-                    <motion.div
-                      layoutId="active-nav"
-                      className="absolute inset-0 -z-10 rounded-lg bg-white/50 dark:bg-black/50"
-                    />
-                  )}
                   <Link
                     href={item.url}
                     className={clsx(
                       'inline-flex items-center gap-2 rounded-lg px-3 py-1.5',
                       'text-sm font-medium transition-colors hover:duration-0',
+                      active && 'bg-white/50 dark:bg-black/50',
                       !active &&
                         'text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800 focus-visible:bg-zinc-200 focus-visible:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200 dark:focus-visible:bg-zinc-800 dark:focus-visible:text-zinc-200'
                     )}

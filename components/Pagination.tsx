@@ -50,7 +50,7 @@ export default function Pagination({
       <button
         onClick={() => onPageChangeAction(currentPage - 1)}
         disabled={currentPage === 1}
-        className="inline-flex h-[1lh] min-w-26 items-center justify-start rounded px-1.5 py-1 transition-colors hover:bg-zinc-200 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800"
+        className="inline-flex h-[1lh] w-26 items-center justify-start rounded px-1.5 py-1 transition-colors hover:bg-zinc-200 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800"
       >
         <ChevronLeft size={16} className="" />
         <span className="px-2">Previous</span>
@@ -70,7 +70,7 @@ export default function Pagination({
                   autoFocus
                   onKeyDown={(e) => handleInputChange(e, index)}
                   onBlur={() => setShowInput(null)}
-                  className="h-[1lh] min-w-9 appearance-none rounded bg-transparent text-center [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden"
+                  className="h-[1lh] w-9 appearance-none rounded bg-transparent text-center [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden"
                 />
               )
             }
@@ -78,7 +78,7 @@ export default function Pagination({
               <button
                 key={`ellipsis-${index}`}
                 onClick={() => setShowInput(index)}
-                className="inline-flex h-[1lh] min-w-9 items-center justify-center rounded py-1 transition-colors hover:bg-zinc-200 hover:duration-0 dark:hover:bg-zinc-800"
+                className="inline-flex h-[1lh] w-9 items-center justify-center rounded py-1 transition-colors hover:bg-zinc-200 hover:duration-0 dark:hover:bg-zinc-800"
               >
                 ...
               </button>
@@ -92,7 +92,7 @@ export default function Pagination({
                 typeof page === 'number' && onPageChangeAction(page)
               }
               className={clsx(
-                'relative inline-flex h-[1lh] min-w-9 items-center justify-center rounded-md py-1',
+                'relative inline-flex h-[1lh] w-9 items-center justify-center rounded-md py-1',
                 page === currentPage
                   ? 'border border-zinc-300 dark:border-zinc-700'
                   : 'transition-colors hover:bg-zinc-200 hover:duration-0 dark:hover:bg-zinc-800'
@@ -107,7 +107,7 @@ export default function Pagination({
       <button
         onClick={() => onPageChangeAction(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="inline-flex h-[1lh] min-w-26 items-center justify-end rounded px-1.5 py-1 transition-colors hover:bg-zinc-200 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800"
+        className="inline-flex h-[1lh] w-26 items-center justify-end rounded px-1.5 py-1 transition-colors hover:bg-zinc-200 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800"
       >
         <span className="px-2">Next</span>
         <ChevronRight size={16} className="" />

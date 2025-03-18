@@ -1,5 +1,4 @@
-import Image from 'next/image'
-import { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
+import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import TypePill from '@/components/TypePill'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 

@@ -1,6 +1,5 @@
 import clsx from 'clsx'
-import { EvolutionChain, PokemonSpecies } from 'pokedex-promise-v2'
-import { pokeapi } from '@/lib/providers'
+import type { EvolutionChain, PokemonSpecies } from 'pokedex-promise-v2'
 import MonsterPill from '@/components/MonsterPill'
 
 async function EvolutionNode({
@@ -10,7 +9,9 @@ async function EvolutionNode({
   chain: EvolutionChain['chain']
   depth?: number
 }) {
-  const species: PokemonSpecies = await pokeapi.getResource(chain.species.url)
+  const species: PokemonSpecies = await fetch(chain.species.url).then(
+    (response) => response.json() as Promise<PokemonSpecies>
+  )
 
   return (
     <div className="flex flex-col gap-2">
@@ -59,9 +60,9 @@ export default async function EvolutionSection({
 }: {
   species: PokemonSpecies
 }) {
-  const evolutionChain: EvolutionChain = await pokeapi.getResource(
+  const evolutionChain: EvolutionChain = await fetch(
     species.evolution_chain.url
-  )
+  ).then((response) => response.json() as Promise<EvolutionChain>)
 
   return (
     <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">

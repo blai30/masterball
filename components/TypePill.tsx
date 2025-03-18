@@ -39,10 +39,12 @@ export default function TypePill({
   variant,
   size = 'large',
   link = true,
+  className,
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
   link?: boolean
+  className?: string
 }) {
   const name = TypeLabels[variant as TypeKey]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
@@ -62,7 +64,8 @@ export default function TypePill({
         variants({ size }),
         link &&
           'transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700',
-        'bg-zinc-200 dark:bg-zinc-800'
+        'bg-zinc-200 dark:bg-zinc-800',
+        className
       )}
     >
       <Image
@@ -75,7 +78,7 @@ export default function TypePill({
           'aspect-square rounded-xs object-contain'
         )}
       />
-      <p className="inline-flex h-full w-full items-center text-black uppercase dark:text-white">
+      <p className="items-center text-black uppercase dark:text-white">
         {name}
       </p>
     </Wrapper>

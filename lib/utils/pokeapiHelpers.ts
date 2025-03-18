@@ -1,46 +1,10 @@
-import { pokeapi } from '@/lib/providers'
-import { Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
-
-/**
- * Generic function to batch PokeAPI requests to avoid hitting rate limits
- * and improve performance when fetching multiple resources.
- *
- * @param identifiers Array of names, IDs, or URLs to fetch.
- * @param fetchFunction Function that fetches a single resource.
- * @param batchSize Max number of requests to make in parallel (default: 20).
- * @returns Promise with array of results in the same order as identifiers.
- */
-export async function batchFetch<T, R>(
-  identifiers: T[],
-  fetchFunction: (identifier: T) => Promise<R>,
-  batchSize: number = 20
-): Promise<R[]> {
-  const results: R[] = []
-
-  // Process in batches.
-  for (let i = 0; i < identifiers.length; i += batchSize) {
-    const batch = identifiers.slice(i, i + batchSize)
-
-    // Fetch each batch in parallel and get all outcomes.
-    const batchResults = await Promise.allSettled(
-      batch.map((identifier) => fetchFunction(identifier))
-    )
-
-    // Filter fulfilled promises and extract their values.
-    batchResults.forEach((result, index) => {
-      if (result.status === 'fulfilled') {
-        results.push(result.value)
-      } else {
-        console.error(
-          `Error fetching resource for ${String(batch[index])}:`,
-          result.reason
-        )
-      }
-    })
-  }
-
-  return results
-}
+import pMap from 'p-map'
+import type {
+  Pokemon,
+  PokemonForm,
+  PokemonSpecies,
+  Type,
+} from 'pokedex-promise-v2'
 
 export function getTranslation<
   T extends {
@@ -77,7 +41,10 @@ export const createMonster = async (
   const form =
     variant.is_default || species.name === variant.name
       ? undefined
-      : await pokeapi.getPokemonFormByName(variant.name).catch(() => undefined)
+      : // : await pokeapi.getPokemonFormByName(variant.name).catch(() => undefined)
+        await fetch(`https://pokeapi.co/api/v2/pokemon-form/${variant.name}`)
+          .then((response) => response.json() as Promise<PokemonForm>)
+          .catch(() => undefined)
 
   const name =
     getTranslation(form?.form_names, 'name') ??
@@ -105,12 +72,21 @@ export const createMonster = async (
 export const getMonstersBySpecies = async (
   species: PokemonSpecies
 ): Promise<Monster[]> => {
-  const variants: Pokemon[] = await batchFetch(
-    species.varieties.map((v) => v.pokemon.url),
-    (url) => pokeapi.getResource(url)
+  const variants: Pokemon[] = await pMap(
+    species.varieties,
+    async (variant) =>
+      fetch(variant.pokemon.url).then(
+        (response) => response.json() as Promise<Pokemon>
+      ),
+    { concurrency: 4 }
   )
 
-  return Promise.all(variants.map((variant) => createMonster(variant, species)))
+  const monsters = await pMap(
+    variants,
+    async (variant) => createMonster(variant, species),
+    { concurrency: 4 }
+  )
+  return monsters
 }
 
 export enum LearnMethodKey {
@@ -136,6 +112,15 @@ export const StatLabels: Record<StatKey, string> = {
   [StatKey.Defense]: 'Defense',
   [StatKey.SpecialAttack]: 'Sp. Atk',
   [StatKey.SpecialDefense]: 'Sp. Def',
+  [StatKey.Speed]: 'Speed',
+}
+
+export const StatLabelsFull: Record<StatKey, string> = {
+  [StatKey.Hp]: 'HP',
+  [StatKey.Attack]: 'Attack',
+  [StatKey.Defense]: 'Defense',
+  [StatKey.SpecialAttack]: 'Special Attack',
+  [StatKey.SpecialDefense]: 'Special Defense',
   [StatKey.Speed]: 'Speed',
 }
 
@@ -213,12 +198,8 @@ export enum VersionGroupKey {
   UltraSunUltraMoon = 'ultra-sun-ultra-moon',
   LetsGoPikachuLetsGoEevee = 'lets-go-pikachu-lets-go-eevee',
   SwordShield = 'sword-shield',
-  // TheIsleOfArmor = 'the-isle-of-armor',
-  // TheCrownTundra = 'the-crown-tundra',
   BrilliantDiamondShiningPearl = 'brilliant-diamond-shining-pearl',
   ScarletViolet = 'scarlet-violet',
-  // TheTealMask = 'the-teal-mask',
-  // TheIndigoDisk = 'the-indigo-disk',
 }
 
 // prettier-ignore
@@ -241,12 +222,8 @@ export const VersionGroupLabels: Record<VersionGroupKey, string> = {
   [VersionGroupKey.UltraSunUltraMoon]: 'Ultra Sun & Ultra Moon',
   [VersionGroupKey.LetsGoPikachuLetsGoEevee]: 'Let\'s Go Pikachu & Let\'s Go Eevee',
   [VersionGroupKey.SwordShield]: 'Sword & Shield',
-  // [VersionGroupKey.TheIsleOfArmor]: 'Sword & Shield: The Isle of Armor',
-  // [VersionGroupKey.TheCrownTundra]: 'Sword & Shield: The Crown Tundra',
   [VersionGroupKey.BrilliantDiamondShiningPearl]: 'Brilliant Diamond & Shining Pearl',
   [VersionGroupKey.ScarletViolet]: 'Scarlet & Violet',
-  // [VersionGroupKey.TheTealMask]: 'Scarlet & Violet: The Teal Mask',
-  // [VersionGroupKey.TheIndigoDisk]: 'Scarlet & Violet: The Indigo Disk',
 }
 
 export enum Effectiveness {

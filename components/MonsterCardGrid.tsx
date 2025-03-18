@@ -18,7 +18,6 @@ export default function MonsterCardGrid({
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 60
-
   // Memoize the Fuse instance to prevent recreation on every render
   const fuse = useMemo(
     () =>
