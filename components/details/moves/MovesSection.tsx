@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic'
 import pMap from 'p-map'
 import type { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 import {
@@ -7,7 +8,14 @@ import {
   DamageClassKey,
   TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
-import MovesTable from '@/components/details/moves/MovesTable'
+import LoadingSection from '@/components/details/LoadingSection'
+
+const MovesTable = dynamic(
+  () => import('@/components/details/moves/MovesTable'),
+  {
+    loading: () => <LoadingSection />,
+  }
+)
 
 function createMoveRows(
   moves: MoveElement[],
