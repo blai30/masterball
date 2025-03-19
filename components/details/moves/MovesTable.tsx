@@ -34,12 +34,12 @@ const idColumnLabels = {
 }
 
 const columnClasses: Record<string, string> = {
-  id: 'min-w-16 text-left',
-  name: 'min-w-44 grow text-left',
-  type: 'min-w-20 text-center',
-  power: 'min-w-10 text-right',
-  accuracy: 'min-w-10 text-right',
-  pp: 'min-w-10 text-right',
+  id: 'min-w-16 justify-start text-left',
+  name: 'min-w-44 grow justify-start text-left',
+  type: 'min-w-20 justify-center text-center',
+  power: 'min-w-14 justify-end text-right',
+  accuracy: 'min-w-14 justify-end text-right',
+  pp: 'min-w-8 justify-end text-right',
 }
 
 function MovesTable({
@@ -93,7 +93,7 @@ function MovesTable({
       columnHelper.accessor('type', {
         header: 'Type',
         cell: (info) => (
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-1">
             <TypePill variant={info.getValue()} size="medium" />
             <DamageClassIcon
               variant={info.row.original.damageClass}
@@ -169,16 +169,20 @@ function MovesTable({
                       key={header.id}
                       colSpan={header.colSpan}
                       onClick={header.column.getToggleSortingHandler()}
-                      className={clsx(
-                        'px-2 text-xs font-semibold',
-                        columnClasses[header.id]
-                      )}
+                      className="px-2 text-xs font-semibold"
                     >
-                      <div className="flex items-center">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+                      <div
+                        className={clsx(
+                          'flex items-center',
+                          columnClasses[header.id]
                         )}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                         {{
                           asc: <ChevronUp className="h-3 w-3" />,
                           desc: <ChevronDown className="h-3 w-3" />,

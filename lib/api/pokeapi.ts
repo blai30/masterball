@@ -19,6 +19,7 @@ const pokeapi = {
     url.search = params.toString()
     return fetch(url.toString()).then((res) => {
       if (!res.ok) {
+        console.log(res)
         throw new Error(`Failed to fetch ${endpoint}: ${res.statusText}`)
       }
       return res.json()
@@ -51,6 +52,7 @@ const pokeapi = {
   getResource: async <T>(url: string): Promise<T> => {
     return fetch(url).then((res) => {
       if (!res.ok) {
+        console.log(res)
         throw new Error(`Failed to fetch ${url}: ${res.statusText}`)
       }
       return res.json()
