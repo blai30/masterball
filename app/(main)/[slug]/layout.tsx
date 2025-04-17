@@ -1,10 +1,9 @@
+import type { PokemonSpecies } from 'pokedex-promise-v2'
 import {
   getMonstersBySpecies,
   getTranslation,
 } from '@/lib/utils/pokeapiHelpers'
-import HorizontalScroller from '@/components/HorizontalScroller'
 import VariantCardSelector from '@/components/VariantCardSelector'
-import type { PokemonSpecies } from 'pokedex-promise-v2'
 
 export const dynamicParams = false
 export const fetchCache = 'only-cache'
@@ -28,8 +27,8 @@ export default async function RootLayout({
   const significantDigits = dexId.slice(leadingZeros.length)
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <div className="container mx-auto px-4">
+    <div className="flex w-full flex-1 flex-col gap-6">
+      <div className="mx-auto w-full max-w-[96rem] px-4">
         <div className="flex flex-row items-center gap-2.5">
           <p className="font-num rounded-lg bg-zinc-200 px-2 text-lg font-bold dark:bg-zinc-800">
             <span className="text-zinc-400 dark:text-zinc-600">
@@ -47,11 +46,18 @@ export default async function RootLayout({
         </div>
       </div>
       {/* Variants section */}
-      <HorizontalScroller className="flex">
-        <div className="container mx-auto px-4">
-          <VariantCardSelector monsters={monsters} className="min-w-full" />
+      <div className="grow">
+        <div className="mx-auto max-w-[96rem]">
+          <div className="flex overflow-x-auto">
+            <div className="grow px-4">
+              <VariantCardSelector
+                monsters={monsters}
+                className="min-w-full whitespace-nowrap"
+              />
+            </div>
+          </div>
         </div>
-      </HorizontalScroller>
+      </div>
       {children}
     </div>
   )

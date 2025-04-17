@@ -50,7 +50,7 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-zinc-200/50 backdrop-blur-2xl dark:bg-zinc-800/50">
-      <nav className="container mx-auto px-4">
+      <nav className="max-w-[96rem] mx-auto px-4">
         <div className="flex flex-row flex-wrap items-center justify-center gap-4 py-2 md:justify-between">
           <ul className="flex flex-row flex-wrap items-center gap-4">
             {navItems.map((item) => {
