@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { memo, useMemo, useState } from 'react'
-import clsx from 'clsx'
+import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   flexRender,
@@ -34,12 +34,12 @@ const idColumnLabels = {
 }
 
 const columnClasses: Record<string, string> = {
-  id: 'min-w-16 justify-start text-left',
-  name: 'min-w-44 grow justify-start text-left',
-  type: 'min-w-20 justify-center text-center',
-  power: 'min-w-14 justify-end text-right',
-  accuracy: 'min-w-14 justify-end text-right',
-  pp: 'min-w-8 justify-end text-right',
+  id: 'w-16 justify-start text-left',
+  name: 'grow justify-start text-left',
+  type: 'w-20 justify-center text-center',
+  power: 'w-14 justify-end text-right',
+  accuracy: 'w-14 justify-end text-right',
+  pp: 'w-8 justify-end text-right',
 }
 
 function MovesTable({
@@ -78,14 +78,10 @@ function MovesTable({
           <div className="@container/move">
             <Link
               href={`/move/${info.row.original.slug}`}
-              className="inline-flex"
+              title={`Move: ${info.getValue()}`}
+              className="inline-flex overflow-clip font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
             >
-              <p
-                title={`Move: ${info.getValue()}`}
-                className="max-w-52 overflow-hidden font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 @max-[12rem]/move:max-w-32 @xs/move:max-w-86 dark:text-blue-300 dark:hover:text-blue-200"
-              >
-                {info.getValue()}
-              </p>
+              {info.getValue()}
             </Link>
           </div>
         ),
@@ -156,7 +152,7 @@ function MovesTable({
   }
 
   return (
-    <div className={className}>
+    <div className={clsx('w-full', className)}>
       <h3 className="text-lg">{tableNames[variant]}</h3>
       <div className="-mx-4 mt-2 flex overflow-x-auto">
         <div className="grow px-4">

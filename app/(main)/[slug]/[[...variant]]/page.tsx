@@ -116,14 +116,14 @@ export default async function Page({
     <div className="flex w-full flex-col gap-6">
       {/* Metadata section */}
       <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
-        <section className="container mx-auto px-4">
+        <section className="mx-auto w-full max-w-[96rem] px-4">
           <Suspense fallback={<LoadingMetadata />}>
             <MonsterMetadata species={species} pokemon={pokemon} />
           </Suspense>
         </section>
       </div>
       {/* Main details section */}
-      <section className="container mx-auto px-4">
+      <section className="mx-auto w-full max-w-[96rem] px-4">
         <div className="flex w-full flex-col gap-6 xl:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-6">
