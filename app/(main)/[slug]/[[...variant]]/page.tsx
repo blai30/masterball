@@ -27,10 +27,7 @@ export async function generateStaticParams() {
 
   const species = await pMap(
     speciesList.results,
-    async (result) => {
-      const species = await pokeapi.getResource<PokemonSpecies>(result.url)
-      return species
-    },
+    async (result) => await pokeapi.getResource<PokemonSpecies>(result.url),
     { concurrency: 4 }
   )
 

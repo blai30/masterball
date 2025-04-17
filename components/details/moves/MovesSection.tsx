@@ -84,12 +84,10 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   ]
   const movesData = await pMap(
     uniqueMoveNames,
-    async (name) => {
-      const move = await fetch(`https://pokeapi.co/api/v2/move/${name}`).then(
+    async (name) =>
+      await fetch(`https://pokeapi.co/api/v2/move/${name}`).then(
         (response) => response.json() as Promise<Move>
-      )
-      return move
-    },
+      ),
     { concurrency: 4 }
   )
 
@@ -106,12 +104,8 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   ]
   const machinesData = await pMap(
     uniqueMachinesUrls,
-    async (url) => {
-      const machine = await fetch(url).then(
-        (response) => response.json() as Promise<Machine>
-      )
-      return machine
-    },
+    async (url) =>
+      await fetch(url).then((response) => response.json() as Promise<Machine>),
     { concurrency: 4 }
   )
 
