@@ -152,9 +152,9 @@ function MovesTable({
   }
 
   return (
-    <div className={clsx('@container/moves w-full', className)}>
+    <div className={clsx('w-full', className)}>
       <h3 className="text-lg">{tableNames[variant]}</h3>
-      <div className="-mx-4 mt-2 flex @sm/moves:overflow-x-auto">
+      <div className="-mx-4 mt-2 flex overflow-x-auto">
         <div className="grow px-4">
           <table className="min-w-full">
             <thead>
