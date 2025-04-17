@@ -96,7 +96,7 @@ export default function HorizontalScroller({
 
       <div
         ref={scrollContainerRef}
-        className={clsx('overflow-x-auto', className)}
+        className={clsx('overflow-x-auto whitespace-nowrap', className)}
       >
         {children}
       </div>

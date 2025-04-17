@@ -47,11 +47,11 @@ export default async function RootLayout({
         </div>
       </div>
       {/* Variants section */}
-      <div className="container mx-auto px-4">
-        <HorizontalScroller>
-          <VariantCardSelector monsters={monsters} />
-        </HorizontalScroller>
-      </div>
+      <HorizontalScroller className="flex">
+        <div className="container mx-auto px-4">
+          <VariantCardSelector monsters={monsters} className="min-w-full" />
+        </div>
+      </HorizontalScroller>
       {children}
     </div>
   )
