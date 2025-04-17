@@ -75,6 +75,7 @@ export const viewport: Viewport = {
   themeColor: '#A25C7E',
 }
 
+export const dynamicParams = false
 export const fetchCache = 'only-cache'
 
 export default function RootLayout({

@@ -14,7 +14,7 @@ const variants = cva({
     },
     size: {
       small: 'h-6 w-8 rounded-xs',
-      medium: 'h-7 w-10 rounded-sm px-1 py-0.5',
+      medium: 'h-7 w-9 rounded-sm px-1 py-0.5',
       large: 'h-8 w-12 rounded-sm px-1',
     },
   },
@@ -63,7 +63,7 @@ export default function DamageClassIcon({
         alt={name}
         width={50}
         height={40}
-        className="size-full object-contain"
+        className="size-full object-contain py-0.5"
       />
     </Wrapper>
   )

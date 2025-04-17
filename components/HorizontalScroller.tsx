@@ -83,25 +83,28 @@ export default function HorizontalScroller({
   }
 
   return (
-    <div className={clsx('relative w-full', className)}>
+    <div className="relative">
       {showLeftArrow && (
         <button
           onClick={() => scroll('left')}
-          className="absolute top-1/2 left-2 z-10 -translate-y-1/2 rounded-full bg-white/40 p-2 text-black inset-ring-2 inset-ring-black backdrop-blur-lg dark:bg-black/40 dark:text-white dark:inset-ring-white"
+          className="absolute top-1/2 left-8 z-10 -translate-y-1/2 rounded-full bg-white/40 p-2 text-black inset-ring-2 inset-ring-black backdrop-blur-lg dark:bg-black/40 dark:text-white dark:inset-ring-white"
           aria-label="Scroll left"
         >
           <ChevronLeft size={24} />
         </button>
       )}
 
-      <div ref={scrollContainerRef} className="overflow-x-auto">
+      <div
+        ref={scrollContainerRef}
+        className={clsx('overflow-x-auto whitespace-nowrap', className)}
+      >
         {children}
       </div>
 
       {showRightArrow && (
         <button
           onClick={() => scroll('right')}
-          className="absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-full bg-white/40 p-2 text-black inset-ring-2 inset-ring-black backdrop-blur-lg dark:bg-black/40 dark:text-white dark:inset-ring-white"
+          className="absolute top-1/2 right-8 z-10 -translate-y-1/2 rounded-full bg-white/40 p-2 text-black inset-ring-2 inset-ring-black backdrop-blur-lg dark:bg-black/40 dark:text-white dark:inset-ring-white"
           aria-label="Scroll right"
         >
           <ChevronRight size={24} />
