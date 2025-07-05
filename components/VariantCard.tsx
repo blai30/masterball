@@ -17,27 +17,33 @@ export default function VariantCard({
   return (
     <div
       className={clsx(
-        'relative flex w-58 flex-col items-center gap-4',
+        'relative flex w-58 flex-col items-center gap-3',
         className
       )}
     >
-      <Image
-        src={imageUrl || ''}
-        alt={name}
-        width={200}
-        height={200}
-        className="object-scale-down"
-      />
-      <h3 className="text-lg font-medium text-black dark:text-white">{name}</h3>
-      {types && (
-        <ul className="flex flex-row gap-2">
-          {types.map((type) => (
-            <li key={type}>
-              <TypePill variant={type} size="medium" link={false} />
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="flex w-full items-center justify-center">
+        <Image
+          src={imageUrl || ''}
+          alt={name}
+          width={128}
+          height={128}
+          className="object-scale-down"
+        />
+      </div>
+      <div className="flex h-full w-full flex-col items-center gap-3">
+        <h3 className="w-full text-center text-lg font-normal text-balance text-black dark:text-white">
+          {name}
+        </h3>
+        {types && (
+          <ul className="flex w-full flex-row justify-center gap-2">
+            {types.map((type) => (
+              <li key={type}>
+                <TypePill variant={type} size="medium" link={false} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   )
 }
