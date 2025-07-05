@@ -9,6 +9,13 @@ export const excludedVariants = [
   // Zygarde power constructs
   'zygarde-50-power-construct',
   'zygarde-10-power-construct',
+  // Minior duplicates with no unique sprites
+  'minior-orange-meteor',
+  'minior-yellow-meteor',
+  'minior-green-meteor',
+  'minior-blue-meteor',
+  'minior-indigo-meteor',
+  'minior-violet-meteor',
   // Eternatus story battle
   'eternatus-eternamax',
   // Gigantamax forms
