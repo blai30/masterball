@@ -3,3 +3,6 @@
 
 // This is supposed to sort Tailwind classes but it is incomplete so I continue to use Prettier.
 "useSortedClasses"
+
+// I turn this off because it's just annoying, I sort the imports myself my way.
+"assist": { "actions": { "source": { "organizeImports": "off" } } },

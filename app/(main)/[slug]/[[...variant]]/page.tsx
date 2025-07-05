@@ -5,6 +5,7 @@ import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
+import { excludedVariants } from '@/lib/utils/excludedVariants'
 import LoadingSection from '@/components/details/LoadingSection'
 import LoadingMetadata from '@/components/details/LoadingMetadata'
 import MonsterMetadata from '@/components/details/MonsterMetadata'
@@ -32,10 +33,16 @@ export async function generateStaticParams() {
   )
 
   const params = species.flatMap((specie) =>
-    specie.varieties.map((variant) => ({
-      slug: specie.name,
-      variant: variant.is_default ? undefined : [variant.pokemon.name],
-    }))
+    specie.varieties
+      .filter(
+        (variant) =>
+          !excludedVariants.includes(variant.pokemon.name) &&
+          !variant.pokemon.name.includes('gmax')
+      )
+      .map((variant) => ({
+        slug: specie.name,
+        variant: variant.is_default ? undefined : [variant.pokemon.name],
+      }))
   )
 
   return params
@@ -52,13 +59,19 @@ export async function generateMetadata({
     'pokemon-species',
     slug
   )
-  const pokemonUrl = species.varieties.find((v) =>
-    variantKey ? v.pokemon.name === variantKey : v.is_default
-  )!.pokemon.url
+  const pokemonUrl = species.varieties
+    .filter(
+      (variant) =>
+        !excludedVariants.includes(variant.name) &&
+        !variant.pokemon.name.includes('gmax')
+    )
+    .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
+    .pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const imageId = species.id.toString().padStart(4, '0')
-  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
   const name = getTranslation(species.names, 'name')!
   const description = pokemon.types
     .map((t) => TypeLabels[t.type.name as TypeKey])
@@ -100,9 +113,14 @@ export default async function Page({
     'pokemon-species',
     slug
   )
-  const pokemonUrl = species.varieties.find((v) =>
-    variantKey ? v.pokemon.name === variantKey : v.is_default
-  )!.pokemon.url
+  const pokemonUrl = species.varieties
+    .filter(
+      (variant) =>
+        !excludedVariants.includes(variant.name) &&
+        !variant.pokemon.name.includes('gmax')
+    )
+    .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
+    .pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const forms = await pMap(

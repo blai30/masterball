@@ -22,7 +22,8 @@ export default function MonsterHero({
   const imageUrl =
     pokemon.sprites.other.home.front_default ??
     pokemon.sprites.front_default ??
-    `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+    // `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+    `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
 
   const leadingZeros = imageId.match(/^0+/)?.[0] || ''
   const significantDigits = imageId.slice(leadingZeros.length)

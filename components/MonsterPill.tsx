@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { getTranslation, TypeKey } from '@/lib/utils/pokeapiHelpers'
+import { excludedVariants } from '@/lib/utils/excludedVariants'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 
@@ -10,15 +11,21 @@ export default async function MonsterPill({
 }: {
   species: PokemonSpecies
 }) {
-  const slug = species.varieties.find((variety) => variety.is_default)!.pokemon
-    .name
+  const slug = species.varieties
+    .filter(
+      (variant) =>
+        !excludedVariants.includes(variant.pokemon.name) &&
+        !variant.pokemon.name.includes('gmax')
+    )
+    .find((variety) => variety.is_default)!.pokemon.name
   const pokemon: Pokemon = await fetch(
     `https://pokeapi.co/api/v2/pokemon/${slug}`
   ).then((response) => response.json() as Promise<Pokemon>)
 
   const name = getTranslation(species.names, 'name')
   const imageId = species.id.toString().padStart(4, '0')
-  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
 
   return (
     <GlassCard variant="link" className="rounded-lg">
