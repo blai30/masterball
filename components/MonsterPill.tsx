@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { getTranslation, TypeKey } from '@/lib/utils/pokeapiHelpers'
-import { excludedVariants } from '@/lib/utils/excludedVariants'
+import { excludedVariants } from '@/lib/utils/excludedSlugs'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 
@@ -12,11 +12,7 @@ export default async function MonsterPill({
   species: PokemonSpecies
 }) {
   const slug = species.varieties
-    .filter(
-      (variant) =>
-        !excludedVariants.includes(variant.pokemon.name) &&
-        !variant.pokemon.name.includes('gmax')
-    )
+    .filter((variant) => !excludedVariants.includes(variant.pokemon.name))
     .find((variety) => variety.is_default)!.pokemon.name
   const pokemon: Pokemon = await fetch(
     `https://pokeapi.co/api/v2/pokemon/${slug}`

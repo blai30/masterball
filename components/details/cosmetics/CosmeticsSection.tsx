@@ -27,12 +27,16 @@ export default async function CosmeticsSection({
         <ul className="flex flex-wrap gap-4">
           {forms.map((form) => {
             const name = getTranslation(form.form_names, 'name')!
+            const imageId = pokemon.id.toString().padStart(4, '0')
+            const imageUrl = form.is_default
+              ? `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+              : `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_${form.name}_s0.webp`
 
             return (
               <li
                 key={form.name}
                 className={clsx(
-                  'flex w-44 flex-col items-center gap-2',
+                  'flex w-40 flex-col items-center gap-2',
                   // 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
                   'rounded-lg p-2'
                 )}
@@ -41,12 +45,10 @@ export default async function CosmeticsSection({
                   {name}
                 </span>
                 <Image
-                  src={
-                    form.sprites.front_default || pokemon.sprites.front_default!
-                  }
+                  src={imageUrl}
                   alt={name}
-                  width={100}
-                  height={100}
+                  width={128}
+                  height={128}
                   className="object-contain"
                 />
               </li>

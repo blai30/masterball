@@ -5,7 +5,7 @@ import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
-import { excludedVariants } from '@/lib/utils/excludedVariants'
+import { excludedForms, excludedVariants } from '@/lib/utils/excludedSlugs'
 import LoadingSection from '@/components/details/LoadingSection'
 import LoadingMetadata from '@/components/details/LoadingMetadata'
 import MonsterMetadata from '@/components/details/MonsterMetadata'
@@ -34,11 +34,7 @@ export async function generateStaticParams() {
 
   const params = species.flatMap((specie) =>
     specie.varieties
-      .filter(
-        (variant) =>
-          !excludedVariants.includes(variant.pokemon.name) &&
-          !variant.pokemon.name.includes('gmax')
-      )
+      .filter((variant) => !excludedVariants.includes(variant.pokemon.name))
       .map((variant) => ({
         slug: specie.name,
         variant: variant.is_default ? undefined : [variant.pokemon.name],
@@ -60,11 +56,7 @@ export async function generateMetadata({
     slug
   )
   const pokemonUrl = species.varieties
-    .filter(
-      (variant) =>
-        !excludedVariants.includes(variant.name) &&
-        !variant.pokemon.name.includes('gmax')
-    )
+    .filter((variant) => !excludedVariants.includes(variant.name))
     .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
     .pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
@@ -114,17 +106,15 @@ export default async function Page({
     slug
   )
   const pokemonUrl = species.varieties
-    .filter(
-      (variant) =>
-        !excludedVariants.includes(variant.name) &&
-        !variant.pokemon.name.includes('gmax')
-    )
+    .filter((variant) => !excludedVariants.includes(variant.name))
     .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
     .pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const forms = await pMap(
-    pokemon.forms.filter((form) => form.name !== pokemon.name),
+    pokemon.forms.filter(
+      (form) => form.name !== pokemon.name && !excludedForms.includes(form.name)
+    ),
     async (form) =>
       await pokeapi.getByName<PokemonForm>('pokemon-form', form.name),
     { concurrency: 4 }

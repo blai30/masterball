@@ -174,6 +174,14 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/758/',
     },
     {
+      name: 'silvally',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/773/',
+    },
+    {
+      name: 'minior',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/774/',
+    },
+    {
       name: 'lunala',
       url: 'https://pokeapi.co/api/v2/pokemon-species/792/',
     },
@@ -182,12 +190,20 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/800/',
     },
     {
+      name: 'cramorant',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/845/',
+    },
+    {
       name: 'hatterene',
       url: 'https://pokeapi.co/api/v2/pokemon-species/858/',
     },
     {
       name: 'indeedee',
       url: 'https://pokeapi.co/api/v2/pokemon-species/876/',
+    },
+    {
+      name: 'morpeko',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/877/',
     },
     {
       name: 'eternatus',
@@ -202,8 +218,28 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/916/',
     },
     {
+      name: 'maushold',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/925/',
+    },
+    {
+      name: 'tatsugiri',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/978/',
+    },
+    {
+      name: 'dudunsparce',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/982/',
+    },
+    {
       name: 'iron-hands',
       url: 'https://pokeapi.co/api/v2/pokemon-species/992/',
+    },
+    {
+      name: 'koraidon',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/998/',
+    },
+    {
+      name: 'miraidon',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/999/',
     },
     {
       name: 'roaring-moon',

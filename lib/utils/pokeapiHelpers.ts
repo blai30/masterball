@@ -5,7 +5,7 @@ import type {
   PokemonSpecies,
   Type,
 } from 'pokedex-promise-v2'
-import { excludedVariants } from '@/lib/utils/excludedVariants'
+import { excludedVariants } from '@/lib/utils/excludedSlugs'
 
 export function getTranslation<
   T extends {
@@ -73,9 +73,7 @@ export const getMonstersBySpecies = async (
 ): Promise<Monster[]> => {
   // Hard-code exceptions to filter out useless variants.
   const filteredVariants = species.varieties.filter(
-    (variant) =>
-      !excludedVariants.includes(variant.pokemon.name) &&
-      !variant.pokemon.name.includes('gmax')
+    (variant) => !excludedVariants.includes(variant.pokemon.name)
   )
 
   const variants: Pokemon[] = await pMap(
