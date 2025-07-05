@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Store, useStore } from '@tanstack/react-store'
 import { VersionGroupKey } from '@/lib/utils/pokeapiHelpers'
 
@@ -28,18 +28,20 @@ export function useVersionGroup() {
     versionGroupStore,
     (state) => state.versionGroup
   )
+  const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {
+    setHasMounted(true)
     if (typeof window !== 'undefined') {
       const storedValue = localStorage.getItem('version_group')
       if (storedValue && isValidVersionGroupKey(storedValue)) {
         // Only update if the stored value differs from current state
         if (versionGroup !== storedValue) {
-          versionGroupStore.setState(() => ({ versionGroup: storedValue }))
+          versionGroupStore.setState(() => ({ versionGroup: storedValue as VersionGroupKey }))
         }
       }
     }
   }, [versionGroup])
 
-  return { versionGroup, setVersionGroup }
+  return { versionGroup, setVersionGroup, hasMounted }
 }
