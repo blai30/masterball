@@ -32,7 +32,10 @@ export default function VariantCardSelector({
     <RadioGroup
       value={selectedVariant}
       onChange={handleVariantChange}
-      className={clsx('flex flex-row gap-4 py-4', className)}
+      className={clsx(
+        'grid grid-cols-1 gap-3 py-4 @lg:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-4 @7xl:grid-cols-5',
+        className
+      )}
     >
       {monsters.map((monster) => (
         <Radio
@@ -40,7 +43,7 @@ export default function VariantCardSelector({
           value={getUrl(monster)}
           aria-label={monster.name}
           className={clsx(
-            'group relative flex cursor-pointer justify-center rounded-xl p-4 focus:outline-offset-4 data-checked:cursor-default',
+            'group relative flex cursor-pointer justify-center rounded-xl focus:outline-offset-4 data-checked:cursor-default',
             'bg-white inset-ring inset-ring-zinc-200 transition-colors hover:bg-zinc-100 hover:inset-ring-zinc-300 hover:duration-0 data-checked:inset-ring-2 data-checked:inset-ring-zinc-700 data-checked:hover:bg-inherit dark:bg-black dark:inset-ring-zinc-800 dark:hover:bg-zinc-900 dark:hover:inset-ring-zinc-700 dark:data-checked:inset-ring-zinc-300'
           )}
         >

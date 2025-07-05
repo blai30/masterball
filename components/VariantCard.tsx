@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import clsx from 'clsx/lite'
 import { Monster } from '@/lib/utils/pokeapiHelpers'
-import TypePill from '@/components/TypePill'
+import TypeIcon from '@/components/TypeIcon'
 
 export default function VariantCard({
   monster,
@@ -17,11 +17,11 @@ export default function VariantCard({
   return (
     <div
       className={clsx(
-        'relative flex w-58 flex-col items-center gap-3',
+        'relative flex w-full flex-row items-center gap-3 px-4 py-3',
         className
       )}
     >
-      <div className="flex w-full items-center justify-center">
+      <div className="flex aspect-square size-16 items-center justify-center">
         <Image
           src={imageUrl || ''}
           alt={name}
@@ -30,15 +30,15 @@ export default function VariantCard({
           className="object-scale-down"
         />
       </div>
-      <div className="flex h-full w-full flex-col items-center gap-3">
-        <h3 className="w-full text-center text-lg font-normal text-balance text-black dark:text-white">
+      <div className="flex grow flex-col gap-2">
+        <h3 className="text-base font-normal text-black dark:text-white">
           {name}
         </h3>
         {types && (
-          <ul className="flex w-full flex-row justify-center gap-2">
+          <ul className="flex flex-row gap-1">
             {types.map((type) => (
               <li key={type}>
-                <TypePill variant={type} size="medium" link={false} />
+                <TypeIcon variant={type} size="small" link={false} />
               </li>
             ))}
           </ul>

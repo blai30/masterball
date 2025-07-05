@@ -16,6 +16,7 @@ import EvolutionSection from '@/components/details/evolution/EvolutionSection'
 import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection'
 import LocalizationSection from '@/components/details/localization/LocalizationSection'
 import MovesSection from '@/components/details/moves/MovesSection'
+import MonsterHero from '@/components/details/MonsterHero'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -112,16 +113,22 @@ export default async function Page({
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const forms = await pMap(
-    pokemon.forms.filter(
-      (form) => form.name !== pokemon.name && !excludedForms.includes(form.name)
-    ),
+    pokemon.forms.filter((form) => !excludedForms.includes(form.name)),
     async (form) =>
       await pokeapi.getByName<PokemonForm>('pokemon-form', form.name),
     { concurrency: 4 }
   )
 
+  const form =
+    pokemon.is_default || species.name === pokemon.name
+      ? undefined
+      : forms.find((f) => f.name === variantKey || f.name === pokemon.name)
+
   return (
     <div className="flex w-full flex-col gap-6">
+      <section className="mx-auto w-full max-w-[96rem] px-4">
+        <MonsterHero species={species} pokemon={pokemon} form={form} />
+      </section>
       {/* Metadata section */}
       <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
         <section className="mx-auto w-full max-w-[96rem] px-4">

@@ -198,6 +198,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/858/',
     },
     {
+      name: 'alcremie',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/869/',
+    },
+    {
       name: 'indeedee',
       url: 'https://pokeapi.co/api/v2/pokemon-species/876/',
     },

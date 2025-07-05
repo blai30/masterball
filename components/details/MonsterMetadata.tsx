@@ -184,11 +184,8 @@ function HatchCounterMetadata({
     return <MetadataCard title="Hatch counter" />
   }
 
-  const hatchSteps = (hatchCounter * 128).toLocaleString()
-
   return (
     <MetadataCard title="Hatch counter">
-      <ValueUnit value={hatchSteps} unit="steps" />
       <ValueUnit value={hatchCounter.toLocaleString()} unit="cycles" />
     </MetadataCard>
   )
