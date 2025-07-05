@@ -35,6 +35,7 @@
         }
       },
       "style": {
+        "noNonNullAssertion": "off",
         "noNamespace": "error",
         "useAsConstAssertion": "error",
         "useBlockStatements": "off",

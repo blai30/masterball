@@ -1,0 +1,5 @@
+// I set this to off for pokeapi stuff because I know the data.
+"noNonNullAssertion": "off",
+
+// This is supposed to sort Tailwind classes but it is incomplete so I continue to use Prettier.
+"useSortedClasses"
