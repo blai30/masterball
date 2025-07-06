@@ -33,7 +33,7 @@ export default function VariantCardSelector({
       value={selectedVariant}
       onChange={handleVariantChange}
       className={clsx(
-        'grid grid-cols-1 gap-3 py-4 @lg:grid-cols-2 @3xl:grid-cols-3 @5xl:grid-cols-4 @7xl:grid-cols-5',
+        'grid grid-cols-3 gap-3 py-4 @2xl:grid-cols-4 @3xl:grid-cols-5 @4xl:grid-cols-6 @5xl:grid-cols-7 @6xl:grid-cols-8',
         className
       )}
     >
@@ -43,11 +43,17 @@ export default function VariantCardSelector({
           value={getUrl(monster)}
           aria-label={monster.name}
           className={clsx(
-            'group relative flex cursor-pointer justify-center rounded-xl focus:outline-offset-4 data-checked:cursor-default',
-            'bg-white inset-ring inset-ring-zinc-200 transition-colors hover:bg-zinc-100 hover:inset-ring-zinc-300 hover:duration-0 data-checked:inset-ring-2 data-checked:inset-ring-zinc-700 data-checked:hover:bg-inherit dark:bg-black dark:inset-ring-zinc-800 dark:hover:bg-zinc-900 dark:hover:inset-ring-zinc-700 dark:data-checked:inset-ring-zinc-300'
+            'group relative flex cursor-pointer justify-center rounded-xl focus:outline-offset-4 data-checked:cursor-default'
           )}
         >
-          <VariantCard monster={monster} />
+          <VariantCard
+            monster={monster}
+            className={clsx(
+              // 'rounded-xl',
+              'group-data-checked:bg-inherit group-data-checked:inset-ring-2 group-data-checked:inset-ring-zinc-700 dark:group-data-checked:inset-ring-zinc-300'
+            )}
+            variant={selectedVariant === getUrl(monster) ? 'default' : 'link'}
+          />
         </Radio>
       ))}
     </RadioGroup>

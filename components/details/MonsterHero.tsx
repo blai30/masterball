@@ -26,9 +26,9 @@ export default function MonsterHero({
   const significantDigits = imageId.slice(leadingZeros.length)
 
   return (
-    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-12">
-      <div className="flex flex-col items-start gap-2">
-        <p className="font-num text-xl sm:text-2xl">
+    <div className="relative h-42 w-full max-w-md flex-row items-end gap-12">
+      <div className="flex flex-col items-start gap-4">
+        <p className="font-num text-2xl">
           <span className="text-zinc-400 dark:text-zinc-600">
             {leadingZeros}
           </span>
@@ -37,7 +37,7 @@ export default function MonsterHero({
           </span>
         </p>
         <div className="flex flex-col">
-          <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl dark:text-white">
+          <h1 className="text-5xl font-semibold tracking-tight text-black dark:text-white">
             {name}
           </h1>
         </div>
@@ -49,7 +49,7 @@ export default function MonsterHero({
           ))}
         </ul>
       </div>
-      <div className="flex">
+      <div className="absolute right-12 bottom-0 flex">
         <Image
           src={imageUrl}
           alt={`${species.name} front default`}
