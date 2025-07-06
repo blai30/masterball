@@ -3,7 +3,7 @@ import {
   getMonstersBySpecies,
   getTranslation,
 } from '@/lib/utils/pokeapiHelpers'
-import VariantCardSelector from '@/components/VariantCardSelector'
+import VariantCardSelector from '@/components/compounds/VariantCardSelector'
 
 export const dynamicParams = false
 export const fetchCache = 'only-cache'

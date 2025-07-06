@@ -1,17 +1,17 @@
 import { Metadata } from 'next'
 import pMap from 'p-map'
-import { PokemonSpecies } from 'pokedex-promise-v2'
+import { Item } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTestSpeciesList } from '@/lib/providers'
+import { getTestItemsList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import SpeciesCardGrid from '@/components/compounds/SpeciesCardGrid'
+import ItemCardGrid from '@/components/compounds/ItemCardGrid'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
 
 export async function generateMetadata(): Promise<Metadata> {
   const metadata: Metadata = {
-    title: 'Pokemon List',
+    title: 'Item List',
     twitter: {
       card: 'summary',
     },
@@ -21,29 +21,30 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const speciesList =
+  const itemsList =
     process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-      ? await getTestSpeciesList()
-      : await pokeapi.getList('pokemon-species', 1025, 0)
+      ? await getTestItemsList()
+      : await pokeapi.getList('item', 200, 0)
 
-  const species = await pMap(
-    speciesList.results,
+  const items = await pMap(
+    itemsList.results,
     async (result) => {
-      const species = await pokeapi.getResource<PokemonSpecies>(result.url)
+      const species = await pokeapi.getResource<Item>(result.url)
       return species
     },
     { concurrency: 4 }
   )
 
-  const speciesData = species.map((specie) => ({
-    id: specie.id,
-    slug: specie.name,
-    name: getTranslation(specie.names, 'name')!,
+  const itemsData = items.map((item) => ({
+    id: item.id,
+    slug: item.name,
+    name: getTranslation(item.names, 'name')!,
+    effect: getTranslation(item.effect_entries, 'short_effect') || '',
   }))
 
   return (
     <div className="mx-auto max-w-[96rem] px-4">
-      <SpeciesCardGrid speciesData={speciesData} />
+      <ItemCardGrid itemsData={itemsData} />
     </div>
   )
 }

@@ -24,9 +24,9 @@ const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
 
 const navItems = [
   { label: 'Pokemon', url: '/', icon: Cat },
-  // { label: 'Items', url: '/item', icon: Backpack },
-  // { label: 'Moves', url: '/move', icon: Swords },
-  // { label: 'Abilities', url: '/ability', icon: Accessibility },
+  { label: 'Items', url: '/item', icon: Backpack },
+  { label: 'Moves', url: '/move', icon: Swords },
+  { label: 'Abilities', url: '/ability', icon: Accessibility },
   // { label: 'Types', url: '/type' },
   // { label: 'Egg Groups', url: '/egg-group' },
   // { label: 'Damage Classes', url: '/damage-class' },

@@ -1,46 +1,52 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, ReactNode } from 'react'
 import Fuse from 'fuse.js'
 import { Search } from 'lucide-react'
-import MonsterCard from '@/components/MonsterCard'
-import Pagination from '@/components/Pagination'
+import Pagination from '@/components/compounds/Pagination'
 
-export default function MonsterCardGrid({
-  speciesData,
-}: {
-  speciesData: {
-    id: number
-    slug: string
-    name: string
-  }[]
-}) {
+export interface CardGridProps<T> {
+  data: T[]
+  renderCardAction: (item: T) => ReactNode
+  getKeyAction: (item: T) => string | number
+  searchKeys: (keyof T)[]
+  itemsPerPage?: number
+  searchPlaceholder?: string
+}
+
+export default function CardGrid<T>({
+  data,
+  renderCardAction,
+  getKeyAction,
+  searchKeys,
+  itemsPerPage = 60,
+  searchPlaceholder = 'Filter...',
+}: CardGridProps<T>) {
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 60
-  // Memoize the Fuse instance to prevent recreation on every render
+
   const fuse = useMemo(
     () =>
-      new Fuse(speciesData, {
-        keys: ['id', 'slug', 'name'],
+      new Fuse(data, {
+        keys: searchKeys as string[],
         threshold: 0.4,
       }),
-    [speciesData]
+    [data, searchKeys]
   )
 
   const filteredItems = useMemo(() => {
-    return query ? fuse.search(query).map((result) => result.item) : speciesData
-  }, [query, fuse, speciesData])
+    return query ? fuse.search(query).map((result) => result.item) : data
+  }, [query, fuse, data])
 
   const totalPages = useMemo(() => {
     return Math.ceil(filteredItems.length / itemsPerPage)
-  }, [filteredItems])
+  }, [filteredItems, itemsPerPage])
 
   const paginatedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
     return filteredItems.slice(startIndex, endIndex)
-  }, [filteredItems, currentPage])
+  }, [filteredItems, currentPage, itemsPerPage])
 
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page)
@@ -65,7 +71,7 @@ export default function MonsterCardGrid({
             id="filter"
             name="filter"
             type="search"
-            placeholder="Filter by name or ID"
+            placeholder={searchPlaceholder}
             value={query}
             onChange={handleQueryChange}
             className="appearance-none border-b-2 border-zinc-600 bg-transparent pr-10 pl-3 text-zinc-900 outline-hidden transition-colors placeholder:text-zinc-500 focus:border-zinc-900 focus:duration-0 focus:outline-none dark:border-zinc-400 dark:text-zinc-100 dark:focus:border-zinc-100 [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden"
@@ -83,13 +89,9 @@ export default function MonsterCardGrid({
           onPageChangeAction={handlePageChange}
         />
         <ul className="2xs:grid-cols-3 xs:grid-cols-3 grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10">
-          {paginatedItems.map((object) => (
-            <li key={object.id} className="col-span-1">
-              <MonsterCard
-                id={object.id}
-                slug={object.slug}
-                name={object.name}
-              />
+          {paginatedItems.map((item) => (
+            <li key={getKeyAction(item)} className="col-span-1">
+              {renderCardAction(item)}
             </li>
           ))}
         </ul>
