@@ -130,13 +130,11 @@ export default async function Page({
         <MonsterHero species={species} pokemon={pokemon} form={form} />
       </section>
       {/* Metadata section */}
-      <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
-        <section className="mx-auto w-full max-w-[96rem] px-4">
-          <Suspense fallback={<LoadingMetadata />}>
-            <MonsterMetadata species={species} pokemon={pokemon} />
-          </Suspense>
-        </section>
-      </div>
+      <section className="@container mx-auto w-full max-w-[96rem] px-4">
+        <Suspense fallback={<LoadingMetadata />}>
+          <MonsterMetadata species={species} pokemon={pokemon} />
+        </Suspense>
+      </section>
       {/* Main details section */}
       <section className="mx-auto w-full max-w-[96rem] px-4">
         <div className="flex w-full flex-col gap-6 xl:flex-row">

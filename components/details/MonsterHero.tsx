@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import clsx from 'clsx/lite'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import TypePill from '@/components/TypePill'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
@@ -7,10 +8,12 @@ export default function MonsterHero({
   species,
   pokemon,
   form,
+  className,
 }: {
   species: PokemonSpecies
   pokemon: Pokemon
   form?: PokemonForm | undefined
+  className?: string
 }) {
   const name =
     getTranslation(form?.form_names, 'name') ??
@@ -26,7 +29,12 @@ export default function MonsterHero({
   const significantDigits = imageId.slice(leadingZeros.length)
 
   return (
-    <div className="relative h-42 w-full max-w-md flex-row items-end gap-12">
+    <div
+      className={clsx(
+        'relative h-42 w-full max-w-md flex-row items-end gap-12',
+        className
+      )}
+    >
       <div className="flex flex-col items-start gap-4">
         <p className="font-num text-2xl">
           <span className="text-zinc-400 dark:text-zinc-600">
@@ -37,7 +45,7 @@ export default function MonsterHero({
           </span>
         </p>
         <div className="flex flex-col">
-          <h1 className="text-5xl font-semibold tracking-tight text-black dark:text-white">
+          <h1 className="text-4xl font-semibold tracking-tight text-black dark:text-white">
             {name}
           </h1>
         </div>
@@ -49,7 +57,7 @@ export default function MonsterHero({
           ))}
         </ul>
       </div>
-      <div className="absolute right-12 bottom-0 flex">
+      <div className="absolute right-0 bottom-0 flex">
         <Image
           src={imageUrl}
           alt={`${species.name} front default`}

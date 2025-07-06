@@ -1,0 +1,12 @@
+## Project specific
+- Framework: Next.js 15
+- Language: TypeScript 5
+- Core packages: Tailwind CSS 4.1, React 19, Bun 1.2, TanStack Table
+- Ensure best practices.
+- Ensure the best robust, clean, readable code style and architecture.
+- Ensure the solution is scalable.
+- Try to suggest/find better approaches than what is already given or existing when asked to do something, see if there is a better way to do it instead of just doing it the way it was asked.
+- Ensure the user experience and developer experience is kept at a high quality.
+- Favor the official/correct/proper way to do things over hacky ways.
+- Offer ways to improve the code or architecture whenever possible, even if it means changing existing code.
+- Offer ways to improve performance whenever possible.

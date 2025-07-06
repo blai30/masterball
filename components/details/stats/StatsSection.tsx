@@ -15,7 +15,6 @@ export default async function StatsSection({ pokemon }: { pokemon: Pokemon }) {
           <StatsBarChart pokemon={pokemon} />
         </div>
         <div className="flex h-full w-full flex-col items-center justify-center pt-5 pb-8 @2xl/stats:pt-0">
-          {/* Radar chart */}
           <StatsRadarChart pokemon={pokemon} />
         </div>
       </div>
