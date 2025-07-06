@@ -154,7 +154,7 @@ function MovesTable({
   }
 
   return (
-    <div className={clsx('w-full', className)}>
+    <div className={clsx('max-w-2xl', className)}>
       <h3 className="text-lg">{tableNames[variant]}</h3>
       <div className="-mx-4 mt-2 flex overflow-x-auto">
         <div className="grow px-4">

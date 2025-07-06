@@ -21,11 +21,11 @@ export default function VariantCard({
     <GlassCard
       variant={variant}
       className={clsx(
-        'relative flex w-full flex-col items-center gap-4 rounded-xl p-3',
+        'relative flex w-44 flex-col items-center gap-4 rounded-xl p-3',
         className
       )}
     >
-      <div className="flex aspect-square size-20 items-center justify-center">
+      <div className="flex aspect-square size-36 items-center justify-center">
         <Image
           src={imageUrl || ''}
           alt={name}

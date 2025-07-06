@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import clsx from 'clsx/lite'
 import pMap from 'p-map'
 import type {
   PokemonSpecies,
@@ -42,7 +43,13 @@ function MetadataCard({
   children?: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div
+      className={clsx(
+        'flex flex-col gap-2',
+        'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
+        'rounded-xl p-4'
+      )}
+    >
       <h2 className="mb-1 text-xs font-medium tracking-wide text-zinc-700 uppercase dark:text-zinc-300">
         {title}
       </h2>
@@ -245,7 +252,14 @@ export default async function MonsterMetadata({
   )
 
   return (
-    <div className="grid grid-cols-1 gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 @md:grid-cols-2 @lg:grid-cols-3 @4xl:grid-cols-6 dark:inset-ring-zinc-800">
+    // <div
+    //   className={clsx(
+    //     // 'grid grid-cols-1 gap-4 @md:grid-cols-2 @lg:grid-cols-3 @4xl:grid-cols-6'
+    //     // 'rounded-xl p-4'
+    //     // 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800'
+    //   )}
+    // >
+    <>
       <SizeMetadata height={pokemon.height} weight={pokemon.weight} />
       <GenderRatioMetadata genderRate={species.gender_rate} />
       <CatchRateMetadata catchRate={species.capture_rate} />
@@ -255,6 +269,7 @@ export default async function MonsterMetadata({
       />
       <GrowthRateMetadata growthRate={growthRate} />
       <EffortValueYieldMetadata stats={pokemon.stats} />
-    </div>
+    </>
+    // </div>
   )
 }
