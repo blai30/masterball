@@ -135,7 +135,7 @@ export default async function Page({
         </Suspense>
       </section> */}
       <section className="@container mx-auto w-full max-w-[96rem] px-4">
-        <div className="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @7xl:grid-cols-8">
+        <div className="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @[88rem]:grid-cols-8">
           <MonsterHero species={species} pokemon={pokemon} form={form} className="col-span-2" />
           <Suspense fallback={<LoadingMetadata />}>
             <MonsterMetadata species={species} pokemon={pokemon} />
