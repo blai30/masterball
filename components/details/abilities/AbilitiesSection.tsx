@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import pMap from 'p-map'
 import type { Ability, Pokemon } from 'pokedex-promise-v2'
-import { EyeOff } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default async function AbilitiesSection({
@@ -54,15 +54,15 @@ export default async function AbilitiesSection({
                     </h3>
                   </Link>
                   {a.hidden && (
-                    <span
-                      title="Hidden ability"
-                      className="rounded-md px-2 inset-ring-1 inset-ring-zinc-800 dark:inset-ring-zinc-200"
-                    >
-                      <EyeOff
-                        size={16}
-                        className="text-zinc-800 dark:text-zinc-200"
-                      />
-                    </span>
+                    // <span
+                    //   title="Hidden ability"
+                    //   className="rounded-md px-2 inset-ring-1 inset-ring-zinc-800 dark:inset-ring-zinc-200"
+                    // >
+                    <Sparkles
+                      size={16}
+                      className="text-zinc-800 dark:text-zinc-200"
+                    />
+                    // </span>
                   )}
                 </div>
                 <p className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">

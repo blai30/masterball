@@ -228,7 +228,7 @@ function GrowthRateMetadata({ growthRate }: { growthRate: GrowthRate }) {
 
   return (
     <MetadataCard title="Growth rate">
-      <ValueUnit value={maxExperience.toLocaleString()} unit="points" />
+      <ValueUnit value={maxExperience.toLocaleString()} unit="exp" />
       <ValueUnit value={description} />
     </MetadataCard>
   )
