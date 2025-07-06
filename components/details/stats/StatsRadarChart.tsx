@@ -2,40 +2,50 @@ import clsx from 'clsx/lite'
 import type { Pokemon } from 'pokedex-promise-v2'
 import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapiHelpers'
 
-const statAngleMap: Record<string, number> = {
-  hp: 0, // top
-  attack: 1, // top right
-  defense: 2, // bottom right
-  speed: 3, // bottom
-  'special-defense': 4, // top left
-  'special-attack': 5, // bottom left
+// Stat order for radar chart
+const statOrder: StatKey[] = [
+  StatKey.Hp,
+  StatKey.Attack,
+  StatKey.Defense,
+  StatKey.Speed,
+  StatKey.SpecialDefense,
+  StatKey.SpecialAttack,
+]
+
+const labelClasses: Record<StatKey, string> = {
+  [StatKey.Hp]: 'text-center',
+  [StatKey.Attack]: 'text-left',
+  [StatKey.Defense]: 'text-left',
+  [StatKey.Speed]: 'text-center',
+  [StatKey.SpecialDefense]: 'text-right',
+  [StatKey.SpecialAttack]: 'text-right',
 }
 
 export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
-  const generateSubdivisions = (length: number) => {
-    return Array.from({ length }, (_, i) => Math.ceil((i + 1) * (50 / length)))
-  }
+  const generateSubdivisions = (length: number) =>
+    Array.from({ length }, (_, i) => Math.ceil((i + 1) * (50 / length)))
 
   const generateHexagonPoints = (
     radius: number,
     centerX: number,
     centerY: number
-  ) => {
-    const points = []
-    for (let i = 0; i < 6; i++) {
+  ) =>
+    Array.from({ length: 6 }, (_, i) => {
       const angle = (Math.PI / 3) * i - Math.PI / 2
       const x = centerX + radius * Math.cos(angle)
       const y = centerY + radius * Math.sin(angle)
-      points.push(`${x},${y}`)
-    }
-    return points.join(' ')
-  }
+      return `${x},${y}`
+    }).join(' ')
 
   const dataPoints = pokemon.stats
-    .slice() // Create a copy to avoid mutating original array
-    .sort((a, b) => statAngleMap[a.stat.name] - statAngleMap[b.stat.name])
+    .slice()
+    .sort(
+      (a, b) =>
+        statOrder.indexOf(a.stat.name as StatKey) -
+        statOrder.indexOf(b.stat.name as StatKey)
+    )
     .map((stat) => {
-      const angleIndex = statAngleMap[stat.stat.name]
+      const angleIndex = statOrder.indexOf(stat.stat.name as StatKey)
       const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
       const x = 50 + (stat.base_stat / 255) * 50 * Math.cos(angle)
       const y = 50 + (stat.base_stat / 255) * 50 * Math.sin(angle)
@@ -75,7 +85,7 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
           />
           {/* Add dots at stat points */}
           {pokemon.stats.map((stat) => {
-            const angleIndex = statAngleMap[stat.stat.name]
+            const angleIndex = statOrder.indexOf(stat.stat.name as StatKey)
             const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
             const statX = 50 + (stat.base_stat / 255) * 50 * Math.cos(angle)
             const statY = 50 + (stat.base_stat / 255) * 50 * Math.sin(angle)
@@ -93,42 +103,32 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
         </svg>
         {/* Stat labels and their values */}
         {pokemon.stats.map((stat) => {
-          const fullLabel = StatLabelsFull[stat.stat.name as StatKey]
-          const angleIndex = statAngleMap[stat.stat.name]
+          const { name } = stat.stat
+          const angleIndex = statOrder.indexOf(name as StatKey)
           const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
           const x = 50 + 56 * Math.cos(angle)
           const y = 50 + 50 * Math.sin(angle)
-
+          const align = labelClasses[name as StatKey]
           return (
             <div
-              key={`label-${stat.stat.name}`}
+              key={`label-${name}`}
               className="absolute top-0 left-0 flex w-14 -translate-x-1/2 -translate-y-1/2 flex-col"
               style={{ left: `${x}%`, top: `${y}%` }}
             >
               <abbr
-                title={fullLabel}
-                aria-label={fullLabel}
+                title={StatLabelsFull[name as StatKey]}
+                aria-label={StatLabelsFull[name as StatKey]}
                 className={clsx(
                   'text-xs font-normal text-zinc-700 no-underline dark:text-zinc-300',
-                  angleIndex === 0 && 'text-center',
-                  angleIndex === 1 && 'text-left',
-                  angleIndex === 2 && 'text-left',
-                  angleIndex === 3 && 'text-center',
-                  angleIndex === 4 && 'text-right',
-                  angleIndex === 5 && 'text-right'
+                  align
                 )}
               >
-                {StatLabels[stat.stat.name as StatKey]}
+                {StatLabels[name as StatKey]}
               </abbr>
               <p
                 className={clsx(
                   'font-num text-lg font-semibold text-black tabular-nums dark:text-white',
-                  angleIndex === 0 && 'text-center',
-                  angleIndex === 1 && 'text-left',
-                  angleIndex === 2 && 'text-left',
-                  angleIndex === 3 && 'text-center',
-                  angleIndex === 4 && 'text-right',
-                  angleIndex === 5 && 'text-right'
+                  align
                 )}
               >
                 {stat.base_stat}

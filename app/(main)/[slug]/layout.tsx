@@ -48,7 +48,7 @@ export default async function RootLayout({
       {/* Variants section */}
       <div className="grow">
         <div className="mx-auto max-w-[96rem]">
-          <div className="flex">
+          <div className="flex overflow-x-auto">
             <div className="@container grow px-4">
               <VariantCardSelector
                 monsters={monsters}
