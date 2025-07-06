@@ -51,7 +51,7 @@ function MovesTable({
   moveRows: MoveRow[]
   className?: string
 }) {
-  const { versionGroup } = useVersionGroup()
+  const { versionGroup, hasMounted } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'id', desc: false },
@@ -138,6 +138,8 @@ function MovesTable({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   })
+
+  if (!hasMounted) return null
 
   if (filteredMoveRows.length === 0) {
     return (

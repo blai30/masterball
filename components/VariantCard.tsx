@@ -3,41 +3,51 @@
 import Image from 'next/image'
 import clsx from 'clsx/lite'
 import { Monster } from '@/lib/utils/pokeapiHelpers'
-import TypePill from '@/components/TypePill'
+import TypeIcon from '@/components/TypeIcon'
+import GlassCard from '@/components/GlassCard'
 
 export default function VariantCard({
   monster,
   className,
+  variant = 'link',
 }: {
   monster: Monster
   className?: string
+  variant?: 'default' | 'link'
 }) {
   const { name, types, imageUrl } = monster
 
   return (
-    <div
+    <GlassCard
+      variant={variant}
       className={clsx(
-        'relative flex w-58 flex-col items-center gap-4',
+        'relative flex w-full flex-col items-center gap-4 rounded-xl p-3',
         className
       )}
     >
-      <Image
-        src={imageUrl || ''}
-        alt={name}
-        width={200}
-        height={200}
-        className="object-scale-down"
-      />
-      <h3 className="text-lg font-medium text-black dark:text-white">{name}</h3>
-      {types && (
-        <ul className="flex flex-row gap-2">
-          {types.map((type) => (
-            <li key={type}>
-              <TypePill variant={type} size="medium" link={false} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+      <div className="flex aspect-square size-20 items-center justify-center">
+        <Image
+          src={imageUrl || ''}
+          alt={name}
+          width={128}
+          height={128}
+          className="object-scale-down"
+        />
+      </div>
+      <div className="flex grow flex-col items-center gap-3">
+        {types && (
+          <ul className="flex flex-row gap-1">
+            {types.map((type) => (
+              <li key={type}>
+                <TypeIcon variant={type} size="small" link={false} />
+              </li>
+            ))}
+          </ul>
+        )}
+        <h3 className="text-sm font-medium text-black dark:text-white">
+          {name}
+        </h3>
+      </div>
+    </GlassCard>
   )
 }

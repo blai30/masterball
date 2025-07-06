@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  allowedDevOrigins: ['brianpc'],
   // logging: {
   //   fetches: {
   //     fullUrl: true,

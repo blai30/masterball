@@ -1,3 +1,5 @@
+import Image from 'next/image'
+import clsx from 'clsx/lite'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import TypePill from '@/components/TypePill'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
@@ -6,31 +8,35 @@ export default function MonsterHero({
   species,
   pokemon,
   form,
+  className,
 }: {
   species: PokemonSpecies
   pokemon: Pokemon
   form?: PokemonForm | undefined
+  className?: string
 }) {
-  const name = getTranslation(species.names, 'name')!
-  const formName = form
-    ? (getTranslation(form?.form_names, 'name') ??
-      getTranslation(form?.names, 'name') ??
-      name)
-    : name
+  const name =
+    getTranslation(form?.form_names, 'name') ??
+    getTranslation(form?.names, 'name') ??
+    getTranslation(species.names, 'name')!
 
   const imageId = species.id.toString().padStart(4, '0')
-  const imageUrl =
-    pokemon.sprites.other.home.front_default ??
-    pokemon.sprites.front_default ??
-    `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  const imageUrl = pokemon.is_default
+    ? `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+    : `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_${pokemon.name}_s0.webp`
 
   const leadingZeros = imageId.match(/^0+/)?.[0] || ''
   const significantDigits = imageId.slice(leadingZeros.length)
 
   return (
-    <section className="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-12">
-      <div className="flex flex-col items-start gap-2">
-        <p className="font-num text-xl sm:text-2xl">
+    <div
+      className={clsx(
+        'relative h-42 w-full max-w-md flex-row items-end gap-12',
+        className
+      )}
+    >
+      <div className="flex flex-col items-start gap-4">
+        <p className="font-num text-2xl">
           <span className="text-zinc-400 dark:text-zinc-600">
             {leadingZeros}
           </span>
@@ -39,8 +45,8 @@ export default function MonsterHero({
           </span>
         </p>
         <div className="flex flex-col">
-          <h1 className="text-2xl font-semibold tracking-tight text-black sm:text-3xl dark:text-white">
-            {formName}
+          <h1 className="text-4xl font-semibold tracking-tight text-black dark:text-white">
+            {name}
           </h1>
         </div>
         <ul className="flex flex-row gap-2">
@@ -51,30 +57,15 @@ export default function MonsterHero({
           ))}
         </ul>
       </div>
-      {/* <div className="flex">
-        <div className="grid w-full grid-cols-2 gap-8">
-          <Image
-            src={pokemon.sprites.other.home.front_default!}
-            // src={pokemon.sprites.front_default!}
-            alt={`${species.name} front default`}
-            width={200}
-            height={200}
-            priority
-            loading="eager"
-            className="object-scale-down"
-          />
-          <Image
-            src={pokemon.sprites.other.home.front_shiny!}
-            // src={pokemon.sprites.front_shiny!}
-            alt={`${species.name} front shiny`}
-            width={200}
-            height={200}
-            priority
-            loading="eager"
-            className="object-scale-down"
-          />
-        </div>
-      </div> */}
-    </section>
+      <div className="absolute right-0 bottom-0 flex">
+        <Image
+          src={imageUrl}
+          alt={`${species.name} front default`}
+          width={128}
+          height={128}
+          className="object-scale-down"
+        />
+      </div>
+    </div>
   )
 }

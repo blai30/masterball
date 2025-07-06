@@ -5,6 +5,7 @@ import type {
   PokemonSpecies,
   Type,
 } from 'pokedex-promise-v2'
+import { excludedVariants } from '@/lib/utils/excludedSlugs'
 
 export function getTranslation<
   T extends {
@@ -61,19 +62,22 @@ export const createMonster = async (
     pokemonSlug: variant.name ?? undefined,
     formSlug: form?.name ?? undefined,
     types: variant.types.map((t) => t.type.name as TypeKey) ?? undefined,
-    imageUrl:
-      variant?.sprites?.other?.home?.front_default ??
-      variant?.sprites?.other['official-artwork']?.front_default ??
-      `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png` ??
-      undefined,
+    imageUrl: variant.is_default
+      ? `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+      : `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_${variant.name}_s0.webp`,
   } as Monster
 }
 
 export const getMonstersBySpecies = async (
   species: PokemonSpecies
 ): Promise<Monster[]> => {
+  // Hard-code exceptions to filter out useless variants.
+  const filteredVariants = species.varieties.filter(
+    (variant) => !excludedVariants.includes(variant.pokemon.name)
+  )
+
   const variants: Pokemon[] = await pMap(
-    species.varieties,
+    filteredVariants,
     async (variant) =>
       fetch(variant.pokemon.url).then(
         (response) => response.json() as Promise<Pokemon>
@@ -220,9 +224,11 @@ export const VersionGroupLabels: Record<VersionGroupKey, string> = {
   [VersionGroupKey.OmegaRubyAlphaSapphire]: 'Omega Ruby & Alpha Sapphire',
   [VersionGroupKey.SunMoon]: 'Sun & Moon',
   [VersionGroupKey.UltraSunUltraMoon]: 'Ultra Sun & Ultra Moon',
-  [VersionGroupKey.LetsGoPikachuLetsGoEevee]: 'Let\'s Go Pikachu & Let\'s Go Eevee',
+  [VersionGroupKey.LetsGoPikachuLetsGoEevee]:
+    "Let's Go Pikachu & Let's Go Eevee",
   [VersionGroupKey.SwordShield]: 'Sword & Shield',
-  [VersionGroupKey.BrilliantDiamondShiningPearl]: 'Brilliant Diamond & Shining Pearl',
+  [VersionGroupKey.BrilliantDiamondShiningPearl]:
+    'Brilliant Diamond & Shining Pearl',
   [VersionGroupKey.ScarletViolet]: 'Scarlet & Violet',
 }
 

@@ -5,6 +5,7 @@ import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
+import { excludedForms, excludedVariants } from '@/lib/utils/excludedSlugs'
 import LoadingSection from '@/components/details/LoadingSection'
 import LoadingMetadata from '@/components/details/LoadingMetadata'
 import MonsterMetadata from '@/components/details/MonsterMetadata'
@@ -15,6 +16,7 @@ import EvolutionSection from '@/components/details/evolution/EvolutionSection'
 import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection'
 import LocalizationSection from '@/components/details/localization/LocalizationSection'
 import MovesSection from '@/components/details/moves/MovesSection'
+import MonsterHero from '@/components/details/MonsterHero'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -32,10 +34,12 @@ export async function generateStaticParams() {
   )
 
   const params = species.flatMap((specie) =>
-    specie.varieties.map((variant) => ({
-      slug: specie.name,
-      variant: variant.is_default ? undefined : [variant.pokemon.name],
-    }))
+    specie.varieties
+      .filter((variant) => !excludedVariants.includes(variant.pokemon.name))
+      .map((variant) => ({
+        slug: specie.name,
+        variant: variant.is_default ? undefined : [variant.pokemon.name],
+      }))
   )
 
   return params
@@ -52,13 +56,15 @@ export async function generateMetadata({
     'pokemon-species',
     slug
   )
-  const pokemonUrl = species.varieties.find((v) =>
-    variantKey ? v.pokemon.name === variantKey : v.is_default
-  )!.pokemon.url
+  const pokemonUrl = species.varieties
+    .filter((variant) => !excludedVariants.includes(variant.name))
+    .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
+    .pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const imageId = species.id.toString().padStart(4, '0')
-  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
   const name = getTranslation(species.names, 'name')!
   const description = pokemon.types
     .map((t) => TypeLabels[t.type.name as TypeKey])
@@ -100,28 +106,35 @@ export default async function Page({
     'pokemon-species',
     slug
   )
-  const pokemonUrl = species.varieties.find((v) =>
-    variantKey ? v.pokemon.name === variantKey : v.is_default
-  )!.pokemon.url
+  const pokemonUrl = species.varieties
+    .filter((variant) => !excludedVariants.includes(variant.name))
+    .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
+    .pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const forms = await pMap(
-    pokemon.forms.filter((form) => form.name !== pokemon.name),
+    pokemon.forms.filter((form) => !excludedForms.includes(form.name)),
     async (form) =>
       await pokeapi.getByName<PokemonForm>('pokemon-form', form.name),
     { concurrency: 4 }
   )
 
+  const form =
+    pokemon.is_default || species.name === pokemon.name
+      ? undefined
+      : forms.find((f) => f.name === variantKey || f.name === pokemon.name)
+
   return (
     <div className="flex w-full flex-col gap-6">
+      <section className="mx-auto w-full max-w-[96rem] px-4">
+        <MonsterHero species={species} pokemon={pokemon} form={form} />
+      </section>
       {/* Metadata section */}
-      <div className="w-full bg-zinc-100 py-6 dark:bg-zinc-900/50">
-        <section className="mx-auto w-full max-w-[96rem] px-4">
-          <Suspense fallback={<LoadingMetadata />}>
-            <MonsterMetadata species={species} pokemon={pokemon} />
-          </Suspense>
-        </section>
-      </div>
+      <section className="@container mx-auto w-full max-w-[96rem] px-4">
+        <Suspense fallback={<LoadingMetadata />}>
+          <MonsterMetadata species={species} pokemon={pokemon} />
+        </Suspense>
+      </section>
       {/* Main details section */}
       <section className="mx-auto w-full max-w-[96rem] px-4">
         <div className="flex w-full flex-col gap-6 xl:flex-row">

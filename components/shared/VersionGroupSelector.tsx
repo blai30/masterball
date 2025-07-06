@@ -6,7 +6,9 @@ import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapiHelpers'
 import { useVersionGroup } from '@/lib/stores/version-group'
 
 function VersionGroupSelector() {
-  const { versionGroup, setVersionGroup } = useVersionGroup()
+  const { versionGroup, setVersionGroup, hasMounted } = useVersionGroup()
+
+  if (!hasMounted) return null
 
   return (
     <div className="relative flex w-full items-center justify-center text-sm/6">

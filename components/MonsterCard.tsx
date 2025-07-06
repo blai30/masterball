@@ -15,7 +15,8 @@ const MonsterCard = ({
   name: string
 }) => {
   const imageId = id.toString().padStart(4, '0')
-  const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
+  const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
 
   return (
     <GlassCard variant="link" className="h-full rounded-xl">

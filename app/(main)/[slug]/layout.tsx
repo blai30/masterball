@@ -28,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <div className="flex w-full flex-1 flex-col gap-6">
-      <div className="mx-auto w-full max-w-[96rem] px-4">
+      {/* <div className="mx-auto w-full max-w-[96rem] px-4">
         <div className="flex flex-row items-center gap-2.5">
           <p className="font-num rounded-lg bg-zinc-200 px-2 text-lg font-bold dark:bg-zinc-800">
             <span className="text-zinc-400 dark:text-zinc-600">
@@ -44,12 +44,12 @@ export default async function RootLayout({
             </h1>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* Variants section */}
       <div className="grow">
         <div className="mx-auto max-w-[96rem]">
           <div className="flex overflow-x-auto">
-            <div className="grow px-4">
+            <div className="@container grow px-4">
               <VariantCardSelector
                 monsters={monsters}
                 className="min-w-full whitespace-nowrap"

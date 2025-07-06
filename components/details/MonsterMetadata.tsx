@@ -11,7 +11,7 @@ import { Mars, Venus } from 'lucide-react'
 import pokeapi from '@/lib/api/pokeapi'
 import { StatLabels, StatKey, getTranslation } from '@/lib/utils/pokeapiHelpers'
 
-const calculateCaptureProbability = (captureRate: number) => {
+const calculateCatchProbability = (captureRate: number) => {
   const a = captureRate / 3
   const captureValue = 65535 / Math.pow(255 / a, 0.1875)
   const captureProbability = Math.pow(captureValue / 65535, 4)
@@ -42,9 +42,11 @@ function MetadataCard({
   children?: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-2 rounded-lg">
-      <h2 className="text-sm/6 text-zinc-600 dark:text-zinc-400">{title}</h2>
-      <div className="flex flex-col">{children}</div>
+    <div className="flex flex-col gap-2">
+      <h2 className="mb-1 text-xs font-medium tracking-wide text-zinc-700 uppercase dark:text-zinc-300">
+        {title}
+      </h2>
+      <div className="flex flex-1 flex-col">{children}</div>
     </div>
   )
 }
@@ -62,12 +64,12 @@ function ValueUnit({ value, unit }: { value: string | number; unit?: string }) {
   )
 }
 
-function CaptureRateMetadata({ captureRate }: { captureRate: number }) {
-  const probability = calculateCaptureProbability(captureRate).toFixed(2)
+function CatchRateMetadata({ catchRate }: { catchRate: number }) {
+  const probability = calculateCatchProbability(catchRate).toFixed(2)
 
   return (
-    <MetadataCard title="Capture rate">
-      <ValueUnit value={captureRate} unit="/ 255" />
+    <MetadataCard title="Catch rate">
+      <ValueUnit value={catchRate} unit="/ 255" />
       <ValueUnit value={probability} unit="%" />
     </MetadataCard>
   )
@@ -78,14 +80,14 @@ function EffortValueYieldMetadata({ stats }: { stats: StatElement[] }) {
 
   if (evStats.length === 0) {
     return (
-      <MetadataCard title="Effort Value yield">
+      <MetadataCard title="EV yield">
         <p>None</p>
       </MetadataCard>
     )
   }
 
   return (
-    <MetadataCard title="Effort Value yield">
+    <MetadataCard title="EV yield">
       <ul className="flex flex-col">
         {evStats.map((stat) => (
           <li key={stat.stat.name} className="flex gap-x-1">
@@ -100,21 +102,71 @@ function EffortValueYieldMetadata({ stats }: { stats: StatElement[] }) {
   )
 }
 
-function EggGroupMetadata({ eggGroups }: { eggGroups: EggGroup[] }) {
+function SizeMetadata({ height, weight }: { height: number; weight: number }) {
+  const { feet, inches, meters } = convertHeight(height)
+  const { pounds, kilograms } = convertWeight(weight)
+
   return (
-    <MetadataCard title="Egg group">
-      <ul className="flex flex-col">
-        {eggGroups.map((group) => (
-          <li key={group.name} className="inline-block">
-            <Link
-              href={`/egg-group/${group.name}`}
-              className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
-            >
-              {getTranslation(group.names, 'name')}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <MetadataCard title="Size">
+      <div className="flex flex-col gap-2">
+        <div>
+          <span className="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+            Height
+          </span>
+          <ValueUnit value={meters} unit="m" />
+        </div>
+        <div>
+          <span className="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+            Weight
+          </span>
+          <ValueUnit value={kilograms} unit="kg" />
+        </div>
+      </div>
+    </MetadataCard>
+  )
+}
+
+function BreedingMetadata({
+  hatchCounter,
+  eggGroups,
+}: {
+  hatchCounter: number | null
+  eggGroups: EggGroup[]
+}) {
+  return (
+    <MetadataCard title="Breeding">
+      <div className="flex flex-col gap-2">
+        <div>
+          <span className="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+            Egg Groups
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {eggGroups.length > 0 ? (
+              eggGroups.map((group, i) => (
+                <span key={group.name}>
+                  <Link
+                    href={`/egg-group/${group.name}`}
+                    className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
+                  >
+                    {getTranslation(group.names, 'name')}
+                  </Link>
+                  {i < eggGroups.length - 1 && ','}
+                </span>
+              ))
+            ) : (
+              <span>—</span>
+            )}
+          </div>
+        </div>
+        <div>
+          <span className="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+            Hatch Cycles
+          </span>
+          <div>
+            <span>{hatchCounter ? hatchCounter.toLocaleString() : '—'}</span>
+          </div>
+        </div>
+      </div>
     </MetadataCard>
   )
 }
@@ -175,50 +227,6 @@ function GrowthRateMetadata({ growthRate }: { growthRate: GrowthRate }) {
   )
 }
 
-function HatchCounterMetadata({
-  hatchCounter,
-}: {
-  hatchCounter: number | null
-}) {
-  if (!hatchCounter) {
-    return <MetadataCard title="Hatch counter" />
-  }
-
-  const hatchSteps = (hatchCounter * 128).toLocaleString()
-
-  return (
-    <MetadataCard title="Hatch counter">
-      <ValueUnit value={hatchSteps} unit="steps" />
-      <ValueUnit value={hatchCounter.toLocaleString()} unit="cycles" />
-    </MetadataCard>
-  )
-}
-
-function HeightMetadata({ height }: { height: number }) {
-  const { feet, inches, meters } = convertHeight(height)
-
-  return (
-    <MetadataCard title="Height">
-      <span className="flex gap-x-1">
-        <ValueUnit value={feet} unit="ft" />
-        <ValueUnit value={inches} unit="in" />
-      </span>
-      <ValueUnit value={meters} unit="meters" />
-    </MetadataCard>
-  )
-}
-
-function WeightMetadata({ weight }: { weight: number }) {
-  const { pounds, kilograms } = convertWeight(weight)
-
-  return (
-    <MetadataCard title="Weight">
-      <ValueUnit value={pounds} unit="lbs" />
-      <ValueUnit value={kilograms} unit="kg" />
-    </MetadataCard>
-  )
-}
-
 export default async function MonsterMetadata({
   species,
   pokemon,
@@ -237,13 +245,14 @@ export default async function MonsterMetadata({
   )
 
   return (
-    <div className="grid grid-cols-2 gap-6 md:grid-cols-4 2xl:grid-cols-8">
-      <HeightMetadata height={pokemon.height} />
-      <WeightMetadata weight={pokemon.weight} />
+    <div className="grid grid-cols-1 gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 @md:grid-cols-2 @lg:grid-cols-3 @4xl:grid-cols-6 dark:inset-ring-zinc-800">
+      <SizeMetadata height={pokemon.height} weight={pokemon.weight} />
       <GenderRatioMetadata genderRate={species.gender_rate} />
-      <CaptureRateMetadata captureRate={species.capture_rate} />
-      <HatchCounterMetadata hatchCounter={species.hatch_counter} />
-      <EggGroupMetadata eggGroups={eggGroups} />
+      <CatchRateMetadata catchRate={species.capture_rate} />
+      <BreedingMetadata
+        hatchCounter={species.hatch_counter}
+        eggGroups={eggGroups}
+      />
       <GrowthRateMetadata growthRate={growthRate} />
       <EffortValueYieldMetadata stats={pokemon.stats} />
     </div>
