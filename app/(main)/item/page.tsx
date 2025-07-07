@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import pMap from 'p-map'
 import { Item } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTestItemsList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import ItemCardGrid from '@/components/compounds/ItemCardGrid'
 
@@ -21,11 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  // const itemsList =
-  //   process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-  //     ? await getTestItemsList()
-  //     : await pokeapi.getList('item', 200, 0)
-  const itemsList = await pokeapi.getList('item', 40, 0)
+  const itemsList =
+    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+      ? await pokeapi.getList('item', 40, 0)
+      : await pokeapi.getList('item', 3000, 0)
 
   const items = await pMap(
     itemsList.results,

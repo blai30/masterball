@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import pMap from 'p-map'
 import { Move } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTestMovesList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import MoveCardGrid from '@/components/compounds/MoveCardGrid'
 
@@ -21,11 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  // const moveList =
-  //   process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-  //     ? await getTestMovesList()
-  //     : await pokeapi.getList('move', 200, 0)
-  const moveList = await pokeapi.getList('move', 40, 0)
+  const moveList =
+    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+      ? await pokeapi.getList('move', 40, 0)
+      : await pokeapi.getList('move', 1200, 0)
 
   const moves = await pMap(
     moveList.results,

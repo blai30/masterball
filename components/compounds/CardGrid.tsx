@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo, useCallback, ReactNode } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useMemo, useCallback, ReactNode, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { Search } from 'lucide-react'
 import Pagination from '@/components/compounds/Pagination'
@@ -24,8 +25,37 @@ export default function CardGrid<T>({
   searchPlaceholder = 'Filter...',
   className,
 }: CardGridProps<T>) {
-  const [query, setQuery] = useState('')
-  const [currentPage, setCurrentPage] = useState(1)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Read page from URL param 'p', default to 1
+  const pageFromUrl = useMemo(() => {
+    const p = searchParams.get('p')
+    const pageNum = p ? parseInt(p, 10) : 1
+    return isNaN(pageNum) || pageNum < 1 ? 1 : pageNum
+  }, [searchParams])
+
+  // Read query from URL param 'q', default to ''
+  const queryFromUrl = useMemo(() => {
+    return searchParams.get('q') || ''
+  }, [searchParams])
+
+  const [query, setQuery] = useState(queryFromUrl)
+  const [currentPage, setCurrentPage] = useState(pageFromUrl)
+
+  // Keep currentPage in sync with URL param
+  useEffect(() => {
+    if (currentPage !== pageFromUrl) {
+      setCurrentPage(pageFromUrl)
+    }
+  }, [pageFromUrl, currentPage])
+
+  // Keep query in sync with URL param
+  useEffect(() => {
+    if (query !== queryFromUrl) {
+      setQuery(queryFromUrl)
+    }
+  }, [queryFromUrl, query])
 
   const fuse = useMemo(
     () =>
@@ -50,16 +80,45 @@ export default function CardGrid<T>({
     return filteredItems.slice(startIndex, endIndex)
   }, [filteredItems, currentPage, itemsPerPage])
 
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page)
-  }, [])
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page)
+      // Update URL params 'p' and 'q' (remove if 1 or empty), do not push to history
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (page === 1) {
+        params.delete('p')
+      } else {
+        params.set('p', String(page))
+      }
+      if (!query) {
+        params.delete('q')
+      } else {
+        params.set('q', query)
+      }
+      const search = params.toString()
+      router.replace(search ? `?${search}` : '?', { scroll: false })
+    },
+    [router, searchParams, query]
+  )
 
   const handleQueryChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setQuery(e.target.value)
+      const newQuery = e.target.value
+      setQuery(newQuery)
       setCurrentPage(1)
+      // Update URL params 'q' and 'p' (remove if empty or 1), do not push to history
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (!newQuery) {
+        params.delete('q')
+      } else {
+        params.set('q', newQuery)
+      }
+      // Always reset page to 1 on search
+      params.delete('p')
+      const search = params.toString()
+      router.replace(search ? `?${search}` : '?', { scroll: false })
     },
-    []
+    [router, searchParams]
   )
 
   return (

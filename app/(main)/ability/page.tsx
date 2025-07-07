@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import pMap from 'p-map'
 import { Ability } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTestAbilitiesList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import AbilityCardGrid from '@/components/compounds/AbilityCardGrid'
 
@@ -21,11 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  // const abilityList =
-  //   process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-  //     ? await getTestAbilitiesList()
-  //     : await pokeapi.getList('ability', 100, 0)
-  const abilityList = await pokeapi.getList('ability', 40, 0)
+  const abilityList =
+    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+      ? await pokeapi.getList('ability', 40, 0)
+      : await pokeapi.getList('ability', 600, 0)
 
   const abilities = await pMap(
     abilityList.results,

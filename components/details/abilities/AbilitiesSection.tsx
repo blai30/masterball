@@ -45,7 +45,7 @@ export default async function AbilitiesSection({
             <li key={a.id} className="">
               <div className="flex flex-col gap-1">
                 <div className="flex flex-row items-center gap-2">
-                  <Link href={`/ability/${a.name}`} className="inline-block">
+                  <Link href={`/ability?q=${a.name}`} className="inline-block">
                     <h3
                       title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
                       className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"

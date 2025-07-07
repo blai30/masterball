@@ -77,7 +77,7 @@ function MovesTable({
         cell: (info) => (
           <div className="@container/move">
             <Link
-              href={`/move/${info.row.original.slug}`}
+              href={`/move?q=${info.row.original.slug}`}
               title={`Move: ${info.getValue()}`}
               className="inline-flex overflow-clip font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
             >
