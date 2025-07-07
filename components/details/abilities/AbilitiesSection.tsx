@@ -14,11 +14,10 @@ export default async function AbilitiesSection({
   const abilities = await pMap(
     pokemon.abilities.map((ability) => ability.ability.url),
     async (url) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getResource<Ability>(url)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
 
   const abilitiesMap = pokemon.abilities.map((ability) => {

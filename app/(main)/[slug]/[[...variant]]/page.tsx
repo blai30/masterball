@@ -30,11 +30,10 @@ export async function generateStaticParams() {
   const species = await pMap(
     speciesList.results,
     async (result) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getResource<PokemonSpecies>(result.url)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
 
   const params = species.flatMap((specie) =>
@@ -119,14 +118,13 @@ export default async function Page({
   const forms = await pMap(
     pokemon.forms.filter((form) => !excludedForms.includes(form.name)),
     async (form) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getByName<PokemonForm>(
         'pokemon-form',
         form.name
       )
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
 
   const form =

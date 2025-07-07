@@ -28,11 +28,10 @@ export default async function Home() {
   const moves = await pMap(
     moveList.results,
     async (result) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const move = await pokeapi.getResource<Move>(result.url)
       return move
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
 
   const movesData = moves.map((move) => ({

@@ -18,20 +18,18 @@ export default async function TypeEffectivenessSection({
   const typeResources = await pMap(
     pokemon.types.map((type) => type.type.url),
     async (url) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getResource<Type>(url)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
   const allTypeResources = await pMap(
     Object.values(TypeKey).map((t) => `https://pokeapi.co/api/v2/type/${t}`),
     async (url) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getResource<Type>(url)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
   const typeEffectiveness = getEffectiveness(...typeResources)
   const allTypeRelations = allTypeResources.map(

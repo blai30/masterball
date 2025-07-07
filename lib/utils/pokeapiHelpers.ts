@@ -80,21 +80,19 @@ export const getMonstersBySpecies = async (
   const variants: Pokemon[] = await pMap(
     filteredVariants.map((variant) => variant.pokemon.url),
     async (url) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getResource<Pokemon>(url)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
 
   const monsters = await pMap(
     variants,
     async (variant) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = createMonster(variant, species)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
   return monsters
 }

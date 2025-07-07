@@ -86,11 +86,10 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const movesData = await pMap(
     uniqueMoveNames,
     async (name) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getByName<Move>('move', name)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
 
   // Process moves with machines
@@ -107,11 +106,10 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   const machinesData = await pMap(
     uniqueMachinesUrls,
     async (url) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getResource<Machine>(url)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
 
   // Create optimized maps

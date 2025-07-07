@@ -28,11 +28,10 @@ export default async function Home() {
   const abilities = await pMap(
     abilityList.results,
     async (result) => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
       const resource = await pokeapi.getResource<Ability>(result.url)
       return resource
     },
-    { concurrency: 8 }
+    { concurrency: 4 }
   )
 
   const abilitiesData = abilities.map((ability) => ({
