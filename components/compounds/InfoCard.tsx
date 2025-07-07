@@ -1,26 +1,25 @@
 'use client'
 
 import Image from 'next/image'
-import { memo } from 'react'
 import GlassCard from '@/components/GlassCard'
 
-const ItemCard = ({
-  id,
-  slug,
-  name,
-  description,
-  imageUrl,
-}: {
+interface InfoCardProps {
   id: number
   slug: string
   name: string
   description: string
   imageUrl?: string
-}) => {
-  // const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+}
 
+export default function InfoCard({
+  id,
+  slug,
+  name,
+  description,
+  imageUrl,
+}: InfoCardProps) {
   return (
-    <GlassCard variant="default" className="h-48 rounded-xl">
+    <GlassCard variant="default" className="h-full rounded-xl">
       <div className="group flex flex-row items-start gap-4 p-4">
         {imageUrl && (
           <div className="aspect-square size-16">
@@ -45,5 +44,3 @@ const ItemCard = ({
     </GlassCard>
   )
 }
-
-export default memo(ItemCard)
