@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import pMap from 'p-map'
 import type { Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
+import pokeapi from '@/lib/api/pokeapi'
 import {
   LearnMethodKey,
   getTranslation,
@@ -84,11 +85,12 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   ]
   const movesData = await pMap(
     uniqueMoveNames,
-    async (name) =>
-      await fetch(`https://pokeapi.co/api/v2/move/${name}`).then(
-        (response) => response.json() as Promise<Move>
-      ),
-    { concurrency: 4 }
+    async (name) => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      const resource = await pokeapi.getByName<Move>('move', name)
+      return resource
+    },
+    { concurrency: 8 }
   )
 
   // Process moves with machines
@@ -104,9 +106,12 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   ]
   const machinesData = await pMap(
     uniqueMachinesUrls,
-    async (url) =>
-      await fetch(url).then((response) => response.json() as Promise<Machine>),
-    { concurrency: 4 }
+    async (url) => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      const resource = await pokeapi.getResource<Machine>(url)
+      return resource
+    },
+    { concurrency: 8 }
   )
 
   // Create optimized maps

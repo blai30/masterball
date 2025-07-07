@@ -28,10 +28,11 @@ export default async function Home() {
   const items = await pMap(
     itemsList.results,
     async (result) => {
-      const species = await pokeapi.getResource<Item>(result.url)
-      return species
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      const resource = await pokeapi.getResource<Item>(result.url)
+      return resource
     },
-    { concurrency: 4 }
+    { concurrency: 8 }
   )
 
   const itemsData = items.map((item) => {

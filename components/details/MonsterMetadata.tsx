@@ -291,8 +291,12 @@ export default async function MonsterMetadata({
 }) {
   const eggGroups = await pMap(
     species.egg_groups,
-    async (eggGroup) => await pokeapi.getResource<EggGroup>(eggGroup.url),
-    { concurrency: 4 }
+    async (eggGroup) => {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      const resource = await pokeapi.getResource<EggGroup>(eggGroup.url)
+      return resource
+    },
+    { concurrency: 8 }
   )
 
   const growthRate = await pokeapi.getResource<GrowthRate>(
