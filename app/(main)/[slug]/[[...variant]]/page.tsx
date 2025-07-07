@@ -125,21 +125,28 @@ export default async function Page({
       : forms.find((f) => f.name === variantKey || f.name === pokemon.name)
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <section className="mx-auto w-full max-w-[96rem] px-4">
+    <div className="flex w-full flex-col gap-4 xl:max-w-none">
+      {/* <section className="mx-auto w-full max-w-[96rem] px-4">
         <MonsterHero species={species} pokemon={pokemon} form={form} />
       </section>
-      {/* Metadata section */}
       <section className="@container mx-auto w-full max-w-[96rem] px-4">
         <Suspense fallback={<LoadingMetadata />}>
           <MonsterMetadata species={species} pokemon={pokemon} />
         </Suspense>
+      </section> */}
+      <section className="@container mx-auto w-full max-w-[96rem] px-4">
+        <div className="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @[88rem]:grid-cols-8">
+          <MonsterHero species={species} pokemon={pokemon} form={form} className="col-span-2" />
+          <Suspense fallback={<LoadingMetadata />}>
+            <MonsterMetadata species={species} pokemon={pokemon} />
+          </Suspense>
+        </div>
       </section>
       {/* Main details section */}
       <section className="mx-auto w-full max-w-[96rem] px-4">
-        <div className="flex w-full flex-col gap-6 xl:flex-row">
+        <div className="flex w-full flex-col gap-4 xl:flex-row">
           {/* First column on large screens */}
-          <div className="flex w-full flex-col gap-6">
+          <div className="flex w-full flex-col gap-4">
             <Suspense fallback={<LoadingSection />}>
               <StatsSection pokemon={pokemon} />
             </Suspense>

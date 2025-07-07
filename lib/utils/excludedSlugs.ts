@@ -6,6 +6,8 @@ export const excludedVariants = [
   'pikachu-phd',
   'pikachu-libre',
   'pikachu-cosplay',
+  // Greninja battle bond is redundant with Ash-Greninja
+  'greninja-battle-bond',
   // Zygarde power constructs
   'zygarde-50-power-construct',
   'zygarde-10-power-construct',

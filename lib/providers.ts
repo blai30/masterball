@@ -106,6 +106,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/479/',
     },
     {
+      name: 'dialga',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/483/',
+    },
+    {
       name: 'arceus',
       url: 'https://pokeapi.co/api/v2/pokemon-species/493/',
     },
@@ -260,182 +264,6 @@ const species: NamedAPIResourceList = {
   ],
 }
 
-const moves: NamedAPIResourceList = {
-  count: 937,
-  next: null,
-  previous: null,
-  results: [
-    {
-      name: 'pound',
-      url: 'https://pokeapi.co/api/v2/move/1/',
-    },
-    {
-      name: 'karate-chop',
-      url: 'https://pokeapi.co/api/v2/move/2/',
-    },
-    {
-      name: 'double-slap',
-      url: 'https://pokeapi.co/api/v2/move/3/',
-    },
-    {
-      name: 'comet-punch',
-      url: 'https://pokeapi.co/api/v2/move/4/',
-    },
-    {
-      name: 'mega-punch',
-      url: 'https://pokeapi.co/api/v2/move/5/',
-    },
-    {
-      name: 'pay-day',
-      url: 'https://pokeapi.co/api/v2/move/6/',
-    },
-    {
-      name: 'fire-punch',
-      url: 'https://pokeapi.co/api/v2/move/7/',
-    },
-    {
-      name: 'ice-punch',
-      url: 'https://pokeapi.co/api/v2/move/8/',
-    },
-    {
-      name: 'thunder-punch',
-      url: 'https://pokeapi.co/api/v2/move/9/',
-    },
-    {
-      name: 'scratch',
-      url: 'https://pokeapi.co/api/v2/move/10/',
-    },
-  ],
-}
-
-const abilities: NamedAPIResourceList = {
-  count: 367,
-  next: null,
-  previous: null,
-  results: [
-    {
-      name: 'stench',
-      url: 'https://pokeapi.co/api/v2/ability/1/',
-    },
-    {
-      name: 'drizzle',
-      url: 'https://pokeapi.co/api/v2/ability/2/',
-    },
-    {
-      name: 'speed-boost',
-      url: 'https://pokeapi.co/api/v2/ability/3/',
-    },
-    {
-      name: 'battle-armor',
-      url: 'https://pokeapi.co/api/v2/ability/4/',
-    },
-    {
-      name: 'sturdy',
-      url: 'https://pokeapi.co/api/v2/ability/5/',
-    },
-    {
-      name: 'damp',
-      url: 'https://pokeapi.co/api/v2/ability/6/',
-    },
-    {
-      name: 'limber',
-      url: 'https://pokeapi.co/api/v2/ability/7/',
-    },
-    {
-      name: 'sand-veil',
-      url: 'https://pokeapi.co/api/v2/ability/8/',
-    },
-    {
-      name: 'static',
-      url: 'https://pokeapi.co/api/v2/ability/9/',
-    },
-    {
-      name: 'volt-absorb',
-      url: 'https://pokeapi.co/api/v2/ability/10/',
-    },
-    {
-      name: 'water-absorb',
-      url: 'https://pokeapi.co/api/v2/ability/11/',
-    },
-  ],
-}
-
-const items: NamedAPIResourceList = {
-  count: 2180,
-  next: null,
-  previous: null,
-  results: [
-    {
-      name: 'master-ball',
-      url: 'https://pokeapi.co/api/v2/item/1/',
-    },
-    {
-      name: 'ultra-ball',
-      url: 'https://pokeapi.co/api/v2/item/2/',
-    },
-    {
-      name: 'great-ball',
-      url: 'https://pokeapi.co/api/v2/item/3/',
-    },
-    {
-      name: 'poke-ball',
-      url: 'https://pokeapi.co/api/v2/item/4/',
-    },
-    {
-      name: 'safari-ball',
-      url: 'https://pokeapi.co/api/v2/item/5/',
-    },
-    {
-      name: 'net-ball',
-      url: 'https://pokeapi.co/api/v2/item/6/',
-    },
-    {
-      name: 'dive-ball',
-      url: 'https://pokeapi.co/api/v2/item/7/',
-    },
-    {
-      name: 'nest-ball',
-      url: 'https://pokeapi.co/api/v2/item/8/',
-    },
-    {
-      name: 'repeat-ball',
-      url: 'https://pokeapi.co/api/v2/item/9/',
-    },
-    {
-      name: 'timer-ball',
-      url: 'https://pokeapi.co/api/v2/item/10/',
-    },
-    {
-      name: 'luxury-ball',
-      url: 'https://pokeapi.co/api/v2/item/11/',
-    },
-    {
-      name: 'premier-ball',
-      url: 'https://pokeapi.co/api/v2/item/12/',
-    },
-    {
-      name: 'dusk-ball',
-      url: 'https://pokeapi.co/api/v2/item/13/',
-    },
-    {
-      name: 'heal-ball',
-      url: 'https://pokeapi.co/api/v2/item/14/',
-    },
-    {
-      name: 'quick-ball',
-      url: 'https://pokeapi.co/api/v2/item/15/',
-    },
-    {
-      name: 'cherish-ball',
-      url: 'https://pokeapi.co/api/v2/item/16/',
-    },
-    {
-      name: 'potion',
-      url: 'https://pokeapi.co/api/v2/item/17/',
-    },
-  ],
-}
-
 // export const pokeapi = new Pokedex({
 //   // 3 months
 //   cacheLimit: 1000 * 60 * 60 * 24 * 30 * 3,
@@ -446,19 +274,4 @@ const items: NamedAPIResourceList = {
 export const getTestSpeciesList = async () => {
   await new Promise((resolve) => setTimeout(resolve, 10))
   return species
-}
-
-export const getTestMovesList = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  return moves
-}
-
-export const getTestAbilitiesList = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  return abilities
-}
-
-export const getTestItemsList = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  return items
 }

@@ -31,7 +31,9 @@ export default function MonsterHero({
   return (
     <div
       className={clsx(
-        'relative h-42 w-full max-w-md flex-row items-end gap-12',
+        'relative w-full flex-row items-end gap-12',
+        'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
+        'rounded-xl p-4',
         className
       )}
     >
@@ -45,7 +47,7 @@ export default function MonsterHero({
           </span>
         </p>
         <div className="flex flex-col">
-          <h1 className="text-4xl font-semibold tracking-tight text-black dark:text-white">
+          <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-white">
             {name}
           </h1>
         </div>
@@ -57,7 +59,7 @@ export default function MonsterHero({
           ))}
         </ul>
       </div>
-      <div className="absolute right-0 bottom-0 flex">
+      {/* <div className="absolute right-0 bottom-0 flex">
         <Image
           src={imageUrl}
           alt={`${species.name} front default`}
@@ -65,7 +67,7 @@ export default function MonsterHero({
           height={128}
           className="object-scale-down"
         />
-      </div>
+      </div> */}
     </div>
   )
 }

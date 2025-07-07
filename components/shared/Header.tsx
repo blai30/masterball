@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { memo } from 'react'
 import clsx from 'clsx'
-import { Accessibility, Backpack, Cat, Swords } from 'lucide-react'
+import { Backpack, Cat, Shield, Swords } from 'lucide-react'
 import VersionGroupSelector from '@/components/shared/VersionGroupSelector'
 
 const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
@@ -24,9 +24,9 @@ const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
 
 const navItems = [
   { label: 'Pokemon', url: '/', icon: Cat },
-  // { label: 'Items', url: '/item', icon: Backpack },
-  // { label: 'Moves', url: '/move', icon: Swords },
-  // { label: 'Abilities', url: '/ability', icon: Accessibility },
+  { label: 'Items', url: '/item', icon: Backpack },
+  { label: 'Moves', url: '/move', icon: Swords },
+  { label: 'Abilities', url: '/ability', icon: Shield },
   // { label: 'Types', url: '/type' },
   // { label: 'Egg Groups', url: '/egg-group' },
   // { label: 'Damage Classes', url: '/damage-class' },
@@ -50,7 +50,7 @@ function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-zinc-200/50 backdrop-blur-2xl dark:bg-zinc-800/50">
-      <nav className="max-w-[96rem] mx-auto px-4">
+      <nav className="mx-auto max-w-[96rem] px-4">
         <div className="flex flex-row flex-wrap items-center justify-center gap-4 py-2 md:justify-between">
           <ul className="flex flex-row flex-wrap items-center gap-4">
             {navItems.map((item) => {

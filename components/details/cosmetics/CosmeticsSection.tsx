@@ -39,7 +39,7 @@ export default async function CosmeticsSection({
                 className={clsx(
                   'flex flex-col items-center gap-2',
                   // 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
-                  'bg-gradient-to-br from-white to-zinc-100 dark:from-zinc-900 dark:to-zinc-950',
+                  'bg-gradient-to-br from-white to-zinc-100 dark:from-zinc-950 dark:to-zinc-900',
                   'rounded-lg p-4'
                 )}
               >

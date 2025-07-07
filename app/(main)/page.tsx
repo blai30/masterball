@@ -4,7 +4,7 @@ import { PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import MonsterCardGrid from '@/components/MonsterCardGrid'
+import SpeciesCardGrid from '@/components/compounds/SpeciesCardGrid'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -43,7 +43,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto max-w-[96rem] px-4">
-      <MonsterCardGrid speciesData={speciesData} />
+      <SpeciesCardGrid speciesData={speciesData} />
     </div>
   )
 }

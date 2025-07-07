@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import clsx from 'clsx/lite'
 import pMap from 'p-map'
 import type {
   PokemonSpecies,
@@ -10,6 +11,8 @@ import type {
 import { Mars, Venus } from 'lucide-react'
 import pokeapi from '@/lib/api/pokeapi'
 import { StatLabels, StatKey, getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { Group } from '@visx/group'
+import { Pie } from '@visx/shape'
 
 const calculateCatchProbability = (captureRate: number) => {
   const a = captureRate / 3
@@ -42,7 +45,13 @@ function MetadataCard({
   children?: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div
+      className={clsx(
+        'flex flex-col gap-2',
+        'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
+        'rounded-xl p-4'
+      )}
+    >
       <h2 className="mb-1 text-xs font-medium tracking-wide text-zinc-700 uppercase dark:text-zinc-300">
         {title}
       </h2>
@@ -171,6 +180,71 @@ function BreedingMetadata({
   )
 }
 
+function GenderRatioDonut({ male, female }: { male: number; female: number }) {
+  const data = [
+    { label: 'Male', value: male },
+    { label: 'Female', value: female },
+  ]
+  const width = 128
+  const height = 128
+  const centerX = width / 2
+  const centerY = height / 2
+  const radius = 56
+  const innerRadius = 50
+  const genderClasses: Record<string, string> = {
+    Male: 'text-blue-700 dark:text-blue-300',
+    Female: 'text-pink-700 dark:text-pink-300',
+  }
+
+  return (
+    <div className="relative">
+      <svg
+        width={width}
+        height={height}
+        aria-label="Gender ratio donut chart"
+        role="img"
+      >
+        <Group top={centerY} left={centerX}>
+          <Pie<{ label: string; value: number }>
+            data={data}
+            pieValue={(d) => d.value}
+            outerRadius={radius}
+            innerRadius={innerRadius}
+            padAngle={male === 100 || female === 100 ? 0 : 0.02}
+          >
+            {(pie) =>
+              pie.arcs.map((arc, i) => (
+                <path
+                  key={i}
+                  d={pie.path(arc) || undefined}
+                  className={clsx(
+                    'fill-current',
+                    genderClasses[arc.data.label]
+                  )}
+                />
+              ))
+            }
+          </Pie>
+        </Group>
+      </svg>
+      <div className="absolute top-1/2 left-1/2 flex size-full -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center">
+        <div className="flex gap-x-1">
+          <span className="flex flex-row items-center gap-x-1 text-blue-800 dark:text-blue-200">
+            <Mars size={20} />
+            <ValueUnit value={male} unit="%" />
+          </span>
+        </div>
+        <div className="flex gap-x-1">
+          <span className="flex flex-row items-center gap-x-1 text-base font-light text-pink-800 dark:text-pink-200">
+            <Venus size={20} />
+            <ValueUnit value={female} unit="%" />
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function GenderRatioMetadata({ genderRate }: { genderRate: number }) {
   if (genderRate === -1) {
     return (
@@ -180,34 +254,15 @@ function GenderRatioMetadata({ genderRate }: { genderRate: number }) {
     )
   }
 
-  const { maleRate, femaleRate } = calculateGenderRates(genderRate)
+  const { femaleRate, maleRate } = calculateGenderRates(genderRate)
 
   return (
     <MetadataCard title="Gender ratio">
-      {/* Progress bar visualization */}
-      <div className="mb-2 h-2 w-full max-w-36 overflow-hidden">
-        <div className="relative h-full max-w-full bg-pink-700 dark:bg-pink-300">
-          <div
-            className="absolute inset-0 h-full bg-white dark:bg-black"
-            style={{ width: `calc(${maleRate}% + 1px)` }}
-          ></div>
-          <div
-            className="absolute inset-0 h-full bg-blue-700 dark:bg-blue-300"
-            style={{ width: `calc(${maleRate}% - 1px)` }}
-          ></div>
-        </div>
-      </div>
-      <div className="flex gap-x-1">
-        <span className="flex flex-row items-center gap-x-2 text-blue-800 dark:text-blue-200">
-          <Mars size={20} />
-          <ValueUnit value={maleRate} unit="%" />
-        </span>
-      </div>
-      <div className="flex gap-x-1">
-        <span className="flex flex-row items-center gap-x-2 text-base font-light text-pink-800 dark:text-pink-200">
-          <Venus size={20} />
-          <ValueUnit value={femaleRate} unit="%" />
-        </span>
+      <div className="flex items-center">
+        <GenderRatioDonut
+          female={parseFloat(femaleRate)}
+          male={parseFloat(maleRate)}
+        />
       </div>
     </MetadataCard>
   )
@@ -221,7 +276,7 @@ function GrowthRateMetadata({ growthRate }: { growthRate: GrowthRate }) {
 
   return (
     <MetadataCard title="Growth rate">
-      <ValueUnit value={maxExperience.toLocaleString()} unit="points" />
+      <ValueUnit value={maxExperience.toLocaleString()} unit="exp" />
       <ValueUnit value={description} />
     </MetadataCard>
   )
@@ -245,7 +300,14 @@ export default async function MonsterMetadata({
   )
 
   return (
-    <div className="grid grid-cols-1 gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 @md:grid-cols-2 @lg:grid-cols-3 @4xl:grid-cols-6 dark:inset-ring-zinc-800">
+    // <div
+    //   className={clsx(
+    //     // 'grid grid-cols-1 gap-4 @md:grid-cols-2 @lg:grid-cols-3 @4xl:grid-cols-6'
+    //     // 'rounded-xl p-4'
+    //     // 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800'
+    //   )}
+    // >
+    <>
       <SizeMetadata height={pokemon.height} weight={pokemon.weight} />
       <GenderRatioMetadata genderRate={species.gender_rate} />
       <CatchRateMetadata catchRate={species.capture_rate} />
@@ -255,6 +317,7 @@ export default async function MonsterMetadata({
       />
       <GrowthRateMetadata growthRate={growthRate} />
       <EffortValueYieldMetadata stats={pokemon.stats} />
-    </div>
+    </>
+    // </div>
   )
 }

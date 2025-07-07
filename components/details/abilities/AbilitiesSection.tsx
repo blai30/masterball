@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import pMap from 'p-map'
 import type { Ability, Pokemon } from 'pokedex-promise-v2'
-import { EyeOff } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default async function AbilitiesSection({
@@ -45,7 +45,7 @@ export default async function AbilitiesSection({
             <li key={a.id} className="">
               <div className="flex flex-col gap-1">
                 <div className="flex flex-row items-center gap-2">
-                  <Link href={`/ability/${a.name}`} className="inline-block">
+                  <Link href={`/ability?q=${a.name}`} className="inline-block">
                     <h3
                       title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
                       className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
@@ -54,15 +54,15 @@ export default async function AbilitiesSection({
                     </h3>
                   </Link>
                   {a.hidden && (
-                    <span
-                      title="Hidden ability"
-                      className="rounded-md px-2 inset-ring-1 inset-ring-zinc-800 dark:inset-ring-zinc-200"
-                    >
-                      <EyeOff
-                        size={16}
-                        className="text-zinc-800 dark:text-zinc-200"
-                      />
-                    </span>
+                    // <span
+                    //   title="Hidden ability"
+                    //   className="rounded-md px-2 inset-ring-1 inset-ring-zinc-800 dark:inset-ring-zinc-200"
+                    // >
+                    <Sparkles
+                      size={16}
+                      className="text-zinc-800 dark:text-zinc-200"
+                    />
+                    // </span>
                   )}
                 </div>
                 <p className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
