@@ -144,23 +144,31 @@ export default function CardGrid<T>({
         </div>
       </div>
       <div className="xs:gap-8 flex flex-col gap-4">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChangeAction={handlePageChange}
-        />
-        <ul className={className}>
-          {paginatedItems.map((item) => (
-            <li key={getKeyAction(item)} className="col-span-1">
-              {renderCardAction(item)}
-            </li>
-          ))}
-        </ul>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChangeAction={handlePageChange}
-        />
+        {filteredItems.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-zinc-500 dark:text-zinc-400">
+            <span className="text-lg font-medium">No results found</span>
+          </div>
+        ) : (
+          <>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChangeAction={handlePageChange}
+            />
+            <ul className={className}>
+              {paginatedItems.map((item) => (
+                <li key={getKeyAction(item)} className="col-span-1">
+                  {renderCardAction(item)}
+                </li>
+              ))}
+            </ul>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChangeAction={handlePageChange}
+            />
+          </>
+        )}
       </div>
     </div>
   )
