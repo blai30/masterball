@@ -43,7 +43,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto max-w-[96rem] px-4">
-      <SpeciesCardGrid speciesData={speciesData} />
+      <SpeciesCardGrid props={speciesData} />
     </div>
   )
 }

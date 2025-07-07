@@ -3,7 +3,7 @@ import pMap from 'p-map'
 import { Item } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import ItemCardGrid from '@/components/compounds/ItemCardGrid'
+import InfoCardGrid from '@/components/compounds/InfoCardGrid'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -49,7 +49,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto max-w-[96rem] px-4">
-      <ItemCardGrid itemsData={itemsData} />
+      <InfoCardGrid data={itemsData} />
     </div>
   )
 }

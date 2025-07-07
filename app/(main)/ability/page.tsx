@@ -3,7 +3,7 @@ import pMap from 'p-map'
 import { Ability } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import AbilityCardGrid from '@/components/compounds/AbilityCardGrid'
+import InfoCardGrid from '@/components/compounds/InfoCardGrid'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -43,7 +43,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto max-w-[96rem] px-4">
-      <AbilityCardGrid abilitiesData={abilitiesData} />
+      <InfoCardGrid data={abilitiesData} />
     </div>
   )
 }
