@@ -21,10 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const itemsList =
-    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-      ? await getTestItemsList()
-      : await pokeapi.getList('item', 200, 0)
+  // const itemsList =
+  //   process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+  //     ? await getTestItemsList()
+  //     : await pokeapi.getList('item', 200, 0)
+  const itemsList = await pokeapi.getList('item', 40, 0)
 
   const items = await pMap(
     itemsList.results,
@@ -35,12 +36,18 @@ export default async function Home() {
     { concurrency: 4 }
   )
 
-  const itemsData = items.map((item) => ({
-    id: item.id,
-    slug: item.name,
-    name: getTranslation(item.names, 'name')!,
-    effect: getTranslation(item.effect_entries, 'short_effect') || '',
-  }))
+  const itemsData = items.map((item) => {
+    const { id, name } = item
+    const imageId = id.toString().padStart(4, '0')
+    const imageUrl = `https://resource.pokemon-home.com/battledata/img/item/item_${imageId}.png`
+    return {
+      id,
+      slug: name,
+      name: getTranslation(item.names, 'name')!,
+      description: getTranslation(item.effect_entries, 'short_effect') || '',
+      imageUrl,
+    }
+  })
 
   return (
     <div className="mx-auto max-w-[96rem] px-4">

@@ -106,6 +106,10 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/479/',
     },
     {
+      name: 'dialga',
+      url: 'https://pokeapi.co/api/v2/pokemon-species/483/',
+    },
+    {
       name: 'arceus',
       url: 'https://pokeapi.co/api/v2/pokemon-species/493/',
     },

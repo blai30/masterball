@@ -21,10 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const abilityList =
-    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-      ? await getTestAbilitiesList()
-      : await pokeapi.getList('ability', 200, 0)
+  // const abilityList =
+  //   process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
+  //     ? await getTestAbilitiesList()
+  //     : await pokeapi.getList('ability', 100, 0)
+  const abilityList = await pokeapi.getList('ability', 40, 0)
 
   const abilities = await pMap(
     abilityList.results,
@@ -39,6 +40,7 @@ export default async function Home() {
     id: ability.id,
     slug: ability.name,
     name: getTranslation(ability.names, 'name')!,
+    description: getTranslation(ability.effect_entries, 'short_effect') || '',
   }))
 
   return (

@@ -3,10 +3,10 @@
 import CardGrid from '@/components/compounds/CardGrid'
 import ItemCard from '@/components/compounds/ItemCard'
 
-export default function AbilityCardGrid({
-  abilitiesData,
+export default function MoveCardGrid({
+  movesData,
 }: {
-  abilitiesData: {
+  movesData: {
     id: number
     slug: string
     name: string
@@ -15,7 +15,7 @@ export default function AbilityCardGrid({
 }) {
   return (
     <CardGrid
-      data={abilitiesData}
+      data={movesData}
       renderCardAction={(item) => (
         <ItemCard
           id={item.id}

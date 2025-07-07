@@ -12,6 +12,7 @@ export interface CardGridProps<T> {
   searchKeys: (keyof T)[]
   itemsPerPage?: number
   searchPlaceholder?: string
+  className?: string
 }
 
 export default function CardGrid<T>({
@@ -21,6 +22,7 @@ export default function CardGrid<T>({
   searchKeys,
   itemsPerPage = 60,
   searchPlaceholder = 'Filter...',
+  className,
 }: CardGridProps<T>) {
   const [query, setQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
@@ -88,7 +90,7 @@ export default function CardGrid<T>({
           totalPages={totalPages}
           onPageChangeAction={handlePageChange}
         />
-        <ul className="2xs:grid-cols-3 xs:grid-cols-3 grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10">
+        <ul className={className}>
           {paginatedItems.map((item) => (
             <li key={getKeyAction(item)} className="col-span-1">
               {renderCardAction(item)}
