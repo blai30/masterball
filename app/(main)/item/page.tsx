@@ -35,6 +35,10 @@ export default async function Home() {
   )
 
   const itemsData = items
+    .filter(
+      (item) =>
+        item?.names?.find((name) => name?.language?.name === 'en') !== undefined
+    )
     .map((item) => {
       const { id, name } = item
       const imageId = id.toString().padStart(4, '0')
