@@ -1,17 +1,36 @@
 'use client'
 
 import Image from 'next/image'
+import { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
 import GlassCard from '@/components/GlassCard'
+import { useVersionGroup } from '@/lib/stores/version-group'
 
 export type InfoCardProps = {
   id: number
   slug: string
   name: string
-  description: string
+  defaultDescription: string
+  flavorTextEntries: FlavorText[] | VersionGroupFlavorText[]
   imageUrl?: string
 }
 
 export default function InfoCard({ props }: { props: InfoCardProps }) {
+  const { versionGroup, hasMounted } = useVersionGroup()
+  if (!hasMounted) return null
+
+  const description = (() => {
+    const entry = props.flavorTextEntries.find(
+      (entry) =>
+        entry.language.name === 'en' &&
+        entry.version_group?.name === versionGroup
+    )
+    if (!entry) return props.defaultDescription
+    if ('text' in entry) return entry.text
+    if ('flavor_text' in entry) return entry.flavor_text
+
+    return props.defaultDescription
+  })()
+
   return (
     <GlassCard variant="default" className="h-full rounded-xl">
       <div className="flex flex-row items-start gap-4 p-4">
@@ -31,7 +50,7 @@ export default function InfoCard({ props }: { props: InfoCardProps }) {
             {props.name}
           </h3>
           <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">
-            {props.description}
+            {description}
           </p>
         </div>
       </div>
