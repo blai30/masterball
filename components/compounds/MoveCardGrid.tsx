@@ -3,9 +3,13 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import Fuse from 'fuse.js'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
-import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
+import FilterBar, {
+  FilterOption,
+  type FilterConfig,
+} from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, {
   SortDirection,
@@ -55,14 +59,19 @@ export default function MoveCardGrid({
     [router, searchParams]
   )
 
-  // Extract unique types and damage classes from data
-  const types = useMemo(
-    () => Array.from(new Set(data.map((m) => m.type))).sort(),
-    [data]
-  )
-  const damageClasses = useMemo(
-    () => Array.from(new Set(data.map((m) => m.damageClass))).sort(),
-    [data]
+  const types: FilterOption[] = Object.entries(TypeKey).map(([key, value]) => {
+    return {
+      label: key,
+      value: value,
+    }
+  })
+  const damageClasses: FilterOption[] = Object.entries(DamageClassKey).map(
+    ([key, value]) => {
+      return {
+        label: key,
+        value: value,
+      }
+    }
   )
 
   // Multi-select state for filters
@@ -84,13 +93,13 @@ export default function MoveCardGrid({
   const filters: FilterConfig[] = [
     {
       label: 'Type',
-      options: types.map((type) => ({ label: type, value: type })),
+      options: types,
       values: typeFilter,
       onChange: setTypeFilter,
     },
     {
       label: 'Class',
-      options: damageClasses.map((dc) => ({ label: dc, value: dc })),
+      options: damageClasses,
       values: damageClassFilter,
       onChange: setDamageClassFilter,
     },
@@ -151,7 +160,7 @@ export default function MoveCardGrid({
           onChangeAction={handleSearchChange}
           placeholder="Search moves..."
         />
-        <div className="flex flex-row gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row lg:w-fit">
           <FilterBar filters={filters} />
           <SortBar
             sortKey={sortKey}
