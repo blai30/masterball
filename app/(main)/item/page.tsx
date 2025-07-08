@@ -37,7 +37,7 @@ export default async function Home() {
   const itemsData = items
     .filter(
       (item) =>
-        item.names.find((name) => name.language.name === 'en') !== undefined
+        item?.names?.find((name) => name?.language?.name === 'en') !== undefined
     )
     .map((item) => {
       const { id, name } = item
