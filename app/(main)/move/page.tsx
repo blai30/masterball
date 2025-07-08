@@ -36,6 +36,10 @@ export default async function Home() {
   )
 
   const movesData: MoveCardProps[] = moves
+    .filter(
+      (item) =>
+        item.names.find((name) => name.language.name === 'en') !== undefined
+    )
     .map((move) => ({
       id: move.id,
       slug: move.name,
