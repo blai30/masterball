@@ -3,6 +3,9 @@
 import { useState, useMemo } from 'react'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
+import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
+import SearchBar from '@/components/shared/SearchBar'
+import SortBar from '@/components/shared/SortBar'
 
 export default function MoveCardGrid({
   data,
@@ -23,82 +26,103 @@ export default function MoveCardGrid({
     [data]
   )
 
-  const [typeFilter, setTypeFilter] = useState<string | null>(null)
-  const [damageClassFilter, setDamageClassFilter] = useState<string | null>(
-    null
-  )
+  // Multi-select state for filters
+  const [typeFilter, setTypeFilter] = useState<string[]>([])
+  const [damageClassFilter, setDamageClassFilter] = useState<string[]>([])
+  const [search, setSearch] = useState('')
+
+  // Sorting state
+  const [sortKey, setSortKey] = useState<
+    'name' | 'type' | 'damageClass' | 'power' | 'accuracy' | 'pp' | ''
+  >('name')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+
+  const filters: FilterConfig[] = [
+    {
+      label: 'Type',
+      options: types.map((type) => ({ label: type, value: type })),
+      values: typeFilter,
+      onChange: setTypeFilter,
+    },
+    {
+      label: 'Class',
+      options: damageClasses.map((dc) => ({ label: dc, value: dc })),
+      values: damageClassFilter,
+      onChange: setDamageClassFilter,
+    },
+  ]
 
   const filteredData = useMemo(() => {
-    return data.filter((move) => {
-      if (typeFilter && move.type !== typeFilter) return false
-      if (damageClassFilter && move.damageClass !== damageClassFilter)
-        return false
-      return true
+    const filtered = data.filter((move) => {
+      const typeMatch =
+        typeFilter.length === 0 || typeFilter.includes(move.type)
+      const classMatch =
+        damageClassFilter.length === 0 ||
+        damageClassFilter.includes(move.damageClass)
+      const searchMatch =
+        !search ||
+        move.name.toLowerCase().includes(search.toLowerCase()) ||
+        move.slug.toLowerCase().includes(search.toLowerCase())
+      return typeMatch && classMatch && searchMatch
     })
-  }, [data, typeFilter, damageClassFilter])
+    // Sorting logic (same as CardGrid)
+    if (sortKey) {
+      return [...filtered].sort((a, b) => {
+        const aValue = a[sortKey]
+        const bValue = b[sortKey]
+        if (aValue == null && bValue == null) return 0
+        if (aValue == null) return 1
+        if (bValue == null) return -1
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+        // Fallback: if both have a 'name' property, use it as tiebreaker
+        const aObj = a as Record<string, unknown>
+        const bObj = b as Record<string, unknown>
+        if ('name' in aObj && 'name' in bObj) {
+          const aName = aObj.name
+          const bName = bObj.name
+          if (typeof aName === 'string' && typeof bName === 'string') {
+            if (aName < bName) return sortDirection === 'asc' ? -1 : 1
+            if (aName > bName) return sortDirection === 'asc' ? 1 : -1
+          }
+        }
+        return 0
+      })
+    }
+    return filtered
+  }, [data, typeFilter, damageClassFilter, search, sortKey, sortDirection])
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        {/* Type filter */}
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-            Type:
-          </span>
-          <button
-            className={`rounded border px-2 py-1 text-xs font-medium ${typeFilter === null ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black' : 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'} border-zinc-300 dark:border-zinc-600`}
-            onClick={() => setTypeFilter(null)}
-          >
-            All
-          </button>
-          {types.map((type) => (
-            <button
-              key={type}
-              className={`rounded border px-2 py-1 text-xs font-medium ${typeFilter === type ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black' : 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'} border-zinc-300 dark:border-zinc-600`}
-              onClick={() => setTypeFilter(type)}
-            >
-              {type}
-            </button>
-          ))}
-        </div>
-        {/* Damage class filter */}
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-            Class:
-          </span>
-          <button
-            className={`rounded border px-2 py-1 text-xs font-medium ${damageClassFilter === null ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black' : 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'} border-zinc-300 dark:border-zinc-600`}
-            onClick={() => setDamageClassFilter(null)}
-          >
-            All
-          </button>
-          {damageClasses.map((dc) => (
-            <button
-              key={dc}
-              className={`rounded border px-2 py-1 text-xs font-medium ${damageClassFilter === dc ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black' : 'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100'} border-zinc-300 dark:border-zinc-600`}
-              onClick={() => setDamageClassFilter(dc)}
-            >
-              {dc}
-            </button>
-          ))}
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-6">
+        <SearchBar
+          value={search}
+          onChangeAction={setSearch}
+          placeholder="Search moves..."
+        />
+        <div className="flex flex-row gap-4">
+          <FilterBar filters={filters} />
+          <SortBar
+            sortKey={sortKey}
+            sortDirection={sortDirection}
+            sortKeys={[
+              'name',
+              'type',
+              'damageClass',
+              'power',
+              'accuracy',
+              'pp',
+            ]}
+            onSortKeyChangeAction={setSortKey}
+            onSortDirectionChangeAction={setSortDirection}
+          />
         </div>
       </div>
       <CardGrid
         data={filteredData}
         renderCardAction={(props) => <MoveCard props={props} />}
         getKeyAction={(item) => item.id}
-        searchKeys={['slug', 'name', 'type', 'damageClass']}
         itemsPerPage={itemsPerPage}
-        initialSortKey="name"
-        initialSortDirection="asc"
-        sortableKeys={[
-          'name',
-          'type',
-          'damageClass',
-          'power',
-          'accuracy',
-          'pp',
-        ]}
         className={
           className ??
           'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
