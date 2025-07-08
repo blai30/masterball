@@ -1,11 +1,15 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Fuse from 'fuse.js'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
-import SortBar from '@/components/shared/SortBar'
+import SortBar, {
+  SortDirection,
+  type SortOption,
+} from '@/components/shared/SortBar'
 
 export default function MoveCardGrid({
   data,
@@ -32,10 +36,16 @@ export default function MoveCardGrid({
   const [search, setSearch] = useState('')
 
   // Sorting state
-  const [sortKey, setSortKey] = useState<
-    'name' | 'type' | 'damageClass' | 'power' | 'accuracy' | 'pp' | ''
-  >('name')
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const sortKeyOptions: SortOption<string>[] = [
+    { label: 'Name', value: 'name' },
+    { label: 'Type', value: 'type' },
+    { label: 'Class', value: 'damageClass' },
+    { label: 'Power', value: 'power' },
+    { label: 'Accuracy', value: 'accuracy' },
+    { label: 'PP', value: 'pp' },
+  ]
+  const [sortKey, setSortKey] = useState('name')
+  const [sortDirection, setSortDirection] = useState(SortDirection.ASC)
 
   const filters: FilterConfig[] = [
     {
@@ -53,23 +63,29 @@ export default function MoveCardGrid({
   ]
 
   const filteredData = useMemo(() => {
-    const filtered = data.filter((move) => {
+    let filtered = data.filter((move) => {
       const typeMatch =
         typeFilter.length === 0 || typeFilter.includes(move.type)
       const classMatch =
         damageClassFilter.length === 0 ||
         damageClassFilter.includes(move.damageClass)
-      const searchMatch =
-        !search ||
-        move.name.toLowerCase().includes(search.toLowerCase()) ||
-        move.slug.toLowerCase().includes(search.toLowerCase())
-      return typeMatch && classMatch && searchMatch
+      return typeMatch && classMatch
     })
-    // Sorting logic (same as CardGrid)
+
+    if (search) {
+      const fuse = new Fuse<MoveCardProps>(filtered, {
+        keys: ['name'],
+        threshold: 0.4,
+        ignoreLocation: true,
+      })
+      filtered = fuse.search(search).map((r) => r.item)
+    }
+
     if (sortKey) {
       return [...filtered].sort((a, b) => {
-        const aValue = a[sortKey]
-        const bValue = b[sortKey]
+        // Use a type-safe lookup for MoveCardProps
+        const aValue = a[sortKey as keyof MoveCardProps]
+        const bValue = b[sortKey as keyof MoveCardProps]
         if (aValue == null && bValue == null) return 0
         if (aValue == null) return 1
         if (bValue == null) return -1
@@ -89,12 +105,13 @@ export default function MoveCardGrid({
         return 0
       })
     }
+
     return filtered
   }, [data, typeFilter, damageClassFilter, search, sortKey, sortDirection])
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-6">
+      <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
         <SearchBar
           value={search}
           onChangeAction={setSearch}
@@ -105,14 +122,7 @@ export default function MoveCardGrid({
           <SortBar
             sortKey={sortKey}
             sortDirection={sortDirection}
-            sortKeys={[
-              'name',
-              'type',
-              'damageClass',
-              'power',
-              'accuracy',
-              'pp',
-            ]}
+            sortKeys={[...sortKeyOptions]}
             onSortKeyChangeAction={setSortKey}
             onSortDirectionChangeAction={setSortDirection}
           />

@@ -34,21 +34,23 @@ export default async function Home() {
     { concurrency: 4 }
   )
 
-  const itemsData = items.map((item) => {
-    const { id, name } = item
-    const imageId = id.toString().padStart(4, '0')
-    const imageUrl = `https://resource.pokemon-home.com/battledata/img/item/item_${imageId}.png`
-    return {
-      id,
-      slug: name,
-      name: getTranslation(item.names, 'name')!,
-      description: getTranslation(item.effect_entries, 'short_effect') || '',
-      imageUrl,
-    }
-  })
+  const itemsData = items
+    .map((item) => {
+      const { id, name } = item
+      const imageId = id.toString().padStart(4, '0')
+      const imageUrl = `https://resource.pokemon-home.com/battledata/img/item/item_${imageId}.png`
+      return {
+        id,
+        slug: name,
+        name: getTranslation(item.names, 'name')!,
+        description: getTranslation(item.effect_entries, 'short_effect') || '',
+        imageUrl,
+      }
+    })
+    .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
-    <div className="mx-auto max-w-[96rem] px-4">
+    <div className="mx-auto w-full max-w-[96rem] px-4">
       <InfoCardGrid data={itemsData} />
     </div>
   )

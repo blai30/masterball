@@ -2,12 +2,22 @@
 
 import clsx from 'clsx/lite'
 
+export type SortOption<T extends string> = {
+  label: string
+  value: T
+}
+
+export enum SortDirection {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
 export type SortBarProps<T extends string> = {
   sortKey: T | ''
-  sortDirection: 'asc' | 'desc'
-  sortKeys: T[]
+  sortDirection: SortDirection
+  sortKeys: SortOption<T>[]
   onSortKeyChangeAction: (key: T | '') => void
-  onSortDirectionChangeAction: (dir: 'asc' | 'desc') => void
+  onSortDirectionChangeAction: (dir: SortDirection) => void
   className?: string
 }
 
@@ -30,9 +40,9 @@ export default function SortBar<T extends string>({
         onChange={(e) => onSortKeyChangeAction(e.target.value as T | '')}
         className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
       >
-        {sortKeys.map((key) => (
-          <option key={key} value={key}>
-            {key}
+        {sortKeys.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
           </option>
         ))}
       </select>
@@ -43,7 +53,7 @@ export default function SortBar<T extends string>({
         id="sortDirection"
         value={sortDirection}
         onChange={(e) =>
-          onSortDirectionChangeAction(e.target.value as 'asc' | 'desc')
+          onSortDirectionChangeAction(e.target.value as SortDirection)
         }
         className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
       >

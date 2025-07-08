@@ -42,8 +42,8 @@ export default async function Home() {
   }))
 
   return (
-    <div className="mx-auto max-w-[96rem] px-4">
-      <SpeciesCardGrid props={speciesData} />
+    <div className="mx-auto w-full max-w-[96rem] px-4">
+      <SpeciesCardGrid data={speciesData} />
     </div>
   )
 }
