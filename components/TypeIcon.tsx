@@ -62,6 +62,7 @@ export default function TypeIcon({
       {...wrapperProps}
       title={name}
       className={clsx(
+        'relative',
         variants({ variant: variant as TypeKey, size }),
         link &&
           'transition-(--tw-brightness) hover:brightness-125 hover:duration-0',
@@ -73,7 +74,7 @@ export default function TypeIcon({
         alt={name}
         width={dimensions[size]}
         height={dimensions[size]}
-        className="relative object-contain"
+        className="absolute object-contain"
       />
     </Wrapper>
   )

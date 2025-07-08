@@ -31,35 +31,35 @@ export default function MonsterHero({
   return (
     <div
       className={clsx(
-        'relative w-full flex-row items-end gap-12',
+        'relative h-50 w-full flex-row items-end gap-12',
         'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
         'rounded-xl p-4',
         className
       )}
     >
       <div className="flex flex-col items-start gap-4">
-        <p className="font-num text-2xl">
-          <span className="text-zinc-400 dark:text-zinc-600">
-            {leadingZeros}
-          </span>
-          <span className="text-black dark:text-white">
-            {significantDigits}
-          </span>
-        </p>
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-white">
             {name}
           </h1>
+          <ul className="flex flex-row gap-2">
+            {pokemon.types.map((type) => (
+              <li key={type.type.name}>
+                <TypePill variant={type.type.name} size="medium" />
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="flex flex-row gap-2">
-          {pokemon.types.map((type) => (
-            <li key={type.type.name}>
-              <TypePill variant={type.type.name} size="medium" />
-            </li>
-          ))}
-        </ul>
+        <p className="font-num text-5xl font-extrabold">
+          <span className="text-zinc-400 dark:text-zinc-800">
+            {leadingZeros}
+          </span>
+          <span className="text-zinc-800 dark:text-zinc-400">
+            {significantDigits}
+          </span>
+        </p>
       </div>
-      {/* <div className="absolute right-0 bottom-0 flex">
+      <div className="absolute right-4 bottom-4 flex">
         <Image
           src={imageUrl}
           alt={`${species.name} front default`}
@@ -67,7 +67,7 @@ export default function MonsterHero({
           height={128}
           className="object-scale-down"
         />
-      </div> */}
+      </div>
     </div>
   )
 }

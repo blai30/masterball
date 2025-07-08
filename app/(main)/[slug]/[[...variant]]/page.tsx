@@ -29,7 +29,10 @@ export async function generateStaticParams() {
 
   const species = await pMap(
     speciesList.results,
-    async (result) => await pokeapi.getResource<PokemonSpecies>(result.url),
+    async (result) => {
+      const resource = await pokeapi.getResource<PokemonSpecies>(result.url)
+      return resource
+    },
     { concurrency: 4 }
   )
 
@@ -114,8 +117,13 @@ export default async function Page({
 
   const forms = await pMap(
     pokemon.forms.filter((form) => !excludedForms.includes(form.name)),
-    async (form) =>
-      await pokeapi.getByName<PokemonForm>('pokemon-form', form.name),
+    async (form) => {
+      const resource = await pokeapi.getByName<PokemonForm>(
+        'pokemon-form',
+        form.name
+      )
+      return resource
+    },
     { concurrency: 4 }
   )
 
@@ -136,7 +144,12 @@ export default async function Page({
       </section> */}
       <section className="@container mx-auto w-full max-w-[96rem] px-4">
         <div className="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @[88rem]:grid-cols-8">
-          <MonsterHero species={species} pokemon={pokemon} form={form} className="col-span-2" />
+          <MonsterHero
+            species={species}
+            pokemon={pokemon}
+            form={form}
+            className="col-span-2"
+          />
           <Suspense fallback={<LoadingMetadata />}>
             <MonsterMetadata species={species} pokemon={pokemon} />
           </Suspense>

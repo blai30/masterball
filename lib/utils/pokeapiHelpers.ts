@@ -5,6 +5,7 @@ import type {
   PokemonSpecies,
   Type,
 } from 'pokedex-promise-v2'
+import pokeapi from '@/lib/api/pokeapi'
 import { excludedVariants } from '@/lib/utils/excludedSlugs'
 
 export function getTranslation<
@@ -77,17 +78,20 @@ export const getMonstersBySpecies = async (
   )
 
   const variants: Pokemon[] = await pMap(
-    filteredVariants,
-    async (variant) =>
-      fetch(variant.pokemon.url).then(
-        (response) => response.json() as Promise<Pokemon>
-      ),
+    filteredVariants.map((variant) => variant.pokemon.url),
+    async (url) => {
+      const resource = await pokeapi.getResource<Pokemon>(url)
+      return resource
+    },
     { concurrency: 4 }
   )
 
   const monsters = await pMap(
     variants,
-    async (variant) => createMonster(variant, species),
+    async (variant) => {
+      const resource = createMonster(variant, species)
+      return resource
+    },
     { concurrency: 4 }
   )
   return monsters

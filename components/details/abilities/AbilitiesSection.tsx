@@ -2,6 +2,7 @@ import Link from 'next/link'
 import pMap from 'p-map'
 import type { Ability, Pokemon } from 'pokedex-promise-v2'
 import { Sparkles } from 'lucide-react'
+import pokeapi from '@/lib/api/pokeapi'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default async function AbilitiesSection({
@@ -11,12 +12,10 @@ export default async function AbilitiesSection({
 }) {
   const title = 'Abilities'
   const abilities = await pMap(
-    pokemon.abilities.map((ability) => ability.ability.name),
-    async (name) => {
-      const ability = await fetch(
-        `https://pokeapi.co/api/v2/ability/${name}`
-      ).then((response) => response.json() as Promise<Ability>)
-      return ability
+    pokemon.abilities.map((ability) => ability.ability.url),
+    async (url) => {
+      const resource = await pokeapi.getResource<Ability>(url)
+      return resource
     },
     { concurrency: 4 }
   )
@@ -45,7 +44,7 @@ export default async function AbilitiesSection({
             <li key={a.id} className="">
               <div className="flex flex-col gap-1">
                 <div className="flex flex-row items-center gap-2">
-                  <Link href={`/ability?q=${a.name}`} className="inline-block">
+                  <Link href={`/ability?q=${name}`} className="inline-block">
                     <h3
                       title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
                       className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"

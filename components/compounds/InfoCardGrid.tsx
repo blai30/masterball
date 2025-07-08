@@ -1,21 +1,21 @@
 'use client'
 
 import CardGrid from '@/components/compounds/CardGrid'
-import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
+import InfoCard, { type InfoCardProps } from '@/components/compounds/InfoCard'
 
-export default function MoveCardGrid({
+export default function InfoCardGrid({
   data,
   itemsPerPage = 48,
   className,
 }: {
-  data: MoveCardProps[]
+  data: InfoCardProps[]
   itemsPerPage?: number
   className?: string
 }) {
   return (
     <CardGrid
       data={data}
-      renderCardAction={(props) => <MoveCard props={props} />}
+      renderCardAction={(props) => <InfoCard props={props} />}
       getKeyAction={(item) => item.id}
       searchKeys={['id', 'slug', 'name']}
       itemsPerPage={itemsPerPage}

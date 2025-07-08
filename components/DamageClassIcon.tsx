@@ -5,7 +5,7 @@ import { cva } from 'cva'
 import { DamageClassLabels, DamageClassKey } from '@/lib/utils/pokeapiHelpers'
 
 const variants = cva({
-  base: '',
+  base: 'flex flex-row items-center justify-center',
   variants: {
     variant: {
       [DamageClassKey.Physical]: 'bg-physical',
@@ -13,9 +13,9 @@ const variants = cva({
       [DamageClassKey.Status]: 'bg-status',
     },
     size: {
-      small: 'h-6 w-8 rounded-xs',
-      medium: 'h-7 w-9 rounded-sm px-1 py-0.5',
-      large: 'h-8 w-12 rounded-sm px-1',
+      small: 'size-5 rounded-xs',
+      medium: 'size-6 rounded-sm',
+      large: 'size-8 rounded-md',
     },
   },
 })
@@ -33,6 +33,11 @@ export default function DamageClassIcon({
 }) {
   const name = DamageClassLabels[variant as DamageClassKey]
   const imageUrl = `${process.env.NEXT_PUBLIC_BASEPATH}/${variant}.png`
+  const dimensions = {
+    small: 20,
+    medium: 28,
+    large: 32,
+  }
 
   const Wrapper: React.ElementType = link ? Link : 'div'
   const wrapperProps = link ? { href: `/damage-class/${variant}` } : {}
@@ -42,7 +47,7 @@ export default function DamageClassIcon({
       {...wrapperProps}
       title={name}
       className={clsx(
-        '',
+        'relative',
         variants({
           variant: variant as DamageClassKey,
           size,
@@ -61,9 +66,9 @@ export default function DamageClassIcon({
       <Image
         src={imageUrl}
         alt={name}
-        width={50}
-        height={40}
-        className="size-full object-contain py-0.5"
+        width={dimensions[size]}
+        height={dimensions[size]}
+        className="absolute object-contain p-0.5"
       />
     </Wrapper>
   )

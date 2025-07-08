@@ -1,5 +1,6 @@
 import pMap from 'p-map'
 import type { Pokemon, Type } from 'pokedex-promise-v2'
+import pokeapi from '@/lib/api/pokeapi'
 import {
   getEffectiveness,
   TypeKey,
@@ -17,20 +18,16 @@ export default async function TypeEffectivenessSection({
   const typeResources = await pMap(
     pokemon.types.map((type) => type.type.url),
     async (url) => {
-      const typeResource = await fetch(url).then(
-        (response) => response.json() as Promise<Type>
-      )
-      return typeResource
+      const resource = await pokeapi.getResource<Type>(url)
+      return resource
     },
     { concurrency: 4 }
   )
   const allTypeResources = await pMap(
     Object.values(TypeKey).map((t) => `https://pokeapi.co/api/v2/type/${t}`),
     async (url) => {
-      const typeResource = await fetch(url).then(
-        (response) => response.json() as Promise<Type>
-      )
-      return typeResource
+      const resource = await pokeapi.getResource<Type>(url)
+      return resource
     },
     { concurrency: 4 }
   )

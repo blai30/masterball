@@ -29,8 +29,8 @@ export default async function Home() {
   const species = await pMap(
     speciesList.results,
     async (result) => {
-      const species = await pokeapi.getResource<PokemonSpecies>(result.url)
-      return species
+      const resource = await pokeapi.getResource<PokemonSpecies>(result.url)
+      return resource
     },
     { concurrency: 4 }
   )
@@ -43,7 +43,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto max-w-[96rem] px-4">
-      <SpeciesCardGrid speciesData={speciesData} />
+      <SpeciesCardGrid props={speciesData} />
     </div>
   )
 }
