@@ -36,7 +36,8 @@ const idColumnLabels = {
 const columnClasses: Record<string, string> = {
   id: 'w-16 justify-start text-left',
   name: 'grow justify-start text-left',
-  type: 'w-20 justify-center text-center',
+  damageClass: 'w-6 justify-start text-left',
+  type: 'w-20 justify-start text-left',
   power: 'w-14 justify-end text-right',
   accuracy: 'w-14 justify-end text-right',
   pp: 'w-8 justify-end text-right',
@@ -72,6 +73,17 @@ function MovesTable({
           </p>
         ),
       }),
+      columnHelper.accessor('damageClass', {
+        header: '',
+        cell: (info) => (
+          <div className="flex items-center justify-center gap-1">
+            <DamageClassIcon
+              variant={info.row.original.damageClass}
+              size="medium"
+            />
+          </div>
+        ),
+      }),
       columnHelper.accessor('name', {
         header: 'Move',
         cell: (info) => (
@@ -91,10 +103,10 @@ function MovesTable({
         cell: (info) => (
           <div className="flex items-center justify-center gap-1">
             <TypePill variant={info.getValue()} size="medium" />
-            <DamageClassIcon
+            {/* <DamageClassIcon
               variant={info.row.original.damageClass}
               size="medium"
-            />
+            /> */}
           </div>
         ),
       }),

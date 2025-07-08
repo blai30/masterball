@@ -14,9 +14,9 @@ export type InfoCardProps = {
 export default function InfoCard({ props }: { props: InfoCardProps }) {
   return (
     <GlassCard variant="default" className="h-full rounded-xl">
-      <div className="group flex flex-row items-start gap-4 p-4">
+      <div className="flex flex-row items-start gap-4 p-4">
         {props.imageUrl && (
-          <div className="aspect-square size-16">
+          <div className="flex aspect-square size-20 items-center justify-center rounded-md bg-gradient-to-br from-zinc-100 to-zinc-200 p-2 dark:from-zinc-800 dark:to-zinc-900">
             <Image
               src={props.imageUrl}
               alt={props.slug}
@@ -27,10 +27,10 @@ export default function InfoCard({ props }: { props: InfoCardProps }) {
           </div>
         )}
         <div className="flex flex-col items-start gap-1">
-          <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-lg font-medium text-black dark:text-white">
             {props.name}
           </h3>
-          <p className="text-base font-normal text-zinc-700 dark:text-zinc-300">
+          <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">
             {props.description}
           </p>
         </div>

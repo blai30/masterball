@@ -3,7 +3,8 @@ import pMap from 'p-map'
 import { Move } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import InfoCardGrid from '@/components/compounds/InfoCardGrid'
+import MoveCardGrid from '@/components/compounds/MoveCardGrid'
+import { MoveCardProps } from '@/components/compounds/MoveCard'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -34,16 +35,21 @@ export default async function Home() {
     { concurrency: 4 }
   )
 
-  const movesData = moves.map((move) => ({
+  const movesData: MoveCardProps[] = moves.map((move) => ({
     id: move.id,
     slug: move.name,
     name: getTranslation(move.names, 'name')!,
     description: getTranslation(move.effect_entries, 'short_effect') || '',
+    type: move.type.name,
+    damageClass: move.damage_class.name,
+    power: move.power ?? undefined,
+    accuracy: move.accuracy ?? undefined,
+    pp: move.pp ?? undefined,
   }))
 
   return (
     <div className="mx-auto max-w-[96rem] px-4">
-      <InfoCardGrid data={movesData} />
+      <MoveCardGrid data={movesData} />
     </div>
   )
 }
