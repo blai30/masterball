@@ -34,15 +34,17 @@ export default async function Home() {
     { concurrency: 4 }
   )
 
-  const abilitiesData = abilities.map((ability) => ({
-    id: ability.id,
-    slug: ability.name,
-    name: getTranslation(ability.names, 'name')!,
-    description: getTranslation(ability.effect_entries, 'short_effect') || '',
-  }))
+  const abilitiesData = abilities
+    .map((ability) => ({
+      id: ability.id,
+      slug: ability.name,
+      name: getTranslation(ability.names, 'name')!,
+      description: getTranslation(ability.effect_entries, 'short_effect') || '',
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
-    <div className="mx-auto max-w-[96rem] px-4">
+    <div className="mx-auto w-full max-w-[96rem] px-4">
       <InfoCardGrid data={abilitiesData} />
     </div>
   )

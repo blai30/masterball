@@ -3,12 +3,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { memo } from 'react'
+import { TypeKey } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 
 export type MonsterCardProps = {
   id: number
   slug: string
   name: string
+  types: TypeKey[]
 }
 
 const MonsterCard = ({ props }: { props: MonsterCardProps }) => {

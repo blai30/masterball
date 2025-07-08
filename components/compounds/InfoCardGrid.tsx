@@ -1,7 +1,11 @@
 'use client'
 
+import { useState, useMemo, useEffect, useCallback } from 'react'
+import Fuse from 'fuse.js'
+import { useRouter, useSearchParams } from 'next/navigation'
 import CardGrid from '@/components/compounds/CardGrid'
 import InfoCard, { type InfoCardProps } from '@/components/compounds/InfoCard'
+import SearchBar from '@/components/shared/SearchBar'
 
 export default function InfoCardGrid({
   data,
@@ -12,17 +16,68 @@ export default function InfoCardGrid({
   itemsPerPage?: number
   className?: string
 }) {
-  return (
-    <CardGrid
-      data={data}
-      renderCardAction={(props) => <InfoCard props={props} />}
-      getKeyAction={(item) => item.id}
-      searchKeys={['id', 'slug', 'name']}
-      itemsPerPage={itemsPerPage}
-      className={
-        className ??
-        'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Read search from URL param 'q', default to ''
+  const searchFromUrl = useMemo(() => {
+    const q = searchParams.get('q')
+    return q ?? ''
+  }, [searchParams])
+
+  const [search, setSearch] = useState(searchFromUrl)
+
+  // Keep search in sync with URL param
+  useEffect(() => {
+    if (search !== searchFromUrl) {
+      setSearch(searchFromUrl)
+    }
+  }, [searchFromUrl, search])
+
+  // Update URL param 'q' on search change
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearch(value)
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (!value) {
+        params.delete('q')
+      } else {
+        params.set('q', value)
       }
-    />
+      const searchStr = params.toString()
+      router.replace(searchStr ? `?${searchStr}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  const filteredData = useMemo(() => {
+    if (!search) return data
+    const fuse = new Fuse<InfoCardProps>(data, {
+      keys: ['name'],
+      threshold: 0.4,
+      ignoreLocation: true,
+    })
+    const results = fuse.search(search)
+    return results.map((r) => r.item)
+  }, [data, search])
+
+  return (
+    <div className="flex flex-col gap-8">
+      <SearchBar
+        value={search}
+        onChangeAction={handleSearchChange}
+        placeholder="Search..."
+      />
+      <CardGrid
+        data={filteredData}
+        renderCardAction={(props: InfoCardProps) => <InfoCard props={props} />}
+        getKeyAction={(item: InfoCardProps) => item.id}
+        itemsPerPage={itemsPerPage}
+        className={
+          className ??
+          'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+        }
+      />
+    </div>
   )
 }

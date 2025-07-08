@@ -1,7 +1,19 @@
 ## Project specific
 - Framework: Next.js 15
 - Language: TypeScript 5
-- Core packages: Tailwind CSS 4.1, React 19, Bun 1.2, TanStack Table
+- Core packages: Tailwind CSS 4.1, React 19, Bun 1.2, TanStack Table, pMap, clsx, lucide-react
+- The project is a web application that uses Next.js only for its static exports (SSG) and does not use any server-side rendering (SSR) or API routes in production. Server-side rendering (SSR) is only used for development purposes.
+- Favor using `type` over `interface` unless necessary.
+- Import just the type from a package when possible, e.g., `import type { MyType } from 'my-package'`.
+- Never use require, always use import.
+- Do not `import React from 'react'`.
+- Avoid using `any`, `unknown`, or `object` types. Use specific types or generics instead.
+- Avoid if-else chains, use Record or Map for faster lookups.
+- Use `const` for variables that are not reassigned, and `let` only when necessary.
+- Use Tailwind CSS for styling, and avoid inline styles.
+- Use `useMemo` and `useCallback` to optimize performance when necessary.
+- Use `clsx/lite` package for conditional class names. Avoid using string interpolation for class names.
+- Use `pMap` for parallel processing of arrays.
 - Ensure best practices.
 - Ensure the best robust, clean, readable code style and architecture.
 - Ensure the solution is scalable.
