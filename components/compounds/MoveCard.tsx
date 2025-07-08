@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import clsx from 'clsx/lite'
 import GlassCard from '@/components/GlassCard'
-import DamageClassIcon from '@/components/DamageClassIcon'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import TypeIcon from '@/components/TypeIcon'
 

@@ -12,12 +12,12 @@ export enum SortDirection {
   DESC = 'desc',
 }
 
-export type SortBarProps<T extends string> = {
+type SortBarProps<T extends string> = {
   sortKey: T | ''
   sortDirection: SortDirection
   sortKeys: SortOption<T>[]
   onSortKeyChangeAction: (key: T | '') => void
-  onSortDirectionChangeAction: (dir: SortDirection) => void
+  onSortDirectionChangeAction: (direction: SortDirection) => void
   className?: string
 }
 

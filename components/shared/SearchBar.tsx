@@ -3,7 +3,7 @@
 import React from 'react'
 import { Search } from 'lucide-react'
 
-export interface SearchBarProps {
+type SearchBarProps = {
   value: string
   onChangeAction: (value: string) => void
   placeholder?: string

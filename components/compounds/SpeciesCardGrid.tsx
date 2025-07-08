@@ -1,6 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Fuse from 'fuse.js'
+import { TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, {
@@ -10,7 +12,7 @@ import SortBar, {
 import MonsterCard, {
   type MonsterCardProps,
 } from '@/components/compounds/MonsterCard'
-import Fuse from 'fuse.js'
+import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 
 export default function SpeciesCardGrid({
   data,
@@ -18,26 +20,63 @@ export default function SpeciesCardGrid({
   data: MonsterCardProps[]
 }) {
   const [search, setSearch] = useState('')
+  const [sortKey, setSortKey] = useState('id')
+  const [sortDirection, setSortDirection] = useState(SortDirection.ASC)
+  const [typeFilter, setTypeFilter] = useState<string[]>([])
 
-  // Sorting state
-  const sortKeyOptions: SortOption<string>[] = [
+  const sortOptions: SortOption<string>[] = [
     { label: 'Dex Id', value: 'id' },
     { label: 'Name', value: 'name' },
   ]
-  const [sortKey, setSortKey] = useState('id')
-  const [sortDirection, setSortDirection] = useState(SortDirection.ASC)
+
+  const options = Object.entries(TypeKey).map(([key, value]) => ({
+    label: key,
+    value: value,
+  }))
+
+  const filters: FilterConfig[] = [
+    {
+      label: 'Type',
+      options,
+      values: typeFilter,
+      onChange: setTypeFilter,
+    },
+  ]
 
   const filteredData = useMemo(() => {
-    if (!search) return data
+    let filtered = data.filter(
+      (monster) =>
+        typeFilter.length === 0 ||
+        typeFilter.every((t) =>
+          monster.types.includes(t as (typeof monster.types)[number])
+        )
+    )
 
-    const fuse = new Fuse<MonsterCardProps>(data, {
-      keys: ['id', 'name'],
-      threshold: 0.4,
-      ignoreLocation: true,
-    })
-    const results = fuse.search(search)
-    return results.map((r) => r.item)
-  }, [data, search])
+    if (search) {
+      const fuse = new Fuse<MonsterCardProps>(filtered, {
+        keys: ['id', 'name'],
+        threshold: 0.4,
+        ignoreLocation: true,
+      })
+      filtered = fuse.search(search).map((r) => r.item)
+    }
+
+    if (sortKey) {
+      filtered = [...filtered].sort((a, b) => {
+        const aValue = a[sortKey as keyof MonsterCardProps]
+        const bValue = b[sortKey as keyof MonsterCardProps]
+        if (aValue == null && bValue == null) return 0
+        if (aValue == null) return 1
+        if (bValue == null) return -1
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+        // Default to order by id
+        return a.id < b.id ? -1 : 1
+      })
+    }
+
+    return filtered
+  }, [data, typeFilter, search, sortKey, sortDirection])
 
   return (
     <div className="flex flex-col gap-8">
@@ -48,10 +87,11 @@ export default function SpeciesCardGrid({
           placeholder="Search..."
         />
         <div className="flex flex-row gap-4">
+          <FilterBar filters={filters} />
           <SortBar
             sortKey={sortKey}
             sortDirection={sortDirection}
-            sortKeys={sortKeyOptions}
+            sortKeys={sortOptions}
             onSortKeyChangeAction={setSortKey}
             onSortDirectionChangeAction={setSortDirection}
           />

@@ -14,7 +14,7 @@ export type FilterConfig = {
   onChange: (values: string[]) => void
 }
 
-export type FilterBarProps = {
+type FilterBarProps = {
   filters: FilterConfig[]
   className?: string
 }

@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useMemo, useCallback, ReactNode, useEffect } from 'react'
 import Pagination from '@/components/compounds/Pagination'
 
-export interface CardGridProps<T> {
+type CardGridProps<T> = {
   data: T[]
   renderCardAction: (item: T) => ReactNode
   getKeyAction: (item: T) => string | number
