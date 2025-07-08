@@ -17,8 +17,11 @@ export default function InfoCardGrid({
       data={data}
       renderCardAction={(props) => <InfoCard props={props} />}
       getKeyAction={(item) => item.id}
-      searchKeys={['id', 'slug', 'name']}
+      searchKeys={['slug', 'name']}
       itemsPerPage={itemsPerPage}
+      initialSortKey="name"
+      initialSortDirection="asc"
+      sortableKeys={['name']}
       className={
         className ??
         'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'

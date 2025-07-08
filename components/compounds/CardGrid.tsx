@@ -3,8 +3,8 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useMemo, useCallback, ReactNode, useEffect } from 'react'
 import Fuse from 'fuse.js'
-import { Search } from 'lucide-react'
 import Pagination from '@/components/compounds/Pagination'
+import SearchBar from '@/components/shared/SearchBar'
 
 export interface CardGridProps<T> {
   data: T[]
@@ -14,6 +14,9 @@ export interface CardGridProps<T> {
   itemsPerPage?: number
   searchPlaceholder?: string
   className?: string
+  initialSortKey?: keyof T
+  initialSortDirection?: 'asc' | 'desc'
+  sortableKeys?: (keyof T)[]
 }
 
 export default function CardGrid<T>({
@@ -22,8 +25,11 @@ export default function CardGrid<T>({
   getKeyAction,
   searchKeys,
   itemsPerPage = 60,
-  searchPlaceholder = 'Filter...',
+  searchPlaceholder,
   className,
+  initialSortKey,
+  initialSortDirection = 'asc',
+  sortableKeys,
 }: CardGridProps<T>) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -66,9 +72,54 @@ export default function CardGrid<T>({
     [data, searchKeys]
   )
 
+  // Use sortableKeys if provided, otherwise fallback to all keys from first item
+  const dataKeys = useMemo(() => {
+    if (sortableKeys && sortableKeys.length > 0) return sortableKeys
+    if (data.length === 0) return []
+    return Object.keys(data[0] as object) as (keyof T)[]
+  }, [sortableKeys, data])
+
+  // Sorting state (controlled by UI, fallback to initial props)
+  const [sortKey, setSortKey] = useState<keyof T | undefined>(initialSortKey)
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(
+    initialSortDirection
+  )
+
+  // Keep sort state in sync with initial props if they change
+  useEffect(() => {
+    setSortKey(initialSortKey)
+  }, [initialSortKey])
+  useEffect(() => {
+    setSortDirection(initialSortDirection)
+  }, [initialSortDirection])
+
   const filteredItems = useMemo(() => {
-    return query ? fuse.search(query).map((result) => result.item) : data
-  }, [query, fuse, data])
+    const items = query ? fuse.search(query).map((result) => result.item) : data
+    if (sortKey) {
+      return [...items].sort((a, b) => {
+        const aValue = a[sortKey]
+        const bValue = b[sortKey]
+        if (aValue == null && bValue == null) return 0
+        if (aValue == null) return 1
+        if (bValue == null) return -1
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+        // Fallback: if both have a 'name' property, use it as tiebreaker
+        const aObj = a as Record<string, unknown>
+        const bObj = b as Record<string, unknown>
+        if ('name' in aObj && 'name' in bObj) {
+          const aName = aObj.name
+          const bName = bObj.name
+          if (typeof aName === 'string' && typeof bName === 'string') {
+            if (aName < bName) return sortDirection === 'asc' ? -1 : 1
+            if (aName > bName) return sortDirection === 'asc' ? 1 : -1
+          }
+        }
+        return 0
+      })
+    }
+    return items
+  }, [query, fuse, data, sortKey, sortDirection])
 
   const totalPages = useMemo(() => {
     return Math.ceil(filteredItems.length / itemsPerPage)
@@ -101,17 +152,16 @@ export default function CardGrid<T>({
     [router, searchParams, query]
   )
 
-  const handleQueryChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newQuery = e.target.value
-      setQuery(newQuery)
+  const handleSearchBarChange = useCallback(
+    (value: string) => {
+      setQuery(value)
       setCurrentPage(1)
       // Update URL params 'q' and 'p' (remove if empty or 1), do not push to history
       const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (!newQuery) {
+      if (!value) {
         params.delete('q')
       } else {
-        params.set('q', newQuery)
+        params.set('q', value)
       }
       // Always reset page to 1 on search
       params.delete('p')
@@ -123,25 +173,48 @@ export default function CardGrid<T>({
 
   return (
     <div className="xs:gap-8 flex flex-col gap-4">
-      <div className="flex flex-col items-center justify-center p-4">
-        <label htmlFor="filter" className="sr-only">
-          Filter
-        </label>
-        <div className="relative flex flex-row items-center text-lg/10">
-          <input
-            id="filter"
-            name="filter"
-            type="search"
-            placeholder={searchPlaceholder}
-            value={query}
-            onChange={handleQueryChange}
-            className="appearance-none border-b-2 border-zinc-600 bg-transparent pr-10 pl-3 text-zinc-900 outline-hidden transition-colors placeholder:text-zinc-500 focus:border-zinc-900 focus:duration-0 focus:outline-none dark:border-zinc-400 dark:text-zinc-100 dark:focus:border-zinc-100 [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden"
-          />
-          <Search
-            size={24}
-            className="absolute top-1/2 right-2 h-[1lh] -translate-y-1/2 text-zinc-500 dark:text-zinc-500"
-          />
+      <div className="flex flex-col items-center justify-center gap-2 p-4">
+        {/* Sorting controls */}
+        <div className="flex w-full max-w-md flex-row items-center gap-2">
+          <label htmlFor="sortKey" className="sr-only">
+            Sort by
+          </label>
+          <select
+            id="sortKey"
+            value={(sortKey as string | undefined) || ''}
+            onChange={(e) =>
+              setSortKey(
+                e.target.value ? (e.target.value as keyof T) : undefined
+              )
+            }
+            className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+          >
+            <option value="">Sort by…</option>
+            {dataKeys.map((key) => (
+              <option key={String(key)} value={String(key)}>
+                {String(key)}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="sortDirection" className="sr-only">
+            Sort direction
+          </label>
+          <select
+            id="sortDirection"
+            value={sortDirection}
+            onChange={(e) => setSortDirection(e.target.value as 'asc' | 'desc')}
+            className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+          >
+            <option value="asc">Asc</option>
+            <option value="desc">Desc</option>
+          </select>
         </div>
+        {/* Search input */}
+        <SearchBar
+          value={query}
+          onChangeAction={handleSearchBarChange}
+          placeholder={searchPlaceholder}
+        />
       </div>
       <div className="xs:gap-8 flex flex-col gap-4">
         {filteredItems.length === 0 ? (
