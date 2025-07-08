@@ -2,15 +2,18 @@
 
 import Image from 'next/image'
 import clsx from 'clsx/lite'
+import { FlavorText } from 'pokedex-promise-v2'
 import GlassCard from '@/components/GlassCard'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import TypeIcon from '@/components/TypeIcon'
+import { useVersionGroup } from '@/lib/stores/version-group'
 
 export type MoveCardProps = {
   id: number
   slug: string
   name: string
-  description: string
+  defaultDescription: string
+  flavorTextEntries: FlavorText[]
   type: string
   damageClass: string
   power?: number
@@ -28,6 +31,16 @@ const cardClasses: Record<DamageClassKey, string> = {
 }
 
 export default function MoveCard({ props }: { props: MoveCardProps }) {
+  const { versionGroup, hasMounted } = useVersionGroup()
+  if (!hasMounted) return null
+
+  const description =
+    props.flavorTextEntries.find(
+      (entry) =>
+        entry.language.name === 'en' &&
+        entry.version_group?.name === versionGroup
+    )?.flavor_text ?? props.defaultDescription
+
   return (
     <GlassCard variant="default" className="relative h-full rounded-xl">
       <div
@@ -60,7 +73,7 @@ export default function MoveCard({ props }: { props: MoveCardProps }) {
               {props.name}
             </h3>
             <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">
-              {props.description}
+              {description}
             </p>
           </div>
         </div>

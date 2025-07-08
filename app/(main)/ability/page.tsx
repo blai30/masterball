@@ -36,14 +36,19 @@ export default async function Home() {
 
   const abilitiesData = abilities
     .filter(
-      (item) =>
-        item?.names?.find((name) => name?.language?.name === 'en') !== undefined
+      (resource) =>
+        resource?.names?.find((name) => name?.language?.name === 'en') !==
+        undefined
     )
-    .map((ability) => ({
-      id: ability.id,
-      slug: ability.name,
-      name: getTranslation(ability.names, 'name')!,
-      description: getTranslation(ability.effect_entries, 'short_effect') || '',
+    .map((resource) => ({
+      id: resource.id,
+      slug: resource.name,
+      name: getTranslation(resource.names, 'name')!,
+      defaultDescription:
+        getTranslation(resource.effect_entries, 'short_effect') ?? '',
+      flavorTextEntries: resource.flavor_text_entries.filter(
+        (entry) => entry.language.name === 'en'
+      ),
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
 

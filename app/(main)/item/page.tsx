@@ -26,7 +26,9 @@ export default async function Home() {
       : await pokeapi.getList('item', 3000, 0)
 
   const items = await pMap(
-    itemsList.results,
+    itemsList.results.filter(
+      (result) => !result.name.startsWith('dynamax-crystal-')
+    ),
     async (result) => {
       const resource = await pokeapi.getResource<Item>(result.url)
       return resource
@@ -36,18 +38,23 @@ export default async function Home() {
 
   const itemsData = items
     .filter(
-      (item) =>
-        item?.names?.find((name) => name?.language?.name === 'en') !== undefined
+      (resource) =>
+        resource?.names?.find((name) => name?.language?.name === 'en') !==
+        undefined
     )
-    .map((item) => {
-      const { id, name } = item
+    .map((resource) => {
+      const { id, name } = resource
       const imageId = id.toString().padStart(4, '0')
       const imageUrl = `https://resource.pokemon-home.com/battledata/img/item/item_${imageId}.png`
       return {
         id,
         slug: name,
-        name: getTranslation(item.names, 'name')!,
-        description: getTranslation(item.effect_entries, 'short_effect') || '',
+        name: getTranslation(resource.names, 'name')!,
+        defaultDescription:
+          getTranslation(resource.effect_entries, 'short_effect') ?? '',
+        flavorTextEntries: resource.flavor_text_entries.filter(
+          (entry) => entry.language.name === 'en'
+        ),
         imageUrl,
       }
     })

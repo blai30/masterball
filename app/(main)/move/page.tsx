@@ -37,19 +37,24 @@ export default async function Home() {
 
   const movesData: MoveCardProps[] = moves
     .filter(
-      (item) =>
-        item?.names?.find((name) => name?.language?.name === 'en') !== undefined
+      (resource) =>
+        resource?.names?.find((name) => name?.language?.name === 'en') !==
+        undefined
     )
-    .map((move) => ({
-      id: move.id,
-      slug: move.name,
-      name: getTranslation(move.names, 'name')!,
-      description: getTranslation(move.effect_entries, 'short_effect') || '',
-      type: move.type.name,
-      damageClass: move.damage_class.name,
-      power: move.power ?? undefined,
-      accuracy: move.accuracy ?? undefined,
-      pp: move.pp ?? undefined,
+    .map((resource) => ({
+      id: resource.id,
+      slug: resource.name,
+      name: getTranslation(resource.names, 'name')!,
+      defaultDescription:
+        getTranslation(resource.effect_entries, 'short_effect') ?? '',
+      flavorTextEntries: resource.flavor_text_entries.filter(
+        (entry) => entry.language.name === 'en'
+      ),
+      type: resource.type.name,
+      damageClass: resource.damage_class.name,
+      power: resource.power ?? undefined,
+      accuracy: resource.accuracy ?? undefined,
+      pp: resource.pp ?? undefined,
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
 
