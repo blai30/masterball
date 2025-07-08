@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import Fuse from 'fuse.js'
+import { useRouter, useSearchParams } from 'next/navigation'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
@@ -20,6 +21,40 @@ export default function MoveCardGrid({
   itemsPerPage?: number
   className?: string
 }) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Read search from URL param 'q', default to ''
+  const searchFromUrl = useMemo(() => {
+    const q = searchParams.get('q')
+    return q ?? ''
+  }, [searchParams])
+
+  const [search, setSearch] = useState(searchFromUrl)
+
+  // Keep search in sync with URL param
+  useEffect(() => {
+    if (search !== searchFromUrl) {
+      setSearch(searchFromUrl)
+    }
+  }, [searchFromUrl, search])
+
+  // Update URL param 'q' on search change
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearch(value)
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (!value) {
+        params.delete('q')
+      } else {
+        params.set('q', value)
+      }
+      const searchStr = params.toString()
+      router.replace(searchStr ? `?${searchStr}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
   // Extract unique types and damage classes from data
   const types = useMemo(
     () => Array.from(new Set(data.map((m) => m.type))).sort(),
@@ -33,7 +68,6 @@ export default function MoveCardGrid({
   // Multi-select state for filters
   const [typeFilter, setTypeFilter] = useState<string[]>([])
   const [damageClassFilter, setDamageClassFilter] = useState<string[]>([])
-  const [search, setSearch] = useState('')
 
   // Sorting state
   const sortKeyOptions: SortOption<string>[] = [
@@ -114,7 +148,7 @@ export default function MoveCardGrid({
       <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
         <SearchBar
           value={search}
-          onChangeAction={setSearch}
+          onChangeAction={handleSearchChange}
           placeholder="Search moves..."
         />
         <div className="flex flex-row gap-4">

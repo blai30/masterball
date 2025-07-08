@@ -1,7 +1,8 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Fuse from 'fuse.js'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import SearchBar from '@/components/shared/SearchBar'
@@ -12,27 +13,66 @@ import SortBar, {
 import MonsterCard, {
   type MonsterCardProps,
 } from '@/components/compounds/MonsterCard'
-import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
+import FilterBar, {
+  type FilterOption,
+  type FilterConfig,
+} from '@/components/shared/FilterBar'
 
 export default function SpeciesCardGrid({
   data,
 }: {
   data: MonsterCardProps[]
 }) {
-  const [search, setSearch] = useState('')
   const [sortKey, setSortKey] = useState('id')
   const [sortDirection, setSortDirection] = useState(SortDirection.ASC)
   const [typeFilter, setTypeFilter] = useState<string[]>([])
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Read search from URL param 'q', default to ''
+  const searchFromUrl = useMemo(() => {
+    const q = searchParams.get('q')
+    return q ?? ''
+  }, [searchParams])
+
+  const [search, setSearch] = useState(searchFromUrl)
+
+  // Keep search in sync with URL param
+  useEffect(() => {
+    if (search !== searchFromUrl) {
+      setSearch(searchFromUrl)
+    }
+  }, [searchFromUrl, search])
+
+  // Update URL param 'q' on search change
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearch(value)
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (!value) {
+        params.delete('q')
+      } else {
+        params.set('q', value)
+      }
+      const searchStr = params.toString()
+      router.replace(searchStr ? `?${searchStr}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
 
   const sortOptions: SortOption<string>[] = [
     { label: 'Dex Id', value: 'id' },
     { label: 'Name', value: 'name' },
   ]
 
-  const options = Object.entries(TypeKey).map(([key, value]) => ({
-    label: key,
-    value: value,
-  }))
+  const options: FilterOption[] = Object.entries(TypeKey).map(
+    ([key, value]) => {
+      return {
+        label: key,
+        value: value,
+      }
+    }
+  )
 
   const filters: FilterConfig[] = [
     {
@@ -83,7 +123,7 @@ export default function SpeciesCardGrid({
       <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
         <SearchBar
           value={search}
-          onChangeAction={setSearch}
+          onChangeAction={handleSearchChange}
           placeholder="Search..."
         />
         <div className="flex flex-row gap-4">
