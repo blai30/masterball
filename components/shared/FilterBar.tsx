@@ -64,7 +64,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
           <Listbox value={filter.values} onChange={filter.onChange} multiple>
             {({ open }) => (
               <div className="relative">
-                <ListboxButton className="flex w-42 appearance-none items-center justify-between rounded-md bg-white py-1.5 pr-8 pl-3 inset-ring-1 inset-ring-zinc-300 focus:inset-ring-zinc-500 focus:outline-none dark:bg-black dark:text-zinc-200 dark:inset-ring-zinc-700 dark:focus:inset-ring-zinc-500">
+                <ListboxButton className="flex w-36 appearance-none items-center justify-between rounded-md bg-white py-1.5 pr-8 pl-3 inset-ring-1 inset-ring-zinc-300 focus:inset-ring-zinc-500 focus:outline-none dark:bg-black dark:text-zinc-200 dark:inset-ring-zinc-700 dark:focus:inset-ring-zinc-500">
                   <span className="truncate">
                     {filter.values.length > 0
                       ? filter.options
@@ -78,7 +78,10 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
                     className="pointer-events-none absolute right-2 h-[1lh] w-4 text-zinc-600 dark:text-zinc-400"
                   />
                 </ListboxButton>
-                <ListboxOptions className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded bg-zinc-100 py-1 text-xs shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-zinc-900 dark:text-zinc-100">
+                <ListboxOptions
+                  modal={false}
+                  className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded bg-zinc-100 py-1 text-xs shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-zinc-900 dark:text-zinc-100"
+                >
                   {filter.options.map((option) => (
                     <ListboxOption
                       key={option.value}
