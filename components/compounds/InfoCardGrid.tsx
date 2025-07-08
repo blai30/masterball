@@ -63,11 +63,7 @@ export default function InfoCardGrid({
 
   return (
     <div className="flex flex-col gap-8">
-      <SearchBar
-        value={search}
-        onChangeAction={handleSearchChange}
-        placeholder="Search..."
-      />
+      <SearchBar value={search} onChangeAction={handleSearchChange} />
       <CardGrid
         data={filteredData}
         renderCardAction={(props: InfoCardProps) => <InfoCard props={props} />}
