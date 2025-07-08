@@ -1,6 +1,7 @@
 'use client'
 
 import clsx from 'clsx/lite'
+import { ChevronDown } from 'lucide-react'
 
 export type SortOption<T extends string> = {
   label: string
@@ -30,36 +31,53 @@ export default function SortBar<T extends string>({
   className,
 }: SortBarProps<T>) {
   return (
-    <div className={clsx('flex flex-row items-center gap-2', className)}>
-      <label htmlFor="sortKey" className="sr-only">
-        Sort by
-      </label>
-      <select
-        id="sortKey"
-        value={sortKey}
-        onChange={(e) => onSortKeyChangeAction(e.target.value as T | '')}
-        className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-      >
-        {sortKeys.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <label htmlFor="sortDirection" className="sr-only">
-        Sort direction
-      </label>
-      <select
-        id="sortDirection"
-        value={sortDirection}
-        onChange={(e) =>
-          onSortDirectionChangeAction(e.target.value as SortDirection)
-        }
-        className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-      >
-        <option value="asc">Asc</option>
-        <option value="desc">Desc</option>
-      </select>
+    <div
+      className={clsx(
+        'flex flex-row items-center justify-center gap-2 lg:justify-end',
+        className
+      )}
+    >
+      <div className="relative flex items-center justify-center text-sm/6">
+        <label htmlFor="sortKey" className="sr-only">
+          Sort by
+        </label>
+        <select
+          id="sortKey"
+          value={sortKey}
+          onChange={(e) => onSortKeyChangeAction(e.target.value as T | '')}
+          className="w-28 appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 inset-ring-1 inset-ring-zinc-300 focus:inset-ring-zinc-500 focus:outline-none dark:bg-black dark:text-zinc-200 dark:inset-ring-zinc-700 dark:focus:inset-ring-zinc-500"
+        >
+          {sortKeys.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none absolute right-2 h-[1lh] w-4 text-zinc-600 dark:text-zinc-400"
+        />
+      </div>
+      <div className="relative flex items-center justify-center text-sm/6">
+        <label htmlFor="sortDirection" className="sr-only">
+          Sort direction
+        </label>
+        <select
+          id="sortDirection"
+          value={sortDirection}
+          onChange={(e) =>
+            onSortDirectionChangeAction(e.target.value as SortDirection)
+          }
+          className="w-20 appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 inset-ring-1 inset-ring-zinc-300 focus:inset-ring-zinc-500 focus:outline-none dark:bg-black dark:text-zinc-200 dark:inset-ring-zinc-700 dark:focus:inset-ring-zinc-500"
+        >
+          <option value="asc">Asc</option>
+          <option value="desc">Desc</option>
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none absolute right-2 h-[1lh] w-4 text-zinc-600 dark:text-zinc-400"
+        />
+      </div>
     </div>
   )
 }

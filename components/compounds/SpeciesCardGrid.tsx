@@ -126,7 +126,7 @@ export default function SpeciesCardGrid({
           onChangeAction={handleSearchChange}
           placeholder="Search..."
         />
-        <div className="flex flex-row gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row lg:w-fit">
           <FilterBar filters={filters} />
           <SortBar
             sortKey={sortKey}
