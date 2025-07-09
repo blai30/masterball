@@ -94,7 +94,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
                       {({ selected }) => (
                         <li
                           className={clsx(
-                            'flex items-center gap-2 p-1 select-none data-focus:bg-zinc-200 data-selected:font-semibold dark:data-focus:bg-zinc-700'
+                            'flex items-center gap-2 p-1 select-none data-focus:bg-zinc-300 data-selected:font-semibold dark:data-focus:bg-zinc-700'
                           )}
                         >
                           <span className="flex size-4 items-center justify-center rounded">
