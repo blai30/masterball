@@ -1,8 +1,9 @@
 'use client'
 
-import { useMemo, useCallback } from 'react'
-import Fuse from 'fuse.js'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import Fuse from 'fuse.js'
+import { useDebouncedCallback } from 'use-debounce'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
@@ -13,9 +14,27 @@ import SortBar, {
   type SortOption,
 } from '@/components/shared/SortBar'
 
+const DEFAULT_SORT_KEY = 'name'
+const DEFAULT_SORT_DIRECTION = SortDirection.ASC
+const DEFAULT_PAGE = 1
+const ITEMS_PER_PAGE = 36
+
+function getInitialState(searchParams: URLSearchParams) {
+  return {
+    search: searchParams.get('q') ?? '',
+    sortKey: searchParams.get('sort') ?? DEFAULT_SORT_KEY,
+    sortDirection:
+      (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION,
+    typeFilter: searchParams.get('type')?.split(',').filter(Boolean) ?? [],
+    damageClassFilter:
+      searchParams.get('class')?.split(',').filter(Boolean) ?? [],
+    currentPage: Number(searchParams.get('p')) || DEFAULT_PAGE,
+  }
+}
+
 export default function MoveCardGrid({
   data,
-  itemsPerPage = 48,
+  itemsPerPage = ITEMS_PER_PAGE,
   className,
 }: {
   data: MoveCardProps[]
@@ -24,108 +43,104 @@ export default function MoveCardGrid({
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const initialized = useRef(false)
 
-  // Derive search, sort, and filter state from URL params
-  const search = useMemo(() => searchParams.get('q') ?? '', [searchParams])
-  const sortKey = useMemo(() => searchParams.get('sort') ?? 'name', [searchParams])
-  const sortDirection = useMemo(
-    () => (searchParams.get('dir') as SortDirection) ?? SortDirection.ASC,
-    [searchParams]
+  // Local state for all controls
+  const [search, setSearch] = useState('')
+  const [sortKey, setSortKey] = useState(DEFAULT_SORT_KEY)
+  const [sortDirection, setSortDirection] = useState<SortDirection>(
+    DEFAULT_SORT_DIRECTION
   )
-  // Use comma-separated single param for type and class filters
-  const typeFilter = useMemo(() => {
-    const val = searchParams.get('type')
-    return val ? val.split(',').filter(Boolean) : []
+  const [typeFilter, setTypeFilter] = useState<string[]>([])
+  const [damageClassFilter, setDamageClassFilter] = useState<string[]>([])
+  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE)
+
+  // On first mount, initialize from URL params
+  useEffect(() => {
+    if (!initialized.current) {
+      const initial = getInitialState(searchParams)
+      setSearch(initial.search)
+      setSortKey(initial.sortKey)
+      setSortDirection(initial.sortDirection)
+      setTypeFilter(initial.typeFilter)
+      setDamageClassFilter(initial.damageClassFilter)
+      setCurrentPage(initial.currentPage)
+      initialized.current = true
+    }
   }, [searchParams])
-  const damageClassFilter = useMemo(() => {
-    const val = searchParams.get('class')
-    return val ? val.split(',').filter(Boolean) : []
-  }, [searchParams])
 
-  // Handler updates URL only, and resets pagination
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (!value) {
-        params.delete('q')
-      } else {
-        params.set('q', value)
-      }
-      // Reset pagination
-      params.delete('p')
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  // Debounced URL sync
+  const syncUrl = useDebouncedCallback((state) => {
+    const params = new URLSearchParams()
+    if (state.search) params.set('q', state.search)
+    if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
+    if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
+      params.set('dir', state.sortDirection)
+    if (state.typeFilter.length > 0)
+      params.set('type', state.typeFilter.join(','))
+    if (state.damageClassFilter.length > 0)
+      params.set('class', state.damageClassFilter.join(','))
+    if (state.currentPage !== DEFAULT_PAGE)
+      params.set('p', String(state.currentPage))
+    router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+  }, 400)
 
-  const handleSortKeyChange = useCallback(
-    (key: string) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (key === 'name') {
-        params.delete('sort')
-      } else {
-        params.set('sort', key)
-      }
-      // Reset pagination
-      params.delete('p')
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  // Sync all state to URL on change
+  useEffect(() => {
+    if (!initialized.current) return
+    syncUrl({
+      search,
+      sortKey,
+      sortDirection,
+      typeFilter,
+      damageClassFilter,
+      currentPage,
+    })
+  }, [
+    search,
+    sortKey,
+    sortDirection,
+    typeFilter,
+    damageClassFilter,
+    currentPage,
+    syncUrl,
+  ])
 
-  const handleSortDirectionChange = useCallback(
-    (dir: SortDirection) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (dir === SortDirection.ASC) {
-        params.delete('dir')
-      } else {
-        params.set('dir', dir)
-      }
-      // Reset pagination
-      params.delete('p')
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
 
-  const handleTypeFilterChange = useCallback(
-    (values: string[]) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (values.length === 0) {
-        params.delete('type')
-      } else {
-        params.set('type', values.join(','))
-      }
-      // Reset pagination
-      params.delete('p')
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  const handleSortKeyChange = useCallback((key: string) => {
+    setSortKey(key)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
 
-  const handleDamageClassFilterChange = useCallback(
-    (values: string[]) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (values.length === 0) {
-        params.delete('class')
-      } else {
-        params.set('class', values.join(','))
-      }
-      // Reset pagination
-      params.delete('p')
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  const handleSortDirectionChange = useCallback((dir: SortDirection) => {
+    setSortDirection(dir)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
+
+  const handleTypeFilterChange = useCallback((values: string[]) => {
+    setTypeFilter(values)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
+
+  const handleDamageClassFilterChange = useCallback((values: string[]) => {
+    setDamageClassFilter(values)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page)
+  }, [])
 
   const types = useMemo(
     () =>
-      Object.entries(TypeKey).map(([key, value]) => ({
-        label: key,
-        value,
-      })),
+      Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
     []
   )
+
   const damageClasses = useMemo(
     () =>
       Object.entries(DamageClassKey).map(([key, value]) => ({
@@ -159,11 +174,21 @@ export default function MoveCardGrid({
         onChange: handleDamageClassFilterChange,
       },
     ],
-    [types, damageClasses, typeFilter, damageClassFilter, handleTypeFilterChange, handleDamageClassFilterChange]
+    [
+      types,
+      damageClasses,
+      typeFilter,
+      damageClassFilter,
+      handleTypeFilterChange,
+      handleDamageClassFilterChange,
+    ]
   )
 
   const typeFilterSet = useMemo(() => new Set(typeFilter), [typeFilter])
-  const damageClassFilterSet = useMemo(() => new Set(damageClassFilter), [damageClassFilter])
+  const damageClassFilterSet = useMemo(
+    () => new Set(damageClassFilter),
+    [damageClassFilter]
+  )
 
   const filteredData = useMemo(() => {
     let filtered = data.filter((move) => {
@@ -175,12 +200,12 @@ export default function MoveCardGrid({
     })
 
     if (search) {
-      const fuse = new Fuse<MoveCardProps>(filtered, {
+      const fuse = new Fuse(filtered, {
         keys: ['name'],
         threshold: 0.4,
         ignoreLocation: true,
       })
-      filtered = fuse.search(search).map((r) => r.item)
+      filtered = fuse.search(search).map((r: { item: MoveCardProps }) => r.item)
     }
 
     if (sortKey) {
@@ -193,15 +218,11 @@ export default function MoveCardGrid({
         if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
         if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
         // Fallback: if both have a 'name' property, use it as tiebreaker
-        const aObj = a as Record<string, unknown>
-        const bObj = b as Record<string, unknown>
-        if ('name' in aObj && 'name' in bObj) {
-          const aName = aObj.name
-          const bName = bObj.name
-          if (typeof aName === 'string' && typeof bName === 'string') {
-            if (aName < bName) return sortDirection === 'asc' ? -1 : 1
-            if (aName > bName) return sortDirection === 'asc' ? 1 : -1
-          }
+        const aObj = a as { name?: string }
+        const bObj = b as { name?: string }
+        if (aObj.name && bObj.name) {
+          if (aObj.name < bObj.name) return sortDirection === 'asc' ? -1 : 1
+          if (aObj.name > bObj.name) return sortDirection === 'asc' ? 1 : -1
         }
         return 0
       })
@@ -236,6 +257,8 @@ export default function MoveCardGrid({
         data={filteredData}
         renderCardAction={(props: MoveCardProps) => <MoveCard props={props} />}
         getKeyAction={(item) => item.id}
+        currentPage={currentPage}
+        onPageChangeAction={handlePageChange}
         itemsPerPage={itemsPerPage}
         className={
           className ??

@@ -9,6 +9,7 @@
 - Do not `import React from 'react'`.
 - Avoid using `any`, `unknown`, or `object` types. Use specific types or generics instead.
 - Avoid if-else chains, use Record or Map for faster lookups.
+- Avoid adding redundant comments for self-documenting code, or comments that state the obvious.
 - Use `const` for variables that are not reassigned, and `let` only when necessary.
 - Use Tailwind CSS for styling, and avoid inline styles.
 - Use `useMemo` and `useCallback` to optimize performance when necessary.

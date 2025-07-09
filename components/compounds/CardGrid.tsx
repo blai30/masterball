@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
 import { useMemo, useCallback, ReactNode } from 'react'
 import Pagination from '@/components/compounds/Pagination'
 
@@ -10,6 +9,8 @@ type CardGridProps<T> = {
   getKeyAction: (item: T) => string | number
   itemsPerPage?: number
   className?: string
+  currentPage: number
+  onPageChangeAction: (page: number) => void
 }
 
 export default function CardGrid<T>({
@@ -18,21 +19,9 @@ export default function CardGrid<T>({
   getKeyAction,
   itemsPerPage = 60,
   className,
+  currentPage,
+  onPageChangeAction,
 }: CardGridProps<T>) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  // Read page from URL param 'p', default to 1
-  const pageFromUrl = useMemo(() => {
-    const p = searchParams.get('p')
-    const page = p ? parseInt(p, 10) : 1
-    return isNaN(page) || page < 1 ? 1 : page
-  }, [searchParams])
-
-  // Remove local state, derive from URL only
-  const currentPage = pageFromUrl
-
-  // No sorting logic here; data is already sorted/filtered by parent
   const paginatedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
@@ -42,21 +31,6 @@ export default function CardGrid<T>({
   const totalPages = useMemo(() => {
     return Math.ceil(data.length / itemsPerPage)
   }, [data, itemsPerPage])
-
-  // Remove 'p' param if default (1)
-  const handlePageChange = useCallback(
-    (page: number) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (page === 1) {
-        params.delete('p')
-      } else {
-        params.set('p', String(page))
-      }
-      const search = params.toString()
-      router.replace(search ? `?${search}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
 
   const getKey = useCallback(getKeyAction, [])
   const renderCard = useCallback(renderCardAction, [])
@@ -73,7 +47,7 @@ export default function CardGrid<T>({
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChangeAction={handlePageChange}
+              onPageChangeAction={onPageChangeAction}
             />
             <ul className={className}>
               {paginatedItems.map((item) => (
@@ -85,7 +59,7 @@ export default function CardGrid<T>({
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChangeAction={handlePageChange}
+              onPageChangeAction={onPageChangeAction}
             />
           </>
         )}
