@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useMemo, useCallback, ReactNode, useEffect } from 'react'
+import { useMemo, useCallback, ReactNode } from 'react'
 import Pagination from '@/components/compounds/Pagination'
 
 type CardGridProps<T> = {
@@ -29,14 +29,8 @@ export default function CardGrid<T>({
     return isNaN(page) || page < 1 ? 1 : page
   }, [searchParams])
 
-  const [currentPage, setCurrentPage] = useState(pageFromUrl)
-
-  // Keep currentPage in sync with URL param
-  useEffect(() => {
-    if (currentPage !== pageFromUrl) {
-      setCurrentPage(pageFromUrl)
-    }
-  }, [pageFromUrl, currentPage])
+  // Remove local state, derive from URL only
+  const currentPage = pageFromUrl
 
   // No sorting logic here; data is already sorted/filtered by parent
   const paginatedItems = useMemo(() => {
@@ -49,10 +43,9 @@ export default function CardGrid<T>({
     return Math.ceil(data.length / itemsPerPage)
   }, [data, itemsPerPage])
 
+  // Remove 'p' param if default (1)
   const handlePageChange = useCallback(
     (page: number) => {
-      setCurrentPage(page)
-      // Update URL param 'p' (remove if 1), do not push to history
       const params = new URLSearchParams(Array.from(searchParams.entries()))
       if (page === 1) {
         params.delete('p')
