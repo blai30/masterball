@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 import clsx from 'clsx/lite'
 import { Check, ChevronDown } from 'lucide-react'
 import {
@@ -31,8 +31,11 @@ type FilterBarProps = {
 }
 
 export default function FilterBar({ filters, className }: FilterBarProps) {
-  const typeKeySet = new Set<string>(Object.values(TypeKey))
-  const damageClassKeySet = new Set<string>(Object.values(DamageClassKey))
+  const typeKeySet = useMemo(() => new Set<string>(Object.values(TypeKey)), [])
+  const damageClassKeySet = useMemo(
+    () => new Set<string>(Object.values(DamageClassKey)),
+    []
+  )
 
   const optionPill = (option: FilterOption) => {
     return typeKeySet.has(option.value) ? (
@@ -91,7 +94,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
                       {({ selected }) => (
                         <li
                           className={clsx(
-                            'flex items-center gap-2 p-1 select-none data-focus:bg-zinc-200 data-selected:font-semibold dark:data-focus:bg-zinc-700'
+                            'flex items-center gap-2 p-1 select-none data-focus:bg-zinc-300 data-selected:font-semibold dark:data-focus:bg-zinc-700'
                           )}
                         >
                           <span className="flex size-4 items-center justify-center rounded">

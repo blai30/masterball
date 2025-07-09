@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import Fuse from 'fuse.js'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { TypeKey } from '@/lib/utils/pokeapiHelpers'
@@ -23,39 +23,72 @@ export default function SpeciesCardGrid({
 }: {
   data: MonsterCardProps[]
 }) {
-  const [sortKey, setSortKey] = useState('id')
-  const [sortDirection, setSortDirection] = useState(SortDirection.ASC)
-  const [typeFilter, setTypeFilter] = useState<string[]>([])
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  // Read search from URL param 'q', default to ''
-  const searchFromUrl = useMemo(() => {
-    const q = searchParams.get('q')
-    return q ?? ''
+  // Derive search, sort, and filter state from URL params
+  const search = useMemo(() => searchParams.get('q') ?? '', [searchParams])
+  const sortKey = useMemo(() => searchParams.get('sort') ?? 'id', [searchParams])
+  const sortDirection = useMemo(
+    () => (searchParams.get('dir') as SortDirection) ?? SortDirection.ASC,
+    [searchParams]
+  )
+  // Use comma-separated single param for type filter
+  const typeFilter = useMemo(() => {
+    const val = searchParams.get('type')
+    return val ? val.split(',').filter(Boolean) : []
   }, [searchParams])
 
-  const [search, setSearch] = useState(searchFromUrl)
-
-  // Keep search in sync with URL param
-  useEffect(() => {
-    if (search !== searchFromUrl) {
-      setSearch(searchFromUrl)
-    }
-  }, [searchFromUrl, search])
-
-  // Update URL param 'q' on search change
+  // Handlers update URL only
   const handleSearchChange = useCallback(
     (value: string) => {
-      setSearch(value)
       const params = new URLSearchParams(Array.from(searchParams.entries()))
       if (!value) {
         params.delete('q')
       } else {
         params.set('q', value)
       }
-      const searchStr = params.toString()
-      router.replace(searchStr ? `?${searchStr}` : '?', { scroll: false })
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  const handleSortKeyChange = useCallback(
+    (key: string) => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (key === 'id') {
+        params.delete('sort')
+      } else {
+        params.set('sort', key)
+      }
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  const handleSortDirectionChange = useCallback(
+    (dir: SortDirection) => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (dir === SortDirection.ASC) {
+        params.delete('dir')
+      } else {
+        params.set('dir', dir)
+      }
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  // Store as comma-separated single param
+  const handleTypeFilterChange = useCallback(
+    (values: string[]) => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (values.length === 0) {
+        params.delete('type')
+      } else {
+        params.set('type', values.join(','))
+      }
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     [router, searchParams]
   )
@@ -66,30 +99,26 @@ export default function SpeciesCardGrid({
   ]
 
   const options: FilterOption[] = Object.entries(TypeKey).map(
-    ([key, value]) => {
-      return {
-        label: key,
-        value: value,
-      }
-    }
+    ([key, value]) => ({ label: key, value })
   )
 
-  const filters: FilterConfig[] = [
-    {
-      label: 'Type',
-      options,
-      values: typeFilter,
-      onChange: setTypeFilter,
-    },
-  ]
+  const filters: FilterConfig[] = useMemo(
+    () => [
+      {
+        label: 'Type',
+        options,
+        values: typeFilter,
+        onChange: handleTypeFilterChange,
+      },
+    ],
+    [typeFilter, options, handleTypeFilterChange]
+  )
 
   const filteredData = useMemo(() => {
     let filtered = data.filter(
       (monster) =>
         typeFilter.length === 0 ||
-        typeFilter.every((t) =>
-          monster.types.includes(t as (typeof monster.types)[number])
-        )
+        typeFilter.every((t) => monster.types.includes(t as TypeKey))
     )
 
     if (search) {
@@ -110,7 +139,6 @@ export default function SpeciesCardGrid({
         if (bValue == null) return -1
         if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
         if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
-        // Default to order by id
         return a.id < b.id ? -1 : 1
       })
     }
@@ -128,8 +156,8 @@ export default function SpeciesCardGrid({
             sortKey={sortKey}
             sortDirection={sortDirection}
             sortKeys={sortOptions}
-            onSortKeyChangeAction={setSortKey}
-            onSortDirectionChangeAction={setSortDirection}
+            onSortKeyChangeAction={handleSortKeyChange}
+            onSortDirectionChangeAction={handleSortDirectionChange}
           />
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useMemo, useCallback } from 'react'
 import Fuse from 'fuse.js'
 import { useRouter, useSearchParams } from 'next/navigation'
 import CardGrid from '@/components/compounds/CardGrid'
@@ -19,33 +19,19 @@ export default function InfoCardGrid({
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  // Read search from URL param 'q', default to ''
-  const searchFromUrl = useMemo(() => {
-    const q = searchParams.get('q')
-    return q ?? ''
-  }, [searchParams])
+  // Derive search from URL param
+  const search = useMemo(() => searchParams.get('q') ?? '', [searchParams])
 
-  const [search, setSearch] = useState(searchFromUrl)
-
-  // Keep search in sync with URL param
-  useEffect(() => {
-    if (search !== searchFromUrl) {
-      setSearch(searchFromUrl)
-    }
-  }, [searchFromUrl, search])
-
-  // Update URL param 'q' on search change
+  // Handler updates URL only
   const handleSearchChange = useCallback(
     (value: string) => {
-      setSearch(value)
       const params = new URLSearchParams(Array.from(searchParams.entries()))
       if (!value) {
         params.delete('q')
       } else {
         params.set('q', value)
       }
-      const searchStr = params.toString()
-      router.replace(searchStr ? `?${searchStr}` : '?', { scroll: false })
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     [router, searchParams]
   )
