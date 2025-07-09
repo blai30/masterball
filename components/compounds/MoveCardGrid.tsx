@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import Fuse from 'fuse.js'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
@@ -21,6 +22,93 @@ export default function MoveCardGrid({
   itemsPerPage?: number
   className?: string
 }) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Derive search, sort, and filter state from URL params
+  const search = useMemo(() => searchParams.get('q') ?? '', [searchParams])
+  const sortKey = useMemo(() => searchParams.get('sort') ?? 'name', [searchParams])
+  const sortDirection = useMemo(
+    () => (searchParams.get('dir') as SortDirection) ?? SortDirection.ASC,
+    [searchParams]
+  )
+  // Use comma-separated single param for type and class filters
+  const typeFilter = useMemo(() => {
+    const val = searchParams.get('type')
+    return val ? val.split(',').filter(Boolean) : []
+  }, [searchParams])
+  const damageClassFilter = useMemo(() => {
+    const val = searchParams.get('class')
+    return val ? val.split(',').filter(Boolean) : []
+  }, [searchParams])
+
+  // Handlers update URL only
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (!value) {
+        params.delete('q')
+      } else {
+        params.set('q', value)
+      }
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  const handleSortKeyChange = useCallback(
+    (key: string) => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (key === 'name') {
+        params.delete('sort')
+      } else {
+        params.set('sort', key)
+      }
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  const handleSortDirectionChange = useCallback(
+    (dir: SortDirection) => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (dir === SortDirection.ASC) {
+        params.delete('dir')
+      } else {
+        params.set('dir', dir)
+      }
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  // Store as comma-separated single param
+  const handleTypeFilterChange = useCallback(
+    (values: string[]) => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (values.length === 0) {
+        params.delete('type')
+      } else {
+        params.set('type', values.join(','))
+      }
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  const handleDamageClassFilterChange = useCallback(
+    (values: string[]) => {
+      const params = new URLSearchParams(Array.from(searchParams.entries()))
+      if (values.length === 0) {
+        params.delete('class')
+      } else {
+        params.set('class', values.join(','))
+      }
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    [router, searchParams]
+  )
+
   const types = useMemo(
     () =>
       Object.entries(TypeKey).map(([key, value]) => ({
@@ -38,19 +126,6 @@ export default function MoveCardGrid({
     []
   )
 
-  // Multi-select state for filters
-  const [typeFilter, setTypeFilter] = useState<string[]>([])
-  const [damageClassFilter, setDamageClassFilter] = useState<string[]>([])
-  const [search, setSearch] = useState('')
-
-  // Memoize Sets for fast lookup
-  const typeFilterSet = useMemo(() => new Set(typeFilter), [typeFilter])
-  const damageClassFilterSet = useMemo(
-    () => new Set(damageClassFilter),
-    [damageClassFilter]
-  )
-
-  // Sorting state
   const sortKeyOptions: SortOption<string>[] = [
     { label: 'Name', value: 'name' },
     { label: 'Type', value: 'type' },
@@ -59,8 +134,6 @@ export default function MoveCardGrid({
     { label: 'Accuracy', value: 'accuracy' },
     { label: 'PP', value: 'pp' },
   ]
-  const [sortKey, setSortKey] = useState('name')
-  const [sortDirection, setSortDirection] = useState(SortDirection.ASC)
 
   const filters: FilterConfig[] = useMemo(
     () => [
@@ -68,17 +141,20 @@ export default function MoveCardGrid({
         label: 'Type',
         options: types,
         values: typeFilter,
-        onChange: setTypeFilter,
+        onChange: handleTypeFilterChange,
       },
       {
         label: 'Class',
         options: damageClasses,
         values: damageClassFilter,
-        onChange: setDamageClassFilter,
+        onChange: handleDamageClassFilterChange,
       },
     ],
-    [types, damageClasses, typeFilter, damageClassFilter]
+    [types, damageClasses, typeFilter, damageClassFilter, handleTypeFilterChange, handleDamageClassFilterChange]
   )
+
+  const typeFilterSet = useMemo(() => new Set(typeFilter), [typeFilter])
+  const damageClassFilterSet = useMemo(() => new Set(damageClassFilter), [damageClassFilter])
 
   const filteredData = useMemo(() => {
     let filtered = data.filter((move) => {
@@ -99,7 +175,7 @@ export default function MoveCardGrid({
     }
 
     if (sortKey) {
-      return [...filtered].sort((a, b) => {
+      filtered = [...filtered].sort((a, b) => {
         const aValue = a[sortKey as keyof MoveCardProps]
         const bValue = b[sortKey as keyof MoveCardProps]
         if (aValue == null && bValue == null) return 0
@@ -135,15 +211,15 @@ export default function MoveCardGrid({
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
-        <SearchBar value={search} onChangeAction={setSearch} />
+        <SearchBar value={search} onChangeAction={handleSearchChange} />
         <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row lg:w-fit">
           <FilterBar filters={filters} />
           <SortBar
             sortKey={sortKey}
             sortDirection={sortDirection}
             sortKeys={sortKeyOptions}
-            onSortKeyChangeAction={setSortKey}
-            onSortDirectionChangeAction={setSortDirection}
+            onSortKeyChangeAction={handleSortKeyChange}
+            onSortDirectionChangeAction={handleSortDirectionChange}
           />
         </div>
       </div>
