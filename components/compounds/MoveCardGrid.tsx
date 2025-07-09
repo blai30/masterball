@@ -42,7 +42,7 @@ export default function MoveCardGrid({
     return val ? val.split(',').filter(Boolean) : []
   }, [searchParams])
 
-  // Handlers update URL only
+  // Handler updates URL only, and resets pagination
   const handleSearchChange = useCallback(
     (value: string) => {
       const params = new URLSearchParams(Array.from(searchParams.entries()))
@@ -51,6 +51,8 @@ export default function MoveCardGrid({
       } else {
         params.set('q', value)
       }
+      // Reset pagination
+      params.delete('p')
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     [router, searchParams]
@@ -64,6 +66,8 @@ export default function MoveCardGrid({
       } else {
         params.set('sort', key)
       }
+      // Reset pagination
+      params.delete('p')
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     [router, searchParams]
@@ -77,12 +81,13 @@ export default function MoveCardGrid({
       } else {
         params.set('dir', dir)
       }
+      // Reset pagination
+      params.delete('p')
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     [router, searchParams]
   )
 
-  // Store as comma-separated single param
   const handleTypeFilterChange = useCallback(
     (values: string[]) => {
       const params = new URLSearchParams(Array.from(searchParams.entries()))
@@ -91,6 +96,8 @@ export default function MoveCardGrid({
       } else {
         params.set('type', values.join(','))
       }
+      // Reset pagination
+      params.delete('p')
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     [router, searchParams]
@@ -104,6 +111,8 @@ export default function MoveCardGrid({
       } else {
         params.set('class', values.join(','))
       }
+      // Reset pagination
+      params.delete('p')
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     [router, searchParams]

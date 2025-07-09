@@ -22,7 +22,7 @@ export default function InfoCardGrid({
   // Derive search from URL param
   const search = useMemo(() => searchParams.get('q') ?? '', [searchParams])
 
-  // Handler updates URL only
+  // Handler updates URL only, and resets pagination
   const handleSearchChange = useCallback(
     (value: string) => {
       const params = new URLSearchParams(Array.from(searchParams.entries()))
@@ -31,6 +31,8 @@ export default function InfoCardGrid({
       } else {
         params.set('q', value)
       }
+      // Reset pagination
+      params.delete('p')
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     [router, searchParams]
