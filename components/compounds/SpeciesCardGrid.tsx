@@ -1,8 +1,7 @@
 'use client'
 
-import { useCallback, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import Fuse from 'fuse.js'
-import { useRouter, useSearchParams } from 'next/navigation'
 import { TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import SearchBar from '@/components/shared/SearchBar'
@@ -23,75 +22,10 @@ export default function SpeciesCardGrid({
 }: {
   data: MonsterCardProps[]
 }) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  // Derive search, sort, and filter state from URL params
-  const search = useMemo(() => searchParams.get('q') ?? '', [searchParams])
-  const sortKey = useMemo(() => searchParams.get('sort') ?? 'id', [searchParams])
-  const sortDirection = useMemo(
-    () => (searchParams.get('dir') as SortDirection) ?? SortDirection.ASC,
-    [searchParams]
-  )
-  // Use comma-separated single param for type filter
-  const typeFilter = useMemo(() => {
-    const val = searchParams.get('type')
-    return val ? val.split(',').filter(Boolean) : []
-  }, [searchParams])
-
-  // Handlers update URL only
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (!value) {
-        params.delete('q')
-      } else {
-        params.set('q', value)
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
-
-  const handleSortKeyChange = useCallback(
-    (key: string) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (key === 'id') {
-        params.delete('sort')
-      } else {
-        params.set('sort', key)
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
-
-  const handleSortDirectionChange = useCallback(
-    (dir: SortDirection) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (dir === SortDirection.ASC) {
-        params.delete('dir')
-      } else {
-        params.set('dir', dir)
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
-
-  // Store as comma-separated single param
-  const handleTypeFilterChange = useCallback(
-    (values: string[]) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (values.length === 0) {
-        params.delete('type')
-      } else {
-        params.set('type', values.join(','))
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  const [search, setSearch] = useState('')
+  const [sortKey, setSortKey] = useState('id')
+  const [sortDirection, setSortDirection] = useState(SortDirection.ASC)
+  const [typeFilter, setTypeFilter] = useState<string[]>([])
 
   const sortOptions: SortOption<string>[] = [
     { label: 'Dex Id', value: 'id' },
@@ -99,7 +33,12 @@ export default function SpeciesCardGrid({
   ]
 
   const options: FilterOption[] = Object.entries(TypeKey).map(
-    ([key, value]) => ({ label: key, value })
+    ([key, value]) => {
+      return {
+        label: key,
+        value: value,
+      }
+    }
   )
 
   const filters: FilterConfig[] = useMemo(
@@ -108,10 +47,10 @@ export default function SpeciesCardGrid({
         label: 'Type',
         options,
         values: typeFilter,
-        onChange: handleTypeFilterChange,
+        onChange: setTypeFilter,
       },
     ],
-    [typeFilter, options, handleTypeFilterChange]
+    [typeFilter, options]
   )
 
   const filteredData = useMemo(() => {
@@ -139,6 +78,7 @@ export default function SpeciesCardGrid({
         if (bValue == null) return -1
         if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
         if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+        // Default to order by id
         return a.id < b.id ? -1 : 1
       })
     }
@@ -149,15 +89,15 @@ export default function SpeciesCardGrid({
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
-        <SearchBar value={search} onChangeAction={handleSearchChange} />
+        <SearchBar value={search} onChangeAction={setSearch} />
         <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row lg:w-fit">
           <FilterBar filters={filters} />
           <SortBar
             sortKey={sortKey}
             sortDirection={sortDirection}
             sortKeys={sortOptions}
-            onSortKeyChangeAction={handleSortKeyChange}
-            onSortDirectionChangeAction={handleSortDirectionChange}
+            onSortKeyChangeAction={setSortKey}
+            onSortDirectionChangeAction={setSortDirection}
           />
         </div>
       </div>

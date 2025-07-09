@@ -1,8 +1,7 @@
 'use client'
 
-import { useMemo, useCallback } from 'react'
+import { useMemo, useState } from 'react'
 import Fuse from 'fuse.js'
-import { useRouter, useSearchParams } from 'next/navigation'
 import CardGrid from '@/components/compounds/CardGrid'
 import InfoCard, { type InfoCardProps } from '@/components/compounds/InfoCard'
 import SearchBar from '@/components/shared/SearchBar'
@@ -16,25 +15,7 @@ export default function InfoCardGrid({
   itemsPerPage?: number
   className?: string
 }) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  // Derive search from URL param
-  const search = useMemo(() => searchParams.get('q') ?? '', [searchParams])
-
-  // Handler updates URL only
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (!value) {
-        params.delete('q')
-      } else {
-        params.set('q', value)
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  const [search, setSearch] = useState('')
 
   const filteredData = useMemo(() => {
     if (!search) return data
@@ -49,7 +30,7 @@ export default function InfoCardGrid({
 
   return (
     <div className="flex flex-col gap-8">
-      <SearchBar value={search} onChangeAction={handleSearchChange} />
+      <SearchBar value={search} onChangeAction={setSearch} />
       <CardGrid
         data={filteredData}
         renderCardAction={(props: InfoCardProps) => <InfoCard props={props} />}
