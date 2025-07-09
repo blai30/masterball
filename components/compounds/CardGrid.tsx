@@ -65,6 +65,9 @@ export default function CardGrid<T>({
     [router, searchParams]
   )
 
+  const getKey = useCallback(getKeyAction, [])
+  const renderCard = useCallback(renderCardAction, [])
+
   return (
     <div className="xs:gap-8 flex flex-col gap-4">
       <div className="xs:gap-8 flex flex-col gap-4">
@@ -81,8 +84,8 @@ export default function CardGrid<T>({
             />
             <ul className={className}>
               {paginatedItems.map((item) => (
-                <li key={getKeyAction(item)} className="col-span-1">
-                  {renderCardAction(item)}
+                <li key={getKey(item)} className="col-span-1">
+                  {renderCard(item)}
                 </li>
               ))}
             </ul>

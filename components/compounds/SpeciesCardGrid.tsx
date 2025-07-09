@@ -74,22 +74,23 @@ export default function SpeciesCardGrid({
     }
   )
 
-  const filters: FilterConfig[] = [
-    {
-      label: 'Type',
-      options,
-      values: typeFilter,
-      onChange: setTypeFilter,
-    },
-  ]
+  const filters: FilterConfig[] = useMemo(
+    () => [
+      {
+        label: 'Type',
+        options,
+        values: typeFilter,
+        onChange: setTypeFilter,
+      },
+    ],
+    [typeFilter, options]
+  )
 
   const filteredData = useMemo(() => {
     let filtered = data.filter(
       (monster) =>
         typeFilter.length === 0 ||
-        typeFilter.every((t) =>
-          monster.types.includes(t as (typeof monster.types)[number])
-        )
+        typeFilter.every((t) => monster.types.includes(t as TypeKey))
     )
 
     if (search) {

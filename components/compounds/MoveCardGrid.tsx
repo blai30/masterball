@@ -6,10 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
-import FilterBar, {
-  FilterOption,
-  type FilterConfig,
-} from '@/components/shared/FilterBar'
+import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, {
   SortDirection,
@@ -59,24 +56,33 @@ export default function MoveCardGrid({
     [router, searchParams]
   )
 
-  const types: FilterOption[] = Object.entries(TypeKey).map(([key, value]) => {
-    return {
-      label: key,
-      value: value,
-    }
-  })
-  const damageClasses: FilterOption[] = Object.entries(DamageClassKey).map(
-    ([key, value]) => {
-      return {
+  const types = useMemo(
+    () =>
+      Object.entries(TypeKey).map(([key, value]) => ({
         label: key,
-        value: value,
-      }
-    }
+        value,
+      })),
+    []
+  )
+  const damageClasses = useMemo(
+    () =>
+      Object.entries(DamageClassKey).map(([key, value]) => ({
+        label: key,
+        value,
+      })),
+    []
   )
 
   // Multi-select state for filters
   const [typeFilter, setTypeFilter] = useState<string[]>([])
   const [damageClassFilter, setDamageClassFilter] = useState<string[]>([])
+
+  // Memoize Sets for fast lookup
+  const typeFilterSet = useMemo(() => new Set(typeFilter), [typeFilter])
+  const damageClassFilterSet = useMemo(
+    () => new Set(damageClassFilter),
+    [damageClassFilter]
+  )
 
   // Sorting state
   const sortKeyOptions: SortOption<string>[] = [
@@ -90,28 +96,30 @@ export default function MoveCardGrid({
   const [sortKey, setSortKey] = useState('name')
   const [sortDirection, setSortDirection] = useState(SortDirection.ASC)
 
-  const filters: FilterConfig[] = [
-    {
-      label: 'Type',
-      options: types,
-      values: typeFilter,
-      onChange: setTypeFilter,
-    },
-    {
-      label: 'Class',
-      options: damageClasses,
-      values: damageClassFilter,
-      onChange: setDamageClassFilter,
-    },
-  ]
+  const filters: FilterConfig[] = useMemo(
+    () => [
+      {
+        label: 'Type',
+        options: types,
+        values: typeFilter,
+        onChange: setTypeFilter,
+      },
+      {
+        label: 'Class',
+        options: damageClasses,
+        values: damageClassFilter,
+        onChange: setDamageClassFilter,
+      },
+    ],
+    [types, damageClasses, typeFilter, damageClassFilter]
+  )
 
   const filteredData = useMemo(() => {
     let filtered = data.filter((move) => {
-      const typeMatch =
-        typeFilter.length === 0 || typeFilter.includes(move.type)
+      const typeMatch = typeFilterSet.size === 0 || typeFilterSet.has(move.type)
       const classMatch =
-        damageClassFilter.length === 0 ||
-        damageClassFilter.includes(move.damageClass)
+        damageClassFilterSet.size === 0 ||
+        damageClassFilterSet.has(move.damageClass)
       return typeMatch && classMatch
     })
 
@@ -126,7 +134,6 @@ export default function MoveCardGrid({
 
     if (sortKey) {
       return [...filtered].sort((a, b) => {
-        // Use a type-safe lookup for MoveCardProps
         const aValue = a[sortKey as keyof MoveCardProps]
         const bValue = b[sortKey as keyof MoveCardProps]
         if (aValue == null && bValue == null) return 0
@@ -150,7 +157,14 @@ export default function MoveCardGrid({
     }
 
     return filtered
-  }, [data, typeFilter, damageClassFilter, search, sortKey, sortDirection])
+  }, [
+    data,
+    typeFilterSet,
+    damageClassFilterSet,
+    search,
+    sortKey,
+    sortDirection,
+  ])
 
   return (
     <div className="flex flex-col gap-8">
@@ -161,7 +175,7 @@ export default function MoveCardGrid({
           <SortBar
             sortKey={sortKey}
             sortDirection={sortDirection}
-            sortKeys={[...sortKeyOptions]}
+            sortKeys={sortKeyOptions}
             onSortKeyChangeAction={setSortKey}
             onSortDirectionChangeAction={setSortDirection}
           />
@@ -169,7 +183,7 @@ export default function MoveCardGrid({
       </div>
       <CardGrid
         data={filteredData}
-        renderCardAction={(props) => <MoveCard props={props} />}
+        renderCardAction={(props: MoveCardProps) => <MoveCard props={props} />}
         getKeyAction={(item) => item.id}
         itemsPerPage={itemsPerPage}
         className={
