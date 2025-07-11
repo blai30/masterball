@@ -11,18 +11,6 @@ import SearchBar from '@/components/shared/SearchBar'
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 48
 
-/**
- * Returns initial UI state from URL params for grid controls.
- */
-function getInitialState(searchParams: URLSearchParams) {
-  return {
-    search: searchParams.get('q') ?? '',
-    currentPage:
-      parseInt(searchParams.get('p') ?? String(DEFAULT_PAGE), 10) ||
-      DEFAULT_PAGE,
-  }
-}
-
 export default function InfoCardGrid({
   data,
   itemsPerPage = ITEMS_PER_PAGE,
@@ -35,12 +23,10 @@ export default function InfoCardGrid({
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const initialState = useMemo(
-    () => getInitialState(searchParams),
-    [searchParams]
+  const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
+  const [currentPage, setCurrentPage] = useState(
+    () => Number(searchParams.get('p')) || DEFAULT_PAGE
   )
-  const [search, setSearch] = useState(initialState.search)
-  const [currentPage, setCurrentPage] = useState(initialState.currentPage)
 
   // Debounced URL sync (UI is source of truth)
   const syncUrlParams = useDebouncedCallback((query: string, page: number) => {
@@ -48,7 +34,7 @@ export default function InfoCardGrid({
     if (query) params.set('q', query)
     if (page !== DEFAULT_PAGE) params.set('p', String(page))
     router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-  }, 400)
+  }, 500)
 
   // Sync all state to URL on change
   useEffect(() => {

@@ -24,20 +24,6 @@ const DEFAULT_SORT_DIRECTION = SortDirection.ASC
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 60
 
-/**
- * Returns initial UI state from URL params for grid controls.
- */
-function getInitialState(searchParams: URLSearchParams) {
-  return {
-    search: searchParams.get('q') ?? '',
-    sortKey: searchParams.get('sort') ?? DEFAULT_SORT_KEY,
-    sortDirection:
-      (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION,
-    typeFilter: searchParams.get('type')?.split(',').filter(Boolean) ?? [],
-    currentPage: Number(searchParams.get('p')) || DEFAULT_PAGE,
-  }
-}
-
 export default function SpeciesCardGrid({
   data,
 }: {
@@ -59,33 +45,42 @@ export default function SpeciesCardGrid({
     []
   )
 
-  const initialState = useMemo(
-    () => getInitialState(searchParams),
-    [searchParams]
+  const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
+  const [sortKey, setSortKey] = useState(
+    () => searchParams.get('sort') ?? DEFAULT_SORT_KEY
   )
-  const [search, setSearch] = useState(initialState.search)
-  const [sortKey, setSortKey] = useState(initialState.sortKey)
   const [sortDirection, setSortDirection] = useState<SortDirection>(
-    initialState.sortDirection
+    () => (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION
   )
   const [typeFilter, setTypeFilter] = useState<string[]>(
-    initialState.typeFilter
+    () => searchParams.get('type')?.split(',').filter(Boolean) ?? []
   )
-  const [currentPage, setCurrentPage] = useState(initialState.currentPage)
+  const [currentPage, setCurrentPage] = useState(
+    () => Number(searchParams.get('p')) || DEFAULT_PAGE
+  )
 
   // Debounced URL sync
-  const syncUrl = useDebouncedCallback((state) => {
-    const params = new URLSearchParams()
-    if (state.search) params.set('q', state.search)
-    if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
-    if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
-      params.set('dir', state.sortDirection)
-    if (state.typeFilter.length > 0)
-      params.set('type', state.typeFilter.join(','))
-    if (state.currentPage !== DEFAULT_PAGE)
-      params.set('p', String(state.currentPage))
-    router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-  }, 400)
+  const syncUrl = useDebouncedCallback(
+    (state: {
+      search: string
+      sortKey: string
+      sortDirection: SortDirection
+      typeFilter: string[]
+      currentPage: number
+    }) => {
+      const params = new URLSearchParams()
+      if (state.search) params.set('q', state.search)
+      if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
+      if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
+        params.set('dir', state.sortDirection)
+      if (state.typeFilter.length > 0)
+        params.set('type', state.typeFilter.join(','))
+      if (state.currentPage !== DEFAULT_PAGE)
+        params.set('p', String(state.currentPage))
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    500
+  )
 
   // Sync all state to URL on change
   useEffect(() => {

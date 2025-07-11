@@ -20,22 +20,6 @@ const DEFAULT_SORT_DIRECTION = SortDirection.ASC
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 36
 
-/**
- * Returns initial UI state from URL params for grid controls.
- */
-function getInitialState(searchParams: URLSearchParams) {
-  return {
-    search: searchParams.get('q') ?? '',
-    sortKey: searchParams.get('sort') ?? DEFAULT_SORT_KEY,
-    sortDirection:
-      (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION,
-    typeFilter: searchParams.get('type')?.split(',').filter(Boolean) ?? [],
-    damageClassFilter:
-      searchParams.get('class')?.split(',').filter(Boolean) ?? [],
-    currentPage: Number(searchParams.get('p')) || DEFAULT_PAGE,
-  }
-}
-
 export default function MoveCardGrid({
   data,
   itemsPerPage = ITEMS_PER_PAGE,
@@ -48,7 +32,7 @@ export default function MoveCardGrid({
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const sortKeyOptions: SortOption<string>[] = useMemo(
+  const sortOptions: SortOption<string>[] = useMemo(
     () => [
       { label: 'Name', value: 'name' },
       { label: 'Type', value: 'type' },
@@ -59,12 +43,12 @@ export default function MoveCardGrid({
     ],
     []
   )
-  const typeOptions: FilterOption[] = useMemo(
+  const typeFilters: FilterOption[] = useMemo(
     () =>
       Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
     []
   )
-  const damageClassOptions: FilterOption[] = useMemo(
+  const damageClassFilters: FilterOption[] = useMemo(
     () =>
       Object.entries(DamageClassKey).map(([key, value]) => ({
         label: key,
@@ -73,38 +57,48 @@ export default function MoveCardGrid({
     []
   )
 
-  const initialState = useMemo(
-    () => getInitialState(searchParams),
-    [searchParams]
+  const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
+  const [sortKey, setSortKey] = useState(
+    () => searchParams.get('sort') ?? DEFAULT_SORT_KEY
   )
-  const [search, setSearch] = useState(initialState.search)
-  const [sortKey, setSortKey] = useState(initialState.sortKey)
   const [sortDirection, setSortDirection] = useState<SortDirection>(
-    initialState.sortDirection
+    () => (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION
   )
   const [typeFilter, setTypeFilter] = useState<string[]>(
-    initialState.typeFilter
+    () => searchParams.get('type')?.split(',').filter(Boolean) ?? []
   )
   const [damageClassFilter, setDamageClassFilter] = useState<string[]>(
-    initialState.damageClassFilter
+    () => searchParams.get('class')?.split(',').filter(Boolean) ?? []
   )
-  const [currentPage, setCurrentPage] = useState(initialState.currentPage)
+  const [currentPage, setCurrentPage] = useState(
+    () => Number(searchParams.get('p')) || DEFAULT_PAGE
+  )
 
   // Debounced URL sync
-  const syncUrlParams = useDebouncedCallback((state) => {
-    const params = new URLSearchParams()
-    if (state.search) params.set('q', state.search)
-    if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
-    if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
-      params.set('dir', state.sortDirection)
-    if (state.typeFilter.length > 0)
-      params.set('type', state.typeFilter.join(','))
-    if (state.damageClassFilter.length > 0)
-      params.set('class', state.damageClassFilter.join(','))
-    if (state.currentPage !== DEFAULT_PAGE)
-      params.set('p', String(state.currentPage))
-    router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-  }, 400)
+  const syncUrlParams = useDebouncedCallback(
+    (state: {
+      search: string
+      sortKey: string
+      sortDirection: SortDirection
+      typeFilter: string[]
+      damageClassFilter: string[]
+      currentPage: number
+    }) => {
+      const params = new URLSearchParams()
+      if (state.search) params.set('q', state.search)
+      if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
+      if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
+        params.set('dir', state.sortDirection)
+      if (state.typeFilter.length > 0)
+        params.set('type', state.typeFilter.join(','))
+      if (state.damageClassFilter.length > 0)
+        params.set('class', state.damageClassFilter.join(','))
+      if (state.currentPage !== DEFAULT_PAGE)
+        params.set('p', String(state.currentPage))
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    500
+  )
 
   // Sync all state to URL on change
   useEffect(() => {
@@ -155,23 +149,23 @@ export default function MoveCardGrid({
     () => [
       {
         label: 'Type',
-        options: typeOptions,
+        options: typeFilters,
         values: typeFilter,
         onChange: handleTypeFilterChange,
       },
       {
         label: 'Class',
-        options: damageClassOptions,
+        options: damageClassFilters,
         values: damageClassFilter,
         onChange: handleDamageClassFilterChange,
       },
     ],
     [
       typeFilter,
-      typeOptions,
+      typeFilters,
       handleTypeFilterChange,
       damageClassFilter,
-      damageClassOptions,
+      damageClassFilters,
       handleDamageClassFilterChange,
     ]
   )
@@ -225,7 +219,7 @@ export default function MoveCardGrid({
           <SortBar
             sortKey={sortKey}
             sortDirection={sortDirection}
-            sortKeys={sortKeyOptions}
+            sortKeys={sortOptions}
             onSortKeyChangeAction={handleSortKeyChange}
             onSortDirectionChangeAction={handleSortDirectionChange}
           />
