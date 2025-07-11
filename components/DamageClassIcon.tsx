@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { clsx } from 'clsx/lite'
 import { cva } from 'cva'
 import { DamageClassLabels, DamageClassKey } from '@/lib/utils/pokeapiHelpers'
@@ -23,12 +22,10 @@ const variants = cva({
 export default function DamageClassIcon({
   variant,
   size = 'large',
-  link = true,
   className,
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
-  link?: boolean
   className?: string
 }) {
   const name = DamageClassLabels[variant as DamageClassKey]
@@ -39,12 +36,8 @@ export default function DamageClassIcon({
     large: 32,
   }
 
-  const Wrapper: React.ElementType = link ? Link : 'div'
-  const wrapperProps = link ? { href: `/damage-class/${variant}` } : {}
-
   return (
-    <Wrapper
-      {...wrapperProps}
+    <div
       title={name}
       className={clsx(
         'relative',
@@ -52,8 +45,6 @@ export default function DamageClassIcon({
           variant: variant as DamageClassKey,
           size,
         }),
-        link &&
-          'transition-(--tw-brightness) hover:brightness-125 hover:duration-0',
         className
       )}
     >
@@ -70,6 +61,6 @@ export default function DamageClassIcon({
         height={dimensions[size]}
         className="absolute object-contain p-0.5"
       />
-    </Wrapper>
+    </div>
   )
 }

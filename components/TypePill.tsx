@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import clsx from 'clsx/lite'
 import { cva } from 'cva'
 import { TypeLabels, TypeKey } from '@/lib/utils/pokeapiHelpers'
@@ -38,12 +37,10 @@ const variants = cva({
 export default function TypePill({
   variant,
   size = 'large',
-  link = true,
   className,
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
-  link?: boolean
   className?: string
 }) {
   const name = TypeLabels[variant as TypeKey]
@@ -54,16 +51,10 @@ export default function TypePill({
     large: 28,
   }
 
-  const Wrapper: React.ElementType = link ? Link : 'div'
-  const wrapperProps = link ? { href: `/type/${variant}` } : {}
-
   return (
-    <Wrapper
-      {...wrapperProps}
+    <div
       className={clsx(
         variants({ size }),
-        link &&
-          'transition-colors hover:bg-zinc-300 hover:duration-0 dark:hover:bg-zinc-700',
         'bg-zinc-200 dark:bg-zinc-800',
         className
       )}
@@ -81,6 +72,6 @@ export default function TypePill({
       <p className="items-center text-black uppercase dark:text-white">
         {name}
       </p>
-    </Wrapper>
+    </div>
   )
 }
