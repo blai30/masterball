@@ -1,8 +1,8 @@
 'use client'
 
-import { useCallback, useMemo } from 'react'
-import Fuse from 'fuse.js'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useDebouncedCallback } from 'use-debounce'
 import { TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import SearchBar from '@/components/shared/SearchBar'
@@ -17,6 +17,23 @@ import FilterBar, {
   type FilterOption,
   type FilterConfig,
 } from '@/components/shared/FilterBar'
+import Fuse from 'fuse.js'
+
+const DEFAULT_SORT_KEY = 'id'
+const DEFAULT_SORT_DIRECTION = SortDirection.ASC
+const DEFAULT_PAGE = 1
+const ITEMS_PER_PAGE = 60
+
+function getInitialState(searchParams: URLSearchParams) {
+  return {
+    search: searchParams.get('q') ?? '',
+    sortKey: searchParams.get('sort') ?? DEFAULT_SORT_KEY,
+    sortDirection:
+      (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION,
+    typeFilter: searchParams.get('type')?.split(',').filter(Boolean) ?? [],
+    currentPage: Number(searchParams.get('p')) || DEFAULT_PAGE,
+  }
+}
 
 export default function SpeciesCardGrid({
   data,
@@ -25,81 +42,83 @@ export default function SpeciesCardGrid({
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const initialized = useRef(false)
 
-  // Derive search, sort, and filter state from URL params
-  const search = useMemo(() => searchParams.get('q') ?? '', [searchParams])
-  const sortKey = useMemo(() => searchParams.get('sort') ?? 'id', [searchParams])
-  const sortDirection = useMemo(
-    () => (searchParams.get('dir') as SortDirection) ?? SortDirection.ASC,
-    [searchParams]
+  // Local state for all controls
+  const [search, setSearch] = useState('')
+  const [sortKey, setSortKey] = useState(DEFAULT_SORT_KEY)
+  const [sortDirection, setSortDirection] = useState<SortDirection>(
+    DEFAULT_SORT_DIRECTION
   )
-  // Use comma-separated single param for type filter
-  const typeFilter = useMemo(() => {
-    const val = searchParams.get('type')
-    return val ? val.split(',').filter(Boolean) : []
+  const [typeFilter, setTypeFilter] = useState<string[]>([])
+  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE)
+
+  // On first mount, initialize from URL params
+  useEffect(() => {
+    if (!initialized.current) {
+      const initial = getInitialState(searchParams)
+      setSearch(initial.search)
+      setSortKey(initial.sortKey)
+      setSortDirection(initial.sortDirection)
+      setTypeFilter(initial.typeFilter)
+      setCurrentPage(initial.currentPage)
+      initialized.current = true
+    }
   }, [searchParams])
 
-  // Handlers update URL only
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (!value) {
-        params.delete('q')
-      } else {
-        params.set('q', value)
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  // Debounced URL sync
+  const syncUrl = useDebouncedCallback((state) => {
+    const params = new URLSearchParams()
+    if (state.search) params.set('q', state.search)
+    if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
+    if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
+      params.set('dir', state.sortDirection)
+    if (state.typeFilter.length > 0)
+      params.set('type', state.typeFilter.join(','))
+    if (state.currentPage !== DEFAULT_PAGE)
+      params.set('p', String(state.currentPage))
+    router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+  }, 400)
 
-  const handleSortKeyChange = useCallback(
-    (key: string) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (key === 'id') {
-        params.delete('sort')
-      } else {
-        params.set('sort', key)
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  // Sync all state to URL on change
+  useEffect(() => {
+    if (!initialized.current) return
+    syncUrl({ search, sortKey, sortDirection, typeFilter, currentPage })
+  }, [search, sortKey, sortDirection, typeFilter, currentPage, syncUrl])
 
-  const handleSortDirectionChange = useCallback(
-    (dir: SortDirection) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (dir === SortDirection.ASC) {
-        params.delete('dir')
-      } else {
-        params.set('dir', dir)
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
 
-  // Store as comma-separated single param
-  const handleTypeFilterChange = useCallback(
-    (values: string[]) => {
-      const params = new URLSearchParams(Array.from(searchParams.entries()))
-      if (values.length === 0) {
-        params.delete('type')
-      } else {
-        params.set('type', values.join(','))
-      }
-      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-    },
-    [router, searchParams]
-  )
+  const handleSortKeyChange = useCallback((key: string) => {
+    setSortKey(key)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
+
+  const handleSortDirectionChange = useCallback((dir: SortDirection) => {
+    setSortDirection(dir)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
+
+  const handleTypeFilterChange = useCallback((values: string[]) => {
+    setTypeFilter(values)
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page)
+  }, [])
 
   const sortOptions: SortOption<string>[] = [
     { label: 'Dex Id', value: 'id' },
     { label: 'Name', value: 'name' },
   ]
 
-  const options: FilterOption[] = Object.entries(TypeKey).map(
-    ([key, value]) => ({ label: key, value })
+  const options: FilterOption[] = useMemo(
+    () =>
+      Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
+    []
   )
 
   const filters: FilterConfig[] = useMemo(
@@ -122,12 +141,14 @@ export default function SpeciesCardGrid({
     )
 
     if (search) {
-      const fuse = new Fuse<MonsterCardProps>(filtered, {
+      const fuse = new Fuse(filtered, {
         keys: ['id', 'name'],
         threshold: 0.4,
         ignoreLocation: true,
       })
-      filtered = fuse.search(search).map((r) => r.item)
+      filtered = fuse
+        .search(search)
+        .map((r: { item: MonsterCardProps }) => r.item)
     }
 
     if (sortKey) {
@@ -165,6 +186,9 @@ export default function SpeciesCardGrid({
         data={filteredData}
         renderCardAction={(data) => <MonsterCard props={data} />}
         getKeyAction={(item) => item.id}
+        currentPage={currentPage}
+        onPageChangeAction={handlePageChange}
+        itemsPerPage={ITEMS_PER_PAGE}
         className="2xs:grid-cols-3 xs:grid-cols-3 grid w-full grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10"
       />
     </div>
