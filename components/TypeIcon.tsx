@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import clsx from 'clsx/lite'
 import { cva } from 'cva'
 import { TypeLabels, TypeKey } from '@/lib/utils/pokeapiHelpers'
@@ -38,12 +37,10 @@ const variants = cva({
 export default function TypeIcon({
   variant,
   size = 'large',
-  link = true,
   className,
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
-  link?: boolean
   className?: string
 }) {
   const name = TypeLabels[variant as TypeKey]
@@ -54,18 +51,12 @@ export default function TypeIcon({
     large: 32,
   }
 
-  const Wrapper: React.ElementType = link ? Link : 'div'
-  const wrapperProps = link ? { href: `/type/${variant}` } : {}
-
   return (
-    <Wrapper
-      {...wrapperProps}
+    <div
       title={name}
       className={clsx(
         'relative',
         variants({ variant: variant as TypeKey, size }),
-        link &&
-          'transition-(--tw-brightness) hover:brightness-125 hover:duration-0',
         className
       )}
     >
@@ -76,6 +67,6 @@ export default function TypeIcon({
         height={dimensions[size]}
         className="absolute object-contain"
       />
-    </Wrapper>
+    </div>
   )
 }

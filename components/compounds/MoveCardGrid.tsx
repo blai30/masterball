@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
@@ -13,24 +13,12 @@ import SortBar, {
   SortDirection,
   type SortOption,
 } from '@/components/shared/SortBar'
+import { type FilterOption } from '@/components/shared/FilterBar'
 
 const DEFAULT_SORT_KEY = 'name'
 const DEFAULT_SORT_DIRECTION = SortDirection.ASC
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 36
-
-function getInitialState(searchParams: URLSearchParams) {
-  return {
-    search: searchParams.get('q') ?? '',
-    sortKey: searchParams.get('sort') ?? DEFAULT_SORT_KEY,
-    sortDirection:
-      (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION,
-    typeFilter: searchParams.get('type')?.split(',').filter(Boolean) ?? [],
-    damageClassFilter:
-      searchParams.get('class')?.split(',').filter(Boolean) ?? [],
-    currentPage: Number(searchParams.get('p')) || DEFAULT_PAGE,
-  }
-}
 
 export default function MoveCardGrid({
   data,
@@ -43,52 +31,78 @@ export default function MoveCardGrid({
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const initialized = useRef(false)
 
-  // Local state for all controls
-  const [search, setSearch] = useState('')
-  const [sortKey, setSortKey] = useState(DEFAULT_SORT_KEY)
-  const [sortDirection, setSortDirection] = useState<SortDirection>(
-    DEFAULT_SORT_DIRECTION
+  const sortOptions: SortOption<string>[] = useMemo(
+    () => [
+      { label: 'Name', value: 'name' },
+      { label: 'Type', value: 'type' },
+      { label: 'Class', value: 'damageClass' },
+      { label: 'Power', value: 'power' },
+      { label: 'Accuracy', value: 'accuracy' },
+      { label: 'PP', value: 'pp' },
+    ],
+    []
   )
-  const [typeFilter, setTypeFilter] = useState<string[]>([])
-  const [damageClassFilter, setDamageClassFilter] = useState<string[]>([])
-  const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE)
+  const typeFilters: FilterOption[] = useMemo(
+    () =>
+      Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
+    []
+  )
+  const damageClassFilters: FilterOption[] = useMemo(
+    () =>
+      Object.entries(DamageClassKey).map(([key, value]) => ({
+        label: key,
+        value,
+      })),
+    []
+  )
 
-  // On first mount, initialize from URL params
-  useEffect(() => {
-    if (!initialized.current) {
-      const initial = getInitialState(searchParams)
-      setSearch(initial.search)
-      setSortKey(initial.sortKey)
-      setSortDirection(initial.sortDirection)
-      setTypeFilter(initial.typeFilter)
-      setDamageClassFilter(initial.damageClassFilter)
-      setCurrentPage(initial.currentPage)
-      initialized.current = true
-    }
-  }, [searchParams])
+  const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
+  const [sortKey, setSortKey] = useState(
+    () => searchParams.get('sort') ?? DEFAULT_SORT_KEY
+  )
+  const [sortDirection, setSortDirection] = useState<SortDirection>(
+    () => (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION
+  )
+  const [typeFilter, setTypeFilter] = useState<string[]>(
+    () => searchParams.get('type')?.split(',').filter(Boolean) ?? []
+  )
+  const [damageClassFilter, setDamageClassFilter] = useState<string[]>(
+    () => searchParams.get('class')?.split(',').filter(Boolean) ?? []
+  )
+  const [currentPage, setCurrentPage] = useState(
+    () => Number(searchParams.get('p')) || DEFAULT_PAGE
+  )
 
   // Debounced URL sync
-  const syncUrl = useDebouncedCallback((state) => {
-    const params = new URLSearchParams()
-    if (state.search) params.set('q', state.search)
-    if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
-    if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
-      params.set('dir', state.sortDirection)
-    if (state.typeFilter.length > 0)
-      params.set('type', state.typeFilter.join(','))
-    if (state.damageClassFilter.length > 0)
-      params.set('class', state.damageClassFilter.join(','))
-    if (state.currentPage !== DEFAULT_PAGE)
-      params.set('p', String(state.currentPage))
-    router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
-  }, 400)
+  const syncUrlParams = useDebouncedCallback(
+    (state: {
+      search: string
+      sortKey: string
+      sortDirection: SortDirection
+      typeFilter: string[]
+      damageClassFilter: string[]
+      currentPage: number
+    }) => {
+      const params = new URLSearchParams()
+      if (state.search) params.set('q', state.search)
+      if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
+      if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
+        params.set('dir', state.sortDirection)
+      if (state.typeFilter.length > 0)
+        params.set('type', state.typeFilter.join(','))
+      if (state.damageClassFilter.length > 0)
+        params.set('class', state.damageClassFilter.join(','))
+      if (state.currentPage !== DEFAULT_PAGE)
+        params.set('p', String(state.currentPage))
+      router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
+    },
+    500
+  )
 
   // Sync all state to URL on change
   useEffect(() => {
-    if (!initialized.current) return
-    syncUrl({
+    syncUrlParams({
       search,
       sortKey,
       sortDirection,
@@ -103,102 +117,71 @@ export default function MoveCardGrid({
     typeFilter,
     damageClassFilter,
     currentPage,
-    syncUrl,
+    syncUrlParams,
   ])
 
+  // Handlers
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
-
   const handleSortKeyChange = useCallback((key: string) => {
     setSortKey(key)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
-
   const handleSortDirectionChange = useCallback((dir: SortDirection) => {
     setSortDirection(dir)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
-
   const handleTypeFilterChange = useCallback((values: string[]) => {
     setTypeFilter(values)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
-
   const handleDamageClassFilterChange = useCallback((values: string[]) => {
     setDamageClassFilter(values)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
-
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page)
   }, [])
-
-  const types = useMemo(
-    () =>
-      Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
-    []
-  )
-
-  const damageClasses = useMemo(
-    () =>
-      Object.entries(DamageClassKey).map(([key, value]) => ({
-        label: key,
-        value,
-      })),
-    []
-  )
-
-  const sortKeyOptions: SortOption<string>[] = [
-    { label: 'Name', value: 'name' },
-    { label: 'Type', value: 'type' },
-    { label: 'Class', value: 'damageClass' },
-    { label: 'Power', value: 'power' },
-    { label: 'Accuracy', value: 'accuracy' },
-    { label: 'PP', value: 'pp' },
-  ]
 
   const filters: FilterConfig[] = useMemo(
     () => [
       {
         label: 'Type',
-        options: types,
+        options: typeFilters,
         values: typeFilter,
         onChange: handleTypeFilterChange,
       },
       {
         label: 'Class',
-        options: damageClasses,
+        options: damageClassFilters,
         values: damageClassFilter,
         onChange: handleDamageClassFilterChange,
       },
     ],
     [
-      types,
-      damageClasses,
       typeFilter,
-      damageClassFilter,
+      typeFilters,
       handleTypeFilterChange,
+      damageClassFilter,
+      damageClassFilters,
       handleDamageClassFilterChange,
     ]
   )
 
-  const typeFilterSet = useMemo(() => new Set(typeFilter), [typeFilter])
-  const damageClassFilterSet = useMemo(
-    () => new Set(damageClassFilter),
-    [damageClassFilter]
-  )
-
+  /**
+   * Returns filtered and sorted data for grid display.
+   */
   const filteredData = useMemo(() => {
     let filtered = data.filter((move) => {
-      const typeMatch = typeFilterSet.size === 0 || typeFilterSet.has(move.type)
+      const typeMatch =
+        typeFilter.length === 0 || typeFilter.includes(move.type)
       const classMatch =
-        damageClassFilterSet.size === 0 ||
-        damageClassFilterSet.has(move.damageClass)
+        damageClassFilter.length === 0 ||
+        damageClassFilter.includes(move.damageClass)
       return typeMatch && classMatch
     })
-
     if (search) {
       const fuse = new Fuse(filtered, {
         keys: ['name'],
@@ -207,7 +190,6 @@ export default function MoveCardGrid({
       })
       filtered = fuse.search(search).map((r: { item: MoveCardProps }) => r.item)
     }
-
     if (sortKey) {
       filtered = [...filtered].sort((a, b) => {
         const aValue = a[sortKey as keyof MoveCardProps]
@@ -218,25 +200,15 @@ export default function MoveCardGrid({
         if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
         if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
         // Fallback: if both have a 'name' property, use it as tiebreaker
-        const aObj = a as { name?: string }
-        const bObj = b as { name?: string }
-        if (aObj.name && bObj.name) {
-          if (aObj.name < bObj.name) return sortDirection === 'asc' ? -1 : 1
-          if (aObj.name > bObj.name) return sortDirection === 'asc' ? 1 : -1
+        if (a.name && b.name) {
+          if (a.name < b.name) return sortDirection === 'asc' ? -1 : 1
+          if (a.name > b.name) return sortDirection === 'asc' ? 1 : -1
         }
         return 0
       })
     }
-
     return filtered
-  }, [
-    data,
-    typeFilterSet,
-    damageClassFilterSet,
-    search,
-    sortKey,
-    sortDirection,
-  ])
+  }, [data, typeFilter, damageClassFilter, search, sortKey, sortDirection])
 
   return (
     <div className="flex flex-col gap-8">
@@ -247,7 +219,7 @@ export default function MoveCardGrid({
           <SortBar
             sortKey={sortKey}
             sortDirection={sortDirection}
-            sortKeys={sortKeyOptions}
+            sortKeys={sortOptions}
             onSortKeyChangeAction={handleSortKeyChange}
             onSortDirectionChangeAction={handleSortDirectionChange}
           />

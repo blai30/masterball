@@ -13,9 +13,9 @@ import {
   SortingState,
 } from '@tanstack/react-table'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { LearnMethodKey, MoveRow } from '@/lib/utils/pokeapiHelpers'
+import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
-import TypePill from '@/components/TypePill'
+import TypeIcon from '@/components/TypeIcon'
 
 const tableNames = {
   [LearnMethodKey.LevelUp]: 'Level-Up',
@@ -35,12 +35,12 @@ const idColumnLabels = {
 
 const columnClasses: Record<string, string> = {
   id: 'w-16 justify-start text-left',
+  type: 'w-6',
   name: 'grow justify-start text-left',
-  damageClass: 'w-6 justify-start text-left',
-  type: 'w-20 justify-start text-left',
-  power: 'w-14 justify-end text-right',
+  damageClass: 'w-6',
+  power: 'w-6 justify-end text-right',
   accuracy: 'w-14 justify-end text-right',
-  pp: 'w-8 justify-end text-right',
+  pp: 'w-6 justify-end text-right',
 }
 
 function MovesTable({
@@ -73,14 +73,11 @@ function MovesTable({
           </p>
         ),
       }),
-      columnHelper.accessor('damageClass', {
+      columnHelper.accessor('type', {
         header: '',
         cell: (info) => (
           <div className="flex items-center justify-center gap-1">
-            <DamageClassIcon
-              variant={info.row.original.damageClass}
-              size="medium"
-            />
+            <TypeIcon variant={info.getValue()} size="medium" />
           </div>
         ),
       }),
@@ -98,15 +95,14 @@ function MovesTable({
           </div>
         ),
       }),
-      columnHelper.accessor('type', {
-        header: 'Type',
+      columnHelper.accessor('damageClass', {
+        header: '',
         cell: (info) => (
           <div className="flex items-center justify-center gap-1">
-            <TypePill variant={info.getValue()} size="medium" />
-            {/* <DamageClassIcon
+            <DamageClassIcon
               variant={info.row.original.damageClass}
               size="medium"
-            /> */}
+            />
           </div>
         ),
       }),

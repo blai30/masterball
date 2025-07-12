@@ -42,7 +42,6 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
       <TypePill
         variant={option.value as TypeKey}
         size="small"
-        link={false}
         className="flex-shrink-0"
       />
     ) : damageClassKeySet.has(option.value) ? (
@@ -50,7 +49,6 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
         <DamageClassIcon
           variant={option.value as DamageClassKey}
           size="small"
-          link={false}
           className="flex-shrink-0"
         />
         <span className="uppercase">{option.label}</span>

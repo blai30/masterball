@@ -49,15 +49,7 @@ export default function MoveCard({ props }: { props: MoveCardProps }) {
           cardClasses[props.damageClass as DamageClassKey]
         )}
       >
-        <div className="absolute right-0 bottom-0 size-32 opacity-5">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_BASEPATH}/${props.damageClass}.png`}
-            alt={props.damageClass}
-            width={128}
-            height={128}
-            className="size-full object-contain invert-100 dark:invert-0"
-          />
-        </div>
+        <div className="absolute right-0 bottom-0 size-32 opacity-5"></div>
       </div>
       <div className="flex h-full flex-col justify-between gap-4 rounded-xl p-4">
         <div className="flex flex-row items-start gap-4">
@@ -77,7 +69,21 @@ export default function MoveCard({ props }: { props: MoveCardProps }) {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
+          <div className="flex flex-col items-center">
+            <span className="w-full text-center text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              Class
+            </span>
+            <div className="h-full w-8">
+              <Image
+                src={`${process.env.NEXT_PUBLIC_BASEPATH}/${props.damageClass}.png`}
+                alt={props.damageClass}
+                width={128}
+                height={128}
+                className="size-full object-contain p-0.5 invert-100 dark:invert-0"
+              />
+            </div>
+          </div>
           <div className="flex flex-col items-baseline justify-between">
             <span className="w-full text-center text-xs font-medium text-zinc-500 dark:text-zinc-400">
               Power

@@ -39,7 +39,7 @@ export default function VariantCard({
           <ul className="flex flex-row gap-1">
             {types.map((type) => (
               <li key={type}>
-                <TypeIcon variant={type} size="small" link={false} />
+                <TypeIcon variant={type} size="small" />
               </li>
             ))}
           </ul>

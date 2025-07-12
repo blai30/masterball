@@ -46,7 +46,6 @@ export default async function MonsterPill({
                 key={type.type.name}
                 variant={type.type.name as TypeKey}
                 size="small"
-                link={false}
               />
             ))}
           </div>
