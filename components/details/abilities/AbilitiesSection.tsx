@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import pMap from 'p-map'
 import type { Ability, Pokemon } from 'pokedex-promise-v2'
 import { Sparkles } from 'lucide-react'

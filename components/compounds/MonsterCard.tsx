@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import { memo } from 'react'
 import { TypeKey } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'

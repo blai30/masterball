@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import { memo, useMemo, useState } from 'react'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'

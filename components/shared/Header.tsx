@@ -1,10 +1,10 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import { usePathname } from 'next/navigation'
 import { memo } from 'react'
-import clsx from 'clsx'
+import clsx from 'clsx/lite'
 import { Backpack, Cat, Shield, Swords } from 'lucide-react'
 import VersionGroupSelector from '@/components/shared/VersionGroupSelector'
 

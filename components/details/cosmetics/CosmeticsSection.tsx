@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import clsx from 'clsx'
+import clsx from 'clsx/lite'
 import type { Pokemon, PokemonForm } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
