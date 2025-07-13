@@ -46,7 +46,7 @@ export default function Pagination({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between text-sm/9">
+    <div className="flex items-center justify-between text-sm/9 gap-4">
       <button
         onClick={() => onPageChangeAction(currentPage - 1)}
         disabled={currentPage === 1}
@@ -117,7 +117,7 @@ export default function Pagination({
         >
           {Array.from({ length: totalPages }, (_, i) => (
             <option key={i + 1} value={i + 1}>
-              Page {i + 1}
+              {i + 1}
             </option>
           ))}
         </select>

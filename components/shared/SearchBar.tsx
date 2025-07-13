@@ -28,6 +28,7 @@ export default function SearchBar({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChangeAction(e.target.value)}
+        className="max-w-sm"
       />
     </InputGroup>
   )

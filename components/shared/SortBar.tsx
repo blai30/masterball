@@ -33,43 +33,34 @@ export default function SortBar<T extends string>({
   className,
 }: SortBarProps<T>) {
   return (
-    <div
-      className={clsx(
-        'flex flex-row items-center justify-center gap-2 lg:justify-end',
-        className
-      )}
-    >
-      <Field>
-        <Label className="sr-only">Sort by</Label>
-        <Listbox
-          name="sortKey"
-          value={sortKey}
-          onChange={onSortKeyChangeAction}
-          className="max-w-28 min-w-28"
-        >
-          {sortKeys.map((option) => (
-            <ListboxOption key={option.value} value={option.value}>
-              <ListboxLabel>{option.label}</ListboxLabel>
-            </ListboxOption>
-          ))}
-        </Listbox>
-      </Field>
-      <Field>
-        <Label className="sr-only">Sort direction</Label>
-        <Listbox
-          name="sortDirection"
-          value={sortDirection}
-          onChange={onSortDirectionChangeAction}
-          className="max-w-16 min-w-16"
-        >
-          <ListboxOption value="asc">
-            <ArrowUpNarrowWide className="p-0.5" />
+    <div className={clsx('flex gap-2', className)}>
+      <Listbox
+        name="sortKey"
+        aria-label="Sort by"
+        value={sortKey}
+        onChange={onSortKeyChangeAction}
+        className="max-w-28 min-w-28"
+      >
+        {sortKeys.map((option) => (
+          <ListboxOption key={option.value} value={option.value}>
+            <ListboxLabel>{option.label}</ListboxLabel>
           </ListboxOption>
-          <ListboxOption value="desc">
-            <ArrowDownWideNarrow className="p-0.5" />
-          </ListboxOption>
-        </Listbox>
-      </Field>
+        ))}
+      </Listbox>
+      <Listbox
+        name="sortDirection"
+        aria-label="Sort direction"
+        value={sortDirection}
+        onChange={onSortDirectionChangeAction}
+        className="max-w-16 min-w-16"
+      >
+        <ListboxOption value="asc">
+          <ArrowUpNarrowWide className="p-0.5" />
+        </ListboxOption>
+        <ListboxOption value="desc">
+          <ArrowDownWideNarrow className="p-0.5" />
+        </ListboxOption>
+      </Listbox>
     </div>
   )
 }

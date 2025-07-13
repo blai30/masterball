@@ -1,11 +1,9 @@
 'use client'
 
-import { Fragment, useMemo } from 'react'
+import { useMemo } from 'react'
 import clsx from 'clsx/lite'
-import { Check, ChevronDown } from 'lucide-react'
 import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/listbox'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
-import TypePill from '@/components/TypePill'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
 
@@ -60,7 +58,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
   return (
     <div
       className={clsx(
-        'flex flex-row items-center justify-center gap-2 lg:justify-end',
+        'flex gap-2',
         className
       )}
     >
