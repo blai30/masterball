@@ -36,7 +36,7 @@ const idColumnLabels = {
 const columnClasses: Record<string, string> = {
   id: 'w-16 justify-start text-left',
   type: 'w-6',
-  name: 'grow justify-start text-left',
+  name: 'grow min-w-40 justify-start text-left',
   damageClass: 'w-6',
   power: 'w-6 justify-end text-right',
   accuracy: 'w-14 justify-end text-right',
@@ -201,7 +201,10 @@ function MovesTable({
             </thead>
             <tbody className="">
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="group h-8 items-center rounded-md">
+                <tr
+                  key={row.id}
+                  className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
