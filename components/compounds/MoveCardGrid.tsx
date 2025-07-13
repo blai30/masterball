@@ -151,13 +151,17 @@ export default function MoveCardGrid({
         label: 'Type',
         options: typeFilters,
         values: typeFilter,
-        onChange: handleTypeFilterChange,
+        onChange: (values: string | string[]) =>
+          handleTypeFilterChange(Array.isArray(values) ? values : [values]),
       },
       {
         label: 'Class',
         options: damageClassFilters,
         values: damageClassFilter,
-        onChange: handleDamageClassFilterChange,
+        onChange: (values: string | string[]) =>
+          handleDamageClassFilterChange(
+            Array.isArray(values) ? values : [values]
+          ),
       },
     ],
     [

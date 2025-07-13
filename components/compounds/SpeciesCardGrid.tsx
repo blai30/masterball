@@ -99,8 +99,9 @@ export default function SpeciesCardGrid({
     setSortDirection(dir)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
-  const handleTypeFilterChange = useCallback((values: string[]) => {
-    setTypeFilter(values)
+  const handleTypeFilterChange = useCallback((values: string | string[]) => {
+    const nextValues = Array.isArray(values) ? values : [values]
+    setTypeFilter(nextValues)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
   const handlePageChange = useCallback((page: number) => {
