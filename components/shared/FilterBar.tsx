@@ -16,7 +16,7 @@ export type FilterConfig = {
   label: string
   options: FilterOption[]
   values: string[]
-  onChange: (values: string[]) => void
+  onChange: (values: string | string[]) => void
 }
 
 type FilterBarProps = {
@@ -56,12 +56,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
   }
 
   return (
-    <div
-      className={clsx(
-        'flex gap-2',
-        className
-      )}
-    >
+    <div className={clsx('flex gap-2', className)}>
       {filters.map((filter) => (
         <Listbox
           key={filter.label}

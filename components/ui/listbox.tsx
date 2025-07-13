@@ -10,7 +10,8 @@ export function Listbox<T>({
   autoFocus,
   'aria-label': ariaLabel,
   children: options,
-  multiple = false,
+  value,
+  multiple,
   ...props
 }: {
   className?: string
@@ -18,10 +19,85 @@ export function Listbox<T>({
   autoFocus?: boolean
   'aria-label'?: string
   children?: React.ReactNode
+  value?: T | T[]
   multiple?: boolean
-} & Omit<Headless.ListboxProps<typeof Fragment, T>, 'as' | 'multiple'>) {
+} & Omit<Headless.ListboxProps<typeof Fragment, T>, 'as'>) {
+  // Helper to extract icon from option children
+  const getIcon = (option: React.ReactNode) => {
+    if (!option || typeof option !== 'object') return null
+    // If option is a fragment, get its children
+    // This assumes icon is first child
+    // You may want to improve this for more robust icon extraction
+    // @ts-ignore
+    return option.props?.children?.[0] || null
+  }
+
+  // Render icon and label for single selection, or just icon for multiple selections
+  const renderSelected = () => {
+    const classNames = clsx([
+      // Basic layout
+      'relative flex w-full appearance-none rounded-lg py-[calc(--spacing(2.5)-1px)] sm:py-[calc(--spacing(1.5)-1px)]',
+      // Set minimum height for when no value is selected
+      'min-h-11 sm:min-h-9',
+      // Horizontal padding
+      'pr-[calc(--spacing(7)-1px)] pl-[calc(--spacing(3.5)-1px)] sm:pl-[calc(--spacing(3)-1px)]',
+      // Typography
+      'text-left text-base/6 text-zinc-950 placeholder:text-zinc-500 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
+      // Border
+      'border border-zinc-950/10 group-data-active:border-zinc-950/20 group-data-hover:border-zinc-950/20 dark:border-white/10 dark:group-data-active:border-white/20 dark:group-data-hover:border-white/20',
+      // Background color
+      'bg-transparent dark:bg-white/5',
+      // Invalid state
+      'group-data-invalid:border-red-500 group-data-hover:group-data-invalid:border-red-500 dark:group-data-invalid:border-red-600 dark:data-hover:group-data-invalid:border-red-600',
+      // Disabled state
+      'group-data-disabled:border-zinc-950/20 group-data-disabled:opacity-100 dark:group-data-disabled:border-white/15 dark:group-data-disabled:bg-white/2.5 dark:group-data-disabled:data-hover:border-white/15',
+      // Transitions
+      'transition-colors group-data-hover:duration-0',
+      // Gap for multiple selections
+      'items-center gap-1',
+    ])
+
+    if (multiple && Array.isArray(value) && value.length > 1) {
+      // Only show icons for each selected value
+      // Find the corresponding option for each value
+      return (
+        <span className={classNames}>
+          {value.map((val) => {
+            // Find the option node with matching value prop
+            const optionNode = Array.isArray(options)
+              ? options.find(
+                  (child) =>
+                    typeof child === 'object' &&
+                    child !== null &&
+                    'props' in child &&
+                    child.props?.value === val
+                )
+              : null
+            const icon = getIcon(optionNode?.props?.children)
+            return <span key={String(val)}>{icon}</span>
+          })}
+        </span>
+      )
+    }
+
+    // Single selection: show icon + label (default)
+    // Use Headless.ListboxSelectedOption default rendering
+    return (
+      <Headless.ListboxSelectedOption
+        as="span"
+        options={options}
+        placeholder={
+          placeholder && (
+            <span className="block truncate text-zinc-500">{placeholder}</span>
+          )
+        }
+        className={clsx([classNames])}
+      />
+    )
+  }
+
   return (
-    <Headless.Listbox {...props} multiple={multiple}>
+    <Headless.Listbox {...props} value={value} multiple={multiple}>
       <Headless.ListboxButton
         autoFocus={autoFocus}
         data-slot="control"
@@ -42,37 +118,7 @@ export function Listbox<T>({
           'data-disabled:opacity-50 data-disabled:before:bg-zinc-950/5 data-disabled:before:shadow-none',
         ])}
       >
-        <Headless.ListboxSelectedOption
-          as="span"
-          options={options}
-          placeholder={
-            placeholder && (
-              <span className="block truncate text-zinc-500">
-                {placeholder}
-              </span>
-            )
-          }
-          className={clsx([
-            // Basic layout
-            'relative flex w-full appearance-none rounded-lg py-[calc(--spacing(2.5)-1px)] sm:py-[calc(--spacing(1.5)-1px)]',
-            // Set minimum height for when no value is selected
-            'min-h-11 sm:min-h-9',
-            // Horizontal padding
-            'pr-[calc(--spacing(7)-1px)] pl-[calc(--spacing(3.5)-1px)] sm:pl-[calc(--spacing(3)-1px)]',
-            // Typography
-            'text-left text-base/6 text-zinc-950 placeholder:text-zinc-500 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
-            // Border
-            'border border-zinc-950/10 group-data-active:border-zinc-950/20 group-data-hover:border-zinc-950/20 dark:border-white/10 dark:group-data-active:border-white/20 dark:group-data-hover:border-white/20',
-            // Background color
-            'bg-transparent dark:bg-white/5',
-            // Invalid state
-            'group-data-invalid:border-red-500 group-data-hover:group-data-invalid:border-red-500 dark:group-data-invalid:border-red-600 dark:data-hover:group-data-invalid:border-red-600',
-            // Disabled state
-            'group-data-disabled:border-zinc-950/20 group-data-disabled:opacity-100 dark:group-data-disabled:border-white/15 dark:group-data-disabled:bg-white/2.5 dark:group-data-disabled:data-hover:border-white/15',
-            // Transitions
-            'transition-colors group-data-hover:duration-0',
-          ])}
-        />
+        {renderSelected()}
         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <svg
             className="size-5 stroke-zinc-500 group-data-disabled:stroke-zinc-600 sm:size-4 dark:stroke-zinc-400 forced-colors:stroke-[CanvasText]"
