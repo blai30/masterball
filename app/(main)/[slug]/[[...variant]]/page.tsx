@@ -134,15 +134,15 @@ export default async function Page({
 
   return (
     <div className="flex w-full flex-col gap-4 xl:max-w-none">
-      {/* <section className="mx-auto w-full max-w-[96rem] px-4">
+      {/* <section className="mx-auto w-full max-w-[96rem]">
         <MonsterHero species={species} pokemon={pokemon} form={form} />
       </section>
-      <section className="@container mx-auto w-full max-w-[96rem] px-4">
+      <section className="@container mx-auto w-full max-w-[96rem]">
         <Suspense fallback={<LoadingMetadata />}>
           <MonsterMetadata species={species} pokemon={pokemon} />
         </Suspense>
       </section> */}
-      <section className="@container mx-auto w-full max-w-[96rem] px-4">
+      <section className="@container mx-auto w-full max-w-[96rem]">
         <div className="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @[88rem]:grid-cols-8">
           <MonsterHero
             species={species}
@@ -156,7 +156,7 @@ export default async function Page({
         </div>
       </section>
       {/* Main details section */}
-      <section className="mx-auto w-full max-w-[96rem] px-4">
+      <section className="mx-auto w-full max-w-[96rem]">
         <div className="flex w-full flex-col gap-4 xl:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-4">
