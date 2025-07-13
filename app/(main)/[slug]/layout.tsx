@@ -49,7 +49,7 @@ export default async function RootLayout({
       <div className="grow">
         <div className="mx-auto max-w-[96rem]">
           <div className="flex overflow-x-auto">
-            <div className="@container grow px-4">
+            <div className="@container grow">
               <VariantCardSelector
                 monsters={monsters}
                 className="min-w-full whitespace-nowrap"

@@ -23,7 +23,7 @@ export default function RootLayout({
     <>
       <StackedLayout
         navbar={
-          <Navbar>
+          <Navbar className="@container mx-auto max-w-[96rem]">
             <Header />
           </Navbar>
         }
