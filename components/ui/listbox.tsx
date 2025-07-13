@@ -1,7 +1,7 @@
 'use client'
 
 import { Fragment } from 'react'
-import clsx from 'clsx/lite'
+import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
 
 export function Listbox<T>({
@@ -10,6 +10,7 @@ export function Listbox<T>({
   autoFocus,
   'aria-label': ariaLabel,
   children: options,
+  multiple = false,
   ...props
 }: {
   className?: string
@@ -17,9 +18,10 @@ export function Listbox<T>({
   autoFocus?: boolean
   'aria-label'?: string
   children?: React.ReactNode
+  multiple?: boolean
 } & Omit<Headless.ListboxProps<typeof Fragment, T>, 'as' | 'multiple'>) {
   return (
-    <Headless.Listbox {...props} multiple={false}>
+    <Headless.Listbox {...props} multiple={multiple}>
       <Headless.ListboxButton
         autoFocus={autoFocus}
         data-slot="control"
@@ -35,7 +37,7 @@ export function Listbox<T>({
           // Hide default focus styles
           'focus:outline-hidden',
           // Focus ring
-          'after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-transparent after:ring-inset data-focus:after:ring-2 data-focus:after:ring-blue-500',
+          'after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:ring-transparent after:ring-inset data-focus:after:ring-2 data-focus:after:ring-zinc-700',
           // Disabled state
           'data-disabled:opacity-50 data-disabled:before:bg-zinc-950/5 data-disabled:before:shadow-none',
         ])}
@@ -52,7 +54,7 @@ export function Listbox<T>({
           }
           className={clsx([
             // Basic layout
-            'relative block w-full appearance-none rounded-lg py-[calc(--spacing(2.5)-1px)] sm:py-[calc(--spacing(1.5)-1px)]',
+            'relative flex w-full appearance-none rounded-lg py-[calc(--spacing(2.5)-1px)] sm:py-[calc(--spacing(1.5)-1px)]',
             // Set minimum height for when no value is selected
             'min-h-11 sm:min-h-9',
             // Horizontal padding
@@ -67,6 +69,8 @@ export function Listbox<T>({
             'group-data-invalid:border-red-500 group-data-hover:group-data-invalid:border-red-500 dark:group-data-invalid:border-red-600 dark:data-hover:group-data-invalid:border-red-600',
             // Disabled state
             'group-data-disabled:border-zinc-950/20 group-data-disabled:opacity-100 dark:group-data-disabled:border-white/15 dark:group-data-disabled:bg-white/2.5 dark:group-data-disabled:data-hover:border-white/15',
+            // Transitions
+            'transition-colors group-data-hover:duration-0',
           ])}
         />
         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -92,6 +96,7 @@ export function Listbox<T>({
         </span>
       </Headless.ListboxButton>
       <Headless.ListboxOptions
+        modal={false}
         transition
         anchor="selection start"
         className={clsx(
@@ -153,11 +158,13 @@ export function ListboxOption<T>({
               // Typography
               'text-base/6 text-zinc-950 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
               // Focus
-              'outline-hidden data-focus:bg-blue-500 data-focus:text-white',
+              'outline-hidden data-focus:bg-zinc-700 data-focus:text-white',
               // Forced colors mode
               'forced-color-adjust-none forced-colors:data-focus:bg-[Highlight] forced-colors:data-focus:text-[HighlightText]',
               // Disabled
-              'data-disabled:opacity-50'
+              'data-disabled:opacity-50',
+              // Transitions
+              'transition-colors data-focus:duration-0'
             )}
           >
             <svg

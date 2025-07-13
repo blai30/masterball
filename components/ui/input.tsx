@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import clsx from 'clsx/lite'
+import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
 
 export function InputGroup({
@@ -97,6 +97,8 @@ export const Input = forwardRef(function Input(
           'data-disabled:border-zinc-950/20 dark:data-disabled:border-white/15 dark:data-disabled:bg-white/2.5 dark:data-hover:data-disabled:border-white/15',
           // System icons
           'dark:scheme-dark',
+          // Transitions
+          'transition-colors data-hover:duration-0',
         ])}
       />
     </span>

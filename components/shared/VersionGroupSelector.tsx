@@ -1,39 +1,36 @@
 'use client'
 
 import { memo } from 'react'
-import { ChevronDown } from 'lucide-react'
 import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapiHelpers'
 import { useVersionGroup } from '@/lib/stores/version-group'
+import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/listbox'
 
 function VersionGroupSelector() {
   const { versionGroup, setVersionGroup, hasMounted } = useVersionGroup()
 
   if (!hasMounted) return null
 
+  const options = Object.entries(VersionGroupLabels).map(([key, label]) => ({
+    value: key as VersionGroupKey,
+    label,
+  }))
+
   return (
-    <div className="relative flex w-full items-center justify-center text-sm/6">
-      <label htmlFor="version-group" className="sr-only">
-        Version Group selector
-      </label>
-      <select
-        id="version-group"
-        name="version-group"
-        aria-label="Version Group selector"
-        value={versionGroup}
-        onChange={(e) => setVersionGroup(e.target.value as VersionGroupKey)}
-        className="w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 inset-ring-1 inset-ring-zinc-300 focus:inset-ring-zinc-500 focus:outline-none md:w-40 dark:bg-black dark:text-zinc-200 dark:inset-ring-zinc-700 dark:focus:inset-ring-zinc-500"
-      >
-        {Object.entries(VersionGroupLabels).map(([key, label]) => (
-          <option key={key} value={key}>
-            {label}
-          </option>
-        ))}
-      </select>
-      <ChevronDown
-        aria-hidden="true"
-        className="pointer-events-none absolute right-2 h-[1lh] w-4 text-zinc-600 dark:text-zinc-400"
-      />
-    </div>
+    <Listbox
+      name="version-group"
+      defaultValue={versionGroup}
+      value={versionGroup}
+      onChange={setVersionGroup}
+      className="max-w-40 min-w-40"
+    >
+      {options.map((option) => {
+        return (
+          <ListboxOption key={option.value} value={option.value}>
+            <ListboxLabel>{option.label}</ListboxLabel>
+          </ListboxOption>
+        )
+      })}
+    </Listbox>
   )
 }
 

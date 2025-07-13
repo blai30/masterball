@@ -34,7 +34,7 @@ export default function SpeciesCardGrid({
 
   const sortOptions: SortOption<string>[] = useMemo(
     () => [
-      { label: 'Dex Id', value: 'id' },
+      { label: 'Dex No.', value: 'id' },
       { label: 'Name', value: 'name' },
     ],
     []
@@ -160,7 +160,7 @@ export default function SpeciesCardGrid({
     <div className="flex flex-col gap-8">
       <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
         <SearchBar value={search} onChangeAction={handleSearchChange} />
-        <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row lg:w-fit">
+        <div className="flex w-full flex-col items-end justify-center gap-4 sm:flex-row lg:w-fit">
           <FilterBar filters={filters} />
           <SortBar
             sortKey={sortKey}

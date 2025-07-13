@@ -80,13 +80,15 @@ export const NavbarItem = forwardRef(function NavbarItem(
     // Avatar
     '*:data-[slot=avatar]:-m-0.5 *:data-[slot=avatar]:size-7 *:data-[slot=avatar]:[--avatar-radius:var(--radius-md)] sm:*:data-[slot=avatar]:size-6',
     // Hover
-    'data-hover:bg-zinc-950/5 data-hover:*:data-[slot=icon]:fill-zinc-950',
+    'data-hover:bg-zinc-950/10 data-hover:*:data-[slot=icon]:fill-zinc-950',
     // Active
-    'data-active:bg-zinc-950/5 data-active:*:data-[slot=icon]:fill-zinc-950',
+    'data-active:bg-zinc-950/10 data-active:*:data-[slot=icon]:fill-zinc-950',
     // Dark mode
     'dark:text-white dark:*:data-[slot=icon]:fill-zinc-400',
-    'dark:data-hover:bg-white/5 dark:data-hover:*:data-[slot=icon]:fill-white',
-    'dark:data-active:bg-white/5 dark:data-active:*:data-[slot=icon]:fill-white'
+    'dark:data-hover:bg-white/10 dark:data-hover:*:data-[slot=icon]:fill-white',
+    'dark:data-active:bg-white/10 dark:data-active:*:data-[slot=icon]:fill-white',
+    // Transitions
+    'transition-colors data-hover:duration-0'
   )
 
   return (
