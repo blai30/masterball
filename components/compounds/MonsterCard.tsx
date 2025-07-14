@@ -37,7 +37,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
           height={128}
           className="min-w-full object-contain py-3"
         />
-        <h3 className="rounded-xs text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
           {props.name}
         </h3>
       </Link>

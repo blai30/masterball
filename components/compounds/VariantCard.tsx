@@ -44,7 +44,7 @@ export default function VariantCard({
             ))}
           </ul>
         )}
-        <h3 className="text-sm font-medium text-black dark:text-white">
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
           {name}
         </h3>
       </div>
