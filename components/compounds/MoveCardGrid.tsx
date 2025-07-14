@@ -216,9 +216,9 @@ export default function MoveCardGrid({
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
+      <div className="flex flex-col items-center gap-4 lg:flex-row">
         <SearchBar value={search} onChangeAction={handleSearchChange} />
-        <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row lg:w-fit">
+        <div className="flex flex-col items-center gap-4 sm:flex-row">
           <FilterBar filters={filters} />
           <SortBar
             sortKey={sortKey}

@@ -159,7 +159,7 @@ export default function SpeciesCardGrid({
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col items-center gap-6 lg:flex-row lg:justify-between">
+      <div className="flex flex-col items-center gap-4 lg:flex-row">
         <SearchBar value={search} onChangeAction={handleSearchChange} />
         <div className="flex flex-col items-center gap-4 sm:flex-row">
           <FilterBar filters={filters} />
