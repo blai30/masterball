@@ -52,7 +52,7 @@ export default async function RootLayout({
             <div className="@container grow">
               <VariantCardSelector
                 monsters={monsters}
-                className="min-w-full whitespace-nowrap"
+                className="min-w-full justify-center-safe whitespace-nowrap"
               />
             </div>
           </div>
