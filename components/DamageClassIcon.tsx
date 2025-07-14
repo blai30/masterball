@@ -48,18 +48,12 @@ export default function DamageClassIcon({
         className
       )}
     >
-      {/* <div
-        className={clsx(
-          'h-full w-2',
-          variants({ variant: variant as DamageClassName })
-        )}
-      ></div> */}
       <Image
         src={imageUrl}
         alt={name}
         width={dimensions[size]}
         height={dimensions[size]}
-        className="absolute object-contain p-0.5"
+        className="absolute object-contain p-[0.05rem]"
       />
     </div>
   )

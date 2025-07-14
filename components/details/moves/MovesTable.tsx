@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import { memo, useMemo, useState } from 'react'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -36,7 +36,7 @@ const idColumnLabels = {
 const columnClasses: Record<string, string> = {
   id: 'w-16 justify-start text-left',
   type: 'w-6',
-  name: 'grow justify-start text-left',
+  name: 'grow min-w-40 justify-start text-left',
   damageClass: 'w-6',
   power: 'w-6 justify-end text-right',
   accuracy: 'w-14 justify-end text-right',
@@ -86,7 +86,7 @@ function MovesTable({
         cell: (info) => (
           <div className="@container/move">
             <Link
-              href={`/move?q=${info.row.original.name}`}
+              href={`/move?q=${encodeURIComponent(info.row.original.name.toLowerCase())}`}
               title={`Move: ${info.getValue()}`}
               className="inline-flex overflow-clip font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
             >
@@ -201,7 +201,10 @@ function MovesTable({
             </thead>
             <tbody className="">
               {table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="group h-8 items-center rounded-md">
+                <tr
+                  key={row.id}
+                  className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
+                >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}

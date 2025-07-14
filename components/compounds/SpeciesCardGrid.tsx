@@ -34,7 +34,7 @@ export default function SpeciesCardGrid({
 
   const sortOptions: SortOption<string>[] = useMemo(
     () => [
-      { label: 'Dex Id', value: 'id' },
+      { label: 'Dex No.', value: 'id' },
       { label: 'Name', value: 'name' },
     ],
     []
@@ -99,8 +99,9 @@ export default function SpeciesCardGrid({
     setSortDirection(dir)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
-  const handleTypeFilterChange = useCallback((values: string[]) => {
-    setTypeFilter(values)
+  const handleTypeFilterChange = useCallback((values: string | string[]) => {
+    const nextValues = Array.isArray(values) ? values : [values]
+    setTypeFilter(nextValues)
     setCurrentPage(DEFAULT_PAGE)
   }, [])
   const handlePageChange = useCallback((page: number) => {
@@ -158,9 +159,9 @@ export default function SpeciesCardGrid({
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col items-center justify-between gap-6 lg:flex-row lg:items-end">
+      <div className="flex flex-col items-center gap-6 lg:flex-row lg:justify-between">
         <SearchBar value={search} onChangeAction={handleSearchChange} />
-        <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row lg:w-fit">
+        <div className="flex flex-col items-center gap-4 sm:flex-row">
           <FilterBar filters={filters} />
           <SortBar
             sortKey={sortKey}
@@ -178,7 +179,7 @@ export default function SpeciesCardGrid({
         currentPage={currentPage}
         onPageChangeAction={handlePageChange}
         itemsPerPage={ITEMS_PER_PAGE}
-        className="2xs:grid-cols-3 xs:grid-cols-3 grid w-full grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10"
+        className="2xs:grid-cols-3 xs:grid-cols-4 grid w-full grid-cols-2 gap-2 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 2xl:grid-cols-10"
       />
     </div>
   )

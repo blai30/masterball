@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import clsx from 'clsx/lite'
 import pMap from 'p-map'
 import type {

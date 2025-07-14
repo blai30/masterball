@@ -1,7 +1,7 @@
 import type { Pokemon } from 'pokedex-promise-v2'
 import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapiHelpers'
 
-export default async function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
+export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
 
   return (

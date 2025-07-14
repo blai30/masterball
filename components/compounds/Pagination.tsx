@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import clsx from 'clsx/lite'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const getPageNumbers = (current: number, total: number) => {
   if (total <= 7) {
@@ -46,7 +46,7 @@ export default function Pagination({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between text-sm/9">
+    <div className="flex items-center justify-between text-sm/9 gap-4">
       <button
         onClick={() => onPageChangeAction(currentPage - 1)}
         disabled={currentPage === 1}
@@ -56,10 +56,10 @@ export default function Pagination({
         <span className="px-2">Previous</span>
       </button>
 
+      {/* Desktop: show page numbers */}
       <div className="xs:flex hidden items-center justify-center gap-2">
         {getPageNumbers(currentPage, totalPages).map((page, index) => {
           if (page === '...') {
-            // Ellipsis
             if (showInput === index) {
               return (
                 <input
@@ -84,7 +84,6 @@ export default function Pagination({
               </button>
             )
           }
-
           return (
             <button
               key={`page-${page}-${index}`}
@@ -102,6 +101,30 @@ export default function Pagination({
             </button>
           )
         })}
+      </div>
+
+      {/* Mobile: show dropdown for page selection */}
+      <div className="xs:hidden relative flex items-center justify-center">
+        <select
+          value={currentPage}
+          onChange={(e) => {
+            const page = Number(e.target.value)
+            if (page >= 1 && page <= totalPages) {
+              onPageChangeAction(page)
+            }
+          }}
+          className="w-full appearance-none rounded-md bg-white pr-8 pl-3 inset-ring-1 inset-ring-zinc-300 focus:inset-ring-zinc-500 focus:outline-none md:w-40 dark:bg-black dark:text-zinc-200 dark:inset-ring-zinc-700 dark:focus:inset-ring-zinc-500"
+        >
+          {Array.from({ length: totalPages }, (_, i) => (
+            <option key={i + 1} value={i + 1}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none absolute right-2 h-[1lh] w-4 text-zinc-600 dark:text-zinc-400"
+        />
       </div>
 
       <button

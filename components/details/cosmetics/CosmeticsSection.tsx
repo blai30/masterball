@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import clsx from 'clsx'
+import clsx from 'clsx/lite'
 import type { Pokemon, PokemonForm } from 'pokedex-promise-v2'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
@@ -38,9 +38,9 @@ export default async function CosmeticsSection({
                 key={form.name}
                 className={clsx(
                   'flex flex-col items-center gap-2',
+                  'rounded-lg p-4',
                   // 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
-                  'bg-gradient-to-br from-white to-zinc-100 dark:from-zinc-950 dark:to-zinc-900',
-                  'rounded-lg p-4'
+                  'bg-gradient-to-br from-white to-zinc-100 dark:from-zinc-900 dark:to-zinc-950'
                 )}
               >
                 <span title={name} className="text-sm">

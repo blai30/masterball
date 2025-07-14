@@ -89,7 +89,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={clsx(
-        'h-full scheme-light dark:scheme-dark',
+        'h-full bg-white scheme-light lg:bg-zinc-100 dark:bg-zinc-950 dark:scheme-dark dark:lg:bg-black',
         geist.variable,
         inter.variable,
         jetBrainsMono.variable,
@@ -101,7 +101,7 @@ export default function RootLayout({
           <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script>
         </head>
       )}
-      <body className="h-full bg-white text-black antialiased dark:bg-black dark:text-white">
+      <body className="h-full text-black antialiased dark:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

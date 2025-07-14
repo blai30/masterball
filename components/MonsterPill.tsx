@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import { getTranslation, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import { excludedVariants } from '@/lib/utils/excludedSlugs'
