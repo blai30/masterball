@@ -172,7 +172,7 @@ export default async function Page({
             <Suspense fallback={<LoadingSection />}>
               <EvolutionSection species={species} />
             </Suspense>
-            {forms?.length > 0 && (
+            {forms?.length > 1 && (
               <Suspense fallback={<LoadingSection />}>
                 <CosmeticsSection pokemon={pokemon} forms={forms} />
               </Suspense>
