@@ -34,7 +34,7 @@ export default function VariantCardSelector({
       onChange={handleVariantChange}
       className={clsx(
         // 'grid grid-cols-2 gap-2 py-4 @md:grid-cols-3 @2xl:grid-cols-4 @3xl:grid-cols-5 @4xl:grid-cols-6 @5xl:grid-cols-7 @6xl:grid-cols-8',
-        'gap-2 py-4 flex flex-row',
+        'flex flex-row gap-2 py-4',
         className
       )}
     >

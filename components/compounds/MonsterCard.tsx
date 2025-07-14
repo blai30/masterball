@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import { memo } from 'react'
 import { TypeKey } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
@@ -26,7 +26,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
       >
         <p
           aria-hidden="true"
-          className="font-num text-sm text-zinc-400 dark:text-zinc-500"
+          className="font-num text-xs text-zinc-400 dark:text-zinc-500"
         >
           {props.id}
         </p>
@@ -35,9 +35,9 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
           alt={props.slug}
           width={128}
           height={128}
-          className="min-w-full object-contain py-1"
+          className="min-w-full object-contain py-3"
         />
-        <h3 className="font-base rounded-xs text-base text-zinc-700 dark:text-zinc-300">
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
           {props.name}
         </h3>
       </Link>

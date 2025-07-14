@@ -53,7 +53,7 @@ export default async function Home() {
     .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
-    <div className="mx-auto w-full max-w-[96rem] px-4">
+    <div className="mx-auto w-full max-w-[96rem]">
       <InfoCardGrid data={abilitiesData} />
     </div>
   )

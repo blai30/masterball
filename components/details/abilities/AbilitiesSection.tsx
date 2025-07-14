@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/link'
 import pMap from 'p-map'
 import type { Ability, Pokemon } from 'pokedex-promise-v2'
 import { Sparkles } from 'lucide-react'
@@ -39,12 +39,15 @@ export default async function AbilitiesSection({
       </h2>
       <ul className="flex flex-col gap-4">
         {abilitiesMap.map((a) => {
-          const name = getTranslation(a.resource.names, 'name')
+          const name = getTranslation(a.resource.names, 'name')!
           return (
             <li key={a.id} className="">
               <div className="flex flex-col gap-1">
                 <div className="flex flex-row items-center gap-2">
-                  <Link href={`/ability?q=${name}`} className="inline-block">
+                  <Link
+                    href={`/ability?q=${encodeURIComponent(name.toLowerCase())}`}
+                    className="inline-block"
+                  >
                     <h3
                       title={`${a.hidden ? 'Hidden ability' : `Ability ${a.slot}`}: ${name}`}
                       className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"

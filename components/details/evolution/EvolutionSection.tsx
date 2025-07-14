@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import clsx from 'clsx/lite'
 import type { EvolutionChain, PokemonSpecies } from 'pokedex-promise-v2'
 import MonsterPill from '@/components/MonsterPill'
 

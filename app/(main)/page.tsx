@@ -62,7 +62,7 @@ export default async function Home() {
   })
 
   return (
-    <div className="mx-auto w-full max-w-[96rem] px-4">
+    <div className="mx-auto max-w-[96rem]">
       <SpeciesCardGrid data={speciesData} />
     </div>
   )
