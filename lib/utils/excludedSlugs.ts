@@ -55,6 +55,15 @@ export const excludedVariants = [
   'inteleon-gmax',
   'urshifu-single-strike-gmax',
   'urshifu-rapid-strike-gmax',
+  // Koraidon and Miraidon ride forms
+  'koraidon-limited-build',
+  'koraidon-sprinting-build',
+  'koraidon-swimming-build',
+  'koraidon-gliding-build',
+  'miraidon-limited-build',
+  'miraidon-sprinting-build',
+  'miraidon-swimming-build',
+  'miraidon-gliding-build',
 ]
 
 export const excludedForms = [
