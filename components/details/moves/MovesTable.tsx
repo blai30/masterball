@@ -16,6 +16,12 @@ import { useVersionGroup } from '@/lib/stores/version-group'
 import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
+import {
+  Dialog,
+  DialogActions,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 const tableNames = {
   [LearnMethodKey.LevelUp]: 'Level-Up',
@@ -52,6 +58,7 @@ function MovesTable({
   moveRows: MoveRow[]
   className?: string
 }) {
+  const [activeMove, setActiveMove] = useState<string | null>(null)
   const { versionGroup, hasMounted } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
   const [sorting, setSorting] = useState<SortingState>([
@@ -83,17 +90,13 @@ function MovesTable({
       }),
       columnHelper.accessor('name', {
         header: 'Move',
-        cell: (info) => (
-          <div className="@container/move">
-            <Link
-              href={`/move?q=${encodeURIComponent(info.row.original.name.toLowerCase())}`}
-              title={`Move: ${info.getValue()}`}
-              className="inline-flex overflow-clip font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
-            >
+        cell: (info) => {
+          return (
+            <span className="font-medium text-zinc-900 dark:text-zinc-100">
               {info.getValue()}
-            </Link>
-          </div>
-        ),
+            </span>
+          )
+        },
       }),
       columnHelper.accessor('damageClass', {
         header: '',
@@ -200,28 +203,55 @@ function MovesTable({
               ))}
             </thead>
             <tbody className="">
-              {table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className={clsx('px-2', columnClasses[cell.column.id])}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              {table.getRowModel().rows.map((row) => {
+                const moveSlug = row.original.slug
+                const dialogOpen = activeMove === moveSlug
+                return (
+                  <tr
+                    key={row.id}
+                    className={clsx(
+                      'group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10'
+                    )}
+                    onClick={() => setActiveMove(dialogOpen ? null : moveSlug)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className={clsx('px-2', columnClasses[cell.column.id])}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
       </div>
+      {/* Dialog rendered once, outside the table */}
+      {activeMove &&
+        (() => {
+          const move = filteredMoveRows.find((m) => m.slug === activeMove)
+          if (!move) return null
+          return (
+            <Dialog open={true} onClose={() => setActiveMove(null)}>
+              <DialogTitle>{move.name}</DialogTitle>
+              <DialogDescription>{move.description}</DialogDescription>
+              <DialogActions>
+                <Link
+                  href={`/move?q=${encodeURIComponent(move.name.toLowerCase())}`}
+                  className="text-blue-700 underline underline-offset-4 dark:text-blue-300"
+                >
+                  Visit move page
+                </Link>
+              </DialogActions>
+            </Dialog>
+          )
+        })()}
     </div>
   )
 }

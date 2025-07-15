@@ -27,17 +27,31 @@ function createMoveRows(
 
   moves.forEach((m) => {
     const move = movesMap[m.move.name]
+    const defaultDescription =
+      getTranslation(move.effect_entries, 'short_effect') ?? ''
+    const flavorTextEntries = move.flavor_text_entries.filter(
+      (entry) => entry.language.name === 'en'
+    )
 
-    m.version_group_details.forEach((v) => {
-      if (v.move_learn_method.name === variant) {
+    m.version_group_details.forEach((resource) => {
+      if (resource.move_learn_method.name === variant) {
+        const description =
+          flavorTextEntries.find(
+            (entry) =>
+              entry.language.name === 'en' &&
+              entry.version_group?.name === resource.version_group.name
+          )?.flavor_text ?? defaultDescription
+
         let id = move.id.toString()
 
         if (variant === LearnMethodKey.LevelUp) {
           id =
-            v.level_learned_at === 0 ? 'Evolve' : v.level_learned_at.toString()
+            resource.level_learned_at === 0
+              ? 'Evolve'
+              : resource.level_learned_at.toString()
         } else if (variant === LearnMethodKey.Machine && move.machineItems) {
           const machine = move.machineItems.find(
-            (m: Machine) => m.version_group.name === v.version_group.name
+            (m: Machine) => m.version_group.name === resource.version_group.name
           )
           if (machine) {
             id = machine.item.name.toUpperCase()
@@ -47,10 +61,11 @@ function createMoveRows(
         moveRows.push({
           id,
           slug: m.move.name,
-          versionGroup: v.version_group.name,
+          versionGroup: resource.version_group.name,
           type: move.type.name as TypeKey,
           damageClass: move.damage_class.name as DamageClassKey,
           name: getTranslation(move.names, 'name')!,
+          description,
           power: move.power,
           accuracy: move.accuracy,
           pp: move.pp!,

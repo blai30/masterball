@@ -1,5 +1,5 @@
 import type React from 'react'
-import clsx from 'clsx/lite'
+import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
 import { Text } from '@/components/ui/text'
 

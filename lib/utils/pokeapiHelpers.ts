@@ -291,6 +291,7 @@ export type MoveRow = {
   type: TypeKey
   damageClass: DamageClassKey
   name: string
+  description: string
   power: number | null
   accuracy: number | null
   pp: number
