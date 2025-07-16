@@ -164,6 +164,26 @@ function MovesTable({
     )
   }
 
+  function renderDialog() {
+    const move = filteredMoveRows.find((m) => m.slug === activeMove)
+
+    if (!move) return null
+    return (
+      <Dialog open={!!activeMove} onClose={() => setActiveMove(null)}>
+        <DialogTitle>{move.name}</DialogTitle>
+        <DialogDescription>{move.description}</DialogDescription>
+        <DialogActions>
+          <Link
+            href={`/move?q=${encodeURIComponent(move.name.toLowerCase())}`}
+            className="text-blue-700 underline underline-offset-4 dark:text-blue-300"
+          >
+            Visit move page
+          </Link>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
   return (
     <div className={clsx('max-w-2xl', className)}>
       <h3 className="text-lg">{tableNames[variant]}</h3>
@@ -232,26 +252,7 @@ function MovesTable({
           </table>
         </div>
       </div>
-      {/* Dialog rendered once, outside the table */}
-      {activeMove &&
-        (() => {
-          const move = filteredMoveRows.find((m) => m.slug === activeMove)
-          if (!move) return null
-          return (
-            <Dialog open={true} onClose={() => setActiveMove(null)}>
-              <DialogTitle>{move.name}</DialogTitle>
-              <DialogDescription>{move.description}</DialogDescription>
-              <DialogActions>
-                <Link
-                  href={`/move?q=${encodeURIComponent(move.name.toLowerCase())}`}
-                  className="text-blue-700 underline underline-offset-4 dark:text-blue-300"
-                >
-                  Visit move page
-                </Link>
-              </DialogActions>
-            </Dialog>
-          )
-        })()}
+      {renderDialog()}
     </div>
   )
 }

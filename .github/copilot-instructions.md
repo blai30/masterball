@@ -13,7 +13,7 @@
 - Use `const` for variables that are not reassigned, and `let` only when necessary.
 - Use Tailwind CSS for styling, and avoid inline styles.
 - Use `useMemo` and `useCallback` to optimize performance when necessary.
-- Use `clsx/lite` package for conditional class names. Avoid using string interpolation for class names.
+- Use `clsx/lite` package for conditional class names, or the full `clsx` for more complex className resolution. Avoid using string interpolation for class names.
 - Use `pMap` for parallel processing of arrays.
 - Ensure best practices.
 - Ensure the best robust, clean, readable code style and architecture.

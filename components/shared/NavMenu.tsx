@@ -30,11 +30,7 @@ const navItems = [
   { label: 'Abilities', url: '/ability', icon: Shield },
 ]
 
-type HeaderProps = {
-  variant: 'navbar' | 'sidebar'
-}
-
-function NavMenu({ variant }: HeaderProps) {
+function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
   const pathname = usePathname()
 
   const isActiveRoute = (url: string) => {
@@ -57,12 +53,7 @@ function NavMenu({ variant }: HeaderProps) {
           {navItems.map((item) => {
             const active = isActiveRoute(item.url)
             return (
-              <NavbarItem
-                key={item.url}
-                href={item.url}
-                current={active}
-                className=""
-              >
+              <NavbarItem key={item.url} href={item.url} current={active}>
                 <item.icon size={20} />
                 <NavbarLabel>{item.label}</NavbarLabel>
               </NavbarItem>
@@ -86,12 +77,7 @@ function NavMenu({ variant }: HeaderProps) {
           {navItems.map((item) => {
             const active = isActiveRoute(item.url)
             return (
-              <SidebarItem
-                key={item.url}
-                href={item.url}
-                current={active}
-                className=""
-              >
+              <SidebarItem key={item.url} href={item.url} current={active}>
                 <item.icon size={20} />
                 <SidebarLabel>{item.label}</SidebarLabel>
               </SidebarItem>
