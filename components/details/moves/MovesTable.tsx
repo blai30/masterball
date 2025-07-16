@@ -235,10 +235,16 @@ function MovesTable({
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className={clsx(
-                    'group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10'
-                  )}
+                  className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => handleRowClick(row.original.slug)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleRowClick(row.original.slug)
+                    }
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
