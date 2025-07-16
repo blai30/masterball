@@ -2,9 +2,8 @@ import { Metadata } from 'next'
 import pMap from 'p-map'
 import { Move } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation, type MoveInfo } from '@/lib/utils/pokeapiHelpers'
 import MoveCardGrid from '@/components/compounds/MoveCardGrid'
-import { MoveCardProps } from '@/components/compounds/MoveCard'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -35,14 +34,14 @@ export default async function Home() {
     { concurrency: 4 }
   )
 
-  const movesData: MoveCardProps[] = moves
+  const movesData: MoveInfo[] = moves
     .filter(
       (resource) =>
         resource?.names?.find((name) => name?.language?.name === 'en') !==
         undefined
     )
     .map((resource) => ({
-      id: resource.id,
+      id: resource.id.toString(),
       slug: resource.name,
       name: getTranslation(resource.names, 'name')!,
       defaultDescription:

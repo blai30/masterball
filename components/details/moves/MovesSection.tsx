@@ -27,21 +27,9 @@ function createMoveRows(
 
   moves.forEach((m) => {
     const move = movesMap[m.move.name]
-    const defaultDescription =
-      getTranslation(move.effect_entries, 'short_effect') ?? ''
-    const flavorTextEntries = move.flavor_text_entries.filter(
-      (entry) => entry.language.name === 'en'
-    )
 
     m.version_group_details.forEach((resource) => {
       if (resource.move_learn_method.name === variant) {
-        const description =
-          flavorTextEntries.find(
-            (entry) =>
-              entry.language.name === 'en' &&
-              entry.version_group?.name === resource.version_group.name
-          )?.flavor_text ?? defaultDescription
-
         let id = move.id.toString()
 
         if (variant === LearnMethodKey.LevelUp) {
@@ -65,9 +53,13 @@ function createMoveRows(
           type: move.type.name as TypeKey,
           damageClass: move.damage_class.name as DamageClassKey,
           name: getTranslation(move.names, 'name')!,
-          description,
-          power: move.power,
-          accuracy: move.accuracy,
+          defaultDescription:
+            getTranslation(move.effect_entries, 'short_effect') ?? '',
+          flavorTextEntries: move.flavor_text_entries.filter(
+            (entry) => entry.language.name === 'en'
+          ),
+          power: move.power ?? undefined,
+          accuracy: move.accuracy ?? undefined,
           pp: move.pp!,
         })
       }

@@ -1,7 +1,7 @@
 'use client'
 
+import { memo, useCallback, useMemo, useState } from 'react'
 import Link from '@/components/ui/link'
-import { memo, useMemo, useState } from 'react'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   createColumnHelper,
   useReactTable,
-  SortingState,
+  type SortingState,
 } from '@tanstack/react-table'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapiHelpers'
@@ -23,7 +23,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-const tableNames = {
+const tableNames: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level-Up',
   [LearnMethodKey.Machine]: 'Technical Machine',
   [LearnMethodKey.Tutor]: 'Tutor',
@@ -31,7 +31,7 @@ const tableNames = {
   [LearnMethodKey.FormChange]: 'Form Change',
 }
 
-const idColumnLabels = {
+const idColumnLabels: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level',
   [LearnMethodKey.Machine]: 'Item',
   [LearnMethodKey.Tutor]: '',
@@ -90,13 +90,11 @@ function MovesTable({
       }),
       columnHelper.accessor('name', {
         header: 'Move',
-        cell: (info) => {
-          return (
-            <span className="font-medium text-zinc-900 dark:text-zinc-100">
-              {info.getValue()}
-            </span>
-          )
-        },
+        cell: (info) => (
+          <span className="font-medium text-zinc-900 dark:text-zinc-100">
+            {info.getValue()}
+          </span>
+        ),
       }),
       columnHelper.accessor('damageClass', {
         header: '',
@@ -139,16 +137,21 @@ function MovesTable({
     [moveRows, versionGroup]
   )
 
+  const memoizedMove = useMemo(
+    () => filteredMoveRows.find((m) => m.slug === activeMove),
+    [activeMove, filteredMoveRows]
+  )
+
   const table = useReactTable({
     data: filteredMoveRows,
     columns,
-    state: {
-      sorting,
-    },
+    state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   })
+
+  const handleRowClick = useCallback((slug: string) => setActiveMove(slug), [])
 
   if (!hasMounted) return null
 
@@ -165,16 +168,22 @@ function MovesTable({
   }
 
   function renderDialog() {
-    const move = filteredMoveRows.find((m) => m.slug === activeMove)
+    if (!hasMounted || !memoizedMove) return null
 
-    if (!move) return null
+    const description =
+      memoizedMove.flavorTextEntries.find(
+        (entry) =>
+          entry.language.name === 'en' &&
+          entry.version_group?.name === versionGroup
+      )?.flavor_text ?? memoizedMove.defaultDescription
+
     return (
       <Dialog open={!!activeMove} onClose={() => setActiveMove(null)}>
-        <DialogTitle>{move.name}</DialogTitle>
-        <DialogDescription>{move.description}</DialogDescription>
+        <DialogTitle>{memoizedMove.name}</DialogTitle>
+        <DialogDescription>{description}</DialogDescription>
         <DialogActions>
           <Link
-            href={`/move?q=${encodeURIComponent(move.name.toLowerCase())}`}
+            href={`/move?q=${encodeURIComponent(memoizedMove.name.toLowerCase())}`}
             className="text-blue-700 underline underline-offset-4 dark:text-blue-300"
           >
             Visit move page
@@ -222,32 +231,28 @@ function MovesTable({
                 </tr>
               ))}
             </thead>
-            <tbody className="">
-              {table.getRowModel().rows.map((row) => {
-                const moveSlug = row.original.slug
-                const dialogOpen = activeMove === moveSlug
-                return (
-                  <tr
-                    key={row.id}
-                    className={clsx(
-                      'group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10'
-                    )}
-                    onClick={() => setActiveMove(dialogOpen ? null : moveSlug)}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className={clsx('px-2', columnClasses[cell.column.id])}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                )
-              })}
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className={clsx(
+                    'group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10'
+                  )}
+                  onClick={() => handleRowClick(row.original.slug)}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className={clsx('px-2', columnClasses[cell.column.id])}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
