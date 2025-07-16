@@ -2,28 +2,15 @@
 
 import Image from 'next/image'
 import clsx from 'clsx/lite'
-import { FlavorText } from 'pokedex-promise-v2'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import {
   type DamageClassKey,
   DamageClassLabels,
+  type MoveInfo,
   TypeKey,
 } from '@/lib/utils/pokeapiHelpers'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
-
-export type MoveCardProps = {
-  id: number
-  slug: string
-  name: string
-  defaultDescription: string
-  flavorTextEntries: FlavorText[]
-  type: string
-  damageClass: string
-  power?: number
-  accuracy?: number
-  pp?: number
-}
 
 const typeClasses: Record<TypeKey, string> = {
   [TypeKey.Normal]:
@@ -64,7 +51,7 @@ const typeClasses: Record<TypeKey, string> = {
     'bg-gradient-to-br from-transparent to-fairy/10 inset-ring-1 inset-ring-fairy/10 dark:inset-ring-fairy/10 dark:to-fairy/10',
 }
 
-export default function MoveCard({ props }: { props: MoveCardProps }) {
+export default function MoveCard({ props }: { props: MoveInfo }) {
   const { versionGroup, hasMounted } = useVersionGroup()
   if (!hasMounted) return null
 

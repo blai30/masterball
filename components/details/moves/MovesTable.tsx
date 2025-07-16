@@ -1,7 +1,7 @@
 'use client'
 
+import { memo, useCallback, useMemo, useState } from 'react'
 import Link from '@/components/ui/link'
-import { memo, useMemo, useState } from 'react'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -10,14 +10,20 @@ import {
   getSortedRowModel,
   createColumnHelper,
   useReactTable,
-  SortingState,
+  type SortingState,
 } from '@tanstack/react-table'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
+import {
+  Dialog,
+  DialogActions,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
-const tableNames = {
+const tableNames: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level-Up',
   [LearnMethodKey.Machine]: 'Technical Machine',
   [LearnMethodKey.Tutor]: 'Tutor',
@@ -25,7 +31,7 @@ const tableNames = {
   [LearnMethodKey.FormChange]: 'Form Change',
 }
 
-const idColumnLabels = {
+const idColumnLabels: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level',
   [LearnMethodKey.Machine]: 'Item',
   [LearnMethodKey.Tutor]: '',
@@ -52,6 +58,7 @@ function MovesTable({
   moveRows: MoveRow[]
   className?: string
 }) {
+  const [activeMove, setActiveMove] = useState<string | null>(null)
   const { versionGroup, hasMounted } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
   const [sorting, setSorting] = useState<SortingState>([
@@ -84,15 +91,9 @@ function MovesTable({
       columnHelper.accessor('name', {
         header: 'Move',
         cell: (info) => (
-          <div className="@container/move">
-            <Link
-              href={`/move?q=${encodeURIComponent(info.row.original.name.toLowerCase())}`}
-              title={`Move: ${info.getValue()}`}
-              className="inline-flex overflow-clip font-medium text-nowrap text-ellipsis whitespace-nowrap text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
-            >
-              {info.getValue()}
-            </Link>
-          </div>
+          <span className="font-medium text-zinc-900 dark:text-zinc-100">
+            {info.getValue()}
+          </span>
         ),
       }),
       columnHelper.accessor('damageClass', {
@@ -136,16 +137,21 @@ function MovesTable({
     [moveRows, versionGroup]
   )
 
+  const memoizedMove = useMemo(
+    () => filteredMoveRows.find((m) => m.slug === activeMove),
+    [activeMove, filteredMoveRows]
+  )
+
   const table = useReactTable({
     data: filteredMoveRows,
     columns,
-    state: {
-      sorting,
-    },
+    state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   })
+
+  const handleRowClick = useCallback((slug: string) => setActiveMove(slug), [])
 
   if (!hasMounted) return null
 
@@ -158,6 +164,32 @@ function MovesTable({
           version group.
         </p>
       </div>
+    )
+  }
+
+  function renderDialog() {
+    if (!hasMounted || !memoizedMove) return null
+
+    const description =
+      memoizedMove.flavorTextEntries.find(
+        (entry) =>
+          entry.language.name === 'en' &&
+          entry.version_group?.name === versionGroup
+      )?.flavor_text ?? memoizedMove.defaultDescription
+
+    return (
+      <Dialog open={!!activeMove} onClose={() => setActiveMove(null)}>
+        <DialogTitle>{memoizedMove.name}</DialogTitle>
+        <DialogDescription>{description}</DialogDescription>
+        <DialogActions>
+          <Link
+            href={`/move?q=${encodeURIComponent(memoizedMove.name.toLowerCase())}`}
+            className="text-blue-700 underline underline-offset-4 dark:text-blue-300"
+          >
+            Visit move page
+          </Link>
+        </DialogActions>
+      </Dialog>
     )
   }
 
@@ -199,11 +231,20 @@ function MovesTable({
                 </tr>
               ))}
             </thead>
-            <tbody className="">
+            <tbody>
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
                   className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => handleRowClick(row.original.slug)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleRowClick(row.original.slug)
+                    }
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
@@ -222,6 +263,7 @@ function MovesTable({
           </table>
         </div>
       </div>
+      {renderDialog()}
     </div>
   )
 }

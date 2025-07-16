@@ -134,7 +134,7 @@ export default function SpeciesCardGrid({
       const fuse = new Fuse(filtered, {
         keys: ['id', 'name'],
         threshold: 0.4,
-        ignoreLocation: true,
+        ignoreLocation: false,
       })
       filtered = fuse
         .search(search)

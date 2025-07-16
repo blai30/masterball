@@ -4,9 +4,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
-import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapiHelpers'
+import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
-import MoveCard, { type MoveCardProps } from '@/components/compounds/MoveCard'
+import MoveCard from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, {
@@ -25,7 +25,7 @@ export default function MoveCardGrid({
   itemsPerPage = ITEMS_PER_PAGE,
   className,
 }: {
-  data: MoveCardProps[]
+  data: MoveInfo[]
   itemsPerPage?: number
   className?: string
 }) {
@@ -190,14 +190,14 @@ export default function MoveCardGrid({
       const fuse = new Fuse(filtered, {
         keys: ['name'],
         threshold: 0.4,
-        ignoreLocation: true,
+        ignoreLocation: false,
       })
-      filtered = fuse.search(search).map((r: { item: MoveCardProps }) => r.item)
+      filtered = fuse.search(search).map((r: { item: MoveInfo }) => r.item)
     }
     if (sortKey) {
       filtered = [...filtered].sort((a, b) => {
-        const aValue = a[sortKey as keyof MoveCardProps]
-        const bValue = b[sortKey as keyof MoveCardProps]
+        const aValue = a[sortKey as keyof MoveInfo]
+        const bValue = b[sortKey as keyof MoveInfo]
         if (aValue == null && bValue == null) return 0
         if (aValue == null) return 1
         if (bValue == null) return -1
@@ -231,7 +231,7 @@ export default function MoveCardGrid({
       </div>
       <CardGrid
         data={filteredData}
-        renderCardAction={(props: MoveCardProps) => <MoveCard props={props} />}
+        renderCardAction={(props: MoveInfo) => <MoveCard props={props} />}
         getKeyAction={(item) => item.id}
         currentPage={currentPage}
         onPageChangeAction={handlePageChange}

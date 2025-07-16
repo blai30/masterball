@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
+import clsx from 'clsx/lite'
 import { Search } from 'lucide-react'
-import { Field, Label } from '@/components/ui/fieldset'
 import { Input, InputGroup } from '@/components/ui/input'
 
 type SearchBarProps = {
@@ -19,7 +19,7 @@ export default function SearchBar({
   className,
 }: SearchBarProps) {
   return (
-    <InputGroup className="relative">
+    <InputGroup className={clsx('relative', className)}>
       <Search size={16} data-slot="icon" />
       <Input
         id="search"

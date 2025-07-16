@@ -58,7 +58,7 @@ export default function InfoCardGrid({
     const fuse = new Fuse(data, {
       keys: ['name'],
       threshold: 0.4,
-      ignoreLocation: true,
+      ignoreLocation: false,
     })
     return fuse.search(search).map((r: { item: InfoCardProps }) => r.item)
   }, [data, search])

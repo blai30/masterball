@@ -149,16 +149,11 @@ function BreedingMetadata({
           <span className="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
             Egg Groups
           </span>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1">
             {eggGroups.length > 0 ? (
               eggGroups.map((group, i) => (
-                <span key={group.name}>
-                  <Link
-                    href={`/egg-group/${group.name}`}
-                    className="font-medium text-blue-700 underline underline-offset-4 transition-colors hover:text-blue-800 hover:duration-0 dark:text-blue-300 dark:hover:text-blue-200"
-                  >
-                    {getTranslation(group.names, 'name')}
-                  </Link>
+                <span key={group.name} className="font-medium">
+                  {getTranslation(group.names, 'name')}
                   {i < eggGroups.length - 1 && ','}
                 </span>
               ))

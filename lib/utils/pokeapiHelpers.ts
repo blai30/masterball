@@ -1,5 +1,6 @@
 import pMap from 'p-map'
 import type {
+  FlavorText,
   Pokemon,
   PokemonForm,
   PokemonSpecies,
@@ -284,14 +285,19 @@ export function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
   return effectiveness
 }
 
-export type MoveRow = {
+export type MoveInfo = {
   id: string
   slug: string
-  versionGroup: string
-  type: TypeKey
-  damageClass: DamageClassKey
   name: string
-  power: number | null
-  accuracy: number | null
-  pp: number
+  defaultDescription: string
+  flavorTextEntries: FlavorText[]
+  type: string
+  damageClass: string
+  power?: number
+  accuracy?: number
+  pp?: number
+}
+
+export type MoveRow = MoveInfo & {
+  versionGroup: string
 }
