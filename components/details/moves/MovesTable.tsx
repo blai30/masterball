@@ -58,6 +58,7 @@ function MovesTable({
   moveRows: MoveRow[]
   className?: string
 }) {
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [activeMove, setActiveMove] = useState<string | null>(null)
   const { versionGroup, hasMounted } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
@@ -151,7 +152,10 @@ function MovesTable({
     getSortedRowModel: getSortedRowModel(),
   })
 
-  const handleRowClick = useCallback((slug: string) => setActiveMove(slug), [])
+  const handleRowClick = useCallback((slug: string) => {
+    setActiveMove(slug)
+    setDialogOpen(true)
+  }, [])
 
   if (!hasMounted) return null
 
@@ -167,104 +171,99 @@ function MovesTable({
     )
   }
 
-  function renderDialog() {
-    if (!hasMounted || !memoizedMove) return null
-
-    const description =
-      memoizedMove.flavorTextEntries.find(
-        (entry) =>
-          entry.language.name === 'en' &&
-          entry.version_group?.name === versionGroup
-      )?.flavor_text ?? memoizedMove.defaultDescription
-
-    return (
-      <Dialog open={!!activeMove} onClose={() => setActiveMove(null)}>
-        <DialogTitle>{memoizedMove.name}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
-        <DialogActions>
-          <Link
-            href={`/move?q=${encodeURIComponent(memoizedMove.name.toLowerCase())}`}
-            className="text-blue-700 underline underline-offset-4 dark:text-blue-300"
-          >
-            Visit move page
-          </Link>
-        </DialogActions>
-      </Dialog>
-    )
-  }
-
   return (
-    <div className={clsx('max-w-2xl', className)}>
-      <h3 className="text-lg">{tableNames[variant]}</h3>
-      <div className="-mx-4 mt-2 flex overflow-x-auto">
-        <div className="grow px-4">
-          <table className="min-w-full">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="h-8 items-center">
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      onClick={header.column.getToggleSortingHandler()}
-                      className="px-2 text-xs font-semibold"
-                    >
-                      <div
-                        className={clsx(
-                          'flex items-center',
-                          columnClasses[header.id]
-                        )}
+    <>
+      {memoizedMove && (
+        <Dialog open={dialogOpen} onClose={setDialogOpen}>
+          <DialogTitle>{memoizedMove.name}</DialogTitle>
+          <DialogDescription>
+            {memoizedMove.flavorTextEntries.find(
+              (entry) =>
+                entry.language.name === 'en' &&
+                entry.version_group?.name === versionGroup
+            )?.flavor_text ?? memoizedMove.defaultDescription}
+          </DialogDescription>
+          <DialogActions>
+            <Link
+              href={`/move?q=${encodeURIComponent(memoizedMove.name.toLowerCase())}`}
+              className="text-blue-700 underline underline-offset-4 dark:text-blue-300"
+            >
+              Visit move page
+            </Link>
+          </DialogActions>
+        </Dialog>
+      )}
+      <div className={clsx('max-w-2xl', className)}>
+        <h3 className="text-lg">{tableNames[variant]}</h3>
+        <div className="-mx-4 mt-2 flex overflow-x-auto">
+          <div className="grow px-4">
+            <table className="min-w-full">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id} className="h-8 items-center">
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        onClick={header.column.getToggleSortingHandler()}
+                        className="px-2 text-xs font-semibold"
                       >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                        {{
-                          asc: <ChevronUp className="h-3 w-3" />,
-                          desc: <ChevronDown className="h-3 w-3" />,
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => handleRowClick(row.original.slug)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      handleRowClick(row.original.slug)
-                    }
-                  }}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className={clsx('px-2', columnClasses[cell.column.id])}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                        <div
+                          className={clsx(
+                            'flex items-center',
+                            columnClasses[header.id]
+                          )}
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                          {{
+                            asc: <ChevronUp className="h-3 w-3" />,
+                            desc: <ChevronDown className="h-3 w-3" />,
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleRowClick(row.original.slug)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        handleRowClick(row.original.slug)
+                      }
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className={clsx('px-2', columnClasses[cell.column.id])}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      {renderDialog()}
-    </div>
+    </>
   )
 }
 
