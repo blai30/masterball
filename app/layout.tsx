@@ -1,33 +1,46 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
 import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
 import { Analytics } from '@vercel/analytics/react'
 
-const geist = Geist({
-  variable: '--font-geist',
-  subsets: ['latin'],
-  display: 'swap',
-})
+// Font loading optimized for static builds
+let geist: any, inter: any, jetBrainsMono: any, sofiaSans: any
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-})
+if (process.env.NODE_ENV === 'development') {
+  // Only load Google Fonts during development
+  const { Geist, Inter, JetBrains_Mono, Sofia_Sans } = require('next/font/google')
+  
+  geist = Geist({
+    variable: '--font-geist',
+    subsets: ['latin'],
+    display: 'swap',
+  })
 
-const jetBrainsMono = JetBrains_Mono({
-  variable: '--font-jetbrains-mono',
-  subsets: ['latin'],
-  display: 'swap',
-})
+  inter = Inter({
+    variable: '--font-inter',
+    subsets: ['latin'],
+    display: 'swap',
+  })
 
-const sofiaSans = Sofia_Sans({
-  variable: '--font-sofia-sans',
-  subsets: ['latin'],
-  display: 'swap',
-})
+  jetBrainsMono = JetBrains_Mono({
+    variable: '--font-jetbrains-mono',
+    subsets: ['latin'],
+    display: 'swap',
+  })
+
+  sofiaSans = Sofia_Sans({
+    variable: '--font-sofia-sans',
+    subsets: ['latin'],
+    display: 'swap',
+  })
+} else {
+  // Use fallback font configuration for production builds
+  geist = { variable: '--font-geist' }
+  inter = { variable: '--font-inter' }
+  jetBrainsMono = { variable: '--font-jetbrains-mono' }
+  sofiaSans = { variable: '--font-sofia-sans' }
+}
 
 export const metadata: Metadata = {
   title: {

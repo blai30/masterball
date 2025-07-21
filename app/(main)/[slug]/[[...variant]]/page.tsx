@@ -1,9 +1,8 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
-import pMap from 'p-map'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTestSpeciesList } from '@/lib/providers'
+import dataService from '@/lib/services/dataService'
 import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
 import { excludedForms, excludedVariants } from '@/lib/utils/excludedSlugs'
 import LoadingSection from '@/components/details/LoadingSection'
@@ -22,30 +21,8 @@ export const dynamic = 'force-static'
 export const dynamicParams = false
 
 export async function generateStaticParams() {
-  const speciesList =
-    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-      ? await getTestSpeciesList()
-      : await pokeapi.getList('pokemon-species', 1025, 0)
-
-  const species = await pMap(
-    speciesList.results,
-    async (result) => {
-      const resource = await pokeapi.getResource<PokemonSpecies>(result.url)
-      return resource
-    },
-    { concurrency: 4 }
-  )
-
-  const params = species.flatMap((specie) =>
-    specie.varieties
-      .filter((variant) => !excludedVariants.includes(variant.pokemon.name))
-      .map((variant) => ({
-        slug: specie.name,
-        variant: variant.is_default ? undefined : [variant.pokemon.name],
-      }))
-  )
-
-  return params
+  // Use the shared data service to avoid duplicate fetching
+  return dataService.getStaticParams()
 }
 
 export async function generateMetadata({
@@ -55,12 +32,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug, variant } = await params
   const [variantKey] = variant ?? []
-  const species = await pokeapi.getByName<PokemonSpecies>(
-    'pokemon-species',
-    slug
-  )
+  
+  // Try to get from cached data first
+  let species = await dataService.getSpeciesByName(slug)
+  if (!species) {
+    // Fallback to API if not in cache
+    species = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
+  }
+  
   const pokemonUrl = species.varieties
-    .filter((variant) => !excludedVariants.includes(variant.name))
+    .filter((variant) => !excludedVariants.includes(variant.pokemon.name))
     .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
     .pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
@@ -105,26 +86,26 @@ export default async function Page({
 }) {
   const { slug, variant } = await params
   const [variantKey] = variant ?? []
-  const species = await pokeapi.getByName<PokemonSpecies>(
-    'pokemon-species',
-    slug
-  )
+  
+  // Try to get from cached data first
+  let species = await dataService.getSpeciesByName(slug)
+  if (!species) {
+    // Fallback to API if not in cache
+    species = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
+  }
+  
   const pokemonUrl = species.varieties
-    .filter((variant) => !excludedVariants.includes(variant.name))
+    .filter((variant) => !excludedVariants.includes(variant.pokemon.name))
     .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
     .pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
-  const forms = await pMap(
+  const forms = await pokeapi.batchFetchAndTransform(
     pokemon.forms.filter((form) => !excludedForms.includes(form.name)),
     async (form) => {
-      const resource = await pokeapi.getByName<PokemonForm>(
-        'pokemon-form',
-        form.name
-      )
-      return resource
+      return pokeapi.getByName<PokemonForm>('pokemon-form', form.name)
     },
-    { concurrency: 4 }
+    8 // Increased concurrency
   )
 
   const form =

@@ -16,6 +16,9 @@
 # production
 /build
 
+# build cache
+/.next-cache/
+
 # misc
 .DS_Store
 *.pem
