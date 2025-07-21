@@ -5,8 +5,13 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
+    "build:dev": "NODE_ENV=development next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "clean": "rm -rf .next out .next-cache",
+    "cache:clear": "rm -rf .next-cache"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",

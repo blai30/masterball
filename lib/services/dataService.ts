@@ -3,6 +3,7 @@ import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import { excludedVariants } from '@/lib/utils/excludedSlugs'
 import { getTranslation, TypeKey } from '@/lib/utils/pokeapiHelpers'
+import profiler from '@/lib/utils/profiler'
 
 type SpeciesData = {
   species: PokemonSpecies[]
@@ -53,17 +54,23 @@ class DataService {
   }
 
   private async fetchSpeciesData(): Promise<SpeciesData> {
+    profiler.start('fetchSpeciesData')
     const cacheKey = 'species-data-complete'
     
     // Try to get from build cache first (only during build)
     if (buildCache && typeof window === 'undefined') {
       try {
+        profiler.start('cacheRead')
         const cached = await buildCache.get<SpeciesData>(cacheKey)
+        profiler.end('cacheRead')
+        
         if (cached) {
           console.log('Using cached species data')
+          profiler.end('fetchSpeciesData')
           return cached
         }
       } catch (error) {
+        profiler.end('cacheRead')
         console.warn('Cache read failed:', error)
       }
     }
@@ -71,11 +78,14 @@ class DataService {
     console.log('Fetching fresh species data...')
     
     // Get species list
+    profiler.start('getSpeciesList')
     const speciesList = process?.env?.NODE_ENV === 'development'
       ? await getTestSpeciesList()
       : await pokeapi.getList('pokemon-species', 1025, 0)
+    profiler.end('getSpeciesList')
 
     // Fetch all species data in parallel with increased concurrency
+    profiler.start('fetchSpeciesDetails')
     const species = await pokeapi.batchFetchAndTransform(
       speciesList.results,
       async (result) => {
@@ -83,8 +93,10 @@ class DataService {
       },
       8 // Increased concurrency
     )
+    profiler.end('fetchSpeciesDetails')
 
     // Fetch Pokemon data for each species in parallel
+    profiler.start('fetchPokemonData')
     const speciesPokemonEntries = await pokeapi.batchFetchAndTransform(
       species,
       async (specie) => {
@@ -102,7 +114,9 @@ class DataService {
       },
       8 // Increased concurrency
     )
+    profiler.end('fetchPokemonData')
 
+    profiler.start('processData')
     // Filter out null entries and create the record
     const speciesPokemon = Object.fromEntries(
       speciesPokemonEntries.filter((entry): entry is [string, Pokemon] => entry !== null)
@@ -112,18 +126,24 @@ class DataService {
       species,
       speciesPokemon,
     }
+    profiler.end('processData')
 
     // Cache the complete dataset (only during build)
     if (buildCache && typeof window === 'undefined') {
       try {
+        profiler.start('cacheWrite')
         const ttl = process?.env?.NODE_ENV === 'development' ? 60 * 1000 : 6 * 60 * 60 * 1000
         await buildCache.set<SpeciesData>(cacheKey, data, ttl)
+        profiler.end('cacheWrite')
         console.log(`Fetched and cached data for ${species.length} species`)
       } catch (error) {
+        profiler.end('cacheWrite')
         console.warn('Cache write failed:', error)
       }
     }
 
+    profiler.end('fetchSpeciesData')
+    profiler.summary()
     return data
   }
 
