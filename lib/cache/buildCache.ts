@@ -8,7 +8,6 @@ const CACHE_VERSION = '1.0.0'
 type CacheEntry<T> = {
   version: string
   timestamp: number
-  ttl: number
   data: T
 }
 
@@ -37,11 +36,8 @@ class BuildCache {
       const data = await fs.readFile(cachePath, 'utf-8')
       const entry: CacheEntry<T> = JSON.parse(data)
 
-      // Check version and TTL
-      if (
-        entry.version !== CACHE_VERSION ||
-        Date.now() > entry.timestamp + entry.ttl
-      ) {
+      // Check version only (no TTL check)
+      if (entry.version !== CACHE_VERSION) {
         await this.delete(key)
         return null
       }
@@ -52,14 +48,13 @@ class BuildCache {
     }
   }
 
-  async set<T>(key: string, data: T, ttlMs: number = 24 * 60 * 60 * 1000): Promise<void> {
+  async set<T>(key: string, data: T): Promise<void> {
     try {
       await this.ensureCacheDir()
       const cachePath = this.getCachePath(key)
       const entry: CacheEntry<T> = {
         version: CACHE_VERSION,
         timestamp: Date.now(),
-        ttl: ttlMs,
         data,
       }
       await fs.writeFile(cachePath, JSON.stringify(entry), 'utf-8')

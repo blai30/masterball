@@ -6,10 +6,6 @@
 .pnp.js
 .yarn/install-state.gz
 
-# lock files (project uses bun)
-package-lock.json
-yarn.lock
-
 # testing
 /coverage
 
@@ -19,9 +15,6 @@ yarn.lock
 
 # production
 /build
-
-# build cache
-/.next-cache/
 
 # misc
 .DS_Store

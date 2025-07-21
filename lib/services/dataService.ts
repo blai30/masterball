@@ -13,7 +13,7 @@ type SpeciesData = {
 // Build cache interface
 interface BuildCache {
   get<T>(key: string): Promise<T | null>
-  set<T>(key: string, data: T, ttl: number): Promise<void>
+  set<T>(key: string, data: T): Promise<void>
 }
 
 // Import buildCache only during build time
@@ -132,8 +132,7 @@ class DataService {
     if (buildCache && typeof window === 'undefined') {
       try {
         profiler.start('cacheWrite')
-        const ttl = process?.env?.NODE_ENV === 'development' ? 60 * 1000 : 6 * 60 * 60 * 1000
-        await buildCache.set<SpeciesData>(cacheKey, data, ttl)
+        await buildCache.set<SpeciesData>(cacheKey, data)
         profiler.end('cacheWrite')
         console.log(`Fetched and cached data for ${species.length} species`)
       } catch (error) {
