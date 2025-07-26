@@ -1,8 +1,10 @@
 import clsx from 'clsx/lite'
 import type { Pokemon } from 'pokedex-promise-v2'
+import { Group } from '@visx/group'
+import { Polygon } from '@visx/shape'
+import { scaleLinear } from '@visx/scale'
 import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapiHelpers'
 
-// Stat order for radar chart
 const statOrder: StatKey[] = [
   StatKey.Hp,
   StatKey.Attack,
@@ -16,125 +18,165 @@ const labelClasses: Record<StatKey, string> = {
   [StatKey.Hp]: 'text-center',
   [StatKey.Attack]: 'text-left',
   [StatKey.Defense]: 'text-left',
-  [StatKey.Speed]: 'text-center',
-  [StatKey.SpecialDefense]: 'text-right',
   [StatKey.SpecialAttack]: 'text-right',
+  [StatKey.SpecialDefense]: 'text-right',
+  [StatKey.Speed]: 'text-center',
 }
 
+type StatDatum = {
+  key: StatKey
+  value: number
+}
+
+const RADAR_SIZE = 320
+const RADAR_RADIUS = 120
+const RADAR_CENTER = RADAR_SIZE / 2
+const MAX_STAT = 255
+const LEVELS = 5
+
 export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
-  const generateSubdivisions = (length: number) =>
-    Array.from({ length }, (_, i) => Math.ceil((i + 1) * (50 / length)))
+  // Map stats to statOrder and fill missing with 0
+  const statData: StatDatum[] = statOrder.map((key) => {
+    const stat = pokemon.stats.find((s) => s.stat.name === key)
+    return { key, value: stat ? stat.base_stat : 0 }
+  })
 
-  const generateHexagonPoints = (
-    radius: number,
-    centerX: number,
-    centerY: number
-  ) =>
-    Array.from({ length: 6 }, (_, i) => {
-      const angle = (Math.PI / 3) * i - Math.PI / 2
-      const x = centerX + radius * Math.cos(angle)
-      const y = centerY + radius * Math.sin(angle)
-      return `${x},${y}`
-    }).join(' ')
+  const scale = scaleLinear({
+    domain: [0, MAX_STAT],
+    range: [0, RADAR_RADIUS],
+  })
 
-  const dataPoints = pokemon.stats
-    .slice()
-    .sort(
-      (a, b) =>
-        statOrder.indexOf(a.stat.name as StatKey) -
-        statOrder.indexOf(b.stat.name as StatKey)
-    )
-    .map((stat) => {
-      const angleIndex = statOrder.indexOf(stat.stat.name as StatKey)
-      const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
-      const x = 50 + (stat.base_stat / 255) * 50 * Math.cos(angle)
-      const y = 50 + (stat.base_stat / 255) * 50 * Math.sin(angle)
-      return `${x},${y}`
-    })
-    .join(' ')
+  // visx Radar expects an array of objects with keys matching statOrder
+  const radarDatum: Record<StatKey, number> = {
+    [StatKey.Hp]: statData.find((s) => s.key === StatKey.Hp)?.value ?? 0,
+    [StatKey.Attack]:
+      statData.find((s) => s.key === StatKey.Attack)?.value ?? 0,
+    [StatKey.Defense]:
+      statData.find((s) => s.key === StatKey.Defense)?.value ?? 0,
+    [StatKey.SpecialAttack]:
+      statData.find((s) => s.key === StatKey.SpecialAttack)?.value ?? 0,
+    [StatKey.SpecialDefense]:
+      statData.find((s) => s.key === StatKey.SpecialDefense)?.value ?? 0,
+    [StatKey.Speed]: statData.find((s) => s.key === StatKey.Speed)?.value ?? 0,
+  }
+
+  // For label positioning
+  const getLabelPosition = (i: number) => {
+    const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
+    const x = RADAR_CENTER + (RADAR_RADIUS + 50) * Math.cos(angle)
+    const y = RADAR_CENTER + (RADAR_RADIUS + 32) * Math.sin(angle)
+    return { x, y }
+  }
 
   return (
-    <div className="relative m-4 mt-10 max-w-80 p-8">
-      <svg viewBox="0 0 100 100" className="w-full overflow-visible">
-        {Array.from({ length: pokemon.stats.length }, (_, i) => {
-          const angle = (Math.PI / 3) * i - Math.PI / 2
-          const x = 50 + 50 * Math.cos(angle)
-          const y = 50 + 50 * Math.sin(angle)
-          return (
-            <line
-              key={`grid-line-${i}`}
-              x1="50"
-              y1="50"
-              x2={x}
-              y2={y}
-              className="stroke-zinc-300 stroke-[0.5] dark:stroke-zinc-700"
-            />
-          )
-        })}
-        {generateSubdivisions(5).map((value, index) => (
-          <polygon
-            key={index}
-            points={generateHexagonPoints(value, 50, 50)}
-            className="fill-none stroke-zinc-300 stroke-[0.5] dark:stroke-zinc-700"
+    <div className="relative m-4 mt-8">
+      <svg
+        width={RADAR_SIZE}
+        height={RADAR_SIZE}
+        className="w-full overflow-visible"
+      >
+        <Group top={0} left={0}>
+          {/* Grid levels */}
+          {Array.from({ length: LEVELS }, (_, i) => {
+            const r = scale(MAX_STAT * ((i + 1) / LEVELS))
+            const points: [number, number][] = statOrder.map((_, idx) => {
+              const angle = (Math.PI * 2 * idx) / statOrder.length - Math.PI / 2
+              return [
+                RADAR_CENTER + r * Math.cos(angle),
+                RADAR_CENTER + r * Math.sin(angle),
+              ] as [number, number]
+            })
+            return (
+              <Polygon
+                key={`grid-${i}`}
+                points={points}
+                className="fill-none stroke-zinc-300 stroke-1 dark:stroke-zinc-700"
+              />
+            )
+          })}
+          {/* Stat axis lines */}
+          {statOrder.map((_, i) => {
+            const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
+            const x = RADAR_CENTER + RADAR_RADIUS * Math.cos(angle)
+            const y = RADAR_CENTER + RADAR_RADIUS * Math.sin(angle)
+            return (
+              <line
+                key={`axis-${i}`}
+                x1={RADAR_CENTER}
+                y1={RADAR_CENTER}
+                x2={x}
+                y2={y}
+                className="stroke-zinc-300 stroke-1 dark:stroke-zinc-700"
+              />
+            )
+          })}
+          {/* Radar polygon */}
+          <Polygon
+            points={statOrder.map((key, i) => {
+              const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
+              const r = scale(radarDatum[key])
+              return [
+                RADAR_CENTER + r * Math.cos(angle),
+                RADAR_CENTER + r * Math.sin(angle),
+              ]
+            })}
+            fill="rgba(0,0,0,0.6)"
+            className="fill-black/60 stroke-black stroke-2 dark:fill-white/60 dark:stroke-white"
           />
-        ))}
-        <polygon
-          points={dataPoints}
-          className="fill-black/60 stroke-black stroke-1 dark:fill-white/60 dark:stroke-white"
-        />
-        {/* Add dots at stat points */}
-        {pokemon.stats.map((stat) => {
-          const angleIndex = statOrder.indexOf(stat.stat.name as StatKey)
-          const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
-          const statX = 50 + (stat.base_stat / 255) * 50 * Math.cos(angle)
-          const statY = 50 + (stat.base_stat / 255) * 50 * Math.sin(angle)
-
+          {/* Dots at stat points */}
+          {statOrder.map((key, i) => {
+            const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
+            const r = scale(radarDatum[key])
+            const x = RADAR_CENTER + r * Math.cos(angle)
+            const y = RADAR_CENTER + r * Math.sin(angle)
+            return (
+              <circle
+                key={`dot-${key}`}
+                cx={x}
+                cy={y}
+                r={3}
+                className="fill-black dark:fill-white"
+              />
+            )
+          })}
+        </Group>
+        {/* Stat labels and values */}
+        {statOrder.map((key, i) => {
+          const { x, y } = getLabelPosition(i)
+          const align = labelClasses[key]
           return (
-            <circle
-              key={`dot-${stat.stat.name}`}
-              cx={statX}
-              cy={statY}
-              r="1.2"
-              className="fill-black dark:fill-white"
-            />
+            <foreignObject
+              key={`label-${key}`}
+              x={x - 28}
+              y={y - 18}
+              width={56}
+              height={36}
+              style={{ overflow: 'visible' }}
+            >
+              <div className={clsx('flex w-14 flex-col', align)}>
+                <abbr
+                  title={StatLabelsFull[key]}
+                  aria-label={StatLabelsFull[key]}
+                  className={clsx(
+                    'text-xs font-normal text-zinc-700 no-underline dark:text-zinc-300',
+                    align
+                  )}
+                >
+                  {StatLabels[key]}
+                </abbr>
+                <p
+                  className={clsx(
+                    'font-num text-lg font-semibold text-black tabular-nums dark:text-white',
+                    align
+                  )}
+                >
+                  {radarDatum[key]}
+                </p>
+              </div>
+            </foreignObject>
           )
         })}
       </svg>
-      {/* Stat labels and their values */}
-      {pokemon.stats.map((stat) => {
-        const { name } = stat.stat
-        const angleIndex = statOrder.indexOf(name as StatKey)
-        const angle = (Math.PI / 3) * angleIndex - Math.PI / 2
-        const x = 50 + 56 * Math.cos(angle)
-        const y = 50 + 50 * Math.sin(angle)
-        const align = labelClasses[name as StatKey]
-        return (
-          <div
-            key={`label-${name}`}
-            className="absolute top-0 left-0 flex w-14 -translate-x-1/2 -translate-y-1/2 flex-col"
-            style={{ left: `${x}%`, top: `${y}%` }}
-          >
-            <abbr
-              title={StatLabelsFull[name as StatKey]}
-              aria-label={StatLabelsFull[name as StatKey]}
-              className={clsx(
-                'text-xs font-normal text-zinc-700 no-underline dark:text-zinc-300',
-                align
-              )}
-            >
-              {StatLabels[name as StatKey]}
-            </abbr>
-            <p
-              className={clsx(
-                'font-num text-lg font-semibold text-black tabular-nums dark:text-white',
-                align
-              )}
-            >
-              {stat.base_stat}
-            </p>
-          </div>
-        )
-      })}
     </div>
   )
 }
