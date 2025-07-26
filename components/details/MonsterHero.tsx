@@ -1,5 +1,8 @@
+'use client'
+
 import Image from 'next/image'
 import clsx from 'clsx/lite'
+import { motion } from 'motion/react'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import TypePill from '@/components/TypePill'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
@@ -27,6 +30,7 @@ export default function MonsterHero({
 
   const leadingZeros = imageId.match(/^0+/)?.[0] || ''
   const significantDigits = imageId.slice(leadingZeros.length)
+  const layoutId = `pokemon-image-${species.id}`
 
   return (
     <div
@@ -59,7 +63,7 @@ export default function MonsterHero({
           </span>
         </p>
       </div>
-      <div className="absolute right-4 bottom-4 flex">
+      <motion.div layoutId={layoutId} className="absolute right-4 bottom-4 flex">
         <Image
           src={imageUrl}
           alt={`${species.name} front default`}
@@ -67,7 +71,7 @@ export default function MonsterHero({
           height={128}
           className="object-scale-down"
         />
-      </div>
+      </motion.div>
     </div>
   )
 }

@@ -42,14 +42,14 @@ export default function StatsTabs({
           </h2>
           <Tab
             id="tab-bar"
-            className="rounded-md p-1.5 data-hover:inset-ring-2 data-hover:inset-ring-zinc-300 data-selected:bg-white dark:data-hover:inset-ring-zinc-700 dark:data-selected:bg-zinc-700"
+            className="rounded-md p-1.5 data-hover:inset-ring-2 data-hover:inset-ring-zinc-300 data-selected:bg-zinc-300 dark:data-hover:inset-ring-zinc-700 dark:data-selected:bg-zinc-700"
             aria-controls="tabpanel-bar"
           >
             <ChartBar />
           </Tab>
           <Tab
             id="tab-radar"
-            className="rounded-md p-1.5 data-hover:inset-ring-2 data-hover:inset-ring-zinc-300 data-selected:bg-white dark:data-hover:inset-ring-zinc-700 dark:data-selected:bg-zinc-700"
+            className="rounded-md p-1.5 data-hover:inset-ring-2 data-hover:inset-ring-zinc-300 data-selected:bg-zinc-300 dark:data-hover:inset-ring-zinc-700 dark:data-selected:bg-zinc-700"
             aria-controls="tabpanel-radar"
           >
             <Hexagon />
