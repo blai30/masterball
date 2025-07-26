@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useCallback, ReactNode } from 'react'
+import { motion } from 'motion/react'
 import Pagination from '@/components/compounds/Pagination'
 
 type CardGridProps<T> = {
@@ -49,13 +50,41 @@ export default function CardGrid<T>({
               totalPages={totalPages}
               onPageChangeAction={onPageChangeAction}
             />
-            <ul className={className}>
-              {paginatedItems.map((item) => (
-                <li key={getKey(item)} className="col-span-1">
+            <motion.ul
+              className={className}
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    staggerChildren: 0.01,
+                  },
+                },
+              }}
+              key={currentPage + '-' + paginatedItems.length}
+            >
+              {paginatedItems.map((item, idx) => (
+                <motion.li
+                  key={getKey(item)}
+                  className="col-span-1"
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        type: 'spring',
+                        bounce: 0.18,
+                        duration: 0.38,
+                      },
+                    },
+                  }}
+                >
                   {renderCard(item)}
-                </li>
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { motion } from 'motion/react'
 import Link from '@/components/ui/link'
 import { memo } from 'react'
 import { TypeKey } from '@/lib/utils/pokeapiHelpers'
@@ -17,6 +18,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
   const imageId = props.id.toString().padStart(4, '0')
   // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
   const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+  const layoutId = `pokemon-image-${props.id}`
 
   return (
     <GlassCard variant="link" className="h-full rounded-xl">
@@ -30,13 +32,17 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
         >
           {props.id}
         </p>
-        <Image
-          src={imageUrl}
-          alt={props.slug}
-          width={128}
-          height={128}
-          className="min-w-full object-contain py-3"
-        />
+        <motion.div layoutId={layoutId} className="min-w-full py-3">
+          <Image
+            src={imageUrl}
+            alt={props.slug}
+            width={128}
+            height={128}
+            className="object-contain"
+            priority={true}
+            loading="eager"
+          />
+        </motion.div>
         <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
           {props.name}
         </h3>

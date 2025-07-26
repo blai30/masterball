@@ -1,16 +1,40 @@
+import { useEffect, useState } from 'react'
 import type { Pokemon } from 'pokedex-promise-v2'
 import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapiHelpers'
 
 export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
+  // Animate each stat bar fill
+  const [fillPercentages, setFillPercentages] = useState<number[]>(() =>
+    pokemon.stats.map(() => 0)
+  )
+
+  useEffect(() => {
+    // Animate to actual fill after mount
+    const timeouts = pokemon.stats.map((stat, i) =>
+      setTimeout(
+        () => {
+          setFillPercentages((prev) => {
+            const next = [...prev]
+            next[i] = Number(((stat.base_stat / 255) * 100).toFixed(4))
+            return next
+          })
+        },
+        // Stagger the animations
+        100 + i * 80
+      )
+    )
+    return () => {
+      timeouts.forEach(clearTimeout)
+    }
+  }, [pokemon.stats])
 
   return (
     <div className="w-full">
       {/* Bar chart */}
       <ul className="flex flex-col">
-        {pokemon.stats.map((stat) => {
+        {pokemon.stats.map((stat, i) => {
           const fullLabel = StatLabelsFull[stat.stat.name as StatKey]
-          const fillPercentage = ((stat.base_stat / 255) * 100).toFixed(4)
           return (
             <li
               key={stat.stat.name}
@@ -40,8 +64,10 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
                   </div>
                   {/* Fill bar */}
                   <div
-                    className="absolute h-full rounded-l-sm bg-black/60 inset-ring-1 inset-ring-black dark:bg-white/60 dark:inset-ring-white"
-                    style={{ width: `${fillPercentage}%` }}
+                    className={
+                      'absolute h-full rounded-l-sm bg-black/60 inset-ring-1 inset-ring-black transition-all duration-700 dark:bg-white/60 dark:inset-ring-white'
+                    }
+                    style={{ width: `${fillPercentages[i]}%` }}
                   />
                 </div>
               </div>
