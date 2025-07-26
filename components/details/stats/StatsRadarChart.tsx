@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import clsx from 'clsx/lite'
+import { motion } from 'motion/react'
 import type { Pokemon } from 'pokedex-promise-v2'
 import { Group } from '@visx/group'
 import { Polygon } from '@visx/shape'
@@ -35,10 +37,10 @@ const MAX_STAT = 255
 const LEVELS = 5
 
 export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
-  // Map stats to statOrder and fill missing with 0
+  // Map stats to statOrder
   const statData: StatDatum[] = statOrder.map((key) => {
-    const stat = pokemon.stats.find((s) => s.stat.name === key)
-    return { key, value: stat ? stat.base_stat : 0 }
+    const stat = pokemon.stats.find((s) => s.stat.name === key)!
+    return { key, value: stat.base_stat }
   })
 
   const scale = scaleLinear({
@@ -46,8 +48,18 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
     range: [0, RADAR_RADIUS],
   })
 
-  // visx Radar expects an array of objects with keys matching statOrder
-  const radarDatum: Record<StatKey, number> = {
+  // Animation state for each stat
+  const [animatedStats, setAnimatedStats] = useState<Record<StatKey, number>>({
+    [StatKey.Hp]: 0,
+    [StatKey.Attack]: 0,
+    [StatKey.Defense]: 0,
+    [StatKey.SpecialAttack]: 0,
+    [StatKey.SpecialDefense]: 0,
+    [StatKey.Speed]: 0,
+  })
+
+  // Final stat values
+  const finalStats: Record<StatKey, number> = {
     [StatKey.Hp]: statData.find((s) => s.key === StatKey.Hp)?.value ?? 0,
     [StatKey.Attack]:
       statData.find((s) => s.key === StatKey.Attack)?.value ?? 0,
@@ -60,7 +72,42 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
     [StatKey.Speed]: statData.find((s) => s.key === StatKey.Speed)?.value ?? 0,
   }
 
-  // For label positioning
+  // Animate stats on mount with staggered timing
+  useEffect(() => {
+    // Reset all stats to 0 first
+    setAnimatedStats({
+      [StatKey.Hp]: 0,
+      [StatKey.Attack]: 0,
+      [StatKey.Defense]: 0,
+      [StatKey.SpecialAttack]: 0,
+      [StatKey.SpecialDefense]: 0,
+      [StatKey.Speed]: 0,
+    })
+
+    // Animate each stat with staggered timing
+    const timeouts = statOrder.map((key, i) =>
+      setTimeout(
+        () => {
+          setAnimatedStats((prev) => ({
+            ...prev,
+            [key]: finalStats[key],
+          }))
+        },
+        // Stagger the animations
+        200 + i * 100
+      )
+    )
+
+    return () => timeouts.forEach(clearTimeout)
+  }, [
+    finalStats[StatKey.Hp],
+    finalStats[StatKey.Attack],
+    finalStats[StatKey.Defense],
+    finalStats[StatKey.SpecialAttack],
+    finalStats[StatKey.SpecialDefense],
+    finalStats[StatKey.Speed],
+  ])
+
   const getLabelPosition = (i: number) => {
     const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
     const x = RADAR_CENTER + (RADAR_RADIUS + 50) * Math.cos(angle)
@@ -111,34 +158,36 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
             )
           })}
           {/* Radar polygon */}
-          <Polygon
-            points={statOrder.map((key, i) => {
-              const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
-              const r = scale(radarDatum[key])
-              return [
-                RADAR_CENTER + r * Math.cos(angle),
-                RADAR_CENTER + r * Math.sin(angle),
-              ]
-            })}
+          <motion.polygon
+            points={statOrder
+              .map((key, i) => {
+                const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
+                const r = scale(animatedStats[key])
+                return [
+                  RADAR_CENTER + r * Math.cos(angle),
+                  RADAR_CENTER + r * Math.sin(angle),
+                ]
+              })
+              .map(([x, y]) => `${x},${y}`)
+              .join(' ')}
             fill="rgba(0,0,0,0.6)"
             className="fill-black/60 stroke-black stroke-2 dark:fill-white/60 dark:stroke-white"
+            animate={{
+              points: statOrder
+                .map((key, i) => {
+                  const angle =
+                    (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
+                  const r = scale(animatedStats[key])
+                  return [
+                    RADAR_CENTER + r * Math.cos(angle),
+                    RADAR_CENTER + r * Math.sin(angle),
+                  ]
+                })
+                .map(([x, y]) => `${x},${y}`)
+                .join(' '),
+            }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
           />
-          {/* Dots at stat points */}
-          {statOrder.map((key, i) => {
-            const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
-            const r = scale(radarDatum[key])
-            const x = RADAR_CENTER + r * Math.cos(angle)
-            const y = RADAR_CENTER + r * Math.sin(angle)
-            return (
-              <circle
-                key={`dot-${key}`}
-                cx={x}
-                cy={y}
-                r={3}
-                className="fill-black dark:fill-white"
-              />
-            )
-          })}
         </Group>
         {/* Stat labels and values */}
         {statOrder.map((key, i) => {
@@ -170,7 +219,7 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
                     align
                   )}
                 >
-                  {radarDatum[key]}
+                  {finalStats[key]}
                 </p>
               </div>
             </foreignObject>
