@@ -37,8 +37,9 @@ export default async function Home() {
   const abilitiesData = abilities
     .filter(
       (resource) =>
+        resource.is_main_series &&
         resource?.names?.find((name) => name?.language?.name === 'en') !==
-        undefined
+          undefined
     )
     .map((resource) => ({
       id: resource.id,

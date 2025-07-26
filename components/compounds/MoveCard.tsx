@@ -114,7 +114,7 @@ export default function MoveCard({ props }: { props: MoveInfo }) {
               Power
             </span>
             <span className="font-num w-full text-center text-xl font-medium">
-              {props.power ?? '—'}
+              {props.power || '—'}
             </span>
           </div>
           <div className="flex flex-col items-baseline justify-between">
@@ -122,7 +122,7 @@ export default function MoveCard({ props }: { props: MoveInfo }) {
               Accuracy
             </span>
             <span className="font-num w-full text-center text-xl font-medium">
-              {props.accuracy ?? '—'}
+              {props.accuracy || '—'}
               <span className="ml-0.5 text-zinc-600 dark:text-zinc-400">%</span>
             </span>
           </div>
