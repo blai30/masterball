@@ -2,7 +2,6 @@
 
 import { Fragment, memo, useCallback, useMemo, useState } from 'react'
 import { motion } from 'motion/react'
-import Link from '@/components/ui/link'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -17,12 +16,6 @@ import { useVersionGroup } from '@/lib/stores/version-group'
 import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
-import {
-  Dialog,
-  DialogActions,
-  DialogDescription,
-  DialogTitle,
-} from '@/components/ui/dialog'
 
 const tableNames: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level-Up',
@@ -222,7 +215,7 @@ function MovesTable({
                   <Fragment key={row.id}>
                     <motion.tr
                       className={clsx(
-                        'group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10',
+                        'group h-8 rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10',
                         isActive && 'bg-zinc-100 dark:bg-zinc-900'
                       )}
                       role="button"
@@ -248,43 +241,70 @@ function MovesTable({
                         },
                       }}
                     >
-                      {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className={clsx(
-                            'px-2',
-                            columnClasses[cell.column.id]
-                          )}
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      ))}
+                      {row.getVisibleCells().map((cell) => {
+                        const isNameCell = cell.column.id === 'name'
+                        if (isNameCell) {
+                          return (
+                            <td
+                              key={cell.id}
+                              className={clsx(
+                                'px-2 py-1 align-top',
+                                columnClasses[cell.column.id]
+                              )}
+                            >
+                              <div className="flex flex-col">
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                                <motion.div
+                                  initial={false}
+                                  animate={
+                                    isActive
+                                      ? {
+                                          height: 'auto',
+                                          opacity: 1,
+                                          marginTop: 4,
+                                        }
+                                      : { height: 0, opacity: 0, marginTop: 0 }
+                                  }
+                                  transition={{
+                                    type: 'spring',
+                                    duration: 0.4,
+                                    bounce: 0.3,
+                                  }}
+                                  className="overflow-hidden"
+                                >
+                                  <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                                    {row.original.flavorTextEntries?.find(
+                                      (entry) =>
+                                        entry.language.name === 'en' &&
+                                        entry.version_group?.name ===
+                                          versionGroup
+                                    )?.flavor_text ??
+                                      row.original.defaultDescription}
+                                  </span>
+                                </motion.div>
+                              </div>
+                            </td>
+                          )
+                        }
+                        return (
+                          <td
+                            key={cell.id}
+                            className={clsx(
+                              'px-2 py-1 align-top',
+                              columnClasses[cell.column.id]
+                            )}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        )
+                      })}
                     </motion.tr>
-                    {isActive && (
-                      <motion.tr
-                        layout
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                      >
-                        <td
-                          colSpan={columns.length}
-                          className="rounded-b-md bg-white p-4 shadow-lg dark:bg-zinc-950"
-                          style={{ position: 'relative' }}
-                        >
-                          <span className="text-md text-zinc-700 dark:text-zinc-300">
-                            {row.original.flavorTextEntries?.find(
-                              (entry) =>
-                                entry.language.name === 'en' &&
-                                entry.version_group?.name === versionGroup
-                            )?.flavor_text ?? row.original.defaultDescription}
-                          </span>
-                        </td>
-                      </motion.tr>
-                    )}
                   </Fragment>
                 )
               })}
