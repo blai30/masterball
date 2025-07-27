@@ -140,8 +140,8 @@ function MovesTable({
     getSortedRowModel: getSortedRowModel(),
   })
 
-  const handleRowClick = useCallback((slug: string) => {
-    setActiveMove((prev) => (prev === slug ? null : slug))
+  const handleRowClick = useCallback((key: string) => {
+    setActiveMove((prev) => (prev === key ? null : key))
   }, [])
 
   if (!hasMounted) return null
@@ -207,10 +207,11 @@ function MovesTable({
                   },
                 },
               }}
-              key={versionGroup + '-' + filteredMoveRows.length}
+              key={versionGroup + '-' + variant}
             >
               {table.getRowModel().rows.map((row) => {
-                const isActive = row.original.slug === activeMove
+                const isActive =
+                  `${row.original.id}-${row.original.slug}` === activeMove
                 return (
                   <Fragment key={row.id}>
                     <motion.tr
@@ -220,11 +221,17 @@ function MovesTable({
                       )}
                       role="button"
                       tabIndex={0}
-                      onClick={() => handleRowClick(row.original.slug)}
+                      onClick={() =>
+                        handleRowClick(
+                          `${row.original.id}-${row.original.slug}`
+                        )
+                      }
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault()
-                          handleRowClick(row.original.slug)
+                          handleRowClick(
+                            `${row.original.id}-${row.original.slug}`
+                          )
                         }
                       }}
                       layout
