@@ -76,7 +76,7 @@ export default function CardGrid<T>({
                       transition: {
                         type: 'spring',
                         bounce: 0.18,
-                        duration: 0.38,
+                        duration: 0.5,
                       },
                     },
                   }}
