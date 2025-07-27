@@ -1,6 +1,7 @@
 'use client'
 
 import { memo, useCallback, useMemo, useState } from 'react'
+import { motion } from 'motion/react'
 import Link from '@/components/ui/link'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -197,7 +198,7 @@ function MovesTable({
         <h3 className="text-lg">{tableNames[variant]}</h3>
         <div className="-mx-4 mt-2 flex overflow-x-auto">
           <div className="grow px-4">
-            <table className="min-w-full">
+            <table className="min-w-full overflow-y-clip">
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id} className="h-8 items-center">
@@ -230,9 +231,21 @@ function MovesTable({
                   </tr>
                 ))}
               </thead>
-              <tbody>
+              <motion.tbody
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: {},
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.04,
+                    },
+                  },
+                }}
+                key={versionGroup + '-' + filteredMoveRows.length}
+              >
                 {table.getRowModel().rows.map((row) => (
-                  <tr
+                  <motion.tr
                     key={row.id}
                     className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
                     role="button"
@@ -243,6 +256,18 @@ function MovesTable({
                         e.preventDefault()
                         handleRowClick(row.original.slug)
                       }
+                    }}
+                    variants={{
+                      hidden: { opacity: 0, y: 32 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: {
+                          type: 'spring',
+                          bounce: 0.18,
+                          duration: 0.5,
+                        },
+                      },
                     }}
                   >
                     {row.getVisibleCells().map((cell) => (
@@ -256,9 +281,9 @@ function MovesTable({
                         )}
                       </td>
                     ))}
-                  </tr>
+                  </motion.tr>
                 ))}
-              </tbody>
+              </motion.tbody>
             </table>
           </div>
         </div>
