@@ -1,6 +1,14 @@
 'use client'
 
-import { Fragment, memo, useCallback, useMemo, useState } from 'react'
+import {
+  Fragment,
+  memo,
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+} from 'react'
 import { motion } from 'motion/react'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -58,6 +66,24 @@ function MovesTable({
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'id', desc: false },
   ])
+  const tableRef = useRef<HTMLDivElement>(null)
+
+  // Collapse active move when clicking outside the table
+  useEffect(() => {
+    if (!activeMove) return
+    const handleClick = (event: MouseEvent) => {
+      if (
+        tableRef.current &&
+        !tableRef.current.contains(event.target as Node)
+      ) {
+        setActiveMove(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+    }
+  }, [activeMove])
 
   const columns = useMemo(
     () => [
@@ -159,7 +185,7 @@ function MovesTable({
   }
 
   return (
-    <div className={clsx('max-w-2xl', className)}>
+    <div ref={tableRef} className={clsx('max-w-2xl', className)}>
       <h3 className="text-lg">{tableNames[variant]}</h3>
       <div className="-mx-4 mt-2 flex overflow-x-auto">
         <div className="grow px-4">
