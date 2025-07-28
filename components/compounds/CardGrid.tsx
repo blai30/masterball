@@ -53,7 +53,7 @@ export default function CardGrid<T>({
               totalPages={totalPages}
               onPageChangeAction={onPageChangeAction}
             />
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               <motion.ul
                 className={className}
                 initial="hidden"
@@ -74,17 +74,25 @@ export default function CardGrid<T>({
                     layoutId={`card-${getKey(item)}`}
                     layout
                     className="col-span-1"
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -16 }}
+                    variants={{
+                      hidden: { opacity: 0, y: 16 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: {
+                          type: 'spring',
+                          bounce: 0.1,
+                          duration: 0.5,
+                        },
+                      },
+                    }}
+                    exit={{ opacity: 0, y: -16, transition: { duration: 0.2 } }}
                     transition={{
                       layout: {
                         type: 'spring',
                         bounce: 0.1,
                         duration: 0.6,
                       },
-                      opacity: { duration: 0.2 },
-                      y: { type: 'spring', bounce: 0.1, duration: 0.5 },
                     }}
                   >
                     {renderCard(item)}
