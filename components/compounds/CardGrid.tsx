@@ -53,53 +53,63 @@ export default function CardGrid<T>({
               totalPages={totalPages}
               onPageChangeAction={onPageChangeAction}
             />
-            <AnimatePresence>
-              <motion.ul
-                className={className}
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: {},
-                  visible: {
-                    transition: {
-                      staggerChildren: 0.01,
+            <div className="relative">
+              <AnimatePresence mode="wait">
+                <motion.ul
+                  className={className}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.01,
+                        delayChildren: 0,
+                      },
                     },
-                  },
-                }}
-                key={currentPage}
-              >
-                {paginatedItems.map((item) => (
-                  <motion.li
-                    key={getKey(item)}
-                    layoutId={`card-${getKey(item)}`}
-                    layout
-                    className="col-span-1"
-                    variants={{
-                      hidden: { opacity: 0, y: 16 },
-                      visible: {
-                        opacity: 1,
-                        y: 0,
-                        transition: {
+                    exit: {
+                      opacity: 0,
+                      transition: {
+                        duration: 0.05,
+                      },
+                    },
+                  }}
+                  key={currentPage}
+                >
+                  {paginatedItems.map((item) => (
+                    <motion.li
+                      key={getKey(item)}
+                      layoutId={`card-${getKey(item)}`}
+                      layout
+                      className="col-span-1"
+                      variants={{
+                        hidden: { opacity: 0, y: 16 },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          transition: {
+                            type: 'spring',
+                            bounce: 0.1,
+                            duration: 0.5,
+                          },
+                        },
+                      }}
+                      transition={{
+                        layout: {
                           type: 'spring',
                           bounce: 0.1,
-                          duration: 0.5,
+                          duration: 0.6,
                         },
-                      },
-                    }}
-                    exit={{ opacity: 0, y: -16, transition: { duration: 0.2 } }}
-                    transition={{
-                      layout: {
-                        type: 'spring',
-                        bounce: 0.1,
-                        duration: 0.6,
-                      },
-                    }}
-                  >
-                    {renderCard(item)}
-                  </motion.li>
-                ))}
-              </motion.ul>
-            </AnimatePresence>
+                      }}
+                    >
+                      {renderCard(item)}
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              </AnimatePresence>
+            </div>
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
