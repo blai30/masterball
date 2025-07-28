@@ -5,6 +5,7 @@ import pokeapi from '@/lib/api/pokeapi'
 import { itemList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import InfoCardGrid from '@/components/compounds/InfoCardGrid'
+import { excludedItems } from '@/lib/utils/excludedSlugs'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -28,7 +29,9 @@ export default async function Home() {
 
   const items = await pMap(
     itemsList.results.filter(
-      (result) => !result.name.startsWith('dynamax-crystal-')
+      (result) =>
+        !excludedItems.includes(result.name) &&
+        !result.name.startsWith('dynamax-crystal-')
     ),
     async (result) => {
       const resource = await pokeapi.getResource<Item>(result.url)

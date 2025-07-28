@@ -144,3 +144,33 @@ export const excludedForms = [
   'alcremie-caramel-swirl-ribbon-sweet',
   'alcremie-rainbow-swirl-ribbon-sweet',
 ]
+
+export const excludedItems = [
+  'tm-dark',
+  'tm-dragon',
+  'tm-psychic',
+  'tm-normal',
+  'tm-poison',
+  'tm-ice',
+  'tm-fighting',
+  'tm-fire',
+  'tm-water',
+  'tm-grass',
+  'tm-rock',
+  'tm-electric',
+  'tm-ground',
+  'tm-ghost',
+  'tm-steel',
+  'tm-bug',
+  'tm-flying',
+  'tm-fairy',
+  'tm-material',
+  'kofus-wallet',
+  'leaders-crest',
+  'scarlet-vein',
+  'violet-rune',
+  // TODO: Include when API is updated
+  'crystal-cluster',
+  'metal-alloy',
+  'stellar-tera-shard',
+]
