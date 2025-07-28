@@ -14,10 +14,12 @@ const ITEMS_PER_PAGE = 48
 
 export default function InfoCardGrid({
   data,
+  filterByVersionGroup = false,
   itemsPerPage = ITEMS_PER_PAGE,
   className,
 }: {
   data: InfoCardProps[]
+  filterByVersionGroup?: boolean
   itemsPerPage?: number
   className?: string
 }) {
@@ -56,21 +58,21 @@ export default function InfoCardGrid({
    * Returns filtered data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = data.filter((move) =>
-      move.flavorTextEntries.some(
-        (entry) => entry.version_group?.name === versionGroup
-      )
-    )
-    if (search) {
-      const fuse = new Fuse(data, {
-        keys: ['name'],
-        threshold: 0.4,
-        ignoreLocation: false,
-      })
-      filtered = fuse.search(search).map((r: { item: InfoCardProps }) => r.item)
-    }
-    return filtered
-  }, [data, search, versionGroup])
+    const filtered = filterByVersionGroup
+      ? data.filter((resource) =>
+          resource.flavorTextEntries.some(
+            (entry) => entry.version_group?.name === versionGroup
+          )
+        )
+      : data
+
+    if (!search) return filtered
+    const fuse = new Fuse(filtered, {
+      keys: ['name'],
+      threshold: 0.4,
+    })
+    return fuse.search(search).map((result) => result.item)
+  }, [data, filterByVersionGroup, search, versionGroup])
 
   return (
     <div className="flex flex-col gap-8">

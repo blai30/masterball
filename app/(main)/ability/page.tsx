@@ -55,7 +55,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto w-full max-w-[96rem]">
-      <InfoCardGrid data={abilitiesData} />
+      <InfoCardGrid data={abilitiesData} filterByVersionGroup={true} />
     </div>
   )
 }

@@ -27,10 +27,12 @@ const ITEMS_PER_PAGE = 36
 
 export default function MoveCardGrid({
   data,
+  filterByVersionGroup = false,
   itemsPerPage = ITEMS_PER_PAGE,
   className,
 }: {
   data: MoveInfo[]
+  filterByVersionGroup?: boolean
   itemsPerPage?: number
   className?: string
 }) {
@@ -185,19 +187,24 @@ export default function MoveCardGrid({
    */
   const filteredData = useMemo(() => {
     let filtered = data
-      .filter((move) =>
-        move.flavorTextEntries.some(
+
+    if (filterByVersionGroup) {
+      filtered = filtered.filter((resource) =>
+        resource.flavorTextEntries.some(
           (entry) => entry.version_group?.name === versionGroup
         )
       )
-      .filter((move) => {
-        const typeMatch =
-          typeFilter.length === 0 || typeFilter.includes(move.type)
-        const classMatch =
-          damageClassFilter.length === 0 ||
-          damageClassFilter.includes(move.damageClass)
-        return typeMatch && classMatch
-      })
+    }
+
+    filtered = filtered.filter((resource) => {
+      const typeMatch =
+        typeFilter.length === 0 || typeFilter.includes(resource.type)
+      const classMatch =
+        damageClassFilter.length === 0 ||
+        damageClassFilter.includes(resource.damageClass)
+      return typeMatch && classMatch
+    })
+
     if (search) {
       const fuse = new Fuse(filtered, {
         keys: ['name'],
@@ -206,6 +213,7 @@ export default function MoveCardGrid({
       })
       filtered = fuse.search(search).map((r: { item: MoveInfo }) => r.item)
     }
+
     if (sortKey) {
       filtered = [...filtered].sort((a, b) => {
         const aValue = a[sortKey as keyof MoveInfo]
@@ -223,8 +231,18 @@ export default function MoveCardGrid({
         return 0
       })
     }
+
     return filtered
-  }, [data, typeFilter, damageClassFilter, search, sortKey, sortDirection, versionGroup])
+  }, [
+    data,
+    typeFilter,
+    damageClassFilter,
+    search,
+    sortKey,
+    sortDirection,
+    versionGroup,
+    filterByVersionGroup,
+  ])
 
   return (
     <div className="flex flex-col gap-8">
