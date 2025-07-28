@@ -798,7 +798,7 @@ const items = [
   'stellar-tera-shard',
 ]
 
-export const itemList: NamedAPIResourceList = {
+export const itemResourceList: NamedAPIResourceList = {
   count: items.length,
   next: null,
   previous: null,

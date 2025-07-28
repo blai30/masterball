@@ -2,10 +2,10 @@ import { Metadata } from 'next'
 import pMap from 'p-map'
 import { Item } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { itemList } from '@/lib/providers'
+import { itemResourceList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
-import InfoCardGrid from '@/components/compounds/InfoCardGrid'
 import { excludedItems } from '@/lib/utils/excludedSlugs'
+import InfoCardGrid from '@/components/compounds/InfoCardGrid'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -22,17 +22,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const itemsList =
-    process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
-      ? await pokeapi.getList('item', 40, 0)
-      : itemList
-
   const items = await pMap(
-    itemsList.results.filter(
-      (result) =>
-        !excludedItems.includes(result.name) &&
-        !result.name.startsWith('dynamax-crystal-')
-    ),
+    itemResourceList.results
+      .filter(
+        (result) =>
+          !excludedItems.includes(result.name) &&
+          !result.name.startsWith('dynamax-crystal-')
+      )
+      .slice(
+        process?.env?.NODE_ENV === 'development' ? 300 : undefined,
+        process?.env?.NODE_ENV === 'development' ? 340 : undefined
+      ),
     async (result) => {
       const resource = await pokeapi.getResource<Item>(result.url)
       return resource
