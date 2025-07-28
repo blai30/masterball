@@ -4,7 +4,12 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
-import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapiHelpers'
+import { useVersionGroup } from '@/lib/stores/version-group'
+import {
+  DamageClassKey,
+  type MoveInfo,
+  TypeKey,
+} from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
@@ -31,6 +36,7 @@ export default function MoveCardGrid({
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { versionGroup } = useVersionGroup()
 
   const sortOptions: SortOption<string>[] = useMemo(
     () => [
@@ -178,14 +184,20 @@ export default function MoveCardGrid({
    * Returns filtered and sorted data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = data.filter((move) => {
-      const typeMatch =
-        typeFilter.length === 0 || typeFilter.includes(move.type)
-      const classMatch =
-        damageClassFilter.length === 0 ||
-        damageClassFilter.includes(move.damageClass)
-      return typeMatch && classMatch
-    })
+    let filtered = data
+      .filter((move) =>
+        move.flavorTextEntries.some(
+          (entry) => entry.version_group?.name === versionGroup
+        )
+      )
+      .filter((move) => {
+        const typeMatch =
+          typeFilter.length === 0 || typeFilter.includes(move.type)
+        const classMatch =
+          damageClassFilter.length === 0 ||
+          damageClassFilter.includes(move.damageClass)
+        return typeMatch && classMatch
+      })
     if (search) {
       const fuse = new Fuse(filtered, {
         keys: ['name'],
@@ -212,7 +224,7 @@ export default function MoveCardGrid({
       })
     }
     return filtered
-  }, [data, typeFilter, damageClassFilter, search, sortKey, sortDirection])
+  }, [data, typeFilter, damageClassFilter, search, sortKey, sortDirection, versionGroup])
 
   return (
     <div className="flex flex-col gap-8">
