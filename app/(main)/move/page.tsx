@@ -59,7 +59,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto w-full max-w-[96rem]">
-      <MoveCardGrid data={movesData} />
+      <MoveCardGrid data={movesData} filterByVersionGroup={true} />
     </div>
   )
 }

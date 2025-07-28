@@ -4,7 +4,12 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
-import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapiHelpers'
+import { useVersionGroup } from '@/lib/stores/version-group'
+import {
+  DamageClassKey,
+  type MoveInfo,
+  TypeKey,
+} from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
@@ -22,15 +27,18 @@ const ITEMS_PER_PAGE = 36
 
 export default function MoveCardGrid({
   data,
+  filterByVersionGroup = false,
   itemsPerPage = ITEMS_PER_PAGE,
   className,
 }: {
   data: MoveInfo[]
+  filterByVersionGroup?: boolean
   itemsPerPage?: number
   className?: string
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { versionGroup } = useVersionGroup()
 
   const sortOptions: SortOption<string>[] = useMemo(
     () => [
@@ -178,14 +186,25 @@ export default function MoveCardGrid({
    * Returns filtered and sorted data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = data.filter((move) => {
+    let filtered = data
+
+    if (filterByVersionGroup) {
+      filtered = filtered.filter((resource) =>
+        resource.flavorTextEntries.some(
+          (entry) => entry.version_group?.name === versionGroup
+        )
+      )
+    }
+
+    filtered = filtered.filter((resource) => {
       const typeMatch =
-        typeFilter.length === 0 || typeFilter.includes(move.type)
+        typeFilter.length === 0 || typeFilter.includes(resource.type)
       const classMatch =
         damageClassFilter.length === 0 ||
-        damageClassFilter.includes(move.damageClass)
+        damageClassFilter.includes(resource.damageClass)
       return typeMatch && classMatch
     })
+
     if (search) {
       const fuse = new Fuse(filtered, {
         keys: ['name'],
@@ -194,6 +213,7 @@ export default function MoveCardGrid({
       })
       filtered = fuse.search(search).map((r: { item: MoveInfo }) => r.item)
     }
+
     if (sortKey) {
       filtered = [...filtered].sort((a, b) => {
         const aValue = a[sortKey as keyof MoveInfo]
@@ -211,8 +231,18 @@ export default function MoveCardGrid({
         return 0
       })
     }
+
     return filtered
-  }, [data, typeFilter, damageClassFilter, search, sortKey, sortDirection])
+  }, [
+    data,
+    typeFilter,
+    damageClassFilter,
+    search,
+    sortKey,
+    sortDirection,
+    versionGroup,
+    filterByVersionGroup,
+  ])
 
   return (
     <div className="flex flex-col gap-8">

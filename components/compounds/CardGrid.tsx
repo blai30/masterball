@@ -40,8 +40,11 @@ export default function CardGrid<T>({
     <div className="xs:gap-8 flex flex-col gap-4">
       <div className="xs:gap-8 flex flex-col gap-4">
         {data.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-col items-center justify-center gap-2 py-12 text-zinc-500 dark:text-zinc-400">
             <span className="text-lg font-medium">No results found</span>
+            <span className="text-sm font-normal">
+              Check filters and/or version group dropdown
+            </span>
           </div>
         ) : (
           <>
@@ -76,7 +79,7 @@ export default function CardGrid<T>({
                       transition: {
                         type: 'spring',
                         bounce: 0.18,
-                        duration: 0.38,
+                        duration: 0.5,
                       },
                     },
                   }}

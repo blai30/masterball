@@ -21,7 +21,7 @@ function VersionGroupSelector() {
       defaultValue={versionGroup}
       value={versionGroup}
       onChange={setVersionGroup}
-      className="max-w-40 min-w-40"
+      className="lg:max-w-40 min-w-52"
     >
       {options.map((option) => {
         return (

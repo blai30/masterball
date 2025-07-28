@@ -42,6 +42,8 @@ export default function InfoCard({ props }: { props: InfoCardProps }) {
               width={64}
               height={64}
               className=""
+              priority={true}
+              loading="eager"
             />
           </div>
         )}

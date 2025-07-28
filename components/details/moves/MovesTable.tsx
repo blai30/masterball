@@ -1,7 +1,15 @@
 'use client'
 
-import { memo, useCallback, useMemo, useState } from 'react'
-import Link from '@/components/ui/link'
+import {
+  Fragment,
+  memo,
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+} from 'react'
+import { motion } from 'motion/react'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
@@ -16,12 +24,6 @@ import { useVersionGroup } from '@/lib/stores/version-group'
 import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapiHelpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
-import {
-  Dialog,
-  DialogActions,
-  DialogDescription,
-  DialogTitle,
-} from '@/components/ui/dialog'
 
 const tableNames: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level-Up',
@@ -58,13 +60,30 @@ function MovesTable({
   moveRows: MoveRow[]
   className?: string
 }) {
-  const [dialogOpen, setDialogOpen] = useState(false)
   const [activeMove, setActiveMove] = useState<string | null>(null)
   const { versionGroup, hasMounted } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'id', desc: false },
   ])
+  const tableRef = useRef<HTMLDivElement>(null)
+
+  // Collapse active move when clicking outside the table
+  useEffect(() => {
+    if (!activeMove) return
+    const handleClick = (event: MouseEvent) => {
+      if (
+        tableRef.current &&
+        !tableRef.current.contains(event.target as Node)
+      ) {
+        setActiveMove(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+    }
+  }, [activeMove])
 
   const columns = useMemo(
     () => [
@@ -138,11 +157,6 @@ function MovesTable({
     [moveRows, versionGroup]
   )
 
-  const memoizedMove = useMemo(
-    () => filteredMoveRows.find((m) => m.slug === activeMove),
-    [activeMove, filteredMoveRows]
-  )
-
   const table = useReactTable({
     data: filteredMoveRows,
     columns,
@@ -152,9 +166,8 @@ function MovesTable({
     getSortedRowModel: getSortedRowModel(),
   })
 
-  const handleRowClick = useCallback((slug: string) => {
-    setActiveMove(slug)
-    setDialogOpen(true)
+  const handleRowClick = useCallback((key: string) => {
+    setActiveMove((prev) => (prev === key ? null : key))
   }, [])
 
   if (!hasMounted) return null
@@ -172,98 +185,167 @@ function MovesTable({
   }
 
   return (
-    <>
-      {memoizedMove && (
-        <Dialog open={dialogOpen} onClose={setDialogOpen}>
-          <DialogTitle>{memoizedMove.name}</DialogTitle>
-          <DialogDescription>
-            {memoizedMove.flavorTextEntries.find(
-              (entry) =>
-                entry.language.name === 'en' &&
-                entry.version_group?.name === versionGroup
-            )?.flavor_text ?? memoizedMove.defaultDescription}
-          </DialogDescription>
-          <DialogActions>
-            <Link
-              href={`/move?q=${encodeURIComponent(memoizedMove.name.toLowerCase())}`}
-              className="text-blue-700 underline underline-offset-4 dark:text-blue-300"
-            >
-              Visit move page
-            </Link>
-          </DialogActions>
-        </Dialog>
-      )}
-      <div className={clsx('max-w-2xl', className)}>
-        <h3 className="text-lg">{tableNames[variant]}</h3>
-        <div className="-mx-4 mt-2 flex overflow-x-auto">
-          <div className="grow px-4">
-            <table className="min-w-full">
-              <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id} className="h-8 items-center">
-                    {headerGroup.headers.map((header) => (
-                      <th
-                        key={header.id}
-                        colSpan={header.colSpan}
-                        onClick={header.column.getToggleSortingHandler()}
-                        className="px-2 text-xs font-semibold"
-                      >
-                        <div
-                          className={clsx(
-                            'flex items-center',
-                            columnClasses[header.id]
-                          )}
-                        >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                          {{
-                            asc: <ChevronUp className="h-3 w-3" />,
-                            desc: <ChevronDown className="h-3 w-3" />,
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="group h-8 items-center rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10"
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => handleRowClick(row.original.slug)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault()
-                        handleRowClick(row.original.slug)
-                      }
-                    }}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className={clsx('px-2', columnClasses[cell.column.id])}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
+    <div ref={tableRef} className={clsx('max-w-2xl', className)}>
+      <h3 className="text-lg">{tableNames[variant]}</h3>
+      <div className="-mx-4 mt-2 flex overflow-x-auto">
+        <div className="grow px-4">
+          <table className="min-w-full overflow-y-clip">
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id} className="h-8 items-center">
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      onClick={header.column.getToggleSortingHandler()}
+                      className="px-2 text-xs font-semibold"
+                    >
+                      <div
+                        className={clsx(
+                          'flex items-center',
+                          columnClasses[header.id]
                         )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                        {{
+                          asc: <ChevronUp className="h-3 w-3" />,
+                          desc: <ChevronDown className="h-3 w-3" />,
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <motion.tbody
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    staggerChildren: 0.04,
+                  },
+                },
+              }}
+              key={versionGroup + '-' + variant}
+            >
+              {table.getRowModel().rows.map((row) => {
+                const isActive =
+                  `${row.original.id}-${row.original.slug}` === activeMove
+                return (
+                  <Fragment key={row.id}>
+                    <motion.tr
+                      className={clsx(
+                        'group h-8 rounded-md transition-colors hover:bg-black/10 hover:duration-0 dark:hover:bg-white/10',
+                        isActive && 'bg-zinc-100 dark:bg-zinc-900'
+                      )}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() =>
+                        handleRowClick(
+                          `${row.original.id}-${row.original.slug}`
+                        )
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          handleRowClick(
+                            `${row.original.id}-${row.original.slug}`
+                          )
+                        }
+                      }}
+                      layout
+                      variants={{
+                        hidden: { opacity: 0, y: 32 },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          transition: {
+                            type: 'spring',
+                            bounce: 0.18,
+                            duration: 0.5,
+                          },
+                        },
+                      }}
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        const isNameCell = cell.column.id === 'name'
+                        if (isNameCell) {
+                          return (
+                            <td
+                              key={cell.id}
+                              className={clsx(
+                                'px-2 py-1 align-top',
+                                columnClasses[cell.column.id]
+                              )}
+                            >
+                              <div className="flex flex-col">
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                                <motion.div
+                                  initial={false}
+                                  animate={
+                                    isActive
+                                      ? {
+                                          height: 'auto',
+                                          opacity: 1,
+                                          marginTop: 4,
+                                        }
+                                      : { height: 0, opacity: 0, marginTop: 0 }
+                                  }
+                                  transition={{
+                                    type: 'spring',
+                                    duration: 0.4,
+                                    bounce: 0.3,
+                                  }}
+                                  className="overflow-hidden"
+                                >
+                                  <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                                    {row.original.flavorTextEntries?.find(
+                                      (entry) =>
+                                        entry.language.name === 'en' &&
+                                        entry.version_group?.name ===
+                                          versionGroup
+                                    )?.flavor_text ??
+                                      row.original.defaultDescription}
+                                  </span>
+                                </motion.div>
+                              </div>
+                            </td>
+                          )
+                        }
+                        return (
+                          <td
+                            key={cell.id}
+                            className={clsx(
+                              'px-2 py-1 align-top',
+                              columnClasses[cell.column.id]
+                            )}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        )
+                      })}
+                    </motion.tr>
+                  </Fragment>
+                )
+              })}
+            </motion.tbody>
+          </table>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

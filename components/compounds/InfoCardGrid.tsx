@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
+import { useVersionGroup } from '@/lib/stores/version-group'
 import CardGrid from '@/components/compounds/CardGrid'
 import InfoCard, { type InfoCardProps } from '@/components/compounds/InfoCard'
 import SearchBar from '@/components/shared/SearchBar'
@@ -13,15 +14,18 @@ const ITEMS_PER_PAGE = 48
 
 export default function InfoCardGrid({
   data,
+  filterByVersionGroup = false,
   itemsPerPage = ITEMS_PER_PAGE,
   className,
 }: {
   data: InfoCardProps[]
+  filterByVersionGroup?: boolean
   itemsPerPage?: number
   className?: string
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { versionGroup } = useVersionGroup()
 
   const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
   const [currentPage, setCurrentPage] = useState(
@@ -54,14 +58,21 @@ export default function InfoCardGrid({
    * Returns filtered data for grid display.
    */
   const filteredData = useMemo(() => {
-    if (!search) return data
-    const fuse = new Fuse(data, {
+    const filtered = filterByVersionGroup
+      ? data.filter((resource) =>
+          resource.flavorTextEntries.some(
+            (entry) => entry.version_group?.name === versionGroup
+          )
+        )
+      : data
+
+    if (!search) return filtered
+    const fuse = new Fuse(filtered, {
       keys: ['name'],
       threshold: 0.4,
-      ignoreLocation: false,
     })
-    return fuse.search(search).map((r: { item: InfoCardProps }) => r.item)
-  }, [data, search])
+    return fuse.search(search).map((result) => result.item)
+  }, [data, filterByVersionGroup, search, versionGroup])
 
   return (
     <div className="flex flex-col gap-8">

@@ -2,8 +2,10 @@ import { Metadata } from 'next'
 import pMap from 'p-map'
 import { Item } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
+import { itemList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 import InfoCardGrid from '@/components/compounds/InfoCardGrid'
+import { excludedItems } from '@/lib/utils/excludedSlugs'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -23,11 +25,13 @@ export default async function Home() {
   const itemsList =
     process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development'
       ? await pokeapi.getList('item', 40, 0)
-      : await pokeapi.getList('item', 3000, 0)
+      : itemList
 
   const items = await pMap(
     itemsList.results.filter(
-      (result) => !result.name.startsWith('dynamax-crystal-')
+      (result) =>
+        !excludedItems.includes(result.name) &&
+        !result.name.startsWith('dynamax-crystal-')
     ),
     async (result) => {
       const resource = await pokeapi.getResource<Item>(result.url)
@@ -44,8 +48,7 @@ export default async function Home() {
     )
     .map((resource) => {
       const { id, name } = resource
-      const imageId = id.toString().padStart(4, '0')
-      const imageUrl = `https://resource.pokemon-home.com/battledata/img/item/item_${imageId}.png`
+      const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/items/item_${name}.webp`
       return {
         id,
         slug: name,

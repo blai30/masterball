@@ -94,7 +94,8 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
           }))
         },
         // Stagger the animations
-        200 + i * 100
+        // 200 + i * 100
+        200
       )
     )
 
@@ -186,7 +187,7 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
                 .map(([x, y]) => `${x},${y}`)
                 .join(' '),
             }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
           />
         </Group>
         {/* Stat labels and values */}
