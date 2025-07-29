@@ -51,9 +51,9 @@ export default async function Home() {
       ),
       type: resource.type.name,
       damageClass: resource.damage_class.name,
-      power: resource.power ?? undefined,
-      accuracy: resource.accuracy ?? undefined,
-      pp: resource.pp ?? undefined,
+      power: resource.power || undefined,
+      accuracy: resource.accuracy || undefined,
+      pp: resource.pp!,
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
 

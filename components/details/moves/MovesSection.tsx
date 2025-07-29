@@ -58,8 +58,8 @@ function createMoveRows(
           flavorTextEntries: move.flavor_text_entries.filter(
             (entry) => entry.language.name === 'en'
           ),
-          power: move.power ?? undefined,
-          accuracy: move.accuracy ?? undefined,
+          power: move.power || undefined,
+          accuracy: move.accuracy || undefined,
           pp: move.pp!,
         })
       }
