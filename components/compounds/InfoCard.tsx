@@ -4,6 +4,12 @@ import Image from 'next/image'
 import { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
 import GlassCard from '@/components/GlassCard'
 import { useVersionGroup } from '@/lib/stores/version-group'
+import { Badge } from '@/components/ui/badge'
+
+type Tag = {
+  label: string
+  value: string
+}
 
 export type InfoCardProps = {
   id: number
@@ -12,6 +18,7 @@ export type InfoCardProps = {
   defaultDescription: string
   flavorTextEntries: FlavorText[] | VersionGroupFlavorText[]
   imageUrl?: string
+  tags?: Tag[]
 }
 
 export default function InfoCard({ props }: { props: InfoCardProps }) {
@@ -47,10 +54,19 @@ export default function InfoCard({ props }: { props: InfoCardProps }) {
             />
           </div>
         )}
-        <div className="flex flex-col items-start gap-1">
+        <div className="flex flex-col items-start gap-2">
           <h3 className="text-lg font-medium text-black dark:text-white">
             {props.name}
           </h3>
+          {props.tags && props.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {props.tags.map((tag) => (
+                <Badge key={tag.value} color="zinc">
+                  {tag.label}
+                </Badge>
+              ))}
+            </div>
+          )}
           <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">
             {description}
           </p>
