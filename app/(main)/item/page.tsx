@@ -44,7 +44,7 @@ export default async function Home() {
       const resource = await pokeapi.getResource<Item>(result.url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const itemsData = items

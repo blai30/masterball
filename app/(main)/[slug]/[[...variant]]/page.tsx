@@ -33,7 +33,7 @@ export async function generateStaticParams() {
       const resource = await pokeapi.getResource<PokemonSpecies>(result.url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const params = species.flatMap((specie) =>
@@ -124,7 +124,7 @@ export default async function Page({
       )
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const form =

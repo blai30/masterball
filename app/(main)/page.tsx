@@ -33,7 +33,7 @@ export default async function Home() {
       const resource = await pokeapi.getResource<PokemonSpecies>(result.url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const speciesPokemon: Record<string, Pokemon> = Object.fromEntries(
@@ -47,7 +47,7 @@ export default async function Home() {
         )
         return [specie.name, pokemon] as const
       },
-      { concurrency: 4 }
+      { concurrency: 20 }
     )
   )
 

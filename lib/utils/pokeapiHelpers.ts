@@ -84,7 +84,7 @@ export const getMonstersBySpecies = async (
       const resource = await pokeapi.getResource<Pokemon>(url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const monsters = await pMap(
@@ -93,7 +93,7 @@ export const getMonstersBySpecies = async (
       const resource = createMonster(variant, species)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
   return monsters
 }

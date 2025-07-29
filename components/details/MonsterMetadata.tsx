@@ -290,7 +290,7 @@ export default async function MonsterMetadata({
       const resource = await pokeapi.getResource<EggGroup>(eggGroup.url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const growthRate = await pokeapi.getResource<GrowthRate>(
