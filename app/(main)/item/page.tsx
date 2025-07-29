@@ -12,7 +12,7 @@ import {
   ItemPocketLabels,
 } from '@/lib/utils/pokeapiHelpers'
 import { excludedItems } from '@/lib/utils/excludedSlugs'
-import InfoCardGrid from '@/components/compounds/InfoCardGrid'
+import ItemCardGrid from '@/components/compounds/ItemCardGrid'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -70,17 +70,15 @@ export default async function Home() {
           (entry) => entry.language.name === 'en'
         ),
         imageUrl,
-        tags: [
-          { label: pocketLabel, value: pocket },
-          { label: categoryLabel, value: category.name },
-        ],
+        category: category.name as ItemCategoryKey,
+        pocket: pocket as ItemPocketKey,
       }
     })
     .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
     <div className="mx-auto w-full max-w-[96rem]">
-      <InfoCardGrid data={itemsData} />
+      <ItemCardGrid data={itemsData} />
     </div>
   )
 }
