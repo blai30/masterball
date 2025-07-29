@@ -204,7 +204,7 @@ export function ListboxOption<T>({
               // Typography
               'text-base/6 text-zinc-950 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
               // Focus
-              'outline-hidden data-focus:bg-zinc-700 data-focus:text-white',
+              'outline-hidden data-focus:bg-zinc-200 data-focus:text-black dark:data-focus:bg-zinc-700 dark:data-focus:text-white',
               // Forced colors mode
               'forced-color-adjust-none forced-colors:data-focus:bg-[Highlight] forced-colors:data-focus:text-[HighlightText]',
               // Disabled
