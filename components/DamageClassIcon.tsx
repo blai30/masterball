@@ -23,6 +23,7 @@ export default function DamageClassIcon({
   variant,
   size = 'large',
   className,
+  ...props
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
@@ -38,6 +39,7 @@ export default function DamageClassIcon({
 
   return (
     <div
+      {...props}
       title={name}
       className={clsx(
         'relative',

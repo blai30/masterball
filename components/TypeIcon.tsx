@@ -38,6 +38,7 @@ export default function TypeIcon({
   variant,
   size = 'large',
   className,
+  ...props
 }: {
   variant: string
   size?: 'small' | 'medium' | 'large'
@@ -53,6 +54,7 @@ export default function TypeIcon({
 
   return (
     <div
+      {...props}
       title={name}
       className={clsx(
         'relative',
