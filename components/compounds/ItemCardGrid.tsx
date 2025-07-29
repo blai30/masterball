@@ -95,42 +95,49 @@ export default function ItemCardGrid({
     setCurrentPage(page)
   }, [])
 
-  // Create filter options from available item categories and pockets
+  // Create filter options from available item categories and pockets in the data
   const availableFilters = useMemo(() => {
     const filters: FilterConfig[] = []
 
-    // Category filter using enum
-    const categoryOptions = Object.entries(ItemCategoryKey).map(
-      ([label, value]) => ({
-        label: ItemCategoryLabels[value],
-        value,
-      })
+    const uniqueCategories = Array.from(
+      new Set(data.map((item) => item.category))
     )
+    
+    if (uniqueCategories.length > 0) {
+      const categoryOptions = uniqueCategories.map((category) => ({
+        label: ItemCategoryLabels[category as ItemCategoryKey] || category,
+        value: category,
+      }))
 
-    filters.push({
-      label: 'Category',
-      options: categoryOptions.sort((a, b) => a.label.localeCompare(b.label)),
-      values: categoryFilters,
-      onChange: handleCategoryFilterChange,
-    })
-
-    // Pocket filter using enum
-    const pocketOptions = Object.entries(ItemPocketKey).map(
-      ([label, value]) => ({
-        label: ItemPocketLabels[value],
-        value,
+      filters.push({
+        label: 'Category',
+        options: categoryOptions.sort((a, b) => a.label.localeCompare(b.label)),
+        values: categoryFilters,
+        onChange: handleCategoryFilterChange,
       })
-    )
+    }
 
-    filters.push({
-      label: 'Pocket',
-      options: pocketOptions.sort((a, b) => a.label.localeCompare(b.label)),
-      values: pocketFilters,
-      onChange: handlePocketFilterChange,
-    })
+    const uniquePockets = Array.from(
+      new Set(data.map((item) => item.pocket))
+    )
+    
+    if (uniquePockets.length > 0) {
+      const pocketOptions = uniquePockets.map((pocket) => ({
+        label: ItemPocketLabels[pocket as ItemPocketKey] || pocket,
+        value: pocket,
+      }))
+
+      filters.push({
+        label: 'Pocket',
+        options: pocketOptions.sort((a, b) => a.label.localeCompare(b.label)),
+        values: pocketFilters,
+        onChange: handlePocketFilterChange,
+      })
+    }
 
     return filters
   }, [
+    data,
     categoryFilters,
     pocketFilters,
     handleCategoryFilterChange,
@@ -149,19 +156,16 @@ export default function ItemCardGrid({
         )
       : data
 
-    // Apply category filters
     if (categoryFilters.length > 0) {
       filtered = filtered.filter((item) =>
         categoryFilters.includes(item.category)
       )
     }
 
-    // Apply pocket filters
     if (pocketFilters.length > 0) {
       filtered = filtered.filter((item) => pocketFilters.includes(item.pocket))
     }
 
-    // Apply search
     if (search) {
       const fuse = new Fuse(filtered, {
         keys: ['name'],
