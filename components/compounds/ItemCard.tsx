@@ -19,8 +19,8 @@ export type ItemCardProps = {
   defaultDescription: string
   flavorTextEntries: FlavorText[] | VersionGroupFlavorText[]
   imageUrl?: string
-  category: ItemCategoryKey
   pocket: ItemPocketKey
+  category: ItemCategoryKey
 }
 
 export default function ItemCard({ props }: { props: ItemCardProps }) {

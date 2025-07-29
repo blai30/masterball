@@ -6,10 +6,10 @@ import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import {
-  ItemCategoryKey,
-  ItemCategoryLabels,
   ItemPocketKey,
   ItemPocketLabels,
+  ItemCategoryKey,
+  ItemCategoryLabels,
 } from '@/lib/utils/pokeapiHelpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
@@ -37,11 +37,11 @@ export default function ItemCardGrid({
   const { versionGroup } = useVersionGroup()
 
   const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
-  const [categoryFilters, setCategoryFilters] = useState<string[]>(
-    () => searchParams.get('categories')?.split(',').filter(Boolean) ?? []
-  )
   const [pocketFilters, setPocketFilters] = useState<string[]>(
     () => searchParams.get('pockets')?.split(',').filter(Boolean) ?? []
+  )
+  const [categoryFilters, setCategoryFilters] = useState<string[]>(
+    () => searchParams.get('categories')?.split(',').filter(Boolean) ?? []
   )
   const [currentPage, setCurrentPage] = useState(
     () => Number(searchParams.get('p')) || DEFAULT_PAGE
@@ -51,16 +51,16 @@ export default function ItemCardGrid({
   const syncUrlParams = useDebouncedCallback(
     (state: {
       search: string
-      categoryFilters: string[]
       pocketFilters: string[]
+      categoryFilters: string[]
       currentPage: number
     }) => {
       const params = new URLSearchParams()
       if (state.search) params.set('q', state.search)
-      if (state.categoryFilters.length > 0)
-        params.set('categories', state.categoryFilters.join(','))
       if (state.pocketFilters.length > 0)
         params.set('pockets', state.pocketFilters.join(','))
+      if (state.categoryFilters.length > 0)
+        params.set('categories', state.categoryFilters.join(','))
       if (state.currentPage !== DEFAULT_PAGE)
         params.set('p', String(state.currentPage))
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
@@ -70,8 +70,8 @@ export default function ItemCardGrid({
 
   // Sync all state to URL
   useEffect(() => {
-    syncUrlParams({ search, categoryFilters, pocketFilters, currentPage })
-  }, [search, categoryFilters, pocketFilters, currentPage, syncUrlParams])
+    syncUrlParams({ search, pocketFilters, categoryFilters, currentPage })
+  }, [search, pocketFilters, categoryFilters, currentPage, syncUrlParams])
 
   const handleSearchChange = useCallback((value: string) => {
     setSearch(value)
@@ -99,28 +99,8 @@ export default function ItemCardGrid({
   const availableFilters = useMemo(() => {
     const filters: FilterConfig[] = []
 
-    const uniqueCategories = Array.from(
-      new Set(data.map((item) => item.category))
-    )
-    
-    if (uniqueCategories.length > 0) {
-      const categoryOptions = uniqueCategories.map((category) => ({
-        label: ItemCategoryLabels[category as ItemCategoryKey] || category,
-        value: category,
-      }))
+    const uniquePockets = Array.from(new Set(data.map((item) => item.pocket)))
 
-      filters.push({
-        label: 'Category',
-        options: categoryOptions.sort((a, b) => a.label.localeCompare(b.label)),
-        values: categoryFilters,
-        onChange: handleCategoryFilterChange,
-      })
-    }
-
-    const uniquePockets = Array.from(
-      new Set(data.map((item) => item.pocket))
-    )
-    
     if (uniquePockets.length > 0) {
       const pocketOptions = uniquePockets.map((pocket) => ({
         label: ItemPocketLabels[pocket as ItemPocketKey] || pocket,
@@ -135,11 +115,29 @@ export default function ItemCardGrid({
       })
     }
 
+    const uniqueCategories = Array.from(
+      new Set(data.map((item) => item.category))
+    )
+
+    if (uniqueCategories.length > 0) {
+      const categoryOptions = uniqueCategories.map((category) => ({
+        label: ItemCategoryLabels[category as ItemCategoryKey] || category,
+        value: category,
+      }))
+
+      filters.push({
+        label: 'Category',
+        options: categoryOptions.sort((a, b) => a.label.localeCompare(b.label)),
+        values: categoryFilters,
+        onChange: handleCategoryFilterChange,
+      })
+    }
+
     return filters
   }, [
     data,
-    categoryFilters,
     pocketFilters,
+    categoryFilters,
     handleCategoryFilterChange,
     handlePocketFilterChange,
   ])
@@ -156,14 +154,14 @@ export default function ItemCardGrid({
         )
       : data
 
+    if (pocketFilters.length > 0) {
+      filtered = filtered.filter((item) => pocketFilters.includes(item.pocket))
+    }
+
     if (categoryFilters.length > 0) {
       filtered = filtered.filter((item) =>
         categoryFilters.includes(item.category)
       )
-    }
-
-    if (pocketFilters.length > 0) {
-      filtered = filtered.filter((item) => pocketFilters.includes(item.pocket))
     }
 
     if (search) {
@@ -180,8 +178,8 @@ export default function ItemCardGrid({
     filterByVersionGroup,
     search,
     versionGroup,
-    categoryFilters,
     pocketFilters,
+    categoryFilters,
   ])
 
   return (
