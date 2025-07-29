@@ -31,7 +31,7 @@ export default async function Home() {
       const move = await pokeapi.getResource<Move>(result.url)
       return move
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const movesData: MoveInfo[] = moves

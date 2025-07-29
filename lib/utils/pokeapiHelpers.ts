@@ -84,7 +84,7 @@ export const getMonstersBySpecies = async (
       const resource = await pokeapi.getResource<Pokemon>(url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const monsters = await pMap(
@@ -93,7 +93,7 @@ export const getMonstersBySpecies = async (
       const resource = createMonster(variant, species)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
   return monsters
 }
@@ -185,6 +185,28 @@ export const TypeLabels: Record<TypeKey, string> = {
   [TypeKey.Dragon]: 'Dragon',
   [TypeKey.Dark]: 'Dark',
   [TypeKey.Fairy]: 'Fairy',
+}
+
+export enum ItemPocketKey {
+  Misc = 'misc',
+  Medicine = 'medicine',
+  Pokeballs = 'pokeballs',
+  Machines = 'machines',
+  Berries = 'berries',
+  Mail = 'mail',
+  Battle = 'battle',
+  Key = 'key',
+}
+
+export const ItemPocketLabels: Record<ItemPocketKey, string> = {
+  [ItemPocketKey.Misc]: 'Items',
+  [ItemPocketKey.Medicine]: 'Medicine',
+  [ItemPocketKey.Pokeballs]: 'Poké Balls',
+  [ItemPocketKey.Machines]: 'TMs and HMs',
+  [ItemPocketKey.Berries]: 'Berries',
+  [ItemPocketKey.Mail]: 'Mail',
+  [ItemPocketKey.Battle]: 'Battle Items',
+  [ItemPocketKey.Key]: 'Key Items',
 }
 
 export enum ItemCategoryKey {
@@ -299,28 +321,6 @@ export const ItemCategoryLabels: Record<ItemCategoryKey, string> = {
   [ItemCategoryKey.SandwichIngredients]: 'Sandwich ingredients',
   [ItemCategoryKey.TmMaterials]: 'TM Materials',
   [ItemCategoryKey.Picnic]: 'Picnic items',
-}
-
-export enum ItemPocketKey {
-  Misc = 'misc',
-  Medicine = 'medicine',
-  Pokeballs = 'pokeballs',
-  Machines = 'machines',
-  Berries = 'berries',
-  Mail = 'mail',
-  Battle = 'battle',
-  Key = 'key',
-}
-
-export const ItemPocketLabels: Record<ItemPocketKey, string> = {
-  [ItemPocketKey.Misc]: 'Items',
-  [ItemPocketKey.Medicine]: 'Medicine',
-  [ItemPocketKey.Pokeballs]: 'Poké Balls',
-  [ItemPocketKey.Machines]: 'TMs and HMs',
-  [ItemPocketKey.Berries]: 'Berries',
-  [ItemPocketKey.Mail]: 'Mail',
-  [ItemPocketKey.Battle]: 'Battle Items',
-  [ItemPocketKey.Key]: 'Key Items',
 }
 
 export const ItemCategoryToPocket: Record<ItemCategoryKey, ItemPocketKey> = {

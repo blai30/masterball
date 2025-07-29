@@ -17,7 +17,7 @@ export default async function AbilitiesSection({
       const resource = await pokeapi.getResource<Ability>(url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const abilitiesMap: AbilityEntryProps[] = pokemon.abilities.map((ability) => {

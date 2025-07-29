@@ -31,7 +31,7 @@ export default async function Home() {
       const resource = await pokeapi.getResource<Ability>(result.url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   const abilitiesData = abilities

@@ -41,7 +41,7 @@ function createMoveRows(
           const machine = move.machineItems.find(
             (m: Machine) => m.version_group.name === resource.version_group.name
           )
-          if (machine) {
+          if (machine?.item) {
             id = machine.item.name.toUpperCase()
           }
         }
@@ -96,7 +96,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       const resource = await pokeapi.getByName<Move>('move', name)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   // Process moves with machines
@@ -116,7 +116,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
       const resource = await pokeapi.getResource<Machine>(url)
       return resource
     },
-    { concurrency: 4 }
+    { concurrency: 20 }
   )
 
   // Create optimized maps

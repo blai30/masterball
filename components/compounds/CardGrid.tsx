@@ -66,13 +66,13 @@ export default function CardGrid<T>({
                       opacity: 1,
                       transition: {
                         staggerChildren: 0.01,
-                        delayChildren: 0.05,
+                        delayChildren: 0.01,
                       },
                     },
                     exit: {
                       opacity: 0,
                       transition: {
-                        duration: 0.05,
+                        duration: 0.01,
                       },
                     },
                   }}
