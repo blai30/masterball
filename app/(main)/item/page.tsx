@@ -3,9 +3,16 @@ import pMap from 'p-map'
 import { Item } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { itemResourceList } from '@/lib/providers'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import {
+  getTranslation,
+  ItemCategoryKey,
+  ItemCategoryLabels,
+  ItemCategoryToPocket,
+  ItemPocketKey,
+  ItemPocketLabels,
+} from '@/lib/utils/pokeapiHelpers'
 import { excludedItems } from '@/lib/utils/excludedSlugs'
-import InfoCardGrid from '@/components/compounds/InfoCardGrid'
+import ItemCardGrid from '@/components/compounds/ItemCardGrid'
 
 export const dynamic = 'force-static'
 export const dynamicParams = false
@@ -47,8 +54,12 @@ export default async function Home() {
         undefined
     )
     .map((resource) => {
-      const { id, name } = resource
+      const { id, name, category } = resource
       const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/items/item_${name}.webp`
+      const categoryLabel = ItemCategoryLabels[category.name as ItemCategoryKey]
+      const pocket = ItemCategoryToPocket[category.name as ItemCategoryKey]
+      const pocketLabel = ItemPocketLabels[pocket as ItemPocketKey]
+
       return {
         id,
         slug: name,
@@ -59,13 +70,15 @@ export default async function Home() {
           (entry) => entry.language.name === 'en'
         ),
         imageUrl,
+        category: category.name as ItemCategoryKey,
+        pocket: pocket as ItemPocketKey,
       }
     })
     .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
     <div className="mx-auto w-full max-w-[96rem]">
-      <InfoCardGrid data={itemsData} />
+      <ItemCardGrid data={itemsData} />
     </div>
   )
 }

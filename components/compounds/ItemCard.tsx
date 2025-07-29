@@ -5,23 +5,25 @@ import { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
 import GlassCard from '@/components/GlassCard'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { Badge } from '@/components/ui/badge'
+import {
+  ItemCategoryKey,
+  ItemCategoryLabels,
+  ItemPocketKey,
+  ItemPocketLabels,
+} from '@/lib/utils/pokeapiHelpers'
 
-type Tag = {
-  label: string
-  value: string
-}
-
-export type InfoCardProps = {
+export type ItemCardProps = {
   id: number
   slug: string
   name: string
   defaultDescription: string
   flavorTextEntries: FlavorText[] | VersionGroupFlavorText[]
   imageUrl?: string
-  tags?: Tag[]
+  category: ItemCategoryKey
+  pocket: ItemPocketKey
 }
 
-export default function InfoCard({ props }: { props: InfoCardProps }) {
+export default function ItemCard({ props }: { props: ItemCardProps }) {
   const { versionGroup, hasMounted } = useVersionGroup()
   if (!hasMounted) return null
 
@@ -58,15 +60,14 @@ export default function InfoCard({ props }: { props: InfoCardProps }) {
           <h3 className="text-lg font-medium text-black dark:text-white">
             {props.name}
           </h3>
-          {props.tags && props.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {props.tags.map((tag) => (
-                <Badge key={tag.value} color="zinc">
-                  {tag.label}
-                </Badge>
-              ))}
-            </div>
-          )}
+          <div className="flex flex-wrap gap-1">
+            <Badge key={props.pocket} color="zinc">
+              {ItemPocketLabels[props.pocket]}
+            </Badge>
+            <Badge key={props.category} color="zinc">
+              {ItemCategoryLabels[props.category]}
+            </Badge>
+          </div>
           <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">
             {description}
           </p>

@@ -2,7 +2,6 @@
 
 import clsx from 'clsx/lite'
 import { ArrowDownWideNarrow, ArrowUpNarrowWide } from 'lucide-react'
-import { Field, Label } from '@/components/ui/fieldset'
 import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/listbox'
 
 export type SortOption<T extends string> = {
