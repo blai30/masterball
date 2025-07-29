@@ -115,8 +115,14 @@ export default function ItemCardGrid({
       })
     }
 
+    // Filter data by pocket filters first, then get available categories
+    const pocketFilteredData =
+      pocketFilters.length > 0
+        ? data.filter((item) => pocketFilters.includes(item.pocket))
+        : data
+
     const uniqueCategories = Array.from(
-      new Set(data.map((item) => item.category))
+      new Set(pocketFilteredData.map((item) => item.category))
     )
 
     if (uniqueCategories.length > 0) {
