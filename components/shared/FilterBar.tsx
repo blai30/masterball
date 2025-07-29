@@ -38,6 +38,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
           variant={option.value as TypeKey}
           size="small"
           className="flex-shrink-0"
+          data-slot="icon"
         />
         <ListboxLabel>{option.label}</ListboxLabel>
       </>
@@ -47,6 +48,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
           variant={option.value as DamageClassKey}
           size="small"
           className="flex-shrink-0"
+          data-slot="icon"
         />
         <ListboxLabel>{option.label}</ListboxLabel>
       </>

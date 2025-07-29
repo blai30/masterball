@@ -1,6 +1,12 @@
 'use client'
 
-import { Fragment } from 'react'
+import {
+  Children,
+  ComponentPropsWithoutRef,
+  Fragment,
+  isValidElement,
+  ReactNode,
+} from 'react'
 import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
 
@@ -15,24 +21,14 @@ export function Listbox<T>({
   ...props
 }: {
   className?: string
-  placeholder?: React.ReactNode
+  placeholder?: ReactNode
   autoFocus?: boolean
   'aria-label'?: string
-  children?: React.ReactNode
+  children?: ReactNode
   value?: T | T[]
   multiple?: boolean
 } & Omit<Headless.ListboxProps<typeof Fragment, T>, 'as'>) {
-  // Helper to extract icon from option children
-  const getIcon = (option: React.ReactNode) => {
-    if (!option || typeof option !== 'object') return null
-    // If option is a fragment, get its children
-    // This assumes icon is first child
-    // You may want to improve this for more robust icon extraction
-    // @ts-ignore
-    return option.props?.children?.[0] || null
-  }
-
-  // Render icon and label for single selection, or just icon for multiple selections
+  // Render icon and label for single selection, or selection count for multiple selections
   const renderSelected = () => {
     const classNames = clsx([
       // Basic layout
@@ -58,24 +54,108 @@ export function Listbox<T>({
     ])
 
     if (multiple && Array.isArray(value) && value.length > 1) {
-      // Only show icons for each selected value
-      // Find the corresponding option for each value
+      // Check if any option has an icon by looking for data-slot="icon" in children
+      const hasIcons = Children.toArray(options).some((child) => {
+        if (isValidElement(child)) {
+          // Look for icons in the child's children recursively
+          const findIconInChildren = (children: ReactNode): boolean => {
+            const childArray = Children.toArray(children)
+            for (const nestedChild of childArray) {
+              if (isValidElement(nestedChild)) {
+                const props = nestedChild.props as {
+                  'data-slot'?: string
+                  children?: ReactNode
+                }
+                if (props['data-slot'] === 'icon') {
+                  return true
+                }
+                if (props.children) {
+                  if (findIconInChildren(props.children)) {
+                    return true
+                  }
+                }
+              }
+            }
+            return false
+          }
+          const childProps = child.props as { children?: ReactNode }
+          return findIconInChildren(childProps.children)
+        }
+        return false
+      })
+
+      if (hasIcons) {
+        // Show selected icons
+        const selectedOptions = Children.toArray(options).filter((child) => {
+          if (isValidElement(child)) {
+            const props = child.props as { value?: T }
+            return value.includes(props.value as T)
+          }
+          return false
+        })
+
+        return (
+          <span className={classNames}>
+            {selectedOptions
+              .slice(0, 3)
+              .map((option, index) => {
+                if (isValidElement(option)) {
+                  const props = option.props as {
+                    value?: T
+                    children?: ReactNode
+                  }
+                  // Extract just the icon from the option's children recursively
+                  const extractIcon = (children: ReactNode): ReactNode => {
+                    const childArray = Children.toArray(children)
+                    for (const child of childArray) {
+                      if (isValidElement(child)) {
+                        const childProps = child.props as {
+                          'data-slot'?: string
+                          children?: ReactNode
+                        }
+                        // If this child has data-slot="icon", return it
+                        if (childProps['data-slot'] === 'icon') {
+                          return child
+                        }
+                        // Otherwise, recursively search its children
+                        if (childProps.children) {
+                          const nestedIcon = extractIcon(childProps.children)
+                          if (nestedIcon) {
+                            return nestedIcon
+                          }
+                        }
+                      }
+                    }
+                    return null
+                  }
+                  const icon = extractIcon(props.children)
+                  return icon ? (
+                    <span
+                      key={`${props.value}-${index}`}
+                      className="flex-shrink-0"
+                    >
+                      {icon}
+                    </span>
+                  ) : null
+                }
+                return null
+              })
+              .filter(Boolean)}
+            {value.length > 3 && (
+              <span className="text-sm text-zinc-950 dark:text-white">
+                +{value.length - 3}
+              </span>
+            )}
+          </span>
+        )
+      }
+
+      // Show count of selected items (fallback for non-icon filters)
       return (
         <span className={classNames}>
-          {value.map((val) => {
-            // Find the option node with matching value prop
-            const optionNode = Array.isArray(options)
-              ? options.find(
-                  (child) =>
-                    typeof child === 'object' &&
-                    child !== null &&
-                    'props' in child &&
-                    child.props?.value === val
-                )
-              : null
-            const icon = getIcon(optionNode?.props?.children)
-            return <span key={String(val)}>{icon}</span>
-          })}
+          <span className="text-zinc-950 dark:text-white">
+            {value.length} selected
+          </span>
         </span>
       )
     }
@@ -172,7 +252,7 @@ export function ListboxOption<T>({
   children,
   className,
   ...props
-}: { className?: string; children?: React.ReactNode } & Omit<
+}: { className?: string; children?: ReactNode } & Omit<
   Headless.ListboxOptionProps<'div', T>,
   'as' | 'className'
 >) {
@@ -180,7 +260,8 @@ export function ListboxOption<T>({
     // Base
     'flex min-w-0 items-center',
     // Icons
-    '*:data-[slot=icon]:size-5 *:data-[slot=icon]:shrink-0 sm:*:data-[slot=icon]:size-4',
+    '*:data-[slot=icon]:size-5 *:data-[slot=icon]:shrink-0',
+    // 'sm:*:data-[slot=icon]:size-4',
     '*:data-[slot=icon]:text-zinc-500 group-data-focus/option:*:data-[slot=icon]:text-white dark:*:data-[slot=icon]:text-zinc-400',
     'forced-colors:*:data-[slot=icon]:text-[CanvasText] forced-colors:group-data-focus/option:*:data-[slot=icon]:text-[Canvas]',
     // Avatars
@@ -204,7 +285,7 @@ export function ListboxOption<T>({
               // Typography
               'text-base/6 text-zinc-950 sm:text-sm/6 dark:text-white forced-colors:text-[CanvasText]',
               // Focus
-              'outline-hidden data-focus:bg-zinc-700 data-focus:text-white',
+              'outline-hidden data-focus:bg-zinc-200 data-focus:text-black dark:data-focus:bg-zinc-700 dark:data-focus:text-white',
               // Forced colors mode
               'forced-color-adjust-none forced-colors:data-focus:bg-[Highlight] forced-colors:data-focus:text-[HighlightText]',
               // Disabled
@@ -239,7 +320,7 @@ export function ListboxOption<T>({
 export function ListboxLabel({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<'span'>) {
+}: ComponentPropsWithoutRef<'span'>) {
   return (
     <span
       {...props}
@@ -255,7 +336,7 @@ export function ListboxDescription({
   className,
   children,
   ...props
-}: React.ComponentPropsWithoutRef<'span'>) {
+}: ComponentPropsWithoutRef<'span'>) {
   return (
     <span
       {...props}
