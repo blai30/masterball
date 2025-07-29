@@ -170,7 +170,6 @@ export const excludedItems = [
   'scarlet-vein',
   'violet-rune',
   // TODO: Include when API is updated
-  'crystal-cluster',
   'metal-alloy',
   'stellar-tera-shard',
 ]

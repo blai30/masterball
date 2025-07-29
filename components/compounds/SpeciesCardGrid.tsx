@@ -175,7 +175,7 @@ export default function SpeciesCardGrid({
       <CardGrid
         data={filteredData}
         renderCardAction={(data) => <MonsterCard props={data} />}
-        getKeyAction={(item) => item.id}
+        getKeyAction={(item) => `${item.slug}-${item.id}`}
         currentPage={currentPage}
         onPageChangeAction={handlePageChange}
         itemsPerPage={ITEMS_PER_PAGE}

@@ -80,7 +80,7 @@ export default function InfoCardGrid({
       <CardGrid
         data={filteredData}
         renderCardAction={(props: InfoCardProps) => <InfoCard props={props} />}
-        getKeyAction={(item: InfoCardProps) => item.id}
+        getKeyAction={(item: InfoCardProps) => `${item.slug}-${item.id}`}
         itemsPerPage={itemsPerPage}
         currentPage={currentPage}
         onPageChangeAction={handlePageChange}

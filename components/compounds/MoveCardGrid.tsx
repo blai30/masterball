@@ -262,7 +262,7 @@ export default function MoveCardGrid({
       <CardGrid
         data={filteredData}
         renderCardAction={(props: MoveInfo) => <MoveCard props={props} />}
-        getKeyAction={(item) => item.id}
+        getKeyAction={(item) => `${item.slug}-${item.id}`}
         currentPage={currentPage}
         onPageChangeAction={handlePageChange}
         itemsPerPage={itemsPerPage}
