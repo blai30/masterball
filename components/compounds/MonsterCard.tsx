@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { motion } from 'motion/react'
 import Link from '@/components/ui/link'
 import { memo } from 'react'
-import { TypeKey } from '@/lib/utils/pokeapiHelpers'
+import { TypeKey } from '@/lib/utils/pokeapi-helpers'
 import GlassCard from '@/components/GlassCard'
 
 export type MonsterCardProps = {
@@ -16,7 +16,6 @@ export type MonsterCardProps = {
 
 const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
   const imageId = props.id.toString().padStart(4, '0')
-  // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
   const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
   const layoutId = `pokemon-image-${props.id}`
 

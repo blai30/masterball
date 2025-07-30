@@ -4,8 +4,8 @@ import Image from 'next/image'
 import clsx from 'clsx/lite'
 import { motion } from 'motion/react'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 import TypePill from '@/components/TypePill'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
 
 export default function MonsterHero({
   species,

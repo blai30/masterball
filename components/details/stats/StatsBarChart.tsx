@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Pokemon } from 'pokedex-promise-v2'
-import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapiHelpers'
+import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
 
 export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)

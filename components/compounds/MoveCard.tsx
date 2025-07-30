@@ -8,7 +8,7 @@ import {
   DamageClassLabels,
   type MoveInfo,
   TypeKey,
-} from '@/lib/utils/pokeapiHelpers'
+} from '@/lib/utils/pokeapi-helpers'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 

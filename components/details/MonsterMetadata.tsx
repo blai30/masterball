@@ -10,7 +10,7 @@ import type {
 } from 'pokedex-promise-v2'
 import { Mars, Venus } from 'lucide-react'
 import pokeapi from '@/lib/api/pokeapi'
-import { StatLabels, StatKey, getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { StatLabels, StatKey, getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { Group } from '@visx/group'
 import { Pie } from '@visx/shape'
 
@@ -187,8 +187,8 @@ function GenderRatioDonut({ male, female }: { male: number; female: number }) {
   const radius = 56
   const innerRadius = 50
   const genderClasses: Record<string, string> = {
-    Male: 'text-blue-700 dark:text-blue-300',
-    Female: 'text-pink-700 dark:text-pink-300',
+    Male: 'text-blue-400 dark:text-blue-300',
+    Female: 'text-pink-400 dark:text-pink-300',
   }
 
   return (

@@ -4,8 +4,8 @@ import pMap from 'p-map'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
-import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapiHelpers'
-import { excludedForms, excludedVariants } from '@/lib/utils/excludedSlugs'
+import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapi-helpers'
+import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
 import LoadingSection from '@/components/details/LoadingSection'
 import LoadingMetadata from '@/components/details/LoadingMetadata'
 import MonsterMetadata from '@/components/details/MonsterMetadata'
@@ -66,7 +66,6 @@ export async function generateMetadata({
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const imageId = species.id.toString().padStart(4, '0')
-  // const imageUrl = `https://resource.pokemon-home.com/battledata/img/pokei128/icon${imageId}_f00_s0.png`
   const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
   const name = getTranslation(species.names, 'name')!
   const description = pokemon.types
@@ -134,14 +133,6 @@ export default async function Page({
 
   return (
     <div className="flex w-full flex-col gap-4 xl:max-w-none">
-      {/* <section className="mx-auto w-full max-w-[96rem]">
-        <MonsterHero species={species} pokemon={pokemon} form={form} />
-      </section>
-      <section className="@container mx-auto w-full max-w-[96rem]">
-        <Suspense fallback={<LoadingMetadata />}>
-          <MonsterMetadata species={species} pokemon={pokemon} />
-        </Suspense>
-      </section> */}
       <section className="@container mx-auto w-full max-w-[96rem]">
         <div className="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @[88rem]:grid-cols-8">
           <MonsterHero

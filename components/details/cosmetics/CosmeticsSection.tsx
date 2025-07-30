@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import clsx from 'clsx/lite'
 import type { Pokemon, PokemonForm } from 'pokedex-promise-v2'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 
 export default async function CosmeticsSection({
   pokemon,

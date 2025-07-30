@@ -2,7 +2,7 @@ import type { PokemonSpecies } from 'pokedex-promise-v2'
 import {
   getMonstersBySpecies,
   getTranslation,
-} from '@/lib/utils/pokeapiHelpers'
+} from '@/lib/utils/pokeapi-helpers'
 import VariantCardSelector from '@/components/compounds/VariantCardSelector'
 
 export const dynamicParams = false

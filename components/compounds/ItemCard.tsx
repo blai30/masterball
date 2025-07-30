@@ -10,7 +10,7 @@ import {
   ItemCategoryLabels,
   ItemPocketKey,
   ItemPocketLabels,
-} from '@/lib/utils/pokeapiHelpers'
+} from '@/lib/utils/pokeapi-helpers'
 
 export type ItemCardProps = {
   id: number

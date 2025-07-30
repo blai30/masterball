@@ -1,7 +1,7 @@
 'use client'
 
 import { memo } from 'react'
-import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapiHelpers'
+import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapi-helpers'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/listbox'
 

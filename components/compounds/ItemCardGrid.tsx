@@ -10,7 +10,7 @@ import {
   ItemPocketLabels,
   ItemCategoryKey,
   ItemCategoryLabels,
-} from '@/lib/utils/pokeapiHelpers'
+} from '@/lib/utils/pokeapi-helpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'

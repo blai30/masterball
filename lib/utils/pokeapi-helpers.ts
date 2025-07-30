@@ -7,7 +7,7 @@ import type {
   Type,
 } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { excludedVariants } from '@/lib/utils/excludedSlugs'
+import { excludedVariants } from '@/lib/utils/excluded-slugs'
 
 export function getTranslation<
   T extends {

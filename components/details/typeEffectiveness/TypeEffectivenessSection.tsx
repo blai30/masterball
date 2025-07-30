@@ -5,7 +5,7 @@ import {
   getEffectiveness,
   TypeKey,
   TypeRelation,
-} from '@/lib/utils/pokeapiHelpers'
+} from '@/lib/utils/pokeapi-helpers'
 import TypePill from '@/components/TypePill'
 import EffectivenessMultiplier from '@/components/details/typeEffectiveness/EffectivenessMultiplier'
 

@@ -21,7 +21,7 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapiHelpers'
+import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapi-helpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
 
