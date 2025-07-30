@@ -3,7 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useDebouncedCallback } from 'use-debounce'
-import { TypeKey } from '@/lib/utils/pokeapiHelpers'
+import { TypeKey } from '@/lib/utils/pokeapi-helpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, {

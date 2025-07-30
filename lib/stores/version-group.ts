@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Store, useStore } from '@tanstack/react-store'
-import { VersionGroupKey } from '@/lib/utils/pokeapiHelpers'
+import { VersionGroupKey } from '@/lib/utils/pokeapi-helpers'
 
 const versionGroupStore = new Store<{ versionGroup: VersionGroupKey }>({
   // Default value

@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import Link from '@/components/ui/link'
 import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
-import { getTranslation, TypeKey } from '@/lib/utils/pokeapiHelpers'
-import { excludedVariants } from '@/lib/utils/excludedSlugs'
+import { getTranslation, TypeKey } from '@/lib/utils/pokeapi-helpers'
+import { excludedVariants } from '@/lib/utils/excluded-slugs'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 

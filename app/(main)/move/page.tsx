@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import pMap from 'p-map'
 import { Move } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTranslation, type MoveInfo } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation, type MoveInfo } from '@/lib/utils/pokeapi-helpers'
 import MoveCardGrid from '@/components/compounds/MoveCardGrid'
 
 export const dynamic = 'force-static'

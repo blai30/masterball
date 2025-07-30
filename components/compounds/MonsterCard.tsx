@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { motion } from 'motion/react'
 import Link from '@/components/ui/link'
 import { memo } from 'react'
-import { TypeKey } from '@/lib/utils/pokeapiHelpers'
+import { TypeKey } from '@/lib/utils/pokeapi-helpers'
 import GlassCard from '@/components/GlassCard'
 
 export type MonsterCardProps = {

@@ -5,7 +5,7 @@ import type { Pokemon } from 'pokedex-promise-v2'
 import { Group } from '@visx/group'
 import { Polygon } from '@visx/shape'
 import { scaleLinear } from '@visx/scale'
-import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapiHelpers'
+import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
 
 const statOrder: StatKey[] = [
   StatKey.Hp,

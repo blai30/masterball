@@ -8,7 +8,7 @@ import {
   MoveRow,
   DamageClassKey,
   TypeKey,
-} from '@/lib/utils/pokeapiHelpers'
+} from '@/lib/utils/pokeapi-helpers'
 import LoadingSection from '@/components/details/LoadingSection'
 
 const MovesTable = dynamic(

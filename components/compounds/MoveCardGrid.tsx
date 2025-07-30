@@ -9,7 +9,7 @@ import {
   DamageClassKey,
   type MoveInfo,
   TypeKey,
-} from '@/lib/utils/pokeapiHelpers'
+} from '@/lib/utils/pokeapi-helpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'

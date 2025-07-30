@@ -1,5 +1,5 @@
 import { cva } from 'cva'
-import { Effectiveness } from '@/lib/utils/pokeapiHelpers'
+import { Effectiveness } from '@/lib/utils/pokeapi-helpers'
 
 const variants = cva({
   base: 'font-nums w-12 rounded-md text-right text-sm font-semibold tabular-nums',

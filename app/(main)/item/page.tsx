@@ -10,8 +10,8 @@ import {
   ItemCategoryToPocket,
   ItemPocketKey,
   ItemPocketLabels,
-} from '@/lib/utils/pokeapiHelpers'
-import { excludedItems } from '@/lib/utils/excludedSlugs'
+} from '@/lib/utils/pokeapi-helpers'
+import { excludedItems } from '@/lib/utils/excluded-slugs'
 import ItemCardGrid from '@/components/compounds/ItemCardGrid'
 
 export const dynamic = 'force-static'

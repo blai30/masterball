@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import clsx from 'clsx/lite'
-import { Monster } from '@/lib/utils/pokeapiHelpers'
+import { Monster } from '@/lib/utils/pokeapi-helpers'
 import TypeIcon from '@/components/TypeIcon'
 import GlassCard from '@/components/GlassCard'
 

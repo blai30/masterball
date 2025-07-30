@@ -2,7 +2,7 @@
 
 import { Ability } from 'pokedex-promise-v2'
 import { Sparkles } from 'lucide-react'
-import { getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { useVersionGroup } from '@/lib/stores/version-group'
 
 export type AbilityEntryProps = {

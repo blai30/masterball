@@ -10,7 +10,7 @@ import type {
 } from 'pokedex-promise-v2'
 import { Mars, Venus } from 'lucide-react'
 import pokeapi from '@/lib/api/pokeapi'
-import { StatLabels, StatKey, getTranslation } from '@/lib/utils/pokeapiHelpers'
+import { StatLabels, StatKey, getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { Group } from '@visx/group'
 import { Pie } from '@visx/shape'
 
