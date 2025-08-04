@@ -3,6 +3,7 @@
 - Language: TypeScript 5
 - Core packages: Tailwind CSS 4.1, React 19, Bun 1.2, TanStack Table, pMap, clsx, lucide-react
 - The project is a web application that uses Next.js only for its static exports (SSG) and does not use any server-side rendering (SSR) or API routes in production. Server-side rendering (SSR) is only used for development purposes.
+- Do not suggest using `generateStaticParams` as that is no longer supported in Next.js 15. Instead, Next.js 15 encourages fetching data directly in the page component using `async/await`.
 - Favor using `type` over `interface` unless necessary.
 - Import just the type from a package when possible, e.g., `import type { MyType } from 'my-package'`.
 - Never use require, always use import.

@@ -5,7 +5,11 @@ import type { Pokemon } from 'pokedex-promise-v2'
 import { Group } from '@visx/group'
 import { Polygon } from '@visx/shape'
 import { scaleLinear } from '@visx/scale'
-import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
+import {
+  StatLabels,
+  StatKey,
+  StatLabelsFull,
+} from '@/lib/utils/pokeapi-helpers'
 
 const statOrder: StatKey[] = [
   StatKey.Hp,
@@ -111,13 +115,13 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
 
   const getLabelPosition = (i: number) => {
     const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
-    const x = RADAR_CENTER + (RADAR_RADIUS + 50) * Math.cos(angle)
-    const y = RADAR_CENTER + (RADAR_RADIUS + 32) * Math.sin(angle)
+    const x = RADAR_CENTER + (RADAR_RADIUS + 44) * Math.cos(angle)
+    const y = RADAR_CENTER + (RADAR_RADIUS + 26) * Math.sin(angle)
     return { x, y }
   }
 
   return (
-    <div className="relative m-4 mt-8">
+    <div className="2xs:ml-0 relative mt-8 mb-4 -ml-2">
       <svg
         width={RADAR_SIZE}
         height={RADAR_SIZE}
