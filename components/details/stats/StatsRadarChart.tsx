@@ -121,7 +121,7 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
   }
 
   return (
-    <div className="2xs:ml-0 relative mt-8 mb-4 -ml-2">
+    <div className="xs:ml-0 relative mt-8 mb-4 -ml-2">
       <svg
         width={RADAR_SIZE}
         height={RADAR_SIZE}
