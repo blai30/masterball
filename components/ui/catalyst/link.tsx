@@ -1,9 +1,11 @@
+import type { Route } from 'next'
 import NextLink, { type LinkProps } from 'next/link'
-import React, { forwardRef } from 'react'
+import type React from 'react'
+import { forwardRef } from 'react'
 import * as Headless from '@headlessui/react'
 
 const Link = forwardRef(function Link(
-  props: LinkProps & React.ComponentPropsWithoutRef<'a'>,
+  props: LinkProps<Route> & React.ComponentPropsWithoutRef<'a'>,
   ref: React.ForwardedRef<HTMLAnchorElement>
 ) {
   return (

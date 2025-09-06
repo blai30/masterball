@@ -1,5 +1,6 @@
 'use client'
 
+import type { Route } from 'next'
 import Image from 'next/image'
 import { motion } from 'motion/react'
 import Link from '@/components/ui/catalyst/link'
@@ -22,7 +23,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
   return (
     <GlassCard variant="link" className="h-full rounded-xl">
       <Link
-        href={`/${props.slug}`}
+        href={`/${props.slug}` as Route}
         className="group flex flex-col items-center justify-between px-2 py-3"
       >
         <p

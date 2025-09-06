@@ -1,3 +1,4 @@
+import type { Route } from 'next'
 import Image from 'next/image'
 import Link from '@/components/ui/catalyst/link'
 import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
@@ -25,7 +26,7 @@ export default async function MonsterPill({
   return (
     <GlassCard variant="link" className="rounded-lg">
       <Link
-        href={`/${species.name}`}
+        href={`/${species.name}` as Route}
         className="group flex w-56 items-center gap-3 px-3 py-2"
       >
         <Image

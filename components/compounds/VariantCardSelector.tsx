@@ -1,5 +1,6 @@
 'use client'
 
+import type { Route } from 'next'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import clsx from 'clsx/lite'
@@ -20,7 +21,7 @@ export default function VariantCardSelector({
 
   const handleVariantChange = (url: string) => {
     setSelectedVariant(url)
-    router.replace(`/s/${url}`)
+    router.replace(`/${url}` as Route)
   }
 
   const getUrl = (monster: Monster) =>
@@ -32,10 +33,7 @@ export default function VariantCardSelector({
     <RadioGroup
       value={selectedVariant}
       onChange={handleVariantChange}
-      className={clsx(
-        'flex flex-row gap-2 py-4',
-        className
-      )}
+      className={clsx('flex flex-row gap-2 py-4', className)}
     >
       {monsters.map((monster) => (
         <Radio

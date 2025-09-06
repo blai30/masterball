@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 import * as Headless from '@headlessui/react'
 import { NavbarItem } from '@/components/ui/catalyst/navbar'
 
@@ -56,7 +57,7 @@ export function SidebarLayout({
   navbar: React.ReactNode
   sidebar: React.ReactNode
 }>) {
-  let [showSidebar, setShowSidebar] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(false)
 
   return (
     <div className="relative isolate flex min-h-svh w-full bg-white max-lg:flex-col lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">

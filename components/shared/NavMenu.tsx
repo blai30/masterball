@@ -1,5 +1,6 @@
 'use client'
 
+import type { Route } from 'next'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 import { memo } from 'react'
@@ -53,7 +54,7 @@ function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
           {navItems.map((item) => {
             const active = isActiveRoute(item.url)
             return (
-              <NavbarItem key={item.url} href={item.url} current={active}>
+              <NavbarItem key={item.url} href={item.url as Route} current={active}>
                 <item.icon size={20} />
                 <NavbarLabel>{item.label}</NavbarLabel>
               </NavbarItem>
@@ -76,7 +77,11 @@ function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
         {navItems.map((item) => {
           const active = isActiveRoute(item.url)
           return (
-            <SidebarItem key={item.url} href={item.url} current={active}>
+            <SidebarItem
+              key={item.url}
+              href={item.url as Route}
+              current={active}
+            >
               <item.icon size={20} />
               <SidebarLabel>{item.label}</SidebarLabel>
             </SidebarItem>
