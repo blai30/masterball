@@ -1,6 +1,7 @@
 'use client'
 
-import React, { forwardRef, useId } from 'react'
+import type React from 'react'
+import { forwardRef, useId } from 'react'
 import clsx from 'clsx/lite'
 import { LayoutGroup, motion } from 'motion/react'
 import * as Headless from '@headlessui/react'
@@ -36,7 +37,7 @@ export function NavbarSection({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
-  let id = useId()
+  const id = useId()
 
   return (
     <LayoutGroup id={id}>
@@ -58,19 +59,25 @@ export function NavbarSpacer({
   )
 }
 
-export const NavbarItem = forwardRef(function NavbarItem(
-  {
-    current,
-    className,
-    children,
-    ...props
-  }: { current?: boolean; className?: string; children: React.ReactNode } & (
-    | Omit<Headless.ButtonProps, 'as' | 'className'>
-    | Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>
-  ),
-  ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
-) {
-  let classes = clsx(
+type NavbarItemBaseProps = {
+  current?: boolean
+  className?: string
+  children: React.ReactNode
+}
+
+type NavbarItemLinkProps = NavbarItemBaseProps &
+  Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>
+
+type NavbarItemButtonProps = NavbarItemBaseProps &
+  Omit<Headless.ButtonProps<'button'>, 'as' | 'className'>
+
+type NavbarItemProps = NavbarItemLinkProps | NavbarItemButtonProps
+
+export const NavbarItem = forwardRef<
+  HTMLAnchorElement | HTMLButtonElement,
+  NavbarItemProps
+>(function NavbarItem({ current, className, children, ...props }, ref) {
+  const classes = clsx(
     // Base
     'relative flex min-w-0 items-center gap-3 rounded-lg p-2 text-left text-base/6 font-medium text-zinc-950 sm:text-sm/5',
     // Leading icon/icon-only
@@ -102,7 +109,7 @@ export const NavbarItem = forwardRef(function NavbarItem(
       )}
       {'href' in props ? (
         <Link
-          {...props}
+          {...(props as NavbarItemLinkProps)}
           className={classes}
           data-current={current ? 'true' : undefined}
           ref={ref as React.ForwardedRef<HTMLAnchorElement>}
@@ -111,10 +118,10 @@ export const NavbarItem = forwardRef(function NavbarItem(
         </Link>
       ) : (
         <Headless.Button
-          {...props}
+          {...(props as NavbarItemButtonProps)}
           className={clsx('cursor-default', classes)}
           data-current={current ? 'true' : undefined}
-          ref={ref}
+          ref={ref as React.ForwardedRef<HTMLButtonElement>}
         >
           <TouchTarget>{children}</TouchTarget>
         </Headless.Button>

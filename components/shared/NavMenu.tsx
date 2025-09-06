@@ -71,26 +71,24 @@ function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
 
   // Sidebar variant for mobile
   return (
-    <>
-      <SidebarBody>
-        <SidebarSection>
-          {navItems.map((item) => {
-            const active = isActiveRoute(item.url)
-            return (
-              <SidebarItem key={item.url} href={item.url} current={active}>
-                <item.icon size={20} />
-                <SidebarLabel>{item.label}</SidebarLabel>
-              </SidebarItem>
-            )
-          })}
-        </SidebarSection>
-        <SidebarDivider />
-        <SidebarSection className="flex items-start gap-3">
-          <VersionGroupSelector />
-          <ThemeSwitch />
-        </SidebarSection>
-      </SidebarBody>
-    </>
+    <SidebarBody>
+      <SidebarSection>
+        {navItems.map((item) => {
+          const active = isActiveRoute(item.url)
+          return (
+            <SidebarItem key={item.url} href={item.url} current={active}>
+              <item.icon size={20} />
+              <SidebarLabel>{item.label}</SidebarLabel>
+            </SidebarItem>
+          )
+        })}
+      </SidebarSection>
+      <SidebarDivider />
+      <SidebarSection className="flex items-start gap-3">
+        <VersionGroupSelector />
+        <ThemeSwitch />
+      </SidebarSection>
+    </SidebarBody>
   )
 }
 
