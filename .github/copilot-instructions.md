@@ -8,6 +8,7 @@
 - Import just the type from a package when possible, e.g., `import type { MyType } from 'my-package'`.
 - Never use require, always use import.
 - Do not `import React from 'react'`.
+- Do not suggest to cast variables to 'any' type.
 - Avoid using `any`, `unknown`, or `object` types. Use specific types or generics instead.
 - Avoid if-else chains, use Record or Map for faster lookups.
 - Avoid adding redundant comments for self-documenting code, or comments that state the obvious.
