@@ -1,9 +1,16 @@
 'use client'
 
 import { memo } from 'react'
-import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapi-helpers'
+import {
+  VersionGroupKey,
+  VersionGroupLabels,
+} from '@/lib/utils/pokeapi-helpers'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
+import {
+  Listbox,
+  ListboxLabel,
+  ListboxOption,
+} from '@/components/ui/catalyst/listbox'
 
 function VersionGroupSelector() {
   const { versionGroup, setVersionGroup, hasMounted } = useVersionGroup()
@@ -21,7 +28,7 @@ function VersionGroupSelector() {
       defaultValue={versionGroup}
       value={versionGroup}
       onChange={setVersionGroup}
-      className="lg:max-w-40 min-w-52"
+      className="min-w-52 lg:max-w-40"
     >
       {options.map((option) => {
         return (

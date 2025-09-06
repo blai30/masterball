@@ -2,7 +2,11 @@
 
 import { useMemo } from 'react'
 import clsx from 'clsx/lite'
-import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
+import {
+  Listbox,
+  ListboxLabel,
+  ListboxOption,
+} from '@/components/ui/catalyst/listbox'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapi-helpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'

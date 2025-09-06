@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 import type { Pokemon } from 'pokedex-promise-v2'
-import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
+import {
+  StatLabels,
+  type StatKey,
+  StatLabelsFull,
+} from '@/lib/utils/pokeapi-helpers'
 
 export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
@@ -59,7 +63,7 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
                   {/* Tick marks */}
                   <div className="absolute top-0 bottom-0 grid w-full grid-cols-5 divide-x-1 divide-zinc-300 dark:divide-zinc-700">
                     {[...Array(5)].map((_, index) => (
-                      <div key={index} />
+                      <div key={`${stat.stat.name}-tick-${index}`} />
                     ))}
                   </div>
                   {/* Fill bar */}

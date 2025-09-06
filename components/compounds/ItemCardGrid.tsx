@@ -6,9 +6,9 @@ import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import {
-  ItemPocketKey,
+  type ItemPocketKey,
   ItemPocketLabels,
-  ItemCategoryKey,
+  type ItemCategoryKey,
   ItemCategoryLabels,
 } from '@/lib/utils/pokeapi-helpers'
 import CardGrid from '@/components/compounds/CardGrid'

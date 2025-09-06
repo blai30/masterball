@@ -2,7 +2,11 @@
 
 import clsx from 'clsx/lite'
 import { ArrowDownWideNarrow, ArrowUpNarrowWide } from 'lucide-react'
-import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
+import {
+  Listbox,
+  ListboxLabel,
+  ListboxOption,
+} from '@/components/ui/catalyst/listbox'
 
 export type SortOption<T extends string> = {
   label: string

@@ -1,4 +1,3 @@
-import Link from '@/components/ui/catalyst/link'
 import clsx from 'clsx/lite'
 import pMap from 'p-map'
 import type {
@@ -10,7 +9,11 @@ import type {
 } from 'pokedex-promise-v2'
 import { Mars, Venus } from 'lucide-react'
 import pokeapi from '@/lib/api/pokeapi'
-import { StatLabels, StatKey, getTranslation } from '@/lib/utils/pokeapi-helpers'
+import {
+  StatLabels,
+  type StatKey,
+  getTranslation,
+} from '@/lib/utils/pokeapi-helpers'
 import { Group } from '@visx/group'
 import { Pie } from '@visx/shape'
 
@@ -208,9 +211,9 @@ function GenderRatioDonut({ male, female }: { male: number; female: number }) {
             padAngle={male === 100 || female === 100 ? 0 : 0.02}
           >
             {(pie) =>
-              pie.arcs.map((arc, i) => (
+              pie.arcs.map((arc) => (
                 <path
-                  key={i}
+                  key={arc.data.label}
                   d={pie.path(arc) || undefined}
                   className={clsx(
                     'fill-current',
@@ -298,13 +301,6 @@ export default async function MonsterMetadata({
   )
 
   return (
-    // <div
-    //   className={clsx(
-    //     // 'grid grid-cols-1 gap-4 @md:grid-cols-2 @lg:grid-cols-3 @4xl:grid-cols-6'
-    //     // 'rounded-xl p-4'
-    //     // 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800'
-    //   )}
-    // >
     <>
       <SizeMetadata height={pokemon.height} weight={pokemon.weight} />
       <GenderRatioMetadata genderRate={species.gender_rate} />
@@ -316,6 +312,5 @@ export default async function MonsterMetadata({
       <GrowthRateMetadata growthRate={growthRate} />
       <EffortValueYieldMetadata stats={pokemon.stats} />
     </>
-    // </div>
   )
 }
