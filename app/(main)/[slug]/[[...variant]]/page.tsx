@@ -4,7 +4,11 @@ import pMap from 'p-map'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
-import { getTranslation, TypeKey, TypeLabels } from '@/lib/utils/pokeapi-helpers'
+import {
+  getTranslation,
+  TypeKey,
+  TypeLabels,
+} from '@/lib/utils/pokeapi-helpers'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
 import LoadingSection from '@/components/details/LoadingSection'
 import LoadingMetadata from '@/components/details/LoadingMetadata'
@@ -48,12 +52,10 @@ export async function generateStaticParams() {
   return params
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string; variant: string[] | undefined }>
-}): Promise<Metadata> {
-  const { slug, variant } = await params
+export async function generateMetadata(
+  props: PageProps<'/[slug]/[[...variant]]'>
+): Promise<Metadata> {
+  const { slug, variant } = await props.params
   const [variantKey] = variant ?? []
   const species = await pokeapi.getByName<PokemonSpecies>(
     'pokemon-species',
@@ -97,12 +99,8 @@ export async function generateMetadata({
   return metadata
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string; variant: string[] | undefined }>
-}) {
-  const { slug, variant } = await params
+export default async function Page(props: PageProps<'/[slug]/[[...variant]]'>) {
+  const { slug, variant } = await props.params
   const [variantKey] = variant ?? []
   const species = await pokeapi.getByName<PokemonSpecies>(
     'pokemon-species',

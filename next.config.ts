@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   allowedDevOrigins: ['brianpc'],
+  typedRoutes: true,
   // logging: {
   //   fetches: {
   //     fullUrl: true,
