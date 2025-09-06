@@ -1,6 +1,6 @@
-import { StackedLayout } from '@/components/ui/stacked-layout'
-import { Sidebar } from '@/components/ui/sidebar'
-import { Navbar } from '@/components/ui/navbar'
+import { StackedLayout } from '@/components/ui/catalyst/stacked-layout'
+import { Sidebar } from '@/components/ui/catalyst/sidebar'
+import { Navbar } from '@/components/ui/catalyst/navbar'
 import NavMenu from '@/components/shared/NavMenu'
 import Footer from '@/components/shared/Footer'
 

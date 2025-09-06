@@ -3,7 +3,7 @@
 import { memo } from 'react'
 import { VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapi-helpers'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/listbox'
+import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
 
 function VersionGroupSelector() {
   const { versionGroup, setVersionGroup, hasMounted } = useVersionGroup()

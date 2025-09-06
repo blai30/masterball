@@ -3,7 +3,7 @@
 import React from 'react'
 import clsx from 'clsx/lite'
 import { Search } from 'lucide-react'
-import { Input, InputGroup } from '@/components/ui/input'
+import { Input, InputGroup } from '@/components/ui/catalyst/input'
 
 type SearchBarProps = {
   value: string

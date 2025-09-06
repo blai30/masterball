@@ -3,8 +3,8 @@
 import type React from 'react'
 import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
-import { Button } from '@/components/ui/button'
-import Link from '@/components/ui/link'
+import { Button } from '@/components/ui/catalyst/button'
+import Link from '@/components/ui/catalyst/link'
 
 export function Dropdown(props: Headless.MenuProps) {
   return <Headless.Menu {...props} />

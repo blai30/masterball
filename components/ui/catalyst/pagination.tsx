@@ -1,6 +1,6 @@
 import type React from 'react'
 import clsx from 'clsx/lite'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/catalyst/button'
 
 export function Pagination({
   'aria-label': ariaLabel = 'Page navigation',

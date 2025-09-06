@@ -4,8 +4,8 @@ import React, { forwardRef, useId } from 'react'
 import clsx from 'clsx/lite'
 import { LayoutGroup, motion } from 'motion/react'
 import * as Headless from '@headlessui/react'
-import { TouchTarget } from '@/components/ui/button'
-import Link from '@/components/ui/link'
+import { TouchTarget } from '@/components/ui/catalyst/button'
+import Link from '@/components/ui/catalyst/link'
 
 export function Sidebar({
   className,

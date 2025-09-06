@@ -10,14 +10,14 @@ import {
   NavbarLabel,
   NavbarSection,
   NavbarSpacer,
-} from '@/components/ui/navbar'
+} from '@/components/ui/catalyst/navbar'
 import {
   SidebarBody,
   SidebarDivider,
   SidebarItem,
   SidebarLabel,
   SidebarSection,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/catalyst/sidebar'
 
 const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
   ssr: false,
