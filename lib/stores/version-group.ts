@@ -37,7 +37,9 @@ export function useVersionGroup() {
       if (storedValue && isValidVersionGroupKey(storedValue)) {
         // Only update if the stored value differs from current state
         if (versionGroup !== storedValue) {
-          versionGroupStore.setState(() => ({ versionGroup: storedValue as VersionGroupKey }))
+          versionGroupStore.setState(() => ({
+            versionGroup: storedValue as VersionGroupKey,
+          }))
         }
       }
     }

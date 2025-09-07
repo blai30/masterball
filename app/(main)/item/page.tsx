@@ -6,10 +6,8 @@ import { itemResourceList } from '@/lib/providers'
 import {
   getTranslation,
   ItemCategoryKey,
-  ItemCategoryLabels,
   ItemCategoryToPocket,
   ItemPocketKey,
-  ItemPocketLabels,
 } from '@/lib/utils/pokeapi-helpers'
 import { excludedItems } from '@/lib/utils/excluded-slugs'
 import ItemCardGrid from '@/components/compounds/ItemCardGrid'
@@ -56,9 +54,7 @@ export default async function Home() {
     .map((resource) => {
       const { id, name, category } = resource
       const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/items/item_${name}.webp`
-      const categoryLabel = ItemCategoryLabels[category.name as ItemCategoryKey]
       const pocket = ItemCategoryToPocket[category.name as ItemCategoryKey]
-      const pocketLabel = ItemPocketLabels[pocket as ItemPocketKey]
 
       return {
         id,

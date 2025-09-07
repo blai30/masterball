@@ -1,8 +1,9 @@
-import React, { forwardRef } from 'react'
+import type React from 'react'
+import { forwardRef } from 'react'
 import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
-import { TouchTarget } from '@/components/ui/button'
-import Link from '@/components/ui/link'
+import { TouchTarget } from '@/components/ui/catalyst/button'
+import Link from '@/components/ui/catalyst/link'
 
 const colors = {
   red: 'bg-red-500/15 text-red-700 group-data-hover:bg-red-500/25 dark:bg-red-500/10 dark:text-red-400 dark:group-data-hover:bg-red-500/20',
@@ -65,7 +66,7 @@ export const BadgeButton = forwardRef(function BadgeButton(
     ),
   ref: React.ForwardedRef<HTMLElement>
 ) {
-  let classes = clsx(
+  const classes = clsx(
     className,
     'group relative inline-flex rounded-md focus:not-data-focus:outline-hidden data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-blue-500'
   )

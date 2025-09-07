@@ -1,11 +1,12 @@
 'use client'
 
-import React, { forwardRef, useId } from 'react'
+import type React from 'react'
+import { forwardRef, useId } from 'react'
 import clsx from 'clsx/lite'
 import { LayoutGroup, motion } from 'motion/react'
 import * as Headless from '@headlessui/react'
-import { TouchTarget } from '@/components/ui/button'
-import Link from '@/components/ui/link'
+import { TouchTarget } from '@/components/ui/catalyst/button'
+import Link from '@/components/ui/catalyst/link'
 
 export function Sidebar({
   className,
@@ -68,7 +69,7 @@ export function SidebarSection({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
-  let id = useId()
+  const id = useId()
 
   return (
     <LayoutGroup id={id}>
@@ -124,19 +125,25 @@ export function SidebarHeading({
   )
 }
 
-export const SidebarItem = forwardRef(function SidebarItem(
-  {
-    current,
-    className,
-    children,
-    ...props
-  }: { current?: boolean; className?: string; children: React.ReactNode } & (
-    | Omit<Headless.ButtonProps, 'as' | 'className'>
-    | Omit<Headless.ButtonProps<typeof Link>, 'as' | 'className'>
-  ),
-  ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
-) {
-  let classes = clsx(
+type SidebarItemBaseProps = {
+  current?: boolean
+  className?: string
+  children: React.ReactNode
+}
+
+type SidebarItemButtonProps = SidebarItemBaseProps &
+  Omit<Headless.ButtonProps<'button'>, 'as' | 'className'>
+
+type SidebarItemLinkProps = SidebarItemBaseProps &
+  Omit<Headless.ButtonProps<typeof Link>, 'as' | 'className'>
+
+type SidebarItemProps = SidebarItemButtonProps | SidebarItemLinkProps
+
+export const SidebarItem = forwardRef<
+  HTMLAnchorElement | HTMLButtonElement,
+  SidebarItemProps
+>(function SidebarItem({ current, className, children, ...props }, ref) {
+  const classes = clsx(
     // Base
     'flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-left text-base/6 font-medium text-zinc-950 sm:py-2 sm:text-sm/5',
     // Leading icon/icon-only

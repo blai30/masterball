@@ -1,4 +1,4 @@
-import type { NamedAPIResource, NamedAPIResourceList } from 'pokedex-promise-v2'
+import type { NamedAPIResourceList } from 'pokedex-promise-v2'
 
 const species: NamedAPIResourceList = {
   count: 1025,
@@ -687,7 +687,7 @@ const items = [
   'tera-orb',
   'scarlet-book',
   'violet-book',
-  "kofus-wallet",
+  'kofus-wallet',
   'tiny-bamboo-shoot',
   'big-bamboo-shoot',
   'scroll-of-darkness',
@@ -774,7 +774,7 @@ const items = [
   'pineapple',
   'tm-material',
   'auspicious-armor',
-  "leaders-crest",
+  'leaders-crest',
   'fairy-feather',
   'syrupy-apple',
   'unremarkable-teacup',

@@ -6,6 +6,7 @@ export function Divider({
   ...props
 }: { soft?: boolean } & React.ComponentPropsWithoutRef<'hr'>) {
   return (
+    // biome-ignore lint/a11y/noInteractiveElementToNoninteractiveRole: The hr element is purely decorative here
     <hr
       role="presentation"
       {...props}

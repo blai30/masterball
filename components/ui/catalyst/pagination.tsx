@@ -1,6 +1,7 @@
+import type { Route } from 'next'
 import type React from 'react'
 import clsx from 'clsx/lite'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/catalyst/button'
 
 export function Pagination({
   'aria-label': ariaLabel = 'Page navigation',
@@ -104,7 +105,7 @@ export function PaginationPage({
 }>) {
   return (
     <Button
-      href={href}
+      href={href as Route}
       plain
       aria-label={`Page ${children}`}
       aria-current={current ? 'page' : undefined}

@@ -1,55 +1,45 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
-  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["app/**", "components/**", "lib/**"]
+    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
   },
   "formatter": {
     "enabled": true,
-    "useEditorconfig": true,
-    "formatWithErrors": false,
     "indentStyle": "space",
-    "indentWidth": 2,
-    "lineEnding": "lf",
-    "lineWidth": 80,
-    "attributePosition": "auto",
-    "bracketSpacing": true
+    "indentWidth": 2
   },
-  "assist": { "actions": { "source": { "organizeImports": "off" } } },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": false,
-      "complexity": { "noUselessTypeConstraint": "error" },
-      "correctness": {
-        "noUnusedVariables": "off",
-        "useExhaustiveDependencies": "warn",
-        "useHookAtTopLevel": "error"
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off"
       },
-      "nursery": {
-        "useSortedClasses": {
-          "fix": "none",
-          "level": "off",
-          "options": {
-            "attributes": ["classList"],
-            "functions": ["cn", "clsx", "cva", "tw", "tw.*"]
-          }
-        }
+      "correctness": {
+        "noUnusedVariables": "off"
       },
       "style": {
-        "noNonNullAssertion": "off",
-        "noNamespace": "error",
-        "useAsConstAssertion": "error",
-        "useBlockStatements": "off",
-        "useArrayLiterals": "off"
+        "noNonNullAssertion": "off"
       },
       "suspicious": {
-        "noExplicitAny": "error",
-        "noExtraNonNullAssertion": "error",
-        "noMisleadingInstantiator": "error",
-        "noUnsafeDeclarationMerging": "error",
-        "useNamespaceKeyword": "error"
+        "noUnknownAtRules": "off"
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "off"
       }
     }
   },

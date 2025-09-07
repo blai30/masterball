@@ -1,7 +1,8 @@
-import React, { forwardRef } from 'react'
+import type React from 'react'
+import { forwardRef } from 'react'
 import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
-import Link from '@/components/ui/link'
+import Link from '@/components/ui/catalyst/link'
 
 const styles = {
   base: [
@@ -171,7 +172,7 @@ export const Button = forwardRef(function Button(
   { color, outline, plain, className, children, ...props }: ButtonProps,
   ref: React.ForwardedRef<HTMLElement>
 ) {
-  let classes = clsx(
+  const classes = clsx(
     className,
     styles.base,
     outline

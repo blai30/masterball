@@ -1,5 +1,6 @@
 'use client'
 
+import type { Route } from 'next'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 import { memo } from 'react'
@@ -10,14 +11,14 @@ import {
   NavbarLabel,
   NavbarSection,
   NavbarSpacer,
-} from '@/components/ui/navbar'
+} from '@/components/ui/catalyst/navbar'
 import {
   SidebarBody,
   SidebarDivider,
   SidebarItem,
   SidebarLabel,
   SidebarSection,
-} from '@/components/ui/sidebar'
+} from '@/components/ui/catalyst/sidebar'
 
 const ThemeSwitch = dynamic(() => import('@/components/shared/ThemeSwitch'), {
   ssr: false,
@@ -53,7 +54,7 @@ function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
           {navItems.map((item) => {
             const active = isActiveRoute(item.url)
             return (
-              <NavbarItem key={item.url} href={item.url} current={active}>
+              <NavbarItem key={item.url} href={item.url as Route} current={active}>
                 <item.icon size={20} />
                 <NavbarLabel>{item.label}</NavbarLabel>
               </NavbarItem>
@@ -71,26 +72,28 @@ function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
 
   // Sidebar variant for mobile
   return (
-    <>
-      <SidebarBody>
-        <SidebarSection>
-          {navItems.map((item) => {
-            const active = isActiveRoute(item.url)
-            return (
-              <SidebarItem key={item.url} href={item.url} current={active}>
-                <item.icon size={20} />
-                <SidebarLabel>{item.label}</SidebarLabel>
-              </SidebarItem>
-            )
-          })}
-        </SidebarSection>
-        <SidebarDivider />
-        <SidebarSection className="flex items-start gap-3">
-          <VersionGroupSelector />
-          <ThemeSwitch />
-        </SidebarSection>
-      </SidebarBody>
-    </>
+    <SidebarBody>
+      <SidebarSection>
+        {navItems.map((item) => {
+          const active = isActiveRoute(item.url)
+          return (
+            <SidebarItem
+              key={item.url}
+              href={item.url as Route}
+              current={active}
+            >
+              <item.icon size={20} />
+              <SidebarLabel>{item.label}</SidebarLabel>
+            </SidebarItem>
+          )
+        })}
+      </SidebarSection>
+      <SidebarDivider />
+      <SidebarSection className="flex items-start gap-3">
+        <VersionGroupSelector />
+        <ThemeSwitch />
+      </SidebarSection>
+    </SidebarBody>
   )
 }
 

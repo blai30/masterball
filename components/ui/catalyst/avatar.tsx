@@ -1,8 +1,10 @@
-import React, { forwardRef } from 'react'
+import Image from 'next/image'
+import type React from 'react'
+import { forwardRef } from 'react'
 import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
-import { TouchTarget } from '@/components/ui/button'
-import Link from '@/components/ui/link'
+import { TouchTarget } from '@/components/ui/catalyst/button'
+import Link from '@/components/ui/catalyst/link'
 
 type AvatarProps = {
   src?: string | null
@@ -54,7 +56,7 @@ export function Avatar({
           </text>
         </svg>
       )}
-      {src && <img className="size-full" src={src} alt={alt} />}
+      {src && <Image className="size-full" src={src} alt={alt} />}
     </span>
   )
 }
@@ -74,7 +76,7 @@ export const AvatarButton = forwardRef(function AvatarButton(
     ),
   ref: React.ForwardedRef<HTMLElement>
 ) {
-  let classes = clsx(
+  const classes = clsx(
     className,
     square ? 'rounded-[20%]' : 'rounded-full',
     'relative inline-grid focus:not-data-focus:outline-hidden data-focus:outline-2 data-focus:outline-offset-2 data-focus:outline-blue-500'

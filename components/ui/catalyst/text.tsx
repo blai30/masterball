@@ -1,5 +1,5 @@
 import clsx from 'clsx/lite'
-import Link from '@/components/ui/link'
+import Link from '@/components/ui/catalyst/link'
 
 export function Text({
   className,

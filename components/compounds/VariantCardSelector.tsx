@@ -1,10 +1,11 @@
 'use client'
 
+import type { Route } from 'next'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import clsx from 'clsx/lite'
 import { Radio, RadioGroup } from '@headlessui/react'
-import { Monster } from '@/lib/utils/pokeapi-helpers'
+import type { Monster } from '@/lib/utils/pokeapi-helpers'
 import VariantCard from '@/components/compounds/VariantCard'
 
 export default function VariantCardSelector({
@@ -20,7 +21,7 @@ export default function VariantCardSelector({
 
   const handleVariantChange = (url: string) => {
     setSelectedVariant(url)
-    router.replace(url)
+    router.replace(url as Route)
   }
 
   const getUrl = (monster: Monster) =>
@@ -32,11 +33,7 @@ export default function VariantCardSelector({
     <RadioGroup
       value={selectedVariant}
       onChange={handleVariantChange}
-      className={clsx(
-        // 'grid grid-cols-2 gap-2 py-4 @md:grid-cols-3 @2xl:grid-cols-4 @3xl:grid-cols-5 @4xl:grid-cols-6 @5xl:grid-cols-7 @6xl:grid-cols-8',
-        'flex flex-row gap-2 py-4',
-        className
-      )}
+      className={clsx('flex flex-row gap-2 py-4', className)}
     >
       {monsters.map((monster) => (
         <Radio
