@@ -1,4 +1,4 @@
-import type { NamedAPIResource, NamedAPIResourceList } from 'pokedex-promise-v2'
+import type { NamedAPIResourceList } from 'pokedex-promise-v2'
 
 const species: NamedAPIResourceList = {
   count: 1025,
