@@ -21,7 +21,7 @@ export default function VariantCardSelector({
 
   const handleVariantChange = (url: string) => {
     setSelectedVariant(url)
-    router.replace(`/${url}` as Route)
+    router.replace(url as Route)
   }
 
   const getUrl = (monster: Monster) =>
