@@ -5,9 +5,9 @@ import pokeapi from '@/lib/api/pokeapi'
 import {
   LearnMethodKey,
   getTranslation,
-  MoveRow,
-  DamageClassKey,
-  TypeKey,
+  type MoveRow,
+  type DamageClassKey,
+  type TypeKey,
 } from '@/lib/utils/pokeapi-helpers'
 import LoadingSection from '@/components/details/LoadingSection'
 

@@ -89,7 +89,7 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
     })
 
     // Animate each stat with staggered timing
-    const timeouts = statOrder.map((key, i) =>
+    const timeouts = statOrder.map((key) =>
       setTimeout(
         () => {
           setAnimatedStats((prev) => ({
@@ -140,20 +140,20 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
             })
             return (
               <Polygon
-                key={`grid-${i}`}
+                key={`grid-${r}`}
                 points={points}
                 className="fill-none stroke-zinc-300 stroke-1 dark:stroke-zinc-700"
               />
             )
           })}
           {/* Stat axis lines */}
-          {statOrder.map((_, i) => {
+          {statOrder.map((key, i) => {
             const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
             const x = RADAR_CENTER + RADAR_RADIUS * Math.cos(angle)
             const y = RADAR_CENTER + RADAR_RADIUS * Math.sin(angle)
             return (
               <line
-                key={`axis-${i}`}
+                key={`axis-${key}`}
                 x1={RADAR_CENTER}
                 y1={RADAR_CENTER}
                 x2={x}

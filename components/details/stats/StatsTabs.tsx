@@ -59,7 +59,6 @@ export default function StatsTabs({
           <div
             id={selectedIndex === 0 ? 'tabpanel-bar' : 'tabpanel-radar'}
             role="tabpanel"
-            tabIndex={0}
             aria-labelledby={selectedIndex === 0 ? 'tab-bar' : 'tab-radar'}
             className="focus:outline-none"
           >

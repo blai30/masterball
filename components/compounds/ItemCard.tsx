@@ -1,14 +1,14 @@
 'use client'
 
 import Image from 'next/image'
-import { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
+import type { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
 import GlassCard from '@/components/GlassCard'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { Badge } from '@/components/ui/catalyst/badge'
 import {
-  ItemCategoryKey,
+  type ItemCategoryKey,
   ItemCategoryLabels,
-  ItemPocketKey,
+  type ItemPocketKey,
   ItemPocketLabels,
 } from '@/lib/utils/pokeapi-helpers'
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useCallback, ReactNode } from 'react'
+import { useMemo, useCallback, type ReactNode } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import Pagination from '@/components/compounds/Pagination'
 

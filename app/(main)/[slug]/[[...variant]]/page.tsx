@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import pMap from 'p-map'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
@@ -6,7 +6,7 @@ import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import {
   getTranslation,
-  TypeKey,
+  type TypeKey,
   TypeLabels,
 } from '@/lib/utils/pokeapi-helpers'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'

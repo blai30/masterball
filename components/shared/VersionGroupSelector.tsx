@@ -2,7 +2,7 @@
 
 import { memo } from 'react'
 import {
-  VersionGroupKey,
+  type VersionGroupKey,
   VersionGroupLabels,
 } from '@/lib/utils/pokeapi-helpers'
 import { useVersionGroup } from '@/lib/stores/version-group'

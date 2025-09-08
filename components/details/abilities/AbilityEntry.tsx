@@ -1,6 +1,6 @@
 'use client'
 
-import { Ability } from 'pokedex-promise-v2'
+import type { Ability } from 'pokedex-promise-v2'
 import { Sparkles } from 'lucide-react'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { useVersionGroup } from '@/lib/stores/version-group'

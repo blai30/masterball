@@ -1,6 +1,6 @@
 'use client'
 
-import { HTMLAttributes, memo } from 'react'
+import { type HTMLAttributes, memo } from 'react'
 
 const navigation = [
   {

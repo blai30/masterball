@@ -1,10 +1,10 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import pMap from 'p-map'
-import { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
-import { getTranslation, TypeKey } from '@/lib/utils/pokeapi-helpers'
+import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
 import SpeciesCardGrid from '@/components/compounds/SpeciesCardGrid'
 
 export const dynamic = 'force-static'

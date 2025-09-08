@@ -233,7 +233,7 @@ function MovesTable({
                   },
                 },
               }}
-              key={versionGroup + '-' + variant}
+              key={`${versionGroup}-${variant}`}
             >
               {table.getRowModel().rows.map((row) => {
                 const isActive =
