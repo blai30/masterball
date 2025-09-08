@@ -1,13 +1,13 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import pMap from 'p-map'
-import { Item } from 'pokedex-promise-v2'
+import type { Item } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { itemResourceList } from '@/lib/providers'
 import {
   getTranslation,
-  ItemCategoryKey,
+  type ItemCategoryKey,
   ItemCategoryToPocket,
-  ItemPocketKey,
+  type ItemPocketKey,
 } from '@/lib/utils/pokeapi-helpers'
 import { excludedItems } from '@/lib/utils/excluded-slugs'
 import ItemCardGrid from '@/components/compounds/ItemCardGrid'

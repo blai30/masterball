@@ -18,7 +18,7 @@ import SortBar, {
   SortDirection,
   type SortOption,
 } from '@/components/shared/SortBar'
-import { type FilterOption } from '@/components/shared/FilterBar'
+import type { FilterOption } from '@/components/shared/FilterBar'
 
 const DEFAULT_SORT_KEY = 'name'
 const DEFAULT_SORT_DIRECTION = SortDirection.ASC
