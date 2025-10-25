@@ -2,10 +2,11 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   experimental: {
-    reactCompiler: true,
+    turbopackFileSystemCacheForDev: true,
     viewTransition: true,
   },
   output: 'export',
+  reactCompiler: true,
   reactStrictMode: true,
   basePath: process.env.NEXT_PUBLIC_BASEPATH ?? undefined,
   images: {
