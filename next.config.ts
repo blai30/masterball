@@ -2,7 +2,7 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   experimental: {
-    turbopackFileSystemCacheForDev: true,
+    // turbopackFileSystemCacheForDev: true,
     viewTransition: true,
   },
   output: 'export',
