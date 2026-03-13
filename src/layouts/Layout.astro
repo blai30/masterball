@@ -52,9 +52,5 @@ const faviconUrl = `${basePath}/favicon.png`
   </head>
   <body class="h-full text-black antialiased dark:text-white">
     <slot />
-    <script>
-      import { inject } from '@vercel/analytics'
-      inject()
-    </script>
   </body>
 </html>
