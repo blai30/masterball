@@ -1,0 +1,39 @@
+---
+import pMap from 'p-map'
+import type { Ability } from 'pokedex-promise-v2'
+import Layout from '@/layouts/Layout.astro'
+import AbilityPageContent from '@/components/pages/AbilityPageContent'
+import pokeapi from '@/lib/api/pokeapi'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
+
+const abilityList = import.meta.env.DEV
+  ? await pokeapi.getList('ability', 40, 0)
+  : await pokeapi.getList('ability', 600, 0)
+
+const abilities = await pMap(
+  abilityList.results,
+  async (result) => pokeapi.getResource<Ability>(result.url),
+  { concurrency: 20 }
+)
+
+const abilitiesData = abilities
+  .filter(
+    (resource) =>
+      resource.is_main_series &&
+      resource.names?.find((name) => name?.language?.name === 'en') !== undefined
+  )
+  .map((resource) => ({
+    id: resource.id,
+    slug: resource.name,
+    name: getTranslation(resource.names, 'name')!,
+    defaultDescription: getTranslation(resource.effect_entries, 'short_effect') ?? '',
+    flavorTextEntries: resource.flavor_text_entries.filter(
+      (entry) => entry.language.name === 'en'
+    ),
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name))
+---
+
+<Layout title="Ability List">
+  <AbilityPageContent data={abilitiesData} client:only="react" />
+</Layout>

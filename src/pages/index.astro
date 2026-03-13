@@ -1,0 +1,49 @@
+---
+import pMap from 'p-map'
+import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+import Layout from '@/layouts/Layout.astro'
+import HomePageContent from '@/components/pages/HomePageContent'
+import pokeapi from '@/lib/api/pokeapi'
+import { getTestSpeciesList } from '@/lib/providers'
+import { excludedVariants } from '@/lib/utils/excluded-slugs'
+import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
+
+const speciesList = import.meta.env.DEV
+  ? await getTestSpeciesList()
+  : await pokeapi.getList('pokemon-species', 1025, 0)
+
+const species = await pMap(
+  speciesList.results,
+  async (result) => pokeapi.getResource<PokemonSpecies>(result.url),
+  { concurrency: 20 }
+)
+
+const speciesPokemon: Record<string, Pokemon> = Object.fromEntries(
+  await pMap(
+    species,
+    async (specie) => {
+      const pokemon = await pokeapi.getResource<Pokemon>(
+        specie.varieties
+          .filter((variant) => !excludedVariants.includes(variant.pokemon.name))
+          .find((v) => v.is_default)!.pokemon.url
+      )
+      return [specie.name, pokemon] as const
+    },
+    { concurrency: 20 }
+  )
+)
+
+const speciesData = species.map((specie) => {
+  const pokemon = speciesPokemon[specie.name]
+  return {
+    id: specie.id,
+    slug: specie.name,
+    name: getTranslation(specie.names, 'name')!,
+    types: pokemon.types.map((type) => type.type.name as TypeKey),
+  }
+})
+---
+
+<Layout title="Pokémon List">
+  <HomePageContent data={speciesData} client:only="react" />
+</Layout>
