@@ -6,7 +6,6 @@ export default defineConfig({
   output: 'static',
   integrations: [react()],
   vite: {
-    // @ts-expect-error - tailwindcss vite plugin type mismatch with vite version
     plugins: [tailwindcss()],
     optimizeDeps: {
       include: ['react-dom/client'],
