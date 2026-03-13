@@ -8,6 +8,9 @@ export default defineConfig({
   vite: {
     // @ts-expect-error - tailwindcss vite plugin type mismatch with vite version
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ['react-dom/client'],
+    },
   },
   base: process.env.PUBLIC_BASEPATH ?? '/',
 })
