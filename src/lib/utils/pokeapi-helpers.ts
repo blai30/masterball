@@ -404,7 +404,7 @@ export enum VersionGroupKey {
   ScarletViolet = 'scarlet-violet',
 }
 
-// prettoer-ignore
+// prettier-ignore
 export const VersionGroupLabels: Record<VersionGroupKey, string> = {
   [VersionGroupKey.RedBlue]: 'Red & Blue',
   [VersionGroupKey.Yellow]: 'Yellow',
