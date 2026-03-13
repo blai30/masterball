@@ -17,7 +17,7 @@ export default function VariantCardSelector({
     setSelectedVariant(window.location.pathname)
   }, [])
 
-  const basePath = (import.meta as { env: Record<string, string> }).env?.PUBLIC_BASEPATH || ''
+  const basePath = import.meta.env.PUBLIC_BASEPATH || ''
 
   const getUrl = (monster: Monster) => {
     const path = monster.formSlug

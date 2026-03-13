@@ -31,7 +31,7 @@ function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
     setPathname(window.location.pathname)
   }, [])
 
-  const basePath = (import.meta as { env: Record<string, string> }).env?.PUBLIC_BASEPATH || ''
+  const basePath = import.meta.env.PUBLIC_BASEPATH || ''
 
   const isActiveRoute = (url: string) => {
     const fullUrl = basePath + url

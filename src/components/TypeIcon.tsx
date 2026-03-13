@@ -44,7 +44,7 @@ export default function TypeIcon({
   className?: string
 }) {
   const name = TypeLabels[variant as TypeKey]
-  const basePath = (import.meta as { env: Record<string, string> }).env?.PUBLIC_BASEPATH || ''
+  const basePath = import.meta.env.PUBLIC_BASEPATH || ''
   const imageUrl = `${basePath}/${variant}.png`
   const dimensions = {
     small: 20,

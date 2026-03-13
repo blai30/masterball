@@ -41,7 +41,7 @@ export function useVersionGroup() {
         }
       }
     }
-  }, [versionGroup])
+  }, [])
 
   return { versionGroup, setVersionGroup, hasMounted }
 }
