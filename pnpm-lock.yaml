@@ -29,6 +29,9 @@ importers:
       '@visx/group':
         specifier: ^3.12.0
         version: 3.12.0(react@19.2.6)
+      '@visx/scale':
+        specifier: ^3.12.0
+        version: 3.12.0
       '@visx/shape':
         specifier: ^3.12.0
         version: 3.12.0(react@19.2.6)
