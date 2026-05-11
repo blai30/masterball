@@ -1,11 +1,11 @@
 import clsx from 'clsx/lite'
 import pMap from 'p-map'
 import type {
-  PokemonSpecies,
   Pokemon,
+  PokemonSpecies,
+  PokemonStat,
   EggGroup,
   GrowthRate,
-  StatElement,
 } from 'pokedex-promise-v2'
 import { Mars, Venus } from 'lucide-react'
 import pokeapi from '@/lib/api/pokeapi'
@@ -87,7 +87,7 @@ function CatchRateMetadata({ catchRate }: { catchRate: number }) {
   )
 }
 
-function EffortValueYieldMetadata({ stats }: { stats: StatElement[] }) {
+function EffortValueYieldMetadata({ stats }: { stats: PokemonStat[] }) {
   const evStats = stats.filter((stat) => stat.effort > 0)
 
   if (evStats.length === 0) {
