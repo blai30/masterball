@@ -1,0 +1,13 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "rules": {
+    "a11y/no-svg-without-title": "off",
+    "correctness/no-unused-variables": "off",
+    "style/no-non-null-assertion": "off",
+    "suspicious/no-unknown-at-rules": "off"
+  }
+}
