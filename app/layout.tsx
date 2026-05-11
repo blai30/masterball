@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 import { Geist, Inter, JetBrains_Mono, Sofia_Sans } from 'next/font/google'
 import './globals.css'
 import clsx from 'clsx/lite'
 import { ThemeProvider } from 'next-themes'
+import Head from 'next/head'
 
 const geist = Geist({
   variable: '--font-geist',
@@ -121,9 +123,13 @@ export default function RootLayout({
       )}
     >
       {process?.env?.NODE_ENV && process?.env?.NODE_ENV === 'development' && (
-        <head>
-          <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script>
-        </head>
+        <Head>
+          <Script
+            src="//unpkg.com/react-scan/dist/auto.global.js"
+            crossOrigin="anonymous"
+            strategy="beforeInteractive"
+          />
+        </Head>
       )}
       <body className="h-full text-black antialiased dark:text-white">
         <ThemeProvider
