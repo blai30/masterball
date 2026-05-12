@@ -19,6 +19,7 @@ import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
 import EvolutionSection from '@/components/details/evolution/EvolutionSection'
 import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection'
 import LocalizationSection from '@/components/details/localization/LocalizationSection'
+import LocationsSection from '@/components/details/locations/LocationsSection'
 import MovesSection from '@/components/details/moves/MovesSection'
 import MonsterHero from '@/components/details/MonsterHero'
 
@@ -131,7 +132,7 @@ export default async function Page(props: PageProps<'/[slug]/[[...variant]]'>) {
 
   return (
     <div className="flex w-full flex-col gap-4 xl:max-w-none">
-      <section className="@container mx-auto w-full max-w-[96rem]">
+      <section className="@container mx-auto w-full max-w-384">
         <div className="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @[88rem]:grid-cols-8">
           <MonsterHero
             species={species}
@@ -145,7 +146,7 @@ export default async function Page(props: PageProps<'/[slug]/[[...variant]]'>) {
         </div>
       </section>
       {/* Main details section */}
-      <section className="mx-auto w-full max-w-[96rem]">
+      <section className="mx-auto w-full max-w-384">
         <div className="flex w-full flex-col gap-4 xl:flex-row">
           {/* First column on large screens */}
           <div className="flex w-full flex-col gap-4">
@@ -157,6 +158,9 @@ export default async function Page(props: PageProps<'/[slug]/[[...variant]]'>) {
             </Suspense>
             <Suspense fallback={<LoadingSection />}>
               <AbilitiesSection pokemon={pokemon} />
+            </Suspense>
+            <Suspense fallback={<LoadingSection />}>
+              <LocationsSection pokemon={pokemon} />
             </Suspense>
             <Suspense fallback={<LoadingSection />}>
               <EvolutionSection species={species} />

@@ -430,6 +430,17 @@ export const VersionGroupLabels: Record<VersionGroupKey, string> = {
   [VersionGroupKey.ScarletViolet]: 'Scarlet & Violet',
 }
 
+export type LocationEncounterRow = {
+  locationAreaSlug: string
+  locationName: string
+  versionName: string
+  versionGroup: VersionGroupKey
+  maxChance: number
+  minLevel: number
+  maxLevel: number
+  methods: string[]
+}
+
 export enum Effectiveness {
   Immune = 0.0,
   Quarter = 0.25,

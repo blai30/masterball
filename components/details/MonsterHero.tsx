@@ -72,6 +72,7 @@ export default function MonsterHero({
           alt={`${species.name} front default`}
           width={128}
           height={128}
+          loading="eager"
           className="object-scale-down"
         />
       </motion.div>

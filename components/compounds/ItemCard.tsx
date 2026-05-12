@@ -44,7 +44,7 @@ export default function ItemCard({ props }: { props: ItemCardProps }) {
     <GlassCard variant="default" className="h-full rounded-xl">
       <div className="flex flex-row items-start gap-4 p-4">
         {props.imageUrl && (
-          <div className="flex aspect-square size-20 items-center justify-center rounded-md bg-gradient-to-br from-zinc-100 to-zinc-200 p-2 dark:from-zinc-800 dark:to-zinc-900">
+          <div className="flex aspect-square size-20 items-center justify-center rounded-md bg-linear-to-br from-zinc-100 to-zinc-200 p-2 dark:from-zinc-800 dark:to-zinc-900">
             <Image
               src={props.imageUrl}
               alt={props.slug}

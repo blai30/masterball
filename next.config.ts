@@ -12,7 +12,6 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  allowedDevOrigins: ['brianpc'],
   typedRoutes: true,
   // logging: {
   //   fetches: {

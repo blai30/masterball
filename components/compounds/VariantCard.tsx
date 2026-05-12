@@ -31,6 +31,7 @@ export default function VariantCard({
           alt={name}
           width={128}
           height={128}
+          loading="eager"
           className="object-scale-down"
         />
       </div>

@@ -2,13 +2,12 @@
   "name": "masterball",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@11.1.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "oxlint",
-    "format": "oxfmt",
+    "fmt": "oxfmt",
     "typegen": "next typegen"
   },
   "dependencies": {
@@ -46,6 +45,7 @@
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3"
   },
+  "packageManager": "pnpm@11.1.0",
   "trustedDependencies": [
     "@tailwindcss/oxide"
   ]
