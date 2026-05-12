@@ -6,17 +6,9 @@ import { useDebouncedCallback } from 'use-debounce'
 import { TypeKey } from '@/lib/utils/pokeapi-helpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import SearchBar from '@/components/shared/SearchBar'
-import SortBar, {
-  SortDirection,
-  type SortOption,
-} from '@/components/shared/SortBar'
-import MonsterCard, {
-  type MonsterCardProps,
-} from '@/components/compounds/MonsterCard'
-import FilterBar, {
-  type FilterOption,
-  type FilterConfig,
-} from '@/components/shared/FilterBar'
+import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
+import MonsterCard, { type MonsterCardProps } from '@/components/compounds/MonsterCard'
+import FilterBar, { type FilterOption, type FilterConfig } from '@/components/shared/FilterBar'
 import Fuse from 'fuse.js'
 
 const DEFAULT_SORT_KEY = 'id'
@@ -24,11 +16,7 @@ const DEFAULT_SORT_DIRECTION = SortDirection.ASC
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 60
 
-export default function SpeciesCardGrid({
-  data,
-}: {
-  data: MonsterCardProps[]
-}) {
+export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -40,15 +28,12 @@ export default function SpeciesCardGrid({
     []
   )
   const typeFilters: FilterOption[] = useMemo(
-    () =>
-      Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
+    () => Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
     []
   )
 
   const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
-  const [sortKey, setSortKey] = useState(
-    () => searchParams.get('sort') ?? DEFAULT_SORT_KEY
-  )
+  const [sortKey, setSortKey] = useState(() => searchParams.get('sort') ?? DEFAULT_SORT_KEY)
   const [sortDirection, setSortDirection] = useState<SortDirection>(
     () => (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION
   )
@@ -71,12 +56,9 @@ export default function SpeciesCardGrid({
       const params = new URLSearchParams()
       if (state.search) params.set('q', state.search)
       if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
-      if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
-        params.set('dir', state.sortDirection)
-      if (state.typeFilter.length > 0)
-        params.set('type', state.typeFilter.join(','))
-      if (state.currentPage !== DEFAULT_PAGE)
-        params.set('p', String(state.currentPage))
+      if (state.sortDirection !== DEFAULT_SORT_DIRECTION) params.set('dir', state.sortDirection)
+      if (state.typeFilter.length > 0) params.set('type', state.typeFilter.join(','))
+      if (state.currentPage !== DEFAULT_PAGE) params.set('p', String(state.currentPage))
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     500
@@ -124,10 +106,8 @@ export default function SpeciesCardGrid({
    * Returns filtered and sorted data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = data.filter(
-      (monster) =>
-        typeFilter.length === 0 ||
-        typeFilter.every((t) => monster.types.includes(t as TypeKey))
+    let filtered = data.filter((monster) =>
+      typeFilter.every((t) => monster.types.includes(t as TypeKey))
     )
 
     if (search) {
@@ -136,9 +116,7 @@ export default function SpeciesCardGrid({
         threshold: 0.4,
         ignoreLocation: false,
       })
-      filtered = fuse
-        .search(search)
-        .map((r: { item: MonsterCardProps }) => r.item)
+      filtered = fuse.search(search).map((r: { item: MonsterCardProps }) => r.item)
     }
 
     if (sortKey) {

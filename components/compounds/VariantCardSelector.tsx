@@ -25,9 +25,7 @@ export default function VariantCardSelector({
   }
 
   const getUrl = (monster: Monster) =>
-    monster.formSlug
-      ? `/${monster.speciesSlug}/${monster.formSlug}`
-      : `/${monster.speciesSlug}`
+    monster.formSlug ? `/${monster.speciesSlug}/${monster.formSlug}` : `/${monster.speciesSlug}`
 
   return (
     <RadioGroup

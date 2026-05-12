@@ -57,12 +57,10 @@ export default function ItemCardGrid({
     }) => {
       const params = new URLSearchParams()
       if (state.search) params.set('q', state.search)
-      if (state.pocketFilters.length > 0)
-        params.set('pockets', state.pocketFilters.join(','))
+      if (state.pocketFilters.length > 0) params.set('pockets', state.pocketFilters.join(','))
       if (state.categoryFilters.length > 0)
         params.set('categories', state.categoryFilters.join(','))
-      if (state.currentPage !== DEFAULT_PAGE)
-        params.set('p', String(state.currentPage))
+      if (state.currentPage !== DEFAULT_PAGE) params.set('p', String(state.currentPage))
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     500
@@ -78,13 +76,10 @@ export default function ItemCardGrid({
     setCurrentPage(DEFAULT_PAGE)
   }, [])
 
-  const handleCategoryFilterChange = useCallback(
-    (values: string | string[]) => {
-      setCategoryFilters(Array.isArray(values) ? values : [values])
-      setCurrentPage(DEFAULT_PAGE)
-    },
-    []
-  )
+  const handleCategoryFilterChange = useCallback((values: string | string[]) => {
+    setCategoryFilters(Array.isArray(values) ? values : [values])
+    setCurrentPage(DEFAULT_PAGE)
+  }, [])
 
   const handlePocketFilterChange = useCallback((values: string | string[]) => {
     setPocketFilters(Array.isArray(values) ? values : [values])
@@ -117,13 +112,9 @@ export default function ItemCardGrid({
 
     // Filter data by pocket filters first, then get available categories
     const pocketFilteredData =
-      pocketFilters.length > 0
-        ? data.filter((item) => pocketFilters.includes(item.pocket))
-        : data
+      pocketFilters.length > 0 ? data.filter((item) => pocketFilters.includes(item.pocket)) : data
 
-    const uniqueCategories = Array.from(
-      new Set(pocketFilteredData.map((item) => item.category))
-    )
+    const uniqueCategories = Array.from(new Set(pocketFilteredData.map((item) => item.category)))
 
     if (uniqueCategories.length > 0) {
       const categoryOptions = uniqueCategories.map((category) => ({
@@ -140,13 +131,7 @@ export default function ItemCardGrid({
     }
 
     return filters
-  }, [
-    data,
-    pocketFilters,
-    categoryFilters,
-    handleCategoryFilterChange,
-    handlePocketFilterChange,
-  ])
+  }, [data, pocketFilters, categoryFilters, handleCategoryFilterChange, handlePocketFilterChange])
 
   /**
    * Returns filtered data for grid display.
@@ -154,9 +139,7 @@ export default function ItemCardGrid({
   const filteredData = useMemo(() => {
     let filtered = filterByVersionGroup
       ? data.filter((resource) =>
-          resource.flavorTextEntries.some(
-            (entry) => entry.version_group?.name === versionGroup
-          )
+          resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
         )
       : data
 
@@ -165,9 +148,7 @@ export default function ItemCardGrid({
     }
 
     if (categoryFilters.length > 0) {
-      filtered = filtered.filter((item) =>
-        categoryFilters.includes(item.category)
-      )
+      filtered = filtered.filter((item) => categoryFilters.includes(item.category))
     }
 
     if (search) {
@@ -179,22 +160,13 @@ export default function ItemCardGrid({
     }
 
     return filtered
-  }, [
-    data,
-    filterByVersionGroup,
-    search,
-    versionGroup,
-    pocketFilters,
-    categoryFilters,
-  ])
+  }, [data, filterByVersionGroup, search, versionGroup, pocketFilters, categoryFilters])
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col items-center gap-4 lg:flex-row">
         <SearchBar value={search} onChangeAction={handleSearchChange} />
-        {availableFilters.length > 0 && (
-          <FilterBar filters={availableFilters} />
-        )}
+        {availableFilters.length > 0 && <FilterBar filters={availableFilters} />}
       </div>
       <CardGrid
         data={filteredData}
@@ -204,8 +176,7 @@ export default function ItemCardGrid({
         currentPage={currentPage}
         onPageChangeAction={handlePageChange}
         className={
-          className ??
-          'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+          className ?? 'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
         }
       />
     </div>

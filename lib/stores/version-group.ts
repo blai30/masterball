@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Store, useStore } from '@tanstack/react-store'
+import { Store, useSelector } from '@tanstack/react-store'
 import { VersionGroupKey } from '@/lib/utils/pokeapi-helpers'
 
 const versionGroupStore = new Store<{ versionGroup: VersionGroupKey }>({
@@ -24,10 +24,7 @@ const isValidVersionGroupKey = (value: unknown): value is VersionGroupKey => {
 
 // Create selector hooks for components
 export function useVersionGroup() {
-  const versionGroup = useStore(
-    versionGroupStore,
-    (state) => state.versionGroup
-  )
+  const versionGroup = useSelector(versionGroupStore, (state) => state.versionGroup)
   const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {

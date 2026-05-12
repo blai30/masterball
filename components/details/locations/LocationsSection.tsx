@@ -16,27 +16,18 @@ import {
 } from '@/lib/utils/pokeapi-helpers'
 import LoadingSection from '@/components/details/LoadingSection'
 
-const LocationsTable = dynamic(
-  () => import('@/components/details/locations/LocationsTable'),
-  {
-    loading: () => <LoadingSection />,
-  }
-)
+const LocationsTable = dynamic(() => import('@/components/details/locations/LocationsTable'), {
+  loading: () => <LoadingSection />,
+})
 
-export default async function LocationsSection({
-  pokemon,
-}: {
-  pokemon: Pokemon
-}) {
+export default async function LocationsSection({ pokemon }: { pokemon: Pokemon }) {
   const title = 'Locations'
   const encounters = await pokeapi.getResource<PokemonEncounter[]>(pokemon.location_area_encounters)
 
   if (encounters.length === 0) {
     return (
       <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
-        <h2 className="text-xl font-medium text-black dark:text-white">
-          {title}
-        </h2>
+        <h2 className="text-xl font-medium text-black dark:text-white">{title}</h2>
         <p className="flex items-baseline gap-2">
           <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
             Not encountered in the wild.
@@ -58,17 +49,11 @@ export default async function LocationsSection({
   )
 
   // Fetch parent locations for areas that have no localized name
-  const areasNeedingParent = locationAreas.filter(
-    (area) => !getTranslation(area.names, 'name')
-  )
-  const uniqueLocationUrls = [
-    ...new Set(areasNeedingParent.map((area) => area.location.url)),
-  ]
-  const locations = await pMap(
-    uniqueLocationUrls,
-    (url) => pokeapi.getResource<Location>(url),
-    { concurrency: 20 }
-  )
+  const areasNeedingParent = locationAreas.filter((area) => !getTranslation(area.names, 'name'))
+  const uniqueLocationUrls = [...new Set(areasNeedingParent.map((area) => area.location.url))]
+  const locations = await pMap(uniqueLocationUrls, (url) => pokeapi.getResource<Location>(url), {
+    concurrency: 20,
+  })
   const locationMap: Record<string, Location> = Object.fromEntries(
     locations.map((loc) => [loc.name, loc])
   )
@@ -80,11 +65,9 @@ export default async function LocationsSection({
       )
     ),
   ]
-  const versions = await pMap(
-    uniqueVersionUrls,
-    (url) => pokeapi.getResource<Version>(url),
-    { concurrency: 20 }
-  )
+  const versions = await pMap(uniqueVersionUrls, (url) => pokeapi.getResource<Version>(url), {
+    concurrency: 20,
+  })
   const versionMap: Record<string, Version> = Object.fromEntries(
     versions.map((version) => [version.name, version])
   )
@@ -93,9 +76,7 @@ export default async function LocationsSection({
   const uniqueMethodUrls = [
     ...new Set(
       encounters.flatMap((e) =>
-        e.version_details.flatMap((vd) =>
-          vd.encounter_details.map((ed) => ed.method.url)
-        )
+        e.version_details.flatMap((vd) => vd.encounter_details.map((ed) => ed.method.url))
       )
     ),
   ]
@@ -121,8 +102,7 @@ export default async function LocationsSection({
     for (const versionDetail of encounter.version_details) {
       const version = versionMap[versionDetail.version.name]
       const versionGroup = version.version_group.name as VersionGroupKey
-      const versionName =
-        getTranslation(version?.names, 'name') ?? versionDetail.version.name
+      const versionName = getTranslation(version?.names, 'name') ?? versionDetail.version.name
 
       const key = `${area.name}__${versionGroup}__${versionDetail.version.name}`
       const methods = [
@@ -133,12 +113,8 @@ export default async function LocationsSection({
           })
         ),
       ]
-      const minLevel = Math.min(
-        ...versionDetail.encounter_details.map((ed) => ed.min_level)
-      )
-      const maxLevel = Math.max(
-        ...versionDetail.encounter_details.map((ed) => ed.max_level)
-      )
+      const minLevel = Math.min(...versionDetail.encounter_details.map((ed) => ed.min_level))
+      const maxLevel = Math.max(...versionDetail.encounter_details.map((ed) => ed.max_level))
 
       const existing = rowMap.get(key)
       if (existing) {
@@ -165,9 +141,7 @@ export default async function LocationsSection({
 
   return (
     <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
-      <h2 className="text-xl font-medium text-black dark:text-white">
-        {title}
-      </h2>
+      <h2 className="text-xl font-medium text-black dark:text-white">{title}</h2>
       <LocationsTable rows={rows} />
     </section>
   )

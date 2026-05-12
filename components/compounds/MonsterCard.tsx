@@ -26,10 +26,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
         href={`/${props.slug}` as Route}
         className="group flex flex-col items-center justify-between px-2 py-3"
       >
-        <p
-          aria-hidden="true"
-          className="font-num text-xs text-zinc-400 dark:text-zinc-500"
-        >
+        <p aria-hidden="true" className="font-num text-xs text-zinc-400 dark:text-zinc-500">
           {props.id}
         </p>
         <motion.div layoutId={layoutId} className="min-w-full py-3">
@@ -43,9 +40,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
             loading="eager"
           />
         </motion.div>
-        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-          {props.name}
-        </h3>
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{props.name}</h3>
       </Link>
     </GlassCard>
   )

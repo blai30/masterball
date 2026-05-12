@@ -1,11 +1,5 @@
 import pMap from 'p-map'
-import type {
-  FlavorText,
-  Pokemon,
-  PokemonForm,
-  PokemonSpecies,
-  Type,
-} from 'pokedex-promise-v2'
+import type { FlavorText, Pokemon, PokemonForm, PokemonSpecies, Type } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
 
@@ -70,9 +64,7 @@ export const createMonster = async (
   } as Monster
 }
 
-export const getMonstersBySpecies = async (
-  species: PokemonSpecies
-): Promise<Monster[]> => {
+export const getMonstersBySpecies = async (species: PokemonSpecies): Promise<Monster[]> => {
   // Hard-code exceptions to filter out useless variants.
   const filteredVariants = species.varieties.filter(
     (variant) => !excludedVariants.includes(variant.pokemon.name)
@@ -422,11 +414,9 @@ export const VersionGroupLabels: Record<VersionGroupKey, string> = {
   [VersionGroupKey.OmegaRubyAlphaSapphire]: 'Omega Ruby & Alpha Sapphire',
   [VersionGroupKey.SunMoon]: 'Sun & Moon',
   [VersionGroupKey.UltraSunUltraMoon]: 'Ultra Sun & Ultra Moon',
-  [VersionGroupKey.LetsGoPikachuLetsGoEevee]:
-    "Let's Go Pikachu & Let's Go Eevee",
+  [VersionGroupKey.LetsGoPikachuLetsGoEevee]: "Let's Go Pikachu & Let's Go Eevee",
   [VersionGroupKey.SwordShield]: 'Sword & Shield',
-  [VersionGroupKey.BrilliantDiamondShiningPearl]:
-    'Brilliant Diamond & Shining Pearl',
+  [VersionGroupKey.BrilliantDiamondShiningPearl]: 'Brilliant Diamond & Shining Pearl',
   [VersionGroupKey.ScarletViolet]: 'Scarlet & Violet',
 }
 

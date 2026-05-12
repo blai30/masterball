@@ -1,4 +1,5 @@
 ## Project specific
+
 - Framework: Next.js 15
 - Language: TypeScript 5
 - Core packages: Tailwind CSS 4.1, React 19, Bun 1.2, TanStack Table, pMap, clsx, lucide-react

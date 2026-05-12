@@ -31,8 +31,7 @@ export default async function Home() {
     itemResourceList.results
       .filter(
         (result) =>
-          !excludedItems.includes(result.name) &&
-          !result.name.startsWith('dynamax-crystal-')
+          !excludedItems.includes(result.name) && !result.name.startsWith('dynamax-crystal-')
       )
       .slice(
         process?.env?.NODE_ENV === 'development' ? 300 : undefined,
@@ -47,9 +46,7 @@ export default async function Home() {
 
   const itemsData = items
     .filter(
-      (resource) =>
-        resource?.names?.find((name) => name?.language?.name === 'en') !==
-        undefined
+      (resource) => resource?.names?.find((name) => name?.language?.name === 'en') !== undefined
     )
     .map((resource) => {
       const { id, name, category } = resource
@@ -60,8 +57,7 @@ export default async function Home() {
         id,
         slug: name,
         name: getTranslation(resource.names, 'name')!,
-        defaultDescription:
-          getTranslation(resource.effect_entries, 'short_effect') ?? '',
+        defaultDescription: getTranslation(resource.effect_entries, 'short_effect') ?? '',
         flavorTextEntries: resource.flavor_text_entries.filter(
           (entry) => entry.language.name === 'en'
         ),
@@ -73,7 +69,7 @@ export default async function Home() {
     .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
-    <div className="mx-auto w-full max-w-[96rem]">
+    <div className="mx-auto w-full max-w-384">
       <ItemCardGrid data={itemsData} />
     </div>
   )

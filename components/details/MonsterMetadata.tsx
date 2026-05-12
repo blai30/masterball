@@ -1,19 +1,9 @@
 import clsx from 'clsx/lite'
 import pMap from 'p-map'
-import type {
-  Pokemon,
-  PokemonSpecies,
-  PokemonStat,
-  EggGroup,
-  GrowthRate,
-} from 'pokedex-promise-v2'
+import type { Pokemon, PokemonSpecies, PokemonStat, EggGroup, GrowthRate } from 'pokedex-promise-v2'
 import { Mars, Venus } from 'lucide-react'
 import pokeapi from '@/lib/api/pokeapi'
-import {
-  StatLabels,
-  type StatKey,
-  getTranslation,
-} from '@/lib/utils/pokeapi-helpers'
+import { StatLabels, type StatKey, getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { Group } from '@visx/group'
 import { Pie } from '@visx/shape'
 
@@ -40,13 +30,7 @@ const calculateGenderRates = (genderRate: number) => ({
   femaleRate: Math.fround((genderRate / 8) * 100).toFixed(1),
 })
 
-function MetadataCard({
-  title,
-  children,
-}: {
-  title: string
-  children?: React.ReactNode
-}) {
+function MetadataCard({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
     <div
       className={clsx(
@@ -67,11 +51,7 @@ function ValueUnit({ value, unit }: { value: string | number; unit?: string }) {
   return (
     <p className="flex gap-x-1">
       <span className="text-base font-light">{value}</span>
-      {unit && (
-        <span className="text-base text-zinc-600 dark:text-zinc-400">
-          {unit}
-        </span>
-      )}
+      {unit && <span className="text-base text-zinc-600 dark:text-zinc-400">{unit}</span>}
     </p>
   )
 }
@@ -103,10 +83,7 @@ function EffortValueYieldMetadata({ stats }: { stats: PokemonStat[] }) {
       <ul className="flex flex-col">
         {evStats.map((stat) => (
           <li key={stat.stat.name} className="flex gap-x-1">
-            <ValueUnit
-              value={stat.effort}
-              unit={StatLabels[stat.stat.name as StatKey]}
-            />
+            <ValueUnit value={stat.effort} unit={StatLabels[stat.stat.name as StatKey]} />
           </li>
         ))}
       </ul>
@@ -196,12 +173,7 @@ function GenderRatioDonut({ male, female }: { male: number; female: number }) {
 
   return (
     <div className="relative">
-      <svg
-        width={width}
-        height={height}
-        aria-label="Gender ratio donut chart"
-        role="img"
-      >
+      <svg width={width} height={height} aria-label="Gender ratio donut chart" role="img">
         <Group top={centerY} left={centerX}>
           <Pie<{ label: string; value: number }>
             data={data}
@@ -215,10 +187,7 @@ function GenderRatioDonut({ male, female }: { male: number; female: number }) {
                 <path
                   key={arc.data.label}
                   d={pie.path(arc) || undefined}
-                  className={clsx(
-                    'fill-current',
-                    genderClasses[arc.data.label]
-                  )}
+                  className={clsx('fill-current', genderClasses[arc.data.label])}
                 />
               ))
             }
@@ -257,10 +226,7 @@ function GenderRatioMetadata({ genderRate }: { genderRate: number }) {
   return (
     <MetadataCard title="Gender ratio">
       <div className="flex items-center">
-        <GenderRatioDonut
-          female={parseFloat(femaleRate)}
-          male={parseFloat(maleRate)}
-        />
+        <GenderRatioDonut female={parseFloat(femaleRate)} male={parseFloat(maleRate)} />
       </div>
     </MetadataCard>
   )
@@ -268,9 +234,7 @@ function GenderRatioMetadata({ genderRate }: { genderRate: number }) {
 
 function GrowthRateMetadata({ growthRate }: { growthRate: GrowthRate }) {
   const description = getTranslation(growthRate.descriptions, 'description')!
-  const maxExperience = growthRate.levels.find(
-    (level) => level.level === 100
-  )!.experience
+  const maxExperience = growthRate.levels.find((level) => level.level === 100)!.experience
 
   return (
     <MetadataCard title="Growth rate">
@@ -296,19 +260,14 @@ export default async function MonsterMetadata({
     { concurrency: 20 }
   )
 
-  const growthRate = await pokeapi.getResource<GrowthRate>(
-    species.growth_rate.url
-  )
+  const growthRate = await pokeapi.getResource<GrowthRate>(species.growth_rate.url)
 
   return (
     <>
       <SizeMetadata height={pokemon.height} weight={pokemon.weight} />
       <GenderRatioMetadata genderRate={species.gender_rate} />
       <CatchRateMetadata catchRate={species.capture_rate} />
-      <BreedingMetadata
-        hatchCounter={species.hatch_counter}
-        eggGroups={eggGroups}
-      />
+      <BreedingMetadata hatchCounter={species.hatch_counter} eggGroups={eggGroups} />
       <GrowthRateMetadata growthRate={growthRate} />
       <EffortValueYieldMetadata stats={pokemon.stats} />
     </>

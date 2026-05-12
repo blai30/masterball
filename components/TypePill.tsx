@@ -52,13 +52,7 @@ export default function TypePill({
   }
 
   return (
-    <div
-      className={clsx(
-        variants({ size }),
-        'bg-zinc-200 dark:bg-zinc-800',
-        className
-      )}
-    >
+    <div className={clsx(variants({ size }), 'bg-zinc-200 dark:bg-zinc-800', className)}>
       <Image
         src={imageUrl}
         alt={name}
@@ -69,9 +63,7 @@ export default function TypePill({
           'aspect-square rounded-xs object-contain'
         )}
       />
-      <p className="items-center text-black uppercase dark:text-white">
-        {name}
-      </p>
+      <p className="items-center text-black uppercase dark:text-white">{name}</p>
     </div>
   )
 }

@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react'
 import type { Pokemon } from 'pokedex-promise-v2'
-import {
-  StatLabels,
-  type StatKey,
-  StatLabelsFull,
-} from '@/lib/utils/pokeapi-helpers'
+import { StatLabels, type StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
 
 export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
   // Animate each stat bar fill
-  const [fillPercentages, setFillPercentages] = useState<number[]>(() =>
-    pokemon.stats.map(() => 0)
-  )
+  const [fillPercentages, setFillPercentages] = useState<number[]>(() => pokemon.stats.map(() => 0))
 
   useEffect(() => {
     // Animate to actual fill after mount
@@ -40,10 +34,7 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
         {pokemon.stats.map((stat, i) => {
           const fullLabel = StatLabelsFull[stat.stat.name as StatKey]
           return (
-            <li
-              key={stat.stat.name}
-              className="flex flex-row items-center gap-3"
-            >
+            <li key={stat.stat.name} className="flex flex-row items-center gap-3">
               <p className="flex flex-row items-center justify-between">
                 <abbr
                   title={fullLabel}
@@ -59,9 +50,9 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
 
               {/* Progress bar visualization */}
               <div className="flex h-5 w-full flex-row items-center">
-                <div className="relative h-full max-w-full flex-grow rounded-sm inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
+                <div className="relative h-full max-w-full grow rounded-sm inset-ring-1 inset-ring-zinc-300 dark:inset-ring-zinc-700">
                   {/* Tick marks */}
-                  <div className="absolute top-0 bottom-0 grid w-full grid-cols-5 divide-x-1 divide-zinc-300 dark:divide-zinc-700">
+                  <div className="absolute top-0 bottom-0 grid w-full grid-cols-5 divide-x divide-zinc-300 dark:divide-zinc-700">
                     {[...Array(5)].map((_, index) => (
                       <div key={`${stat.stat.name}-tick-${index}`} />
                     ))}

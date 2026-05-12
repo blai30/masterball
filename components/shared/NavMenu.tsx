@@ -38,9 +38,7 @@ function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
     if (url === '/') {
       return (
         pathname === '/' ||
-        !navItems.some(
-          (item) => item.url !== '/' && pathname.startsWith(item.url)
-        )
+        !navItems.some((item) => item.url !== '/' && pathname.startsWith(item.url))
       )
     }
     return pathname.startsWith(url)
@@ -77,11 +75,7 @@ function NavMenu({ variant }: { variant: 'navbar' | 'sidebar' }) {
         {navItems.map((item) => {
           const active = isActiveRoute(item.url)
           return (
-            <SidebarItem
-              key={item.url}
-              href={item.url as Route}
-              current={active}
-            >
+            <SidebarItem key={item.url} href={item.url as Route} current={active}>
               <item.icon size={20} />
               <SidebarLabel>{item.label}</SidebarLabel>
             </SidebarItem>

@@ -28,10 +28,7 @@ export default function Pagination({
 }) {
   const [showInput, setShowInput] = useState<number | null>(null)
 
-  const pages = useMemo(
-    () => getPageNumbers(currentPage, totalPages),
-    [currentPage, totalPages]
-  )
+  const pages = useMemo(() => getPageNumbers(currentPage, totalPages), [currentPage, totalPages])
 
   const handleInputChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -53,7 +50,7 @@ export default function Pagination({
         type="button"
         onClick={() => onPageChangeAction(currentPage - 1)}
         disabled={currentPage === 1}
-        className="inline-flex h-[1lh] w-26 items-center justify-start rounded px-1.5 py-1 transition-colors hover:bg-zinc-200 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800"
+        className="inline-flex h-lh w-26 items-center justify-start rounded px-1.5 py-1 transition-colors hover:bg-zinc-200 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800"
       >
         <ChevronLeft size={16} className="" />
         <span className="px-2">Previous</span>
@@ -65,10 +62,8 @@ export default function Pagination({
           if (page === '...') {
             const prev = pages[index - 1]
             const next = pages[index + 1]
-            const prevId =
-              typeof prev === 'number' ? prev : prev === '...' ? 'gap' : 'start'
-            const nextId =
-              typeof next === 'number' ? next : next === '...' ? 'gap' : 'end'
+            const prevId = typeof prev === 'number' ? prev : prev === '...' ? 'gap' : 'start'
+            const nextId = typeof next === 'number' ? next : next === '...' ? 'gap' : 'end'
 
             if (showInput === index) {
               return (
@@ -81,7 +76,7 @@ export default function Pagination({
                   autoFocus
                   onKeyDown={(e) => handleInputChange(e)}
                   onBlur={() => setShowInput(null)}
-                  className="h-[1lh] w-9 appearance-none rounded bg-transparent text-center [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden"
+                  className="h-lh w-9 appearance-none rounded bg-transparent text-center [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden"
                 />
               )
             }
@@ -90,7 +85,7 @@ export default function Pagination({
                 key={`ellipsis-${prevId}-${nextId}`}
                 type="button"
                 onClick={() => setShowInput(index)}
-                className="inline-flex h-[1lh] w-9 items-center justify-center rounded py-1 transition-colors hover:bg-zinc-200 hover:duration-0 dark:hover:bg-zinc-800"
+                className="inline-flex h-lh w-9 items-center justify-center rounded py-1 transition-colors hover:bg-zinc-200 hover:duration-0 dark:hover:bg-zinc-800"
               >
                 ...
               </button>
@@ -100,11 +95,9 @@ export default function Pagination({
             <button
               key={`page-${page}`}
               type="button"
-              onClick={() =>
-                typeof page === 'number' && onPageChangeAction(page)
-              }
+              onClick={() => typeof page === 'number' && onPageChangeAction(page)}
               className={clsx(
-                'relative inline-flex h-[1lh] w-9 items-center justify-center rounded-md py-1',
+                'relative inline-flex h-lh w-9 items-center justify-center rounded-md py-1',
                 page === currentPage
                   ? 'border border-zinc-300 dark:border-zinc-700'
                   : 'transition-colors hover:bg-zinc-200 hover:duration-0 dark:hover:bg-zinc-800'
@@ -136,7 +129,7 @@ export default function Pagination({
         </select>
         <ChevronDown
           aria-hidden="true"
-          className="pointer-events-none absolute right-2 h-[1lh] w-4 text-zinc-600 dark:text-zinc-400"
+          className="pointer-events-none absolute right-2 h-lh w-4 text-zinc-600 dark:text-zinc-400"
         />
       </div>
 
@@ -144,7 +137,7 @@ export default function Pagination({
         type="button"
         onClick={() => onPageChangeAction(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="inline-flex h-[1lh] w-26 items-center justify-end rounded px-1.5 py-1 transition-colors hover:bg-zinc-200 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800"
+        className="inline-flex h-lh w-26 items-center justify-end rounded px-1.5 py-1 transition-colors hover:bg-zinc-200 hover:duration-0 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-zinc-800"
       >
         <span className="px-2">Next</span>
         <ChevronRight size={16} className="" />

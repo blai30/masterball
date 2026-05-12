@@ -35,9 +35,7 @@ export function Combobox<T>({
       : options.filter((option) =>
           filter
             ? filter(option, query)
-            : displayValueAction(option)
-                ?.toLowerCase()
-                .includes(query.toLowerCase())
+            : displayValueAction(option)?.toLowerCase().includes(query.toLowerCase())
         )
 
   return (
@@ -184,28 +182,17 @@ export function ComboboxOption<T>({
         fill="none"
         aria-hidden="true"
       >
-        <path
-          d="M4 8.5l3 3L12 4"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <path d="M4 8.5l3 3L12 4" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </Headless.ComboboxOption>
   )
 }
 
-export function ComboboxLabel({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'span'>) {
+export function ComboboxLabel({ className, ...props }: React.ComponentPropsWithoutRef<'span'>) {
   return (
     <span
       {...props}
-      className={clsx(
-        className,
-        'ml-2.5 truncate first:ml-0 sm:ml-2 sm:first:ml-0'
-      )}
+      className={clsx(className, 'ml-2.5 truncate first:ml-0 sm:ml-2 sm:first:ml-0')}
     />
   )
 }

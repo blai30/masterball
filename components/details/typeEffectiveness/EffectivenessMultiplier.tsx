@@ -15,11 +15,7 @@ const variants = cva({
   },
 })
 
-export default function EffectivenessMultiplier({
-  variant,
-}: {
-  variant: Effectiveness
-}) {
+export default function EffectivenessMultiplier({ variant }: { variant: Effectiveness }) {
   const label = `${variant.toFixed(2)} ×`
   return <span className={variants({ variant })}>{label}</span>
 }

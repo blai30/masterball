@@ -19,12 +19,9 @@ export default function AbilityEntry({ props }: { props: AbilityEntryProps }) {
   if (!hasMounted) return null
 
   const description = (() => {
-    const defaultDescription =
-      getTranslation(props.resource.effect_entries, 'short_effect') ?? ''
+    const defaultDescription = getTranslation(props.resource.effect_entries, 'short_effect') ?? ''
     const entry = props.resource.flavor_text_entries.find(
-      (entry) =>
-        entry.language.name === 'en' &&
-        entry.version_group?.name === versionGroup
+      (entry) => entry.language.name === 'en' && entry.version_group?.name === versionGroup
     )
     if (!entry) return defaultDescription
     if ('text' in entry) return entry.text
@@ -48,9 +45,7 @@ export default function AbilityEntry({ props }: { props: AbilityEntryProps }) {
           </span>
         )}
       </div>
-      <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">
-        {description}
-      </p>
+      <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">{description}</p>
     </div>
   )
 }

@@ -81,34 +81,18 @@ export function DropdownItem({
   return 'href' in props ? (
     <Headless.MenuItem as={Link} {...props} className={classes} />
   ) : (
-    <Headless.MenuItem
-      as="button"
-      type="button"
-      {...props}
-      className={classes}
-    />
+    <Headless.MenuItem as="button" type="button" {...props} className={classes} />
   )
 }
 
-export function DropdownHeader({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
-  return (
-    <div
-      {...props}
-      className={clsx(className, 'col-span-5 px-3.5 pt-2.5 pb-1 sm:px-3')}
-    />
-  )
+export function DropdownHeader({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+  return <div {...props} className={clsx(className, 'col-span-5 px-3.5 pt-2.5 pb-1 sm:px-3')} />
 }
 
 export function DropdownSection({
   className,
   ...props
-}: { className?: string } & Omit<
-  Headless.MenuSectionProps,
-  'as' | 'className'
->) {
+}: { className?: string } & Omit<Headless.MenuSectionProps, 'as' | 'className'>) {
   return (
     <Headless.MenuSection
       {...props}
@@ -124,10 +108,7 @@ export function DropdownSection({
 export function DropdownHeading({
   className,
   ...props
-}: { className?: string } & Omit<
-  Headless.MenuHeadingProps,
-  'as' | 'className'
->) {
+}: { className?: string } & Omit<Headless.MenuHeadingProps, 'as' | 'className'>) {
   return (
     <Headless.MenuHeading
       {...props}
@@ -142,10 +123,7 @@ export function DropdownHeading({
 export function DropdownDivider({
   className,
   ...props
-}: { className?: string } & Omit<
-  Headless.MenuSeparatorProps,
-  'as' | 'className'
->) {
+}: { className?: string } & Omit<Headless.MenuSeparatorProps, 'as' | 'className'>) {
   return (
     <Headless.MenuSeparator
       {...props}
@@ -157,10 +135,7 @@ export function DropdownDivider({
   )
 }
 
-export function DropdownLabel({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+export function DropdownLabel({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
       {...props}
@@ -174,10 +149,7 @@ export function DropdownLabel({
 export function DropdownDescription({
   className,
   ...props
-}: { className?: string } & Omit<
-  Headless.DescriptionProps,
-  'as' | 'className'
->) {
+}: { className?: string } & Omit<Headless.DescriptionProps, 'as' | 'className'>) {
   return (
     <Headless.Description
       data-slot="description"
@@ -202,10 +174,7 @@ export function DropdownShortcut({
     <Headless.Description
       as="kbd"
       {...props}
-      className={clsx(
-        className,
-        'col-start-5 row-start-1 flex justify-self-end'
-      )}
+      className={clsx(className, 'col-start-5 row-start-1 flex justify-self-end')}
     >
       {(Array.isArray(keys) ? keys : keys.split('')).map((char, index) => (
         <kbd

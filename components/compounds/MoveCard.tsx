@@ -57,37 +57,24 @@ export default function MoveCard({ props }: { props: MoveInfo }) {
 
   const description =
     props.flavorTextEntries.find(
-      (entry) =>
-        entry.language.name === 'en' &&
-        entry.version_group?.name === versionGroup
+      (entry) => entry.language.name === 'en' && entry.version_group?.name === versionGroup
     )?.flavor_text ?? props.defaultDescription
 
   return (
     <GlassCard variant="default" className="relative h-full rounded-xl">
       <div
-        className={clsx(
-          'absolute -z-10 size-full rounded-xl',
-          typeClasses[props.type as TypeKey]
-        )}
+        className={clsx('absolute -z-10 size-full rounded-xl', typeClasses[props.type as TypeKey])}
       >
         <div className="absolute right-0 bottom-0 size-32 opacity-5"></div>
       </div>
       <div className="flex h-full flex-col justify-between gap-4 rounded-xl p-4">
         <div className="flex flex-row items-start gap-4">
           <div className="flex flex-col gap-2">
-            <TypeIcon
-              variant={props.type as TypeKey}
-              size="large"
-              className="shrink-0"
-            />
+            <TypeIcon variant={props.type as TypeKey} size="large" className="shrink-0" />
           </div>
           <div className="flex flex-col items-start gap-1">
-            <h3 className="text-lg font-medium text-black dark:text-white">
-              {props.name}
-            </h3>
-            <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">
-              {description}
-            </p>
+            <h3 className="text-lg font-medium text-black dark:text-white">{props.name}</h3>
+            <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">{description}</p>
           </div>
         </div>
         <div className="grid grid-cols-4 gap-2">
@@ -130,9 +117,7 @@ export default function MoveCard({ props }: { props: MoveInfo }) {
             <span className="w-full text-center text-xs font-medium text-zinc-500 dark:text-zinc-400">
               PP
             </span>
-            <span className="font-num w-full text-center text-xl font-medium">
-              {props.pp}
-            </span>
+            <span className="font-num w-full text-center text-xl font-medium">{props.pp}</span>
           </div>
         </div>
       </div>

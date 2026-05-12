@@ -20,10 +20,7 @@ export default function VariantCard({
   return (
     <GlassCard
       variant={variant}
-      className={clsx(
-        'relative flex w-44 flex-col items-center gap-4 rounded-xl p-3',
-        className
-      )}
+      className={clsx('relative flex w-44 flex-col items-center gap-4 rounded-xl p-3', className)}
     >
       <div className="flex aspect-square size-36 items-center justify-center">
         <Image
@@ -45,9 +42,7 @@ export default function VariantCard({
             ))}
           </ul>
         )}
-        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-          {name}
-        </h3>
+        <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{name}</h3>
       </div>
     </GlassCard>
   )

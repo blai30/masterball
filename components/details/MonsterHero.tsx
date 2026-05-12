@@ -55,18 +55,11 @@ export default function MonsterHero({
           </ul>
         </div>
         <p className="font-num text-5xl font-extrabold">
-          <span className="text-zinc-400 dark:text-zinc-800">
-            {leadingZeros}
-          </span>
-          <span className="text-zinc-800 dark:text-zinc-400">
-            {significantDigits}
-          </span>
+          <span className="text-zinc-400 dark:text-zinc-800">{leadingZeros}</span>
+          <span className="text-zinc-800 dark:text-zinc-400">{significantDigits}</span>
         </p>
       </div>
-      <motion.div
-        layoutId={layoutId}
-        className="absolute right-4 bottom-4 flex"
-      >
+      <motion.div layoutId={layoutId} className="absolute right-4 bottom-4 flex">
         <Image
           src={imageUrl}
           alt={`${species.name} front default`}

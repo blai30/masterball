@@ -29,9 +29,7 @@ export default function ItemCard({ props }: { props: ItemCardProps }) {
 
   const description = (() => {
     const entry = props.flavorTextEntries.find(
-      (entry) =>
-        entry.language.name === 'en' &&
-        entry.version_group?.name === versionGroup
+      (entry) => entry.language.name === 'en' && entry.version_group?.name === versionGroup
     )
     if (!entry) return props.defaultDescription
     if ('text' in entry) return entry.text
@@ -57,9 +55,7 @@ export default function ItemCard({ props }: { props: ItemCardProps }) {
           </div>
         )}
         <div className="flex flex-col items-start gap-2">
-          <h3 className="text-lg font-medium text-black dark:text-white">
-            {props.name}
-          </h3>
+          <h3 className="text-lg font-medium text-black dark:text-white">{props.name}</h3>
           <div className="flex flex-wrap gap-1">
             <Badge key={props.pocket} color="zinc">
               {ItemPocketLabels[props.pocket]}
@@ -68,9 +64,7 @@ export default function ItemCard({ props }: { props: ItemCardProps }) {
               {ItemCategoryLabels[props.category]}
             </Badge>
           </div>
-          <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">
-            {description}
-          </p>
+          <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">{description}</p>
         </div>
       </div>
     </GlassCard>

@@ -3,9 +3,7 @@ import { forwardRef } from 'react'
 import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
 
-export function InputGroup({
-  children,
-}: React.ComponentPropsWithoutRef<'span'>) {
+export function InputGroup({ children }: React.ComponentPropsWithoutRef<'span'>) {
   return (
     <span
       data-slot="control"
@@ -31,15 +29,7 @@ export const Input = forwardRef(function Input(
     ...props
   }: {
     className?: string
-    type?:
-      | 'email'
-      | 'number'
-      | 'password'
-      | 'search'
-      | 'tel'
-      | 'text'
-      | 'url'
-      | DateType
+    type?: 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url' | DateType
   } & Omit<Headless.InputProps, 'as' | 'className'>,
   ref: React.ForwardedRef<HTMLInputElement>
 ) {

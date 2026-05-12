@@ -4,11 +4,7 @@ import pMap from 'p-map'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
-import {
-  getTranslation,
-  type TypeKey,
-  TypeLabels,
-} from '@/lib/utils/pokeapi-helpers'
+import { getTranslation, type TypeKey, TypeLabels } from '@/lib/utils/pokeapi-helpers'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
 import LoadingSection from '@/components/details/LoadingSection'
 import LoadingMetadata from '@/components/details/LoadingMetadata'
@@ -58,22 +54,16 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug, variant } = await props.params
   const [variantKey] = variant ?? []
-  const species = await pokeapi.getByName<PokemonSpecies>(
-    'pokemon-species',
-    slug
-  )
+  const species = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
   const pokemonUrl = species.varieties
     .filter((variant) => !excludedVariants.includes(variant.name))
-    .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
-    .pokemon.url
+    .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!.pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const imageId = species.id.toString().padStart(4, '0')
   const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
   const name = getTranslation(species.names, 'name')!
-  const description = pokemon.types
-    .map((t) => TypeLabels[t.type.name as TypeKey])
-    .join('/')
+  const description = pokemon.types.map((t) => TypeLabels[t.type.name as TypeKey]).join('/')
 
   const metadata: Metadata = {
     title: `${name} #${imageId}`,
@@ -103,23 +93,16 @@ export async function generateMetadata(
 export default async function Page(props: PageProps<'/[slug]/[[...variant]]'>) {
   const { slug, variant } = await props.params
   const [variantKey] = variant ?? []
-  const species = await pokeapi.getByName<PokemonSpecies>(
-    'pokemon-species',
-    slug
-  )
+  const species = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
   const pokemonUrl = species.varieties
     .filter((variant) => !excludedVariants.includes(variant.name))
-    .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
-    .pokemon.url
+    .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!.pokemon.url
   const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
   const forms = await pMap(
     pokemon.forms.filter((form) => !excludedForms.includes(form.name)),
     async (form) => {
-      const resource = await pokeapi.getByName<PokemonForm>(
-        'pokemon-form',
-        form.name
-      )
+      const resource = await pokeapi.getByName<PokemonForm>('pokemon-form', form.name)
       return resource
     },
     { concurrency: 20 }
@@ -134,12 +117,7 @@ export default async function Page(props: PageProps<'/[slug]/[[...variant]]'>) {
     <div className="flex w-full flex-col gap-4 xl:max-w-none">
       <section className="@container mx-auto w-full max-w-384">
         <div className="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @[88rem]:grid-cols-8">
-          <MonsterHero
-            species={species}
-            pokemon={pokemon}
-            form={form}
-            className="col-span-2"
-          />
+          <MonsterHero species={species} pokemon={pokemon} form={form} className="col-span-2" />
           <Suspense fallback={<LoadingMetadata />}>
             <MonsterMetadata species={species} pokemon={pokemon} />
           </Suspense>

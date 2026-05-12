@@ -11,12 +11,9 @@ import {
 } from '@/lib/utils/pokeapi-helpers'
 import LoadingSection from '@/components/details/LoadingSection'
 
-const MovesTable = dynamic(
-  () => import('@/components/details/moves/MovesTable'),
-  {
-    loading: () => <LoadingSection />,
-  }
-)
+const MovesTable = dynamic(() => import('@/components/details/moves/MovesTable'), {
+  loading: () => <LoadingSection />,
+})
 
 function createMoveRows(
   moves: MoveElement[],
@@ -33,10 +30,7 @@ function createMoveRows(
         let id = move.id.toString()
 
         if (variant === LearnMethodKey.LevelUp) {
-          id =
-            resource.level_learned_at === 0
-              ? 'Evolve'
-              : resource.level_learned_at.toString()
+          id = resource.level_learned_at === 0 ? 'Evolve' : resource.level_learned_at.toString()
         } else if (variant === LearnMethodKey.Machine && move.machineItems) {
           const machine = move.machineItems.find(
             (m: Machine) => m.version_group.name === resource.version_group.name
@@ -53,8 +47,7 @@ function createMoveRows(
           type: move.type.name as TypeKey,
           damageClass: move.damage_class.name as DamageClassKey,
           name: getTranslation(move.names, 'name')!,
-          defaultDescription:
-            getTranslation(move.effect_entries, 'short_effect') ?? '',
+          defaultDescription: getTranslation(move.effect_entries, 'short_effect') ?? '',
           flavorTextEntries: move.flavor_text_entries.filter(
             (entry) => entry.language.name === 'en'
           ),
@@ -75,9 +68,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   if (pokemon.moves.length === 0) {
     return (
       <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
-        <h2 className="text-xl font-medium text-black dark:text-white">
-          {title}
-        </h2>
+        <h2 className="text-xl font-medium text-black dark:text-white">{title}</h2>
         <p className="flex items-baseline gap-2">
           <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
             No moves available.
@@ -87,9 +78,7 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
     )
   }
 
-  const uniqueMoveNames = [
-    ...new Set(pokemon.moves.map((move) => move.move.name)),
-  ]
+  const uniqueMoveNames = [...new Set(pokemon.moves.map((move) => move.move.name))]
   const movesData = await pMap(
     uniqueMoveNames,
     async (name) => {
@@ -100,14 +89,10 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   )
 
   // Process moves with machines
-  const movesWithMachines = movesData.filter(
-    (move) => move.machines?.length > 0
-  )
+  const movesWithMachines = movesData.filter((move) => move.machines?.length > 0)
   const uniqueMachinesUrls = [
     ...new Set(
-      movesWithMachines.flatMap((move) =>
-        move.machines.map((machine) => machine.machine.url)
-      )
+      movesWithMachines.flatMap((move) => move.machines.map((machine) => machine.machine.url))
     ),
   ]
   const machinesData = await pMap(
@@ -148,16 +133,10 @@ export default async function MovesSection({ pokemon }: { pokemon: Pokemon }) {
   Object.keys(moveRowsByMethod).forEach((method) => {
     const methodKey = method as LearnMethodKey
     const methodMoves = pokemon.moves.filter((move) =>
-      move.version_group_details.some(
-        (vgd) => vgd.move_learn_method.name === methodKey
-      )
+      move.version_group_details.some((vgd) => vgd.move_learn_method.name === methodKey)
     )
 
-    moveRowsByMethod[methodKey] = createMoveRows(
-      methodMoves,
-      movesMap,
-      methodKey
-    )
+    moveRowsByMethod[methodKey] = createMoveRows(methodMoves, movesMap, methodKey)
   })
 
   return (
