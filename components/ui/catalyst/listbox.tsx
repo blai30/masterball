@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  Children,
-  ComponentPropsWithoutRef,
-  Fragment,
-  isValidElement,
-  ReactNode,
-} from 'react'
+import { Children, ComponentPropsWithoutRef, Fragment, isValidElement, ReactNode } from 'react'
 import clsx from 'clsx'
 import * as Headless from '@headlessui/react'
 
@@ -130,10 +124,7 @@ export function Listbox<T>({
                   }
                   const icon = extractIcon(props.children)
                   return icon ? (
-                    <span
-                      key={`${props.value}-${index}`}
-                      className="flex-shrink-0"
-                    >
+                    <span key={`${props.value}-${index}`} className="shrink-0">
                       {icon}
                     </span>
                   ) : null
@@ -142,9 +133,7 @@ export function Listbox<T>({
               })
               .filter(Boolean)}
             {value.length > 3 && (
-              <span className="text-sm text-zinc-950 dark:text-white">
-                +{value.length - 3}
-              </span>
+              <span className="text-sm text-zinc-950 dark:text-white">+{value.length - 3}</span>
             )}
           </span>
         )
@@ -153,9 +142,7 @@ export function Listbox<T>({
       // Show count of selected items (fallback for non-icon filters)
       return (
         <span className={classNames}>
-          <span className="text-zinc-950 dark:text-white">
-            {value.length} selected
-          </span>
+          <span className="text-zinc-950 dark:text-white">{value.length} selected</span>
         </span>
       )
     }
@@ -167,9 +154,7 @@ export function Listbox<T>({
         as="span"
         options={options}
         placeholder={
-          placeholder && (
-            <span className="block truncate text-zinc-500">{placeholder}</span>
-          )
+          placeholder && <span className="block truncate text-zinc-500">{placeholder}</span>
         }
         className={clsx([classNames])}
       />
@@ -272,9 +257,7 @@ export function ListboxOption<T>({
     <Headless.ListboxOption as={Fragment} {...props}>
       {({ selectedOption }) => {
         if (selectedOption) {
-          return (
-            <div className={clsx(className, sharedClasses)}>{children}</div>
-          )
+          return <div className={clsx(className, sharedClasses)}>{children}</div>
         }
 
         return (
@@ -307,9 +290,7 @@ export function ListboxOption<T>({
                 strokeLinejoin="round"
               />
             </svg>
-            <span className={clsx(className, sharedClasses, 'col-start-2')}>
-              {children}
-            </span>
+            <span className={clsx(className, sharedClasses, 'col-start-2')}>{children}</span>
           </div>
         )
       }}
@@ -317,17 +298,11 @@ export function ListboxOption<T>({
   )
 }
 
-export function ListboxLabel({
-  className,
-  ...props
-}: ComponentPropsWithoutRef<'span'>) {
+export function ListboxLabel({ className, ...props }: ComponentPropsWithoutRef<'span'>) {
   return (
     <span
       {...props}
-      className={clsx(
-        className,
-        'ml-2.5 truncate first:ml-0 sm:ml-2 sm:first:ml-0'
-      )}
+      className={clsx(className, 'ml-2.5 truncate first:ml-0 sm:ml-2 sm:first:ml-0')}
     />
   )
 }

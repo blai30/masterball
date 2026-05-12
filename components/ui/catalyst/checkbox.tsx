@@ -2,10 +2,7 @@ import type React from 'react'
 import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
 
-export function CheckboxGroup({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+export function CheckboxGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
       data-slot="control"

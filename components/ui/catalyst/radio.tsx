@@ -4,10 +4,7 @@ import * as Headless from '@headlessui/react'
 export function RadioGroup({
   className,
   ...props
-}: { className?: string } & Omit<
-  Headless.RadioGroupProps,
-  'as' | 'className'
->) {
+}: { className?: string } & Omit<Headless.RadioGroupProps, 'as' | 'className'>) {
   return (
     <Headless.RadioGroup
       data-slot="control"

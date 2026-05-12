@@ -43,11 +43,7 @@ async function EvolutionNode({
       {chain.evolves_to.length > 0 && (
         <div className="flex flex-col gap-2">
           {chain.evolves_to.map((evolution) => (
-            <EvolutionNode
-              key={evolution.species.name}
-              chain={evolution}
-              depth={depth + 1}
-            />
+            <EvolutionNode key={evolution.species.name} chain={evolution} depth={depth + 1} />
           ))}
         </div>
       )}
@@ -55,20 +51,14 @@ async function EvolutionNode({
   )
 }
 
-export default async function EvolutionSection({
-  species,
-}: {
-  species: PokemonSpecies
-}) {
-  const evolutionChain: EvolutionChain = await fetch(
-    species.evolution_chain.url
-  ).then((response) => response.json() as Promise<EvolutionChain>)
+export default async function EvolutionSection({ species }: { species: PokemonSpecies }) {
+  const evolutionChain: EvolutionChain = await fetch(species.evolution_chain.url).then(
+    (response) => response.json() as Promise<EvolutionChain>
+  )
 
   return (
     <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
-      <h2 className="text-xl font-medium text-black dark:text-white">
-        Evolution
-      </h2>
+      <h2 className="text-xl font-medium text-black dark:text-white">Evolution</h2>
       <EvolutionNode chain={evolutionChain.chain} />
     </section>
   )

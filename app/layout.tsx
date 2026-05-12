@@ -35,11 +35,8 @@ export const metadata: Metadata = {
     template: '%s',
     default: 'Masterball',
   },
-  description:
-    'Statically rendered and hosted web app for a modern Pokémon database.',
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_FULL_URL || 'http://localhost:3000'
-  ),
+  description: 'Statically rendered and hosted web app for a modern Pokémon database.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_FULL_URL || 'http://localhost:3000'),
   openGraph: {
     type: 'website',
     locale: 'en_US',

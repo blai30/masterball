@@ -56,11 +56,7 @@ export default function TypeIcon({
     <div
       {...props}
       title={name}
-      className={clsx(
-        'relative',
-        variants({ variant: variant as TypeKey, size }),
-        className
-      )}
+      className={clsx('relative', variants({ variant: variant as TypeKey, size }), className)}
     >
       <Image
         src={imageUrl}

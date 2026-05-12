@@ -10,13 +10,7 @@ import StatsRadarChart from '@/components/details/stats/StatsRadarChart'
 
 const LOCAL_STORAGE_KEY = 'stats-tab-index'
 
-export default function StatsTabs({
-  title,
-  pokemon,
-}: {
-  title: string
-  pokemon: Pokemon
-}) {
+export default function StatsTabs({ title, pokemon }: { title: string; pokemon: Pokemon }) {
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
 
   // Load tab index from localStorage on mount
@@ -37,9 +31,7 @@ export default function StatsTabs({
     <section className="@container/stats flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
       <TabGroup selectedIndex={selectedIndex} onChange={handleChange}>
         <TabList className="mb-4 flex flex-row items-center gap-1">
-          <h2 className="mr-3 text-xl font-medium text-black dark:text-white">
-            {title}
-          </h2>
+          <h2 className="mr-3 text-xl font-medium text-black dark:text-white">{title}</h2>
           <Tab
             id="tab-bar"
             className="rounded-md p-1.5 data-hover:inset-ring-2 data-hover:inset-ring-zinc-300 data-selected:bg-zinc-300 dark:data-hover:inset-ring-zinc-700 dark:data-selected:bg-zinc-700"

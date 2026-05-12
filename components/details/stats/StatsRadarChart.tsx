@@ -5,11 +5,7 @@ import type { Pokemon } from 'pokedex-promise-v2'
 import { Group } from '@visx/group'
 import { Polygon } from '@visx/shape'
 import { scaleLinear } from '@visx/scale'
-import {
-  StatLabels,
-  StatKey,
-  StatLabelsFull,
-} from '@/lib/utils/pokeapi-helpers'
+import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
 
 const statOrder: StatKey[] = [
   StatKey.Hp,
@@ -65,14 +61,10 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
   // Final stat values
   const finalStats: Record<StatKey, number> = {
     [StatKey.Hp]: statData.find((s) => s.key === StatKey.Hp)?.value ?? 0,
-    [StatKey.Attack]:
-      statData.find((s) => s.key === StatKey.Attack)?.value ?? 0,
-    [StatKey.Defense]:
-      statData.find((s) => s.key === StatKey.Defense)?.value ?? 0,
-    [StatKey.SpecialAttack]:
-      statData.find((s) => s.key === StatKey.SpecialAttack)?.value ?? 0,
-    [StatKey.SpecialDefense]:
-      statData.find((s) => s.key === StatKey.SpecialDefense)?.value ?? 0,
+    [StatKey.Attack]: statData.find((s) => s.key === StatKey.Attack)?.value ?? 0,
+    [StatKey.Defense]: statData.find((s) => s.key === StatKey.Defense)?.value ?? 0,
+    [StatKey.SpecialAttack]: statData.find((s) => s.key === StatKey.SpecialAttack)?.value ?? 0,
+    [StatKey.SpecialDefense]: statData.find((s) => s.key === StatKey.SpecialDefense)?.value ?? 0,
     [StatKey.Speed]: statData.find((s) => s.key === StatKey.Speed)?.value ?? 0,
   }
 
@@ -122,21 +114,17 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
 
   return (
     <div className="xs:ml-0 relative mt-8 mb-4 -ml-2">
-      <svg
-        width={RADAR_SIZE}
-        height={RADAR_SIZE}
-        className="w-full overflow-visible"
-      >
+      <svg width={RADAR_SIZE} height={RADAR_SIZE} className="w-full overflow-visible">
         <Group top={0} left={0}>
           {/* Grid levels */}
           {Array.from({ length: LEVELS }, (_, i) => {
             const r = scale(MAX_STAT * ((i + 1) / LEVELS))
             const points: [number, number][] = statOrder.map((_, idx) => {
               const angle = (Math.PI * 2 * idx) / statOrder.length - Math.PI / 2
-              return [
-                RADAR_CENTER + r * Math.cos(angle),
-                RADAR_CENTER + r * Math.sin(angle),
-              ] as [number, number]
+              return [RADAR_CENTER + r * Math.cos(angle), RADAR_CENTER + r * Math.sin(angle)] as [
+                number,
+                number,
+              ]
             })
             return (
               <Polygon
@@ -168,10 +156,7 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
               .map((key, i) => {
                 const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
                 const r = scale(animatedStats[key])
-                return [
-                  RADAR_CENTER + r * Math.cos(angle),
-                  RADAR_CENTER + r * Math.sin(angle),
-                ]
+                return [RADAR_CENTER + r * Math.cos(angle), RADAR_CENTER + r * Math.sin(angle)]
               })
               .map(([x, y]) => `${x},${y}`)
               .join(' ')}
@@ -180,13 +165,9 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
             animate={{
               points: statOrder
                 .map((key, i) => {
-                  const angle =
-                    (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
+                  const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
                   const r = scale(animatedStats[key])
-                  return [
-                    RADAR_CENTER + r * Math.cos(angle),
-                    RADAR_CENTER + r * Math.sin(angle),
-                  ]
+                  return [RADAR_CENTER + r * Math.cos(angle), RADAR_CENTER + r * Math.sin(angle)]
                 })
                 .map(([x, y]) => `${x},${y}`)
                 .join(' '),

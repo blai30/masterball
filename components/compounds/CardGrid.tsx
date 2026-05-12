@@ -42,9 +42,7 @@ export default function CardGrid<T>({
         {data.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-2 py-12 text-zinc-500 dark:text-zinc-400">
             <span className="text-lg font-medium">No results found</span>
-            <span className="text-sm font-normal">
-              Check filters and/or version group dropdown
-            </span>
+            <span className="text-sm font-normal">Check filters and/or version group dropdown</span>
           </div>
         ) : (
           <>

@@ -15,9 +15,7 @@ export default async function CosmeticsSection({
 
   return (
     <section className="@container flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
-      <h2 className="text-xl font-medium text-black dark:text-white">
-        {title}
-      </h2>
+      <h2 className="text-xl font-medium text-black dark:text-white">{title}</h2>
       {!cosmeticForms || cosmeticForms.length === 0 ? (
         <p className="flex items-baseline gap-2">
           <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
@@ -40,7 +38,7 @@ export default async function CosmeticsSection({
                   'flex flex-col items-center gap-2',
                   'rounded-lg p-4',
                   // 'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
-                  'bg-gradient-to-br from-white to-zinc-100 dark:from-zinc-900 dark:to-zinc-950'
+                  'bg-linear-to-br from-white to-zinc-100 dark:from-zinc-900 dark:to-zinc-950'
                 )}
               >
                 <span title={name} className="text-sm">

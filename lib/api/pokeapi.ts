@@ -6,11 +6,7 @@ const pokeapi = {
   /**
    * Gets a list of resources with pagination
    */
-  getList: async (
-    endpoint: string,
-    limit = 1025,
-    offset = 0
-  ): Promise<NamedAPIResourceList> => {
+  getList: async (endpoint: string, limit = 1025, offset = 0): Promise<NamedAPIResourceList> => {
     const params = new URLSearchParams({
       limit: limit.toString(),
       offset: offset.toString(),
@@ -29,10 +25,7 @@ const pokeapi = {
   /**
    * Gets a resource by name or ID
    */
-  getByName: async <T>(
-    endpoint: string,
-    nameOrId?: string | number
-  ): Promise<T> => {
+  getByName: async <T>(endpoint: string, nameOrId?: string | number): Promise<T> => {
     const url = new URL(endpoint, BASE_URL)
     if (nameOrId) {
       url.pathname += `/${nameOrId}`

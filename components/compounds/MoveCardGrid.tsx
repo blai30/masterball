@@ -5,19 +5,12 @@ import { useState, useMemo, useCallback, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { useDebouncedCallback } from 'use-debounce'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import {
-  DamageClassKey,
-  type MoveInfo,
-  TypeKey,
-} from '@/lib/utils/pokeapi-helpers'
+import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapi-helpers'
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
-import SortBar, {
-  SortDirection,
-  type SortOption,
-} from '@/components/shared/SortBar'
+import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
 import type { FilterOption } from '@/components/shared/FilterBar'
 
 const DEFAULT_SORT_KEY = 'name'
@@ -52,8 +45,7 @@ export default function MoveCardGrid({
     []
   )
   const typeFilters: FilterOption[] = useMemo(
-    () =>
-      Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
+    () => Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
     []
   )
   const damageClassFilters: FilterOption[] = useMemo(
@@ -66,9 +58,7 @@ export default function MoveCardGrid({
   )
 
   const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
-  const [sortKey, setSortKey] = useState(
-    () => searchParams.get('sort') ?? DEFAULT_SORT_KEY
-  )
+  const [sortKey, setSortKey] = useState(() => searchParams.get('sort') ?? DEFAULT_SORT_KEY)
   const [sortDirection, setSortDirection] = useState<SortDirection>(
     () => (searchParams.get('dir') as SortDirection) ?? DEFAULT_SORT_DIRECTION
   )
@@ -95,14 +85,10 @@ export default function MoveCardGrid({
       const params = new URLSearchParams()
       if (state.search) params.set('q', state.search)
       if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
-      if (state.sortDirection !== DEFAULT_SORT_DIRECTION)
-        params.set('dir', state.sortDirection)
-      if (state.typeFilter.length > 0)
-        params.set('type', state.typeFilter.join(','))
-      if (state.damageClassFilter.length > 0)
-        params.set('class', state.damageClassFilter.join(','))
-      if (state.currentPage !== DEFAULT_PAGE)
-        params.set('p', String(state.currentPage))
+      if (state.sortDirection !== DEFAULT_SORT_DIRECTION) params.set('dir', state.sortDirection)
+      if (state.typeFilter.length > 0) params.set('type', state.typeFilter.join(','))
+      if (state.damageClassFilter.length > 0) params.set('class', state.damageClassFilter.join(','))
+      if (state.currentPage !== DEFAULT_PAGE) params.set('p', String(state.currentPage))
       router.replace(params.toString() ? `?${params}` : '?', { scroll: false })
     },
     500
@@ -118,15 +104,7 @@ export default function MoveCardGrid({
       damageClassFilter,
       currentPage,
     })
-  }, [
-    search,
-    sortKey,
-    sortDirection,
-    typeFilter,
-    damageClassFilter,
-    currentPage,
-    syncUrlParams,
-  ])
+  }, [search, sortKey, sortDirection, typeFilter, damageClassFilter, currentPage, syncUrlParams])
 
   // Handlers
   const handleSearchChange = useCallback((value: string) => {
@@ -167,9 +145,7 @@ export default function MoveCardGrid({
         options: damageClassFilters,
         values: damageClassFilter,
         onChange: (values: string | string[]) =>
-          handleDamageClassFilterChange(
-            Array.isArray(values) ? values : [values]
-          ),
+          handleDamageClassFilterChange(Array.isArray(values) ? values : [values]),
       },
     ],
     [
@@ -190,18 +166,14 @@ export default function MoveCardGrid({
 
     if (filterByVersionGroup) {
       filtered = filtered.filter((resource) =>
-        resource.flavorTextEntries.some(
-          (entry) => entry.version_group?.name === versionGroup
-        )
+        resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
       )
     }
 
     filtered = filtered.filter((resource) => {
-      const typeMatch =
-        typeFilter.length === 0 || typeFilter.includes(resource.type)
+      const typeMatch = typeFilter.length === 0 || typeFilter.includes(resource.type)
       const classMatch =
-        damageClassFilter.length === 0 ||
-        damageClassFilter.includes(resource.damageClass)
+        damageClassFilter.length === 0 || damageClassFilter.includes(resource.damageClass)
       return typeMatch && classMatch
     })
 
@@ -267,8 +239,7 @@ export default function MoveCardGrid({
         onPageChangeAction={handlePageChange}
         itemsPerPage={itemsPerPage}
         className={
-          className ??
-          'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+          className ?? 'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
         }
       />
     </div>

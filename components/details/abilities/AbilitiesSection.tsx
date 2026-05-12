@@ -1,15 +1,9 @@
 import pMap from 'p-map'
 import type { Ability, Pokemon } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
-import AbilityEntry, {
-  type AbilityEntryProps,
-} from '@/components/details/abilities/AbilityEntry'
+import AbilityEntry, { type AbilityEntryProps } from '@/components/details/abilities/AbilityEntry'
 
-export default async function AbilitiesSection({
-  pokemon,
-}: {
-  pokemon: Pokemon
-}) {
+export default async function AbilitiesSection({ pokemon }: { pokemon: Pokemon }) {
   const title = 'Abilities'
   const abilities = await pMap(
     pokemon.abilities.map((ability) => ability.ability.url),
@@ -34,9 +28,7 @@ export default async function AbilitiesSection({
 
   return (
     <section className="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">
-      <h2 className="text-xl font-medium text-black dark:text-white">
-        {title}
-      </h2>
+      <h2 className="text-xl font-medium text-black dark:text-white">{title}</h2>
       <ul className="flex flex-col gap-4">
         {abilitiesMap.map((ability) => {
           return (

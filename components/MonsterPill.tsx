@@ -7,17 +7,13 @@ import { excludedVariants } from '@/lib/utils/excluded-slugs'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 
-export default async function MonsterPill({
-  species,
-}: {
-  species: PokemonSpecies
-}) {
+export default async function MonsterPill({ species }: { species: PokemonSpecies }) {
   const slug = species.varieties
     .filter((variant) => !excludedVariants.includes(variant.pokemon.name))
     .find((variety) => variety.is_default)!.pokemon.name
-  const pokemon: Pokemon = await fetch(
-    `https://pokeapi.co/api/v2/pokemon/${slug}`
-  ).then((response) => response.json() as Promise<Pokemon>)
+  const pokemon: Pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${slug}`).then(
+    (response) => response.json() as Promise<Pokemon>
+  )
 
   const name = getTranslation(species.names, 'name')
   const imageId = species.id.toString().padStart(4, '0')
@@ -42,11 +38,7 @@ export default async function MonsterPill({
           </h3>
           <div className="flex flex-row gap-1">
             {pokemon.types.map((type) => (
-              <TypeIcon
-                key={type.type.name}
-                variant={type.type.name as TypeKey}
-                size="small"
-              />
+              <TypeIcon key={type.type.name} variant={type.type.name as TypeKey} size="small" />
             ))}
           </div>
         </div>

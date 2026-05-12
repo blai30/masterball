@@ -60,9 +60,7 @@ export default function InfoCardGrid({
   const filteredData = useMemo(() => {
     const filtered = filterByVersionGroup
       ? data.filter((resource) =>
-          resource.flavorTextEntries.some(
-            (entry) => entry.version_group?.name === versionGroup
-          )
+          resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
         )
       : data
 
@@ -85,8 +83,7 @@ export default function InfoCardGrid({
         currentPage={currentPage}
         onPageChangeAction={handlePageChange}
         className={
-          className ??
-          'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+          className ?? 'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
         }
       />
     </div>

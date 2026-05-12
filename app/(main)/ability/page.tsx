@@ -38,15 +38,13 @@ export default async function Home() {
     .filter(
       (resource) =>
         resource.is_main_series &&
-        resource?.names?.find((name) => name?.language?.name === 'en') !==
-          undefined
+        resource?.names?.find((name) => name?.language?.name === 'en') !== undefined
     )
     .map((resource) => ({
       id: resource.id,
       slug: resource.name,
       name: getTranslation(resource.names, 'name')!,
-      defaultDescription:
-        getTranslation(resource.effect_entries, 'short_effect') ?? '',
+      defaultDescription: getTranslation(resource.effect_entries, 'short_effect') ?? '',
       flavorTextEntries: resource.flavor_text_entries.filter(
         (entry) => entry.language.name === 'en'
       ),
@@ -54,7 +52,7 @@ export default async function Home() {
     .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
-    <div className="mx-auto w-full max-w-[96rem]">
+    <div className="mx-auto w-full max-w-384">
       <InfoCardGrid data={abilitiesData} filterByVersionGroup={true} />
     </div>
   )

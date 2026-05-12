@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Fragment,
-  memo,
-  useCallback,
-  useMemo,
-  useState,
-  useRef,
-  useEffect,
-} from 'react'
+import { Fragment, memo, useCallback, useMemo, useState, useRef, useEffect } from 'react'
 import { motion } from 'motion/react'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -63,19 +55,14 @@ function MovesTable({
   const [activeMove, setActiveMove] = useState<string | null>(null)
   const { versionGroup, hasMounted } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'id', desc: false },
-  ])
+  const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: false }])
   const tableRef = useRef<HTMLDivElement>(null)
 
   // Collapse active move when clicking outside the table
   useEffect(() => {
     if (!activeMove) return
     const handleClick = (event: MouseEvent) => {
-      if (
-        tableRef.current &&
-        !tableRef.current.contains(event.target as Node)
-      ) {
+      if (tableRef.current && !tableRef.current.contains(event.target as Node)) {
         setActiveMove(null)
       }
     }
@@ -111,27 +98,20 @@ function MovesTable({
       columnHelper.accessor('name', {
         header: 'Move',
         cell: (info) => (
-          <span className="font-medium text-zinc-900 dark:text-zinc-100">
-            {info.getValue()}
-          </span>
+          <span className="font-medium text-zinc-900 dark:text-zinc-100">{info.getValue()}</span>
         ),
       }),
       columnHelper.accessor('damageClass', {
         header: '',
         cell: (info) => (
           <div className="flex items-center justify-center gap-1">
-            <DamageClassIcon
-              variant={info.row.original.damageClass}
-              size="medium"
-            />
+            <DamageClassIcon variant={info.row.original.damageClass} size="medium" />
           </div>
         ),
       }),
       columnHelper.accessor('power', {
         header: 'Power',
-        cell: (info) => (
-          <p className="font-num w-full text-right">{info.getValue() ?? '—'}</p>
-        ),
+        cell: (info) => <p className="font-num w-full text-right">{info.getValue() ?? '—'}</p>,
       }),
       columnHelper.accessor('accuracy', {
         header: 'Accuracy',
@@ -144,9 +124,7 @@ function MovesTable({
       }),
       columnHelper.accessor('pp', {
         header: 'PP',
-        cell: (info) => (
-          <p className="font-num w-full text-right">{info.getValue()}</p>
-        ),
+        cell: (info) => <p className="font-num w-full text-right">{info.getValue()}</p>,
       }),
     ],
     [columnHelper, variant]
@@ -177,8 +155,7 @@ function MovesTable({
       <div className={clsx('flex flex-col gap-2', className)}>
         <h3 className="text-lg">{tableNames[variant]}</h3>
         <p className="text-zinc-500 dark:text-zinc-400">
-          No {tableNames[variant].toLocaleLowerCase()} moves available for this
-          version group.
+          No {tableNames[variant].toLocaleLowerCase()} moves available for this version group.
         </p>
       </div>
     )
@@ -200,18 +177,10 @@ function MovesTable({
                       onClick={header.column.getToggleSortingHandler()}
                       className="px-2 text-xs font-semibold"
                     >
-                      <div
-                        className={clsx(
-                          'flex items-center',
-                          columnClasses[header.id]
-                        )}
-                      >
+                      <div className={clsx('flex items-center', columnClasses[header.id])}>
                         {header.isPlaceholder
                           ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                          : flexRender(header.column.columnDef.header, header.getContext())}
                         {{
                           asc: <ChevronUp className="h-3 w-3" />,
                           desc: <ChevronDown className="h-3 w-3" />,
@@ -236,8 +205,7 @@ function MovesTable({
               key={`${versionGroup}-${variant}`}
             >
               {table.getRowModel().rows.map((row) => {
-                const isActive =
-                  `${row.original.id}-${row.original.slug}` === activeMove
+                const isActive = `${row.original.id}-${row.original.slug}` === activeMove
                 return (
                   <Fragment key={row.id}>
                     <motion.tr
@@ -247,17 +215,11 @@ function MovesTable({
                       )}
                       role="button"
                       tabIndex={0}
-                      onClick={() =>
-                        handleRowClick(
-                          `${row.original.id}-${row.original.slug}`
-                        )
-                      }
+                      onClick={() => handleRowClick(`${row.original.id}-${row.original.slug}`)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault()
-                          handleRowClick(
-                            `${row.original.id}-${row.original.slug}`
-                          )
+                          handleRowClick(`${row.original.id}-${row.original.slug}`)
                         }
                       }}
                       layout
@@ -280,16 +242,10 @@ function MovesTable({
                           return (
                             <td
                               key={cell.id}
-                              className={clsx(
-                                'px-2 py-1 align-top',
-                                columnClasses[cell.column.id]
-                              )}
+                              className={clsx('px-2 py-1 align-top', columnClasses[cell.column.id])}
                             >
                               <div className="flex flex-col">
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext()
-                                )}
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                 <motion.div
                                   initial={false}
                                   animate={
@@ -312,10 +268,8 @@ function MovesTable({
                                     {row.original.flavorTextEntries?.find(
                                       (entry) =>
                                         entry.language.name === 'en' &&
-                                        entry.version_group?.name ===
-                                          versionGroup
-                                    )?.flavor_text ??
-                                      row.original.defaultDescription}
+                                        entry.version_group?.name === versionGroup
+                                    )?.flavor_text ?? row.original.defaultDescription}
                                   </span>
                                 </motion.div>
                               </div>
@@ -325,15 +279,9 @@ function MovesTable({
                         return (
                           <td
                             key={cell.id}
-                            className={clsx(
-                              'px-2 py-1 align-top',
-                              columnClasses[cell.column.id]
-                            )}
+                            className={clsx('px-2 py-1 align-top', columnClasses[cell.column.id])}
                           >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </td>
                         )
                       })}

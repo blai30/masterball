@@ -2,10 +2,7 @@ import type React from 'react'
 import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
 
-export function SwitchGroup({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+export function SwitchGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
       data-slot="control"
@@ -154,7 +151,7 @@ export function Switch({
       className={clsx(
         className,
         // Base styles
-        'group relative isolate inline-flex h-6 w-10 cursor-default rounded-full p-[3px] sm:h-5 sm:w-8',
+        'group relative isolate inline-flex h-6 w-10 cursor-default rounded-full p-0.75 sm:h-5 sm:w-8',
         // Transitions
         'transition duration-0 ease-in-out data-changing:duration-200',
         // Outline and background color in forced-colors mode so switch is still visible

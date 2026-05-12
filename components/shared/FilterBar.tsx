@@ -2,11 +2,7 @@
 
 import { useMemo } from 'react'
 import clsx from 'clsx/lite'
-import {
-  Listbox,
-  ListboxLabel,
-  ListboxOption,
-} from '@/components/ui/catalyst/listbox'
+import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
 import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapi-helpers'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
@@ -30,10 +26,7 @@ type FilterBarProps = {
 
 export default function FilterBar({ filters, className }: FilterBarProps) {
   const typeKeySet = useMemo(() => new Set<string>(Object.values(TypeKey)), [])
-  const damageClassKeySet = useMemo(
-    () => new Set<string>(Object.values(DamageClassKey)),
-    []
-  )
+  const damageClassKeySet = useMemo(() => new Set<string>(Object.values(DamageClassKey)), [])
 
   const optionPill = (option: FilterOption) => {
     return typeKeySet.has(option.value) ? (
@@ -41,7 +34,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
         <TypeIcon
           variant={option.value as TypeKey}
           size="small"
-          className="flex-shrink-0"
+          className="shrink-0"
           data-slot="icon"
         />
         <ListboxLabel>{option.label}</ListboxLabel>
@@ -51,7 +44,7 @@ export default function FilterBar({ filters, className }: FilterBarProps) {
         <DamageClassIcon
           variant={option.value as DamageClassKey}
           size="small"
-          className="flex-shrink-0"
+          className="shrink-0"
           data-slot="icon"
         />
         <ListboxLabel>{option.label}</ListboxLabel>

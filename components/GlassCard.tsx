@@ -35,10 +35,7 @@ export default function GlassCard({
 } & VariantProps<typeof variants> &
   React.ComponentPropsWithoutRef<'div'>) {
   return (
-    <div
-      {...props}
-      className={clsx(className, variants({ variant, transparency }))}
-    >
+    <div {...props} className={clsx(className, variants({ variant, transparency }))}>
       {children}
     </div>
   )
