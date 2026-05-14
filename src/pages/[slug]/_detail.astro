@@ -472,7 +472,7 @@ const [
         <div class="flex w-full flex-col gap-4">
           <StatsSection pokemon={pokemon} client:load />
           <TypeEffectivenessSection typeRelations={typeRelations} />
-          <AbilitiesSection abilitiesMap={abilitiesMap} />
+          <AbilitiesSection abilitiesMap={abilitiesMap} client:load />
           <LocationsSection rows={locationRows} client:load />
           <EvolutionSection evolutionRoot={evolutionRoot} />
           {

@@ -1,6 +1,7 @@
 import clsx from 'clsx/lite'
 import { Mars, Venus } from 'lucide-react'
 import type { Pokemon, PokemonSpecies, PokemonStat, EggGroup, GrowthRate } from 'pokedex-promise-v2'
+import { useId } from 'react'
 
 import { StatLabels, type StatKey, getTranslation } from '@/lib/utils/pokeapi-helpers'
 
@@ -153,6 +154,9 @@ function BreedingMetadata({
 }
 
 function GenderRatioDonut({ male, female }: { male: number; female: number }) {
+  const gradientIdPrefix = useId().replace(/:/g, '')
+  const maleGradientId = `${gradientIdPrefix}-male-gradient`
+  const femaleGradientId = `${gradientIdPrefix}-female-gradient`
   const width = 128
   const height = 128
   const radius = 56
@@ -166,6 +170,16 @@ function GenderRatioDonut({ male, female }: { male: number; female: number }) {
   return (
     <div className="relative">
       <svg width={width} height={height} aria-label="Gender ratio donut chart" role="img">
+        <defs>
+          <linearGradient id={maleGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#93c5fd" />
+            <stop offset="100%" stopColor="#2563eb" />
+          </linearGradient>
+          <linearGradient id={femaleGradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#db2777" />
+            <stop offset="100%" stopColor="#f9a8d4" />
+          </linearGradient>
+        </defs>
         <g transform={`translate(${width / 2} ${height / 2}) rotate(-90)`}>
           {maleArc > 0 && (
             <circle
@@ -175,7 +189,7 @@ function GenderRatioDonut({ male, female }: { male: number; female: number }) {
               fill="none"
               strokeWidth={strokeWidth}
               strokeDasharray={maleDashArray}
-              className="stroke-blue-400 dark:stroke-blue-300"
+              stroke={`url(#${maleGradientId})`}
             />
           )}
           {femaleArc > 0 && (
@@ -187,7 +201,7 @@ function GenderRatioDonut({ male, female }: { male: number; female: number }) {
               strokeWidth={strokeWidth}
               strokeDasharray={femaleDashArray}
               strokeDashoffset={-maleArc}
-              className="stroke-pink-400 dark:stroke-pink-300"
+              stroke={`url(#${femaleGradientId})`}
             />
           )}
         </g>
