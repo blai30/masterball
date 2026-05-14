@@ -13,14 +13,14 @@
 - 🖼️ **Rich UI Components**: Responsive cards, charts, icons, and pills for a delightful user experience.
 - 🌗 **Dark/Light Theme**: Toggle between themes for comfortable browsing.
 - 📦 **Static Export**: Blazing fast static site generation (SSG) for production.
-- 🛠️ **Developer Friendly**: Built with TypeScript, Bun, TanStack Table, pMap, clsx/lite, lucide-react, and more.
+- 🛠️ **Developer Friendly**: Built with TypeScript, pnpm, TanStack Table, pMap, clsx/lite, lucide-react, and more.
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (SSG only, SSR for development)
+- **Framework**: Next.js 16 (SSG only, SSR for development)
 - **Language**: TypeScript 5
 - **Styling**: Tailwind CSS v4
-- **Runtime**: Bun 1.2
+- **Package Manager**: pnpm
 - **UI**: React, lucide-react
 - **Tables**: TanStack Table
 - **Utils**: pMap, clsx/lite
@@ -36,13 +36,13 @@
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) >= 1.2
+- [pnpm](https://pnpm.io/) >= 10
 
 ### Install & Run
 
 ```sh
-bun install
-bun dev
+pnpm install
+pnpm dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) to view the app.
@@ -50,8 +50,7 @@ Visit [http://localhost:3000](http://localhost:3000) to view the app.
 ### Build Static Site
 
 ```sh
-bun run build
-bun run export
+pnpm build
 ```
 
 Static files will be generated in the `out/` directory.
