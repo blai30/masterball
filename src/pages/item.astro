@@ -15,10 +15,14 @@ import {
 import { excludedItems } from '@/lib/utils/excluded-slugs'
 
 const filteredItems = itemResourceList.results.filter(
-  (result) => !excludedItems.includes(result.name) && !result.name.startsWith('dynamax-crystal-')
+  (result) =>
+    !excludedItems.includes(result.name) &&
+    !result.name.startsWith('dynamax-crystal-')
 )
 
-const devSlice = import.meta.env.DEV ? filteredItems.slice(300, 340) : filteredItems
+const devSlice = import.meta.env.DEV
+  ? filteredItems.slice(300, 340)
+  : filteredItems
 
 const items = await pMap(
   devSlice,
@@ -27,7 +31,9 @@ const items = await pMap(
 )
 
 const itemsData = items
-  .filter((resource) => resource.names.some((name) => name.language.name === 'en'))
+  .filter((resource) =>
+    resource.names.some((name) => name.language.name === 'en')
+  )
   .map((resource) => {
     const { id, name, category } = resource
     const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/items/item_${name}.webp`
@@ -36,8 +42,11 @@ const itemsData = items
       id,
       slug: name,
       name: getTranslation(resource.names, 'name')!,
-      defaultDescription: getTranslation(resource.effect_entries, 'short_effect') ?? '',
-      flavorTextEntries: resource.flavor_text_entries.filter((e) => e.language.name === 'en'),
+      defaultDescription:
+        getTranslation(resource.effect_entries, 'short_effect') ?? '',
+      flavorTextEntries: resource.flavor_text_entries.filter(
+        (e) => e.language.name === 'en'
+      ),
       imageUrl,
       category: category.name as ItemCategoryKey,
       pocket: pocket as ItemPocketKey,

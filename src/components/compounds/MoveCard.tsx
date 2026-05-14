@@ -3,7 +3,6 @@ import clsx from 'clsx/lite'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { withBasePath } from '@/lib/utils/base-path'
 import {
   type DamageClassKey,
   DamageClassLabels,
@@ -86,7 +85,7 @@ export default function MoveCard({ props }: { props: MoveInfo }) {
                 {DamageClassLabels[props.damageClass as DamageClassKey]}
               </span>
               <img
-                src={withBasePath(`/${props.damageClass}.png`)}
+                src={`${import.meta.env.BASE_URL}${props.damageClass}.png`}
                 alt={DamageClassLabels[props.damageClass as DamageClassKey]}
                 width={128}
                 height={128}

@@ -3,7 +3,6 @@ import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 
 export default defineConfig({
-  site: process.env.PUBLIC_FULL_URL || 'http://localhost:3000',
   base: process.env.PUBLIC_BASEPATH || '/',
   devToolbar: {
     enabled: false,

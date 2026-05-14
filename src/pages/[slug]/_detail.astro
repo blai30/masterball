@@ -1,0 +1,493 @@
+---
+import pMap from 'p-map'
+import type {
+  Ability,
+  EncounterMethod,
+  EggGroup,
+  EvolutionChain,
+  GrowthRate,
+  Location,
+  LocationArea,
+  Machine,
+  Move,
+  MoveElement,
+  Pokemon,
+  PokemonEncounter,
+  PokemonForm,
+  PokemonSpecies,
+  Type,
+  Version,
+} from 'pokedex-promise-v2'
+import VariantCardSelector from '@/components/compounds/VariantCardSelector'
+import type { AbilityEntryProps } from '@/components/details/abilities/AbilityEntry'
+import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
+import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection'
+import type { EvolutionNodeData } from '@/components/details/evolution/EvolutionSection'
+import MonsterHero from '@/components/details/MonsterHero'
+import MonsterMetadata from '@/components/details/MonsterMetadata'
+import EvolutionSection from '@/components/details/evolution/EvolutionSection'
+import LocalizationSection from '@/components/details/localization/LocalizationSection'
+import LocationsSection from '@/components/details/locations/LocationsSection'
+import MovesSection from '@/components/details/moves/MovesSection'
+import StatsSection from '@/components/details/stats/StatsSection'
+import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
+import pokeapi from '@/lib/api/pokeapi'
+import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
+import {
+  LearnMethodKey,
+  TypeKey,
+  getEffectiveness,
+  getMonstersBySpecies,
+  getTranslation,
+  type DamageClassKey,
+  type LocationEncounterRow,
+  type MoveRow,
+  type TypeRelation,
+  type VersionGroupKey,
+} from '@/lib/utils/pokeapi-helpers'
+
+type Props = {
+  slug: string
+  variant?: string
+}
+
+const { slug, variant } = Astro.props
+
+async function buildTypeRelations(pokemon: Pokemon): Promise<TypeRelation[]> {
+  const typeResources = await pMap(
+    pokemon.types,
+    (t) => pokeapi.getResource<Type>(t.type.url),
+    {
+      concurrency: 4,
+    }
+  )
+
+  const effectiveness = getEffectiveness(...typeResources)
+
+  const allTypeResources = await pMap(
+    Object.values(TypeKey),
+    (typeName) => pokeapi.getByName<Type>('type', typeName),
+    { concurrency: 10 }
+  )
+
+  return allTypeResources.map((type) => ({
+    type,
+    effectiveness: effectiveness[type.name as TypeKey],
+  }))
+}
+
+async function buildAbilitiesMap(
+  pokemon: Pokemon
+): Promise<AbilityEntryProps[]> {
+  return pMap(
+    pokemon.abilities,
+    async (entry) => {
+      const resource = await pokeapi.getResource<Ability>(entry.ability.url)
+      return {
+        id: resource.id,
+        name: resource.name,
+        slot: entry.slot,
+        hidden: entry.is_hidden,
+        resource,
+      } satisfies AbilityEntryProps
+    },
+    { concurrency: 6 }
+  )
+}
+
+async function buildEvolutionNode(
+  chain: EvolutionChain['chain']
+): Promise<EvolutionNodeData> {
+  const species = await pokeapi.getByName<PokemonSpecies>(
+    'pokemon-species',
+    chain.species.name
+  )
+  const defaultVariant = species.varieties
+    .filter((v) => !excludedVariants.includes(v.pokemon.name))
+    .find((v) => v.is_default)
+
+  const pokemon = await pokeapi.getResource<Pokemon>(
+    defaultVariant!.pokemon.url
+  )
+  const evolvesTo = await pMap(
+    chain.evolves_to,
+    (child) => buildEvolutionNode(child),
+    {
+      concurrency: 4,
+    }
+  )
+
+  return { species, pokemon, evolvesTo }
+}
+
+async function buildEvolutionTree(
+  species: PokemonSpecies
+): Promise<EvolutionNodeData> {
+  const evolutionChain = await pokeapi.getResource<EvolutionChain>(
+    species.evolution_chain.url
+  )
+  return buildEvolutionNode(evolutionChain.chain)
+}
+
+async function buildLocationRows(
+  pokemon: Pokemon
+): Promise<LocationEncounterRow[]> {
+  const encounters = await pokeapi.getResource<PokemonEncounter[]>(
+    pokemon.location_area_encounters
+  )
+
+  if (encounters.length === 0) return []
+
+  const uniqueAreaUrls = [
+    ...new Set(encounters.map((e) => e.location_area.url)),
+  ]
+  const locationAreas = await pMap(
+    uniqueAreaUrls,
+    (url) => pokeapi.getResource<LocationArea>(url),
+    {
+      concurrency: 20,
+    }
+  )
+  const areaMap: Record<string, LocationArea> = Object.fromEntries(
+    locationAreas.map((area) => [area.name, area])
+  )
+
+  const areasNeedingParent = locationAreas.filter(
+    (area) => !getTranslation(area.names, 'name')
+  )
+  const uniqueLocationUrls = [
+    ...new Set(areasNeedingParent.map((area) => area.location.url)),
+  ]
+  const locations = await pMap(
+    uniqueLocationUrls,
+    (url) => pokeapi.getResource<Location>(url),
+    {
+      concurrency: 20,
+    }
+  )
+  const locationMap: Record<string, Location> = Object.fromEntries(
+    locations.map((loc) => [loc.name, loc])
+  )
+
+  const uniqueVersionUrls = [
+    ...new Set(
+      encounters.flatMap((e) => e.version_details.map((vd) => vd.version.url))
+    ),
+  ]
+  const versions = await pMap(
+    uniqueVersionUrls,
+    (url) => pokeapi.getResource<Version>(url),
+    {
+      concurrency: 20,
+    }
+  )
+  const versionMap: Record<string, Version> = Object.fromEntries(
+    versions.map((v) => [v.name, v])
+  )
+
+  const uniqueMethodUrls = [
+    ...new Set(
+      encounters.flatMap((e) =>
+        e.version_details.flatMap((vd) =>
+          vd.encounter_details.map((ed) => ed.method.url)
+        )
+      )
+    ),
+  ]
+  const encounterMethods = await pMap(
+    uniqueMethodUrls,
+    (url) => pokeapi.getResource<EncounterMethod>(url),
+    { concurrency: 20 }
+  )
+  const methodMap: Record<string, EncounterMethod> = Object.fromEntries(
+    encounterMethods.map((m) => [m.name, m])
+  )
+
+  const rowMap = new Map<string, LocationEncounterRow>()
+
+  for (const encounter of encounters) {
+    const area = areaMap[encounter.location_area.name]
+    const locationName =
+      getTranslation(area.names, 'name') ||
+      getTranslation(locationMap[area.location.name]?.names, 'name') ||
+      area.name
+
+    for (const versionDetail of encounter.version_details) {
+      const version = versionMap[versionDetail.version.name]
+      const versionGroup = version.version_group.name as VersionGroupKey
+      const versionName =
+        getTranslation(version?.names, 'name') ?? versionDetail.version.name
+      const key = `${area.name}__${versionGroup}__${versionDetail.version.name}`
+      const methods = [
+        ...new Set(
+          versionDetail.encounter_details.map((ed) => {
+            const method = methodMap[ed.method.name]
+            return getTranslation(method?.names, 'name') ?? ed.method.name
+          })
+        ),
+      ]
+      const minLevel = Math.min(
+        ...versionDetail.encounter_details.map((ed) => ed.min_level)
+      )
+      const maxLevel = Math.max(
+        ...versionDetail.encounter_details.map((ed) => ed.max_level)
+      )
+
+      const existing = rowMap.get(key)
+      if (existing) {
+        existing.methods = [...new Set([...existing.methods, ...methods])]
+        existing.minLevel = Math.min(existing.minLevel, minLevel)
+        existing.maxLevel = Math.max(existing.maxLevel, maxLevel)
+        existing.maxChance = Math.max(
+          existing.maxChance,
+          versionDetail.max_chance
+        )
+      } else {
+        rowMap.set(key, {
+          locationAreaSlug: area.name,
+          locationName,
+          versionName,
+          versionGroup,
+          maxChance: versionDetail.max_chance,
+          minLevel,
+          maxLevel,
+          methods,
+        })
+      }
+    }
+  }
+
+  return [...rowMap.values()]
+}
+
+function createMoveRows(
+  moves: MoveElement[],
+  movesMap: Record<string, Move & { machineItems: Machine[] }>,
+  variant: LearnMethodKey
+): MoveRow[] {
+  const moveRows: MoveRow[] = []
+
+  moves.forEach((m) => {
+    const move = movesMap[m.move.name]
+    if (!move) return
+
+    m.version_group_details.forEach((resource) => {
+      if (resource.move_learn_method.name === variant) {
+        let id = move.id.toString()
+
+        if (variant === LearnMethodKey.LevelUp) {
+          id =
+            resource.level_learned_at === 0
+              ? 'Evolve'
+              : resource.level_learned_at.toString()
+        } else if (variant === LearnMethodKey.Machine && move.machineItems) {
+          const machine = move.machineItems.find(
+            (mac: Machine) =>
+              mac.version_group.name === resource.version_group.name
+          )
+          if (machine?.item) {
+            id = machine.item.name.toUpperCase()
+          }
+        }
+
+        moveRows.push({
+          id,
+          slug: m.move.name,
+          versionGroup: resource.version_group.name,
+          type: move.type.name as TypeKey,
+          damageClass: move.damage_class.name as DamageClassKey,
+          name: getTranslation(move.names, 'name')!,
+          defaultDescription:
+            getTranslation(move.effect_entries, 'short_effect') ?? '',
+          flavorTextEntries: move.flavor_text_entries.filter(
+            (entry) => entry.language.name === 'en'
+          ),
+          power: move.power || undefined,
+          accuracy: move.accuracy || undefined,
+          pp: move.pp!,
+        })
+      }
+    })
+  })
+
+  return moveRows
+}
+
+async function buildMoveRowsByMethod(
+  pokemon: Pokemon
+): Promise<Record<LearnMethodKey, MoveRow[]>> {
+  const moveRowsByMethod: Record<LearnMethodKey, MoveRow[]> = {
+    [LearnMethodKey.FormChange]: [],
+    [LearnMethodKey.LevelUp]: [],
+    [LearnMethodKey.Machine]: [],
+    [LearnMethodKey.Tutor]: [],
+    [LearnMethodKey.Egg]: [],
+  }
+
+  if (pokemon.moves.length === 0) return moveRowsByMethod
+
+  const uniqueMoveNames = [
+    ...new Set(pokemon.moves.map((move) => move.move.name)),
+  ]
+  const movesData = await pMap(
+    uniqueMoveNames,
+    async (name) => pokeapi.getByName<Move>('move', name),
+    { concurrency: 20 }
+  )
+
+  const movesWithMachines = movesData.filter(
+    (move) => move.machines?.length > 0
+  )
+  const uniqueMachineUrls = [
+    ...new Set(
+      movesWithMachines.flatMap((move) =>
+        move.machines.map((machine) => machine.machine.url)
+      )
+    ),
+  ]
+  const machinesData = await pMap(
+    uniqueMachineUrls,
+    (url) => pokeapi.getResource<Machine>(url),
+    {
+      concurrency: 5,
+    }
+  )
+
+  const machinesMap = new Map<string, Machine[]>()
+  movesWithMachines.forEach((move) => {
+    machinesMap.set(
+      move.name,
+      machinesData.filter((m) => m.move.name === move.name)
+    )
+  })
+
+  const movesMap = Object.fromEntries(
+    movesData.map((move) => [
+      move.name,
+      { ...move, machineItems: machinesMap.get(move.name) || [] },
+    ])
+  ) as Record<string, Move & { machineItems: Machine[] }>
+
+  Object.keys(moveRowsByMethod).forEach((method) => {
+    const methodKey = method as LearnMethodKey
+    const methodMoves = pokemon.moves.filter((move) =>
+      move.version_group_details.some(
+        (vgd) => vgd.move_learn_method.name === methodKey
+      )
+    )
+    moveRowsByMethod[methodKey] = createMoveRows(
+      methodMoves,
+      movesMap,
+      methodKey
+    )
+  })
+
+  return moveRowsByMethod
+}
+
+const specie = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
+const selectedVariant = specie.varieties
+  .filter((v) => !excludedVariants.includes(v.pokemon.name))
+  .find((v) => (variant ? v.pokemon.name === variant : v.is_default))
+
+if (!selectedVariant) {
+  throw new Error(
+    `No variant found for slug "${slug}" and variant "${variant ?? ''}"`
+  )
+}
+
+const pokemon = await pokeapi.getResource<Pokemon>(selectedVariant.pokemon.url)
+const monsters = await getMonstersBySpecies(specie)
+
+const forms = await pMap(
+  pokemon.forms.filter((entry) => !excludedForms.includes(entry.name)),
+  (entry) => pokeapi.getByName<PokemonForm>('pokemon-form', entry.name),
+  { concurrency: 20 }
+)
+
+const form =
+  pokemon.is_default || specie.name === pokemon.name
+    ? undefined
+    : forms.find(
+        (entry) => entry.name === variant || entry.name === pokemon.name
+      )
+
+const [
+  typeRelations,
+  abilitiesMap,
+  eggGroups,
+  growthRate,
+  evolutionRoot,
+  locationRows,
+  moveRowsByMethod,
+] = await Promise.all([
+  buildTypeRelations(pokemon),
+  buildAbilitiesMap(pokemon),
+  pMap(specie.egg_groups, (entry) => pokeapi.getResource<EggGroup>(entry.url), {
+    concurrency: 4,
+  }),
+  pokeapi.getResource<GrowthRate>(specie.growth_rate.url),
+  buildEvolutionTree(specie),
+  buildLocationRows(pokemon),
+  buildMoveRowsByMethod(pokemon),
+])
+---
+
+<div class="flex w-full flex-1 flex-col gap-6">
+  <div class="grow">
+    <div class="mx-auto max-w-384">
+      <div class="flex overflow-x-auto">
+        <div class="@container grow">
+          <VariantCardSelector
+            pathname={Astro.url.pathname}
+            monsters={monsters}
+            className="min-w-full justify-center-safe whitespace-nowrap"
+            client:load
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex w-full flex-col gap-4 xl:max-w-none">
+    <section class="@container mx-auto w-full max-w-384">
+      <div class="grid grid-cols-2 gap-4 @3xl:grid-cols-4 @[88rem]:grid-cols-8">
+        <MonsterHero
+          species={specie}
+          pokemon={pokemon}
+          form={form}
+          className="col-span-2"
+          client:load
+        />
+        <MonsterMetadata
+          species={specie}
+          pokemon={pokemon}
+          eggGroups={eggGroups}
+          growthRate={growthRate}
+          client:load
+        />
+      </div>
+    </section>
+
+    <section class="mx-auto w-full max-w-384">
+      <div class="flex w-full flex-col gap-4 xl:flex-row">
+        <div class="flex w-full flex-col gap-4">
+          <StatsSection pokemon={pokemon} client:load />
+          <TypeEffectivenessSection typeRelations={typeRelations} client:load />
+          <AbilitiesSection abilitiesMap={abilitiesMap} client:load />
+          <LocationsSection rows={locationRows} client:load />
+          <EvolutionSection evolutionRoot={evolutionRoot} client:load />
+          {
+            forms.length > 1 && (
+              <CosmeticsSection pokemon={pokemon} forms={forms} client:load />
+            )
+          }
+          <LocalizationSection species={specie} client:load />
+        </div>
+        <div class="flex w-full flex-col gap-6">
+          <MovesSection moveRowsByMethod={moveRowsByMethod} client:load />
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

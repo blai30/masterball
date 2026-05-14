@@ -9,10 +9,9 @@ import { getTestSpeciesList } from '@/lib/providers'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
 import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
 
-const speciesList =
-  import.meta.env.DEV
-    ? await getTestSpeciesList()
-    : await pokeapi.getList('pokemon-species', 1025, 0)
+const speciesList = import.meta.env.DEV
+  ? await getTestSpeciesList()
+  : await pokeapi.getList('pokemon-species', 1025, 0)
 
 const species = await pMap(
   speciesList.results,

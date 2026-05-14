@@ -1,0 +1,67 @@
+---
+import pMap from 'p-map'
+import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+import Layout from '@/layouts/Layout.astro'
+import AppShell from '@/components/AppShell'
+import Detail from '@/pages/[slug]/_detail.astro'
+import pokeapi from '@/lib/api/pokeapi'
+import { getTestSpeciesList } from '@/lib/providers'
+import {
+  getTranslation,
+  TypeLabels,
+  type TypeKey,
+} from '@/lib/utils/pokeapi-helpers'
+import { excludedVariants } from '@/lib/utils/excluded-slugs'
+
+export async function getStaticPaths() {
+  const speciesList = import.meta.env.DEV
+    ? await getTestSpeciesList()
+    : await pokeapi.getList('pokemon-species', 1025, 0)
+
+  const species = await pMap(
+    speciesList.results,
+    (result) => pokeapi.getResource<PokemonSpecies>(result.url),
+    {
+      concurrency: 20,
+    }
+  )
+
+  return species.flatMap((specie) =>
+    specie.varieties
+      .filter((v) => !excludedVariants.includes(v.pokemon.name))
+      .filter((variant) => !variant.is_default)
+      .map((variant) => ({
+        params: {
+          slug: specie.name,
+          variant: variant.pokemon.name,
+        },
+      }))
+  )
+}
+
+const { slug, variant } = Astro.params
+
+if (!slug || !variant) {
+  throw new Error('Missing slug or variant route parameter.')
+}
+
+// Load metadata for head
+const specie = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
+const imageId = specie.id.toString().padStart(4, '0')
+const name = getTranslation(specie.names, 'name')!
+const selectedVariant = specie.varieties
+  .filter((v) => !excludedVariants.includes(v.pokemon.name))
+  .find((v) => v.pokemon.name === variant)
+const pokemon = await pokeapi.getResource<Pokemon>(selectedVariant!.pokemon.url)
+const description = pokemon.types
+  .map((t) => TypeLabels[t.type.name as TypeKey])
+  .join('/')
+const title = `${name} #${imageId}`
+const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+---
+
+<Layout title={title} description={description} imageUrl={imageUrl}>
+  <AppShell pathname={Astro.url.pathname} client:load>
+    <Detail slug={slug} variant={variant} />
+  </AppShell>
+</Layout>

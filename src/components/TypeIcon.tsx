@@ -1,7 +1,6 @@
 import clsx from 'clsx/lite'
 import { cva } from 'cva'
 
-import { withBasePath } from '@/lib/utils/base-path'
 import { TypeLabels, TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 const variants = cva({
@@ -46,7 +45,7 @@ export default function TypeIcon({
   className?: string
 }) {
   const name = TypeLabels[variant as TypeKey]
-  const imageUrl = withBasePath(`/${variant}.png`)
+  const imageUrl = `${import.meta.env.BASE_URL}${variant}.png`
   const dimensions = {
     small: 20,
     medium: 28,
