@@ -1,0 +1,43 @@
+---
+import pMap from 'p-map'
+import type { Move } from 'pokedex-promise-v2'
+import Layout from '@/layouts/Layout.astro'
+import AppShell from '@/components/AppShell'
+import MoveCardGrid from '@/components/compounds/MoveCardGrid'
+import pokeapi from '@/lib/api/pokeapi'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
+
+const moveList = import.meta.env.DEV
+  ? await pokeapi.getList('move', 40, 0)
+  : await pokeapi.getList('move', 1200, 0)
+
+const moves = await pMap(
+  moveList.results,
+  (result) => pokeapi.getResource<Move>(result.url),
+  { concurrency: 20 }
+)
+
+const movesData = moves
+  .filter((resource) => resource.names.some((name) => name.language.name === 'en'))
+  .map((resource) => ({
+    id: resource.id.toString(),
+    slug: resource.name,
+    name: getTranslation(resource.names, 'name')!,
+    defaultDescription: getTranslation(resource.effect_entries, 'short_effect') ?? '',
+    flavorTextEntries: resource.flavor_text_entries.filter((e) => e.language.name === 'en'),
+    type: resource.type.name,
+    damageClass: resource.damage_class.name,
+    power: resource.power || undefined,
+    accuracy: resource.accuracy || undefined,
+    pp: resource.pp!,
+  }))
+  .sort((a, b) => a.name.localeCompare(b.name))
+---
+
+<Layout title="Move List">
+  <AppShell pathname={Astro.url.pathname} client:load>
+    <div class="mx-auto w-full max-w-384">
+      <MoveCardGrid data={movesData} filterByVersionGroup={true} client:load />
+    </div>
+  </AppShell>
+</Layout>

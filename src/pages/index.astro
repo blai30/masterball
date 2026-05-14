@@ -1,0 +1,55 @@
+---
+import pMap from 'p-map'
+import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+import Layout from '@/layouts/Layout.astro'
+import AppShell from '@/components/AppShell'
+import SpeciesCardGrid from '@/components/compounds/SpeciesCardGrid'
+import pokeapi from '@/lib/api/pokeapi'
+import { getTestSpeciesList } from '@/lib/providers'
+import { excludedVariants } from '@/lib/utils/excluded-slugs'
+import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
+
+const speciesList =
+  import.meta.env.DEV
+    ? await getTestSpeciesList()
+    : await pokeapi.getList('pokemon-species', 1025, 0)
+
+const species = await pMap(
+  speciesList.results,
+  (result) => pokeapi.getResource<PokemonSpecies>(result.url),
+  { concurrency: 20 }
+)
+
+const speciesPokemon: Record<string, Pokemon> = Object.fromEntries(
+  await pMap(
+    species,
+    async (specie) => {
+      const pokemon = await pokeapi.getResource<Pokemon>(
+        specie.varieties
+          .filter((v) => !excludedVariants.includes(v.name))
+          .find((v) => v.is_default)!.pokemon.url
+      )
+      return [specie.name, pokemon] as const
+    },
+    { concurrency: 20 }
+  )
+)
+
+const speciesData = species.map((specie) => {
+  const pokemon = speciesPokemon[specie.name]
+  return {
+    id: specie.id,
+    slug: specie.name,
+    name: getTranslation(specie.names, 'name')!,
+    types: pokemon.types.map((t) => t.type.name as TypeKey),
+  }
+})
+---
+
+<Layout title="Pokemon List">
+  <AppShell pathname={Astro.url.pathname} client:load>
+    <div class="mx-auto max-w-384">
+      <SpeciesCardGrid data={speciesData} client:load />
+    </div>
+  </AppShell>
+</Layout>

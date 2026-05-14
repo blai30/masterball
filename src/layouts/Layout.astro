@@ -1,0 +1,58 @@
+---
+import '@/styles/globals.css'
+
+export interface Props {
+  title?: string
+  description?: string
+  imageUrl?: string
+}
+
+const {
+  title = 'Masterball',
+  description = 'Statically rendered and hosted web app for a modern Pokémon database.',
+  imageUrl,
+} = Astro.props
+
+const siteUrl = import.meta.env.PUBLIC_FULL_URL || 'https://blai30.github.io/masterball'
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl)
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Masterball" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+
+    <!-- Theme init: apply class before paint to prevent flash -->
+    <script is:inline>
+      ;(function () {
+        const stored = localStorage.getItem('theme') || 'system'
+        const isDark =
+          stored === 'dark' ||
+          (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', isDark)
+      })()
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
