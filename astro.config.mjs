@@ -5,9 +5,6 @@ import { defineConfig } from 'astro/config'
 export default defineConfig({
   site: process.env.PUBLIC_SITE_URL,
   base: process.env.PUBLIC_BASEPATH,
-  devToolbar: {
-    enabled: false,
-  },
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
