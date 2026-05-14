@@ -1,5 +1,6 @@
 import clsx from 'clsx/lite'
 import type { Pokemon, PokemonForm } from 'pokedex-promise-v2'
+
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 
 export default function CosmeticsSection({

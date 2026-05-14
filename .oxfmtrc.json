@@ -1,6 +1,11 @@
 {
+  "sortTailwindcss": {
+    "functions": ["tw", "clsx", "cva"]
+  },
+  "ignorePatterns": ["**/public/**", "**/dist/**", "**/node_modules/**"],
   "semi": false,
   "singleQuote": true,
+  "sortImports": true,
   "tabWidth": 2,
   "trailingComma": "es5"
 }

@@ -1,6 +1,6 @@
-import type React from 'react'
-import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
+import clsx from 'clsx/lite'
+import type React from 'react'
 
 export function SwitchGroup({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (

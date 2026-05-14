@@ -1,10 +1,11 @@
 import pMap from 'p-map'
 import type { Ability, EvolutionChain, Pokemon, PokemonSpecies, Type } from 'pokedex-promise-v2'
-import pokeapi from '@/lib/api/pokeapi'
+
 import type { AbilityEntryProps } from '@/components/details/abilities/AbilityEntry'
 import type { EvolutionNodeData } from '@/components/details/evolution/EvolutionSection'
-import { TypeKey, getEffectiveness, type TypeRelation } from '@/lib/utils/pokeapi-helpers'
+import pokeapi from '@/lib/api/pokeapi'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
+import { TypeKey, getEffectiveness, type TypeRelation } from '@/lib/utils/pokeapi-helpers'
 
 export async function buildTypeRelations(pokemon: Pokemon): Promise<TypeRelation[]> {
   const typeResources = await pMap(pokemon.types, (t) => pokeapi.getResource<Type>(t.type.url), {

@@ -1,4 +1,5 @@
 import { cva } from 'cva'
+
 import { Effectiveness } from '@/lib/utils/pokeapi-helpers'
 
 const variants = cva({

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
 import type { Pokemon } from 'pokedex-promise-v2'
+import { useEffect, useState } from 'react'
+
 import { StatLabels, type StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
 
 export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {

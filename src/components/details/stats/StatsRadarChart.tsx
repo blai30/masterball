@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { Group } from '@visx/group'
+import { scaleLinear } from '@visx/scale'
+import { Polygon } from '@visx/shape'
 import clsx from 'clsx/lite'
 import { motion } from 'motion/react'
 import type { Pokemon } from 'pokedex-promise-v2'
-import { Group } from '@visx/group'
-import { Polygon } from '@visx/shape'
-import { scaleLinear } from '@visx/scale'
+import { useEffect, useState } from 'react'
+
 import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
 
 const statOrder: StatKey[] = [

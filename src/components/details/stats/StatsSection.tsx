@@ -1,4 +1,5 @@
 import type { Pokemon } from 'pokedex-promise-v2'
+
 import StatsTabs from '@/components/details/stats/StatsTabs'
 
 export default function StatsSection({ pokemon }: { pokemon: Pokemon }) {

@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import clsx from 'clsx/lite'
 import { Radio, RadioGroup } from '@headlessui/react'
-import type { Monster } from '@/lib/utils/pokeapi-helpers'
+import clsx from 'clsx/lite'
+import { useState } from 'react'
+
 import VariantCard from '@/components/compounds/VariantCard'
+import type { Monster } from '@/lib/utils/pokeapi-helpers'
 
 export default function VariantCardSelector({
   monsters,

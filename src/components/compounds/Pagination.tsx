@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useMemo } from 'react'
 
 const getPageNumbers = (current: number, total: number) => {
   if (total <= 7) {

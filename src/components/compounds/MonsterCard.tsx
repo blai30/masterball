@@ -1,8 +1,9 @@
 import { motion } from 'motion/react'
-import Link from '@/components/ui/catalyst/link'
 import { memo } from 'react'
-import type { TypeKey } from '@/lib/utils/pokeapi-helpers'
+
 import GlassCard from '@/components/GlassCard'
+import Link from '@/components/ui/catalyst/link'
+import type { TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 export type MonsterCardProps = {
   id: number

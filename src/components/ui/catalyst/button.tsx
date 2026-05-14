@@ -1,7 +1,8 @@
+import * as Headless from '@headlessui/react'
+import clsx from 'clsx'
 import type React from 'react'
 import { forwardRef } from 'react'
-import clsx from 'clsx'
-import * as Headless from '@headlessui/react'
+
 import Link from '@/components/ui/catalyst/link'
 
 const styles = {

@@ -1,5 +1,6 @@
-import { lazy, memo, Suspense } from 'react'
 import { Backpack, Cat, Shield, Swords } from 'lucide-react'
+import { lazy, memo, Suspense } from 'react'
+
 import VersionGroupSelector from '@/components/shared/VersionGroupSelector'
 import {
   NavbarItem,

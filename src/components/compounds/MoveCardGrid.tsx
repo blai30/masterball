@@ -1,14 +1,15 @@
-import { useState, useMemo, useCallback, useEffect } from 'react'
 import Fuse from 'fuse.js'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { useVersionGroup } from '@/lib/stores/version-group'
-import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapi-helpers'
+
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
+import type { FilterOption } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
-import type { FilterOption } from '@/components/shared/FilterBar'
+import { useVersionGroup } from '@/lib/stores/version-group'
+import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 const DEFAULT_SORT_KEY = 'name'
 const DEFAULT_SORT_DIRECTION = SortDirection.ASC

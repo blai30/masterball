@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
-import type { LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
+
 import LoadingSection from '@/components/details/LoadingSection'
+import type { LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
 
 const LocationsTable = lazy(() => import('@/components/details/locations/LocationsTable'))
 

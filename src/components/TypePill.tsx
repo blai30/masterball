@@ -1,7 +1,8 @@
 import clsx from 'clsx/lite'
 import { cva } from 'cva'
-import { TypeLabels, TypeKey } from '@/lib/utils/pokeapi-helpers'
+
 import { withBasePath } from '@/lib/utils/base-path'
+import { TypeLabels, TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 const variants = cva({
   base: 'flex flex-row items-center',

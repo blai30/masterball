@@ -1,12 +1,13 @@
-import { useMemo } from 'react'
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { VersionGroupLabels, type LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
+import { useMemo } from 'react'
+
 import { useVersionGroup } from '@/lib/stores/version-group'
+import { VersionGroupLabels, type LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
 
 export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] }) {
   const { versionGroup, hasMounted } = useVersionGroup()

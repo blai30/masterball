@@ -1,7 +1,8 @@
 import { memo } from 'react'
-import { type VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapi-helpers'
-import { useVersionGroup } from '@/lib/stores/version-group'
+
 import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
+import { useVersionGroup } from '@/lib/stores/version-group'
+import { type VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapi-helpers'
 
 function VersionGroupSelector() {
   const { versionGroup, setVersionGroup, hasMounted } = useVersionGroup()

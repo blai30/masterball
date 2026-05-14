@@ -1,6 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
 import Fuse from 'fuse.js'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
+
+import CardGrid from '@/components/compounds/CardGrid'
+import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
+import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
+import SearchBar from '@/components/shared/SearchBar'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import {
   type ItemPocketKey,
@@ -8,10 +13,6 @@ import {
   type ItemCategoryKey,
   ItemCategoryLabels,
 } from '@/lib/utils/pokeapi-helpers'
-import CardGrid from '@/components/compounds/CardGrid'
-import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
-import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
-import SearchBar from '@/components/shared/SearchBar'
 
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 48

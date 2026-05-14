@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
-import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapi-helpers'
+
 import LoadingSection from '@/components/details/LoadingSection'
+import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapi-helpers'
 
 const MovesTable = lazy(() => import('@/components/details/moves/MovesTable'))
 

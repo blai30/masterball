@@ -1,5 +1,6 @@
-import { useMemo, useCallback, type ReactNode } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
+import { useMemo, useCallback, type ReactNode } from 'react'
+
 import Pagination from '@/components/compounds/Pagination'
 
 type CardGridProps<T> = {

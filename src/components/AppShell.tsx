@@ -1,8 +1,8 @@
-import { StackedLayout } from '@/components/ui/catalyst/stacked-layout'
-import { Sidebar } from '@/components/ui/catalyst/sidebar'
-import { Navbar } from '@/components/ui/catalyst/navbar'
-import NavMenu from '@/components/shared/NavMenu'
 import Footer from '@/components/shared/Footer'
+import NavMenu from '@/components/shared/NavMenu'
+import { Navbar } from '@/components/ui/catalyst/navbar'
+import { Sidebar } from '@/components/ui/catalyst/sidebar'
+import { StackedLayout } from '@/components/ui/catalyst/stacked-layout'
 
 export default function AppShell({
   pathname,

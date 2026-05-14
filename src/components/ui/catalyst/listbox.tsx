@@ -1,3 +1,5 @@
+import * as Headless from '@headlessui/react'
+import clsx from 'clsx'
 import {
   Children,
   Fragment,
@@ -5,8 +7,6 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode,
 } from 'react'
-import clsx from 'clsx'
-import * as Headless from '@headlessui/react'
 
 export function Listbox<T>({
   className,

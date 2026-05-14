@@ -1,7 +1,3 @@
-import { Fragment, memo, useCallback, useMemo, useState, useRef, useEffect } from 'react'
-import { motion } from 'motion/react'
-import clsx from 'clsx/lite'
-import { ChevronDown, ChevronUp } from 'lucide-react'
 import {
   flexRender,
   getCoreRowModel,
@@ -10,10 +6,15 @@ import {
   useReactTable,
   type SortingState,
 } from '@tanstack/react-table'
-import { useVersionGroup } from '@/lib/stores/version-group'
-import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapi-helpers'
+import clsx from 'clsx/lite'
+import { ChevronDown, ChevronUp } from 'lucide-react'
+import { motion } from 'motion/react'
+import { Fragment, memo, useCallback, useMemo, useState, useRef, useEffect } from 'react'
+
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
+import { useVersionGroup } from '@/lib/stores/version-group'
+import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapi-helpers'
 
 const tableNames: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level-Up',

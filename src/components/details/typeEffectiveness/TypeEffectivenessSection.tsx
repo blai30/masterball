@@ -1,6 +1,6 @@
-import type { TypeRelation } from '@/lib/utils/pokeapi-helpers'
-import TypePill from '@/components/TypePill'
 import EffectivenessMultiplier from '@/components/details/typeEffectiveness/EffectivenessMultiplier'
+import TypePill from '@/components/TypePill'
+import type { TypeRelation } from '@/lib/utils/pokeapi-helpers'
 
 export default function TypeEffectivenessSection({
   typeRelations,

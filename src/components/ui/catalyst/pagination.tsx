@@ -1,5 +1,6 @@
-import type React from 'react'
 import clsx from 'clsx/lite'
+import type React from 'react'
+
 import { Button } from '@/components/ui/catalyst/button'
 
 export function Pagination({

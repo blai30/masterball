@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
 import Fuse from 'fuse.js'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { useVersionGroup } from '@/lib/stores/version-group'
+
 import CardGrid from '@/components/compounds/CardGrid'
 import InfoCard, { type InfoCardProps } from '@/components/compounds/InfoCard'
 import SearchBar from '@/components/shared/SearchBar'
+import { useVersionGroup } from '@/lib/stores/version-group'
 
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 48

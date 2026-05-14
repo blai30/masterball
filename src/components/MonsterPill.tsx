@@ -1,8 +1,9 @@
-import Link from '@/components/ui/catalyst/link'
 import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
-import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
+
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
+import Link from '@/components/ui/catalyst/link'
+import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 export default function MonsterPill({
   species,

@@ -1,6 +1,7 @@
+import clsx from 'clsx/lite'
 import type React from 'react'
 import { createContext, useContext, useState } from 'react'
-import clsx from 'clsx/lite'
+
 import Link from '@/components/ui/catalyst/link'
 
 const TableContext = createContext<{

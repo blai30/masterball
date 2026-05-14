@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
 import { Store, useSelector } from '@tanstack/react-store'
+import { useEffect, useState } from 'react'
+
 import { VersionGroupKey } from '@/lib/utils/pokeapi-helpers'
 
 const versionGroupStore = new Store<{ versionGroup: VersionGroupKey }>({

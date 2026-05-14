@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
-import type { Pokemon } from 'pokedex-promise-v2'
 import { Tab, TabGroup, TabList, TabPanels } from '@headlessui/react'
 import { ChartBar, Hexagon } from 'lucide-react'
+import { motion, AnimatePresence } from 'motion/react'
+import type { Pokemon } from 'pokedex-promise-v2'
+import { useState, useEffect, useCallback } from 'react'
+
 import StatsBarChart from '@/components/details/stats/StatsBarChart'
 import StatsRadarChart from '@/components/details/stats/StatsRadarChart'
 

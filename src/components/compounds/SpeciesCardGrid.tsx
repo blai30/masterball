@@ -1,12 +1,13 @@
+import Fuse from 'fuse.js'
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
-import { TypeKey } from '@/lib/utils/pokeapi-helpers'
+
 import CardGrid from '@/components/compounds/CardGrid'
-import SearchBar from '@/components/shared/SearchBar'
-import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
 import MonsterCard, { type MonsterCardProps } from '@/components/compounds/MonsterCard'
 import FilterBar, { type FilterOption, type FilterConfig } from '@/components/shared/FilterBar'
-import Fuse from 'fuse.js'
+import SearchBar from '@/components/shared/SearchBar'
+import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
+import { TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 const DEFAULT_SORT_KEY = 'id'
 const DEFAULT_SORT_DIRECTION = SortDirection.ASC

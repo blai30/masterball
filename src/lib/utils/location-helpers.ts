@@ -7,6 +7,7 @@ import type {
   PokemonEncounter,
   Version,
 } from 'pokedex-promise-v2'
+
 import pokeapi from '@/lib/api/pokeapi'
 import {
   getTranslation,

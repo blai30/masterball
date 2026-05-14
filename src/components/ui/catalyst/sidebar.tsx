@@ -1,8 +1,9 @@
-import type React from 'react'
-import { forwardRef, useId } from 'react'
+import * as Headless from '@headlessui/react'
 import clsx from 'clsx/lite'
 import { LayoutGroup, motion } from 'motion/react'
-import * as Headless from '@headlessui/react'
+import type React from 'react'
+import { forwardRef, useId } from 'react'
+
 import { TouchTarget } from '@/components/ui/catalyst/button'
 import Link from '@/components/ui/catalyst/link'
 

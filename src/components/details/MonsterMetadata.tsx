@@ -1,9 +1,10 @@
-import clsx from 'clsx/lite'
-import type { Pokemon, PokemonSpecies, PokemonStat, EggGroup, GrowthRate } from 'pokedex-promise-v2'
-import { Mars, Venus } from 'lucide-react'
-import { StatLabels, type StatKey, getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { Group } from '@visx/group'
 import { Pie } from '@visx/shape'
+import clsx from 'clsx/lite'
+import { Mars, Venus } from 'lucide-react'
+import type { Pokemon, PokemonSpecies, PokemonStat, EggGroup, GrowthRate } from 'pokedex-promise-v2'
+
+import { StatLabels, type StatKey, getTranslation } from '@/lib/utils/pokeapi-helpers'
 
 const calculateCatchProbability = (captureRate: number) => {
   const a = captureRate / 3

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { Radio, RadioGroup } from '@headlessui/react'
 import clsx from 'clsx/lite'
 import { Monitor, Moon, Sun } from 'lucide-react'
-import { Radio, RadioGroup } from '@headlessui/react'
+import { useState, useEffect } from 'react'
 
 type ThemeValue = 'system' | 'light' | 'dark'
 

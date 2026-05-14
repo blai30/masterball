@@ -1,6 +1,7 @@
-import type React from 'react'
-import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
+import clsx from 'clsx/lite'
+import type React from 'react'
+
 import { Text } from '@/components/ui/catalyst/text'
 
 const sizes = {

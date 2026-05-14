@@ -1,14 +1,15 @@
 import clsx from 'clsx/lite'
+
+import GlassCard from '@/components/GlassCard'
+import TypeIcon from '@/components/TypeIcon'
 import { useVersionGroup } from '@/lib/stores/version-group'
+import { withBasePath } from '@/lib/utils/base-path'
 import {
   type DamageClassKey,
   DamageClassLabels,
   type MoveInfo,
   TypeKey,
 } from '@/lib/utils/pokeapi-helpers'
-import { withBasePath } from '@/lib/utils/base-path'
-import GlassCard from '@/components/GlassCard'
-import TypeIcon from '@/components/TypeIcon'
 
 const typeClasses: Record<TypeKey, string> = {
   [TypeKey.Normal]:

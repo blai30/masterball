@@ -1,5 +1,6 @@
 import pMap from 'p-map'
 import type { FlavorText, Pokemon, PokemonForm, PokemonSpecies, Type } from 'pokedex-promise-v2'
+
 import pokeapi from '@/lib/api/pokeapi'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
 

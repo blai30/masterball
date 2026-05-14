@@ -1,7 +1,7 @@
+import * as Headless from '@headlessui/react'
+import clsx from 'clsx'
 import type React from 'react'
 import { forwardRef } from 'react'
-import clsx from 'clsx'
-import * as Headless from '@headlessui/react'
 
 export function InputGroup({ children }: React.ComponentPropsWithoutRef<'span'>) {
   return (

@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
+import clsx from 'clsx/lite'
+import { useState } from 'react'
 
 export function Combobox<T>({
   options,

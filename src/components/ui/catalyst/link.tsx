@@ -1,6 +1,6 @@
+import * as Headless from '@headlessui/react'
 import type React from 'react'
 import { forwardRef } from 'react'
-import * as Headless from '@headlessui/react'
 
 const Link = forwardRef(function Link(
   props: React.ComponentPropsWithoutRef<'a'>,

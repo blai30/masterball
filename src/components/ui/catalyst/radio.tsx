@@ -1,5 +1,5 @@
-import clsx from 'clsx/lite'
 import * as Headless from '@headlessui/react'
+import clsx from 'clsx/lite'
 
 export function RadioGroup({
   className,
