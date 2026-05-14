@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  PUBLIC_SITE_URL: https://blai30.github.io
-  PUBLIC_BASEPATH: /masterball
+  PUBLIC_SITE_URL: https://blai30.github.io/
+  PUBLIC_BASEPATH: masterball/
 
 permissions:
   contents: read
