@@ -18,7 +18,7 @@ export default function MonsterPill({
 
   return (
     <GlassCard variant="link" className="rounded-lg">
-      <Link href={`/${species.name}`} className="group flex w-56 items-center gap-3 px-3 py-2">
+      <Link href={`${import.meta.env.BASE_URL}${species.name}`} className="group flex w-56 items-center gap-3 px-3 py-2">
         <img
           src={imageUrl}
           alt={species.name}
