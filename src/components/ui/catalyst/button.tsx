@@ -165,13 +165,15 @@ type ButtonProps = (
   | { color?: never; outline: true; plain?: never }
   | { color?: never; outline?: never; plain: true }
 ) & { className?: string; children: React.ReactNode } & (
-    | Omit<Headless.ButtonProps, 'as' | 'className'>
-    | Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className'>
+    | Omit<Headless.ButtonProps<'button'>, 'as' | 'className'>
+    | (Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className' | 'href'> & {
+        href: string
+      })
   )
 
 export const Button = forwardRef(function Button(
   { color, outline, plain, className, children, ...props }: ButtonProps,
-  ref: React.ForwardedRef<HTMLElement>
+  ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
 ) {
   const classes = clsx(
     className,
@@ -188,7 +190,11 @@ export const Button = forwardRef(function Button(
       <TouchTarget>{children}</TouchTarget>
     </Link>
   ) : (
-    <Headless.Button {...props} className={clsx(classes, 'cursor-default')} ref={ref}>
+    <Headless.Button
+      {...props}
+      className={clsx(classes, 'cursor-default')}
+      ref={ref as React.ForwardedRef<HTMLButtonElement>}
+    >
       <TouchTarget>{children}</TouchTarget>
     </Headless.Button>
   )

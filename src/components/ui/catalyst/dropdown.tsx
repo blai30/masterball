@@ -53,8 +53,8 @@ export function DropdownItem({
   className,
   ...props
 }: { className?: string } & (
-  | Omit<Headless.MenuItemProps<'button'>, 'as' | 'className'>
-  | Omit<Headless.MenuItemProps<typeof Link>, 'as' | 'className'>
+  | Omit<Headless.MenuItemProps<'button'>, 'as' | 'className' | 'href'>
+  | (Omit<Headless.MenuItemProps<typeof Link>, 'as' | 'className' | 'href'> & { href: string })
 )) {
   const classes = clsx(
     className,
@@ -80,7 +80,7 @@ export function DropdownItem({
   return 'href' in props ? (
     <Headless.MenuItem as={Link} {...props} className={classes} />
   ) : (
-    <Headless.MenuItem as="button" type="button" {...props} className={classes} />
+    <Headless.MenuItem as="button" {...props} className={classes} />
   )
 }
 
@@ -137,7 +137,6 @@ export function DropdownDivider({
 export function DropdownLabel({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   return (
     <div
-      {...props}
       data-slot="label"
       className={clsx(className, 'col-start-2 row-start-1')}
       {...props}

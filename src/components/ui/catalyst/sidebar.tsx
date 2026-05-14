@@ -92,7 +92,9 @@ type SidebarItemButtonProps = SidebarItemBaseProps &
   Omit<Headless.ButtonProps<'button'>, 'as' | 'className'>
 
 type SidebarItemLinkProps = SidebarItemBaseProps &
-  Omit<Headless.ButtonProps<typeof Link>, 'as' | 'className'>
+  (Omit<React.ComponentPropsWithoutRef<typeof Link>, 'className' | 'href' | 'type'> & {
+    href: string
+  })
 
 type SidebarItemProps = SidebarItemButtonProps | SidebarItemLinkProps
 
@@ -134,7 +136,7 @@ export const SidebarItem = forwardRef<HTMLAnchorElement | HTMLButtonElement, Sid
             {...props}
             className={classes}
             data-current={current ? 'true' : undefined}
-            ref={ref}
+            ref={ref as React.ForwardedRef<HTMLAnchorElement>}
           >
             <TouchTarget>{children}</TouchTarget>
           </Headless.CloseButton>
@@ -143,7 +145,7 @@ export const SidebarItem = forwardRef<HTMLAnchorElement | HTMLButtonElement, Sid
             {...props}
             className={clsx('cursor-default', classes)}
             data-current={current ? 'true' : undefined}
-            ref={ref}
+            ref={ref as React.ForwardedRef<HTMLButtonElement>}
           >
             <TouchTarget>{children}</TouchTarget>
           </Headless.Button>

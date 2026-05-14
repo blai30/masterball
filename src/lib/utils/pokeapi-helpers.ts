@@ -39,10 +39,7 @@ export const createMonster = async (
   const form =
     variant.is_default || species.name === variant.name
       ? undefined
-      : // : await pokeapi.getPokemonFormByName(variant.name).catch(() => undefined)
-        await fetch(`https://pokeapi.co/api/v2/pokemon-form/${variant.name}`)
-          .then((response) => response.json() as Promise<PokemonForm>)
-          .catch(() => undefined)
+      : await pokeapi.getByName<PokemonForm>('pokemon-form', variant.name).catch(() => undefined)
 
   const name =
     getTranslation(form?.form_names, 'name') ??
