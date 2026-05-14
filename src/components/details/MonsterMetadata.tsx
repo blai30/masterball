@@ -1,5 +1,3 @@
-import { Group } from '@visx/group'
-import { Pie } from '@visx/shape'
 import clsx from 'clsx/lite'
 import { Mars, Venus } from 'lucide-react'
 import type { Pokemon, PokemonSpecies, PokemonStat, EggGroup, GrowthRate } from 'pokedex-promise-v2'
@@ -155,43 +153,44 @@ function BreedingMetadata({
 }
 
 function GenderRatioDonut({ male, female }: { male: number; female: number }) {
-  const data = [
-    { label: 'Male', value: male },
-    { label: 'Female', value: female },
-  ]
   const width = 128
   const height = 128
-  const centerX = width / 2
-  const centerY = height / 2
   const radius = 56
-  const innerRadius = 50
-  const genderClasses: Record<string, string> = {
-    Male: 'text-blue-400 dark:text-blue-300',
-    Female: 'text-pink-400 dark:text-pink-300',
-  }
+  const strokeWidth = 6
+  const circumference = 2 * Math.PI * radius
+  const maleArc = Number(((male / 100) * circumference).toFixed(6))
+  const femaleArc = Number(((female / 100) * circumference).toFixed(6))
+  const maleDashArray = `${maleArc} ${Number((circumference - maleArc).toFixed(6))}`
+  const femaleDashArray = `${femaleArc} ${Number((circumference - femaleArc).toFixed(6))}`
 
   return (
     <div className="relative">
       <svg width={width} height={height} aria-label="Gender ratio donut chart" role="img">
-        <Group top={centerY} left={centerX}>
-          <Pie<{ label: string; value: number }>
-            data={data}
-            pieValue={(d) => d.value}
-            outerRadius={radius}
-            innerRadius={innerRadius}
-            padAngle={male === 100 || female === 100 ? 0 : 0.02}
-          >
-            {(pie) =>
-              pie.arcs.map((arc) => (
-                <path
-                  key={arc.data.label}
-                  d={pie.path(arc) || undefined}
-                  className={clsx('fill-current', genderClasses[arc.data.label])}
-                />
-              ))
-            }
-          </Pie>
-        </Group>
+        <g transform={`translate(${width / 2} ${height / 2}) rotate(-90)`}>
+          {maleArc > 0 && (
+            <circle
+              r={radius}
+              cx={0}
+              cy={0}
+              fill="none"
+              strokeWidth={strokeWidth}
+              strokeDasharray={maleDashArray}
+              className="stroke-blue-400 dark:stroke-blue-300"
+            />
+          )}
+          {femaleArc > 0 && (
+            <circle
+              r={radius}
+              cx={0}
+              cy={0}
+              fill="none"
+              strokeWidth={strokeWidth}
+              strokeDasharray={femaleDashArray}
+              strokeDashoffset={-maleArc}
+              className="stroke-pink-400 dark:stroke-pink-300"
+            />
+          )}
+        </g>
       </svg>
       <div className="absolute top-1/2 left-1/2 flex size-full -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center">
         <div className="flex gap-x-1">
