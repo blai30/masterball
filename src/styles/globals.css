@@ -51,7 +51,7 @@
 }
 
 ::view-transition-new(root) {
-  animation-name: reveal-light;
+  animation-name: theme-sweep;
 }
 
 ::view-transition-old(root),
@@ -61,20 +61,10 @@
 }
 
 .dark::view-transition-new(root) {
-  animation-name: reveal-dark;
+  animation-name: theme-sweep;
 }
 
-@keyframes reveal-dark {
-  from {
-    clip-path: polygon(50% -50%, 150% 50%, 150% 50%, 50% -50%);
-  }
-
-  to {
-    clip-path: polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%);
-  }
-}
-
-@keyframes reveal-light {
+@keyframes theme-sweep {
   from {
     clip-path: polygon(50% -50%, 150% 50%, 150% 50%, 50% -50%);
   }
