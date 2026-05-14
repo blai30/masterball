@@ -13,6 +13,12 @@ import {
 } from '@/lib/utils/pokeapi-helpers'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
 
+type PageProps = {
+  title: string
+  description: string
+  imageUrl: string
+}
+
 export async function getStaticPaths() {
   const speciesList = import.meta.env.DEV
     ? await getTestSpeciesList()
@@ -26,37 +32,47 @@ export async function getStaticPaths() {
     }
   )
 
-  return species
-    .map((specie) => {
+  const staticPaths = await pMap(
+    species,
+    async (specie) => {
       const defaultVariant = specie.varieties
         .filter((v) => !excludedVariants.includes(v.pokemon.name))
         .find((variant) => variant.is_default)
-      return defaultVariant ? { params: { slug: specie.name } } : undefined
-    })
-    .filter(
-      (entry): entry is { params: { slug: string } } => entry !== undefined
-    )
+      if (!defaultVariant) return undefined
+
+      const pokemon = await pokeapi.getResource<Pokemon>(
+        defaultVariant.pokemon.url
+      )
+      const imageId = specie.id.toString().padStart(4, '0')
+
+      return {
+        params: { slug: specie.name },
+        props: {
+          title: `${getTranslation(specie.names, 'name')} #${imageId}`,
+          description: pokemon.types
+            .map((t) => TypeLabels[t.type.name as TypeKey])
+            .join('/'),
+          imageUrl: `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`,
+        } satisfies PageProps,
+      }
+    },
+    {
+      concurrency: 20,
+    }
+  )
+
+  return staticPaths.filter(
+    (entry): entry is { params: { slug: string }; props: PageProps } =>
+      entry !== undefined
+  )
 }
 
 const { slug } = Astro.params
+const { title, description, imageUrl } = Astro.props
 
 if (!slug) {
   throw new Error('Missing slug route parameter.')
 }
-
-// Load metadata for head
-const specie = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
-const imageId = specie.id.toString().padStart(4, '0')
-const name = getTranslation(specie.names, 'name')!
-const defaultVariant = specie.varieties
-  .filter((v) => !excludedVariants.includes(v.pokemon.name))
-  .find((v) => v.is_default)
-const pokemon = await pokeapi.getResource<Pokemon>(defaultVariant!.pokemon.url)
-const description = pokemon.types
-  .map((t) => TypeLabels[t.type.name as TypeKey])
-  .join('/')
-const title = `${name} #${imageId}`
-const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
 ---
 
 <Layout title={title} description={description} imageUrl={imageUrl}>

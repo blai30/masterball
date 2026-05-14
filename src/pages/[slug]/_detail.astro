@@ -457,14 +457,12 @@ const [
           pokemon={pokemon}
           form={form}
           className="col-span-2"
-          client:load
         />
         <MonsterMetadata
           species={specie}
           pokemon={pokemon}
           eggGroups={eggGroups}
           growthRate={growthRate}
-          client:load
         />
       </div>
     </section>
@@ -473,16 +471,16 @@ const [
       <div class="flex w-full flex-col gap-4 xl:flex-row">
         <div class="flex w-full flex-col gap-4">
           <StatsSection pokemon={pokemon} client:load />
-          <TypeEffectivenessSection typeRelations={typeRelations} client:load />
-          <AbilitiesSection abilitiesMap={abilitiesMap} client:load />
+          <TypeEffectivenessSection typeRelations={typeRelations} />
+          <AbilitiesSection abilitiesMap={abilitiesMap} />
           <LocationsSection rows={locationRows} client:load />
-          <EvolutionSection evolutionRoot={evolutionRoot} client:load />
+          <EvolutionSection evolutionRoot={evolutionRoot} />
           {
             forms.length > 1 && (
-              <CosmeticsSection pokemon={pokemon} forms={forms} client:load />
+              <CosmeticsSection pokemon={pokemon} forms={forms} />
             )
           }
-          <LocalizationSection species={specie} client:load />
+          <LocalizationSection species={specie} />
         </div>
         <div class="flex w-full flex-col gap-6">
           <MovesSection moveRowsByMethod={moveRowsByMethod} client:load />
