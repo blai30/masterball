@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
+  PUBLIC_SITE_URL: https://blai30.github.io
   PUBLIC_BASEPATH: /masterball
-  PUBLIC_FULL_URL: https://blai30.github.io
 
 permissions:
   contents: read
@@ -28,7 +28,7 @@ jobs:
         uses: withastro/action@v6
         with:
           package-manager: pnpm@11.1.0
-          node-version: 22
+          node-version: 24
 
   deploy:
     environment:
