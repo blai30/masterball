@@ -21,30 +21,34 @@ export default function VariantCardSelector({
 
   return (
     <div className={clsx('flex flex-row gap-2 py-4', className)}>
-      {monsters.map((monster) => (
-        <Link
-          key={monster.key}
-          // href={getUrl(monster)}
-          aria-label={monster.name}
-          onClick={(e) => {
-            e.preventDefault()
-            window.location.replace(resolvePath(getUrl(monster)))
-          }}
-          className={clsx(
-            'group relative flex justify-center rounded-xl focus:outline-offset-4',
-            selectedVariant === getUrl(monster) ? 'cursor-default' : 'cursor-pointer'
-          )}
-          aria-current={selectedVariant === getUrl(monster) ? 'page' : undefined}
-        >
-          <VariantCard
-            monster={monster}
+      {monsters.map((monster) => {
+        const active = selectedVariant === getUrl(monster)
+        return (
+          <Link
+            key={monster.key}
+            // href={getUrl(monster)}
+            aria-label={monster.name}
+            onClick={(e) => {
+              e.preventDefault()
+              window.location.replace(resolvePath(getUrl(monster)))
+            }}
             className={clsx(
-              'group-aria-[current=page]:bg-inherit group-aria-[current=page]:inset-ring-2 group-aria-[current=page]:inset-ring-zinc-700 dark:group-aria-[current=page]:inset-ring-zinc-300'
+              'group relative flex justify-center rounded-xl focus:outline-offset-4',
+              active ? 'cursor-default' : 'cursor-pointer'
             )}
-            variant={selectedVariant === getUrl(monster) ? 'default' : 'link'}
-          />
-        </Link>
-      ))}
+            aria-current={active ? 'page' : undefined}
+            aria-disabled={active}
+          >
+            <VariantCard
+              monster={monster}
+              className={clsx(
+                'group-aria-[current=page]:bg-inherit group-aria-[current=page]:inset-ring-2 group-aria-[current=page]:inset-ring-zinc-700 dark:group-aria-[current=page]:inset-ring-zinc-300'
+              )}
+              variant={active ? 'default' : 'link'}
+            />
+          </Link>
+        )
+      })}
     </div>
   )
 }
