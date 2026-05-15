@@ -33,6 +33,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
             height={128}
             className="object-contain"
             fetchPriority="high"
+            style={{ viewTransitionName: `pokemon-sprite-${props.slug}` }}
           />
         </div>
         <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{props.name}</h3>

@@ -32,12 +32,14 @@ const options = [
 ]
 
 export default function ThemeSwitch() {
-  const [theme, setTheme] = useState<ThemeValue>('system')
+  const [theme, setTheme] = useState<ThemeValue>()
 
   useEffect(() => {
     const stored = (localStorage.getItem('theme') as ThemeValue) ?? 'system'
     setTheme(stored)
   }, [])
+
+  if (theme === undefined) return null
 
   const handleThemeChange = (value: ThemeValue) => {
     setTheme(value)

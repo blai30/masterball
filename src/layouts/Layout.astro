@@ -13,8 +13,7 @@ const {
   imageUrl,
 } = Astro.props
 
-const siteUrl = import.meta.env.PUBLIC_SITE_URL
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl)
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : null
 ---
 
 <!doctype html>
@@ -54,7 +53,7 @@ const canonicalUrl = new URL(Astro.url.pathname, siteUrl)
       })()
     </script>
   </head>
-  <body>
+  <body class="antialiased text-black dark:bg-black dark:text-white">
     <slot />
   </body>
 </html>

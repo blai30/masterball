@@ -9,12 +9,10 @@ const versionGroupStore = new Store<{ versionGroup: VersionGroupKey }>({
 })
 
 const setVersionGroup = (versionGroup: VersionGroupKey) => {
-  versionGroupStore.setState(() => ({ versionGroup }))
+  if (typeof window === 'undefined') return
 
-  // Update localStorage
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('version_group', versionGroup)
-  }
+  versionGroupStore.setState(() => ({ versionGroup }))
+  localStorage.setItem('version_group', versionGroup)
 }
 
 const isValidVersionGroupKey = (value: unknown): value is VersionGroupKey => {
@@ -23,20 +21,20 @@ const isValidVersionGroupKey = (value: unknown): value is VersionGroupKey => {
 
 // Create selector hooks for components
 export function useVersionGroup() {
-  const versionGroup = useSelector(versionGroupStore, (state) => state.versionGroup)
   const [hasMounted, setHasMounted] = useState(false)
+  const versionGroup = useSelector(versionGroupStore, (state) => state.versionGroup)
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     setHasMounted(true)
-    if (typeof window !== 'undefined') {
-      const storedValue = localStorage.getItem('version_group')
-      if (storedValue && isValidVersionGroupKey(storedValue)) {
-        // Only update if the stored value differs from current state
-        if (versionGroup !== storedValue) {
-          versionGroupStore.setState(() => ({
-            versionGroup: storedValue as VersionGroupKey,
-          }))
-        }
+    const storedValue = localStorage.getItem('version_group')
+    if (storedValue && isValidVersionGroupKey(storedValue)) {
+      // Only update if the stored value differs from current state
+      if (versionGroup !== storedValue) {
+        versionGroupStore.setState(() => ({
+          versionGroup: storedValue as VersionGroupKey,
+        }))
       }
     }
   }, [versionGroup])
