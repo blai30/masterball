@@ -49,25 +49,6 @@
   --color-fairy: #ef70ef;
 }
 
-html[data-theme-transition]::view-transition-group(root) {
-  animation-duration: 0.5s !important;
-  animation-timing-function: var(--expo-out);
-}
-
-html[data-theme-transition]::view-transition-new(root) {
-  animation-name: theme-sweep !important;
-}
-
-html[data-theme-transition]::view-transition-old(root),
-html.dark[data-theme-transition]::view-transition-old(root) {
-  animation: none !important;
-  z-index: -1;
-}
-
-html.dark[data-theme-transition]::view-transition-new(root) {
-  animation-name: theme-sweep !important;
-}
-
 @keyframes theme-sweep {
   from {
     clip-path: polygon(50% -50%, 150% 50%, 150% 50%, 50% -50%);
@@ -76,4 +57,12 @@ html.dark[data-theme-transition]::view-transition-new(root) {
   to {
     clip-path: polygon(50% -50%, 150% 50%, 50% 150%, -50% 50%);
   }
+}
+
+html[data-theme-transition]::view-transition-new(root) {
+  animation: theme-sweep 0.5s;
+}
+
+html[data-theme-transition]::view-transition-old(root) {
+  animation: none;
 }

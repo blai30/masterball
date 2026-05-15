@@ -1,56 +1,41 @@
-import { Radio, RadioGroup } from '@headlessui/react'
-import clsx from 'clsx/lite'
-import { Monitor, Moon, Sun } from 'lucide-react'
+import { Moon, Sun } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
-type ThemeValue = 'system' | 'light' | 'dark'
+type ThemeValue = 'light' | 'dark'
 
-function applyTheme(theme: ThemeValue) {
-  const isDark =
-    theme === 'dark' ||
-    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
-  document.documentElement.classList.toggle('dark', isDark)
-  localStorage.setItem('theme', theme)
+function getSystemTheme(): ThemeValue {
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
 }
 
-const options = [
-  {
-    value: 'system' as ThemeValue,
-    label: 'System theme',
-    icon: <Monitor size={20} />,
-  },
-  {
-    value: 'light' as ThemeValue,
-    label: 'Light theme',
-    icon: <Sun size={20} />,
-  },
-  {
-    value: 'dark' as ThemeValue,
-    label: 'Dark theme',
-    icon: <Moon size={20} />,
-  },
-]
+function applyTheme(theme: ThemeValue) {
+  document.documentElement.classList.toggle('dark', theme === 'dark')
+  if (theme === getSystemTheme()) {
+    localStorage.removeItem('theme')
+  } else {
+    localStorage.setItem('theme', theme)
+  }
+}
 
 export default function ThemeSwitch() {
-  const [theme, setTheme] = useState<ThemeValue>()
+  const [theme, setTheme] = useState<ThemeValue | undefined>(undefined)
 
   useEffect(() => {
-    const stored = (localStorage.getItem('theme') as ThemeValue) ?? 'system'
-    setTheme(stored)
+    const stored = localStorage.getItem('theme')
+    setTheme(stored === 'light' || stored === 'dark' ? stored : getSystemTheme())
   }, [])
 
   if (theme === undefined) return null
 
-  const handleThemeChange = (value: ThemeValue) => {
-    setTheme(value)
+  const handleToggle = () => {
+    const next: ThemeValue = theme === 'dark' ? 'light' : 'dark'
+    setTheme(next)
 
     const root = document.documentElement
     if (!document.startViewTransition) {
-      applyTheme(value)
+      applyTheme(next)
     } else {
       root.dataset.themeTransition = 'true'
-
-      const transition = document.startViewTransition(() => applyTheme(value))
+      const transition = document.startViewTransition(() => applyTheme(next))
       transition.finished.finally(() => {
         delete root.dataset.themeTransition
       })
@@ -58,33 +43,13 @@ export default function ThemeSwitch() {
   }
 
   return (
-    <RadioGroup
-      value={theme}
-      onChange={handleThemeChange}
-      title="Theme switch"
-      className="relative isolate flex flex-row items-center gap-0.5 rounded-full bg-zinc-100 p-0.75 lg:bg-white dark:bg-black dark:lg:bg-zinc-900"
+    <button
+      onClick={handleToggle}
+      title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+      aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+      className="flex cursor-default items-center justify-center rounded-lg p-2 text-black transition-colors hover:bg-zinc-950/10 hover:duration-0 dark:text-white dark:hover:bg-white/10"
     >
-      <span
-        aria-hidden="true"
-        className={clsx(
-          'pointer-events-none absolute z-10 size-8 items-center justify-center rounded-full backdrop-invert-100 lg:size-7',
-          theme === 'system' && 'translate-x-0',
-          theme === 'light' && 'translate-x-8.5 lg:translate-x-7.5',
-          theme === 'dark' && 'translate-x-17 lg:translate-x-15'
-        )}
-      />
-      {options.map((option) => (
-        <Radio
-          key={option.value}
-          value={option.value}
-          title={option.label}
-          aria-label={option.label}
-          aria-description={`Change theme to ${option.label}`}
-          className="group relative flex size-8 cursor-default items-center justify-center rounded-full p-1 text-black transition-shadow hover:inset-ring-2 hover:inset-ring-black hover:duration-0 data-checked:inset-ring-0 lg:size-7 dark:text-white dark:hover:inset-ring-white"
-        >
-          {option.icon}
-        </Radio>
-      ))}
-    </RadioGroup>
+      {theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
+    </button>
   )
 }

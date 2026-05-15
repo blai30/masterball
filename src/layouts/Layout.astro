@@ -44,11 +44,10 @@ const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : null
     <!-- Theme init: apply class before paint to prevent flash -->
     <script is:inline>
       ;(function () {
-        const stored = localStorage.getItem('theme') || 'system'
+        const stored = localStorage.getItem('theme')
         const isDark =
           stored === 'dark' ||
-          (stored === 'system' &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches)
+          (stored !== 'light' && !window.matchMedia('(prefers-color-scheme: light)').matches)
         document.documentElement.classList.toggle('dark', isDark)
       })()
     </script>
