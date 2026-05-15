@@ -2,7 +2,7 @@ import clsx from 'clsx/lite'
 
 import VariantCard from '@/components/compounds/VariantCard'
 import Link from '@/components/ui/catalyst/link'
-import { normalizePathname } from '@/lib/utils/path'
+import { normalizePathname, resolvePath } from '@/lib/utils/path'
 import type { Monster } from '@/lib/utils/pokeapi-helpers'
 
 export default function VariantCardSelector({
@@ -28,7 +28,7 @@ export default function VariantCardSelector({
           aria-label={monster.name}
           onClick={(e) => {
             e.preventDefault()
-            window.location.replace(getUrl(monster))
+            window.location.replace(resolvePath(getUrl(monster)))
           }}
           className={clsx(
             'group relative flex justify-center rounded-xl focus:outline-offset-4',
