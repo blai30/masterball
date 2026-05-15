@@ -63,6 +63,7 @@ export default function MonsterHero({
           height={128}
           loading="eager"
           className="object-scale-down"
+          style={{ viewTransitionName: `pokemon-sprite-${species.name}` }}
         />
       </div>
     </div>
