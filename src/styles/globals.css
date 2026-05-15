@@ -45,23 +45,23 @@
   --color-fairy: #ef70ef;
 }
 
-::view-transition-group(root) {
-  animation-duration: 0.5s;
+html[data-theme-transition]::view-transition-group(root) {
+  animation-duration: 0.5s !important;
   animation-timing-function: var(--expo-out);
 }
 
-::view-transition-new(root) {
-  animation-name: theme-sweep;
+html[data-theme-transition]::view-transition-new(root) {
+  animation-name: theme-sweep !important;
 }
 
-::view-transition-old(root),
-.dark::view-transition-old(root) {
-  animation: none;
+html[data-theme-transition]::view-transition-old(root),
+html.dark[data-theme-transition]::view-transition-old(root) {
+  animation: none !important;
   z-index: -1;
 }
 
-.dark::view-transition-new(root) {
-  animation-name: theme-sweep;
+html.dark[data-theme-transition]::view-transition-new(root) {
+  animation-name: theme-sweep !important;
 }
 
 @keyframes theme-sweep {

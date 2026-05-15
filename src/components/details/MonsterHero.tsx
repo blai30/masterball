@@ -1,5 +1,4 @@
 import clsx from 'clsx/lite'
-import { motion } from 'motion/react'
 import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 
 import TypePill from '@/components/TypePill'
@@ -28,7 +27,6 @@ export default function MonsterHero({
 
   const leadingZeros = imageId.match(/^0+/)?.[0] || ''
   const significantDigits = imageId.slice(leadingZeros.length)
-  const layoutId = `pokemon-image-${species.id}`
 
   return (
     <div
@@ -57,7 +55,7 @@ export default function MonsterHero({
           <span className="text-zinc-800 dark:text-zinc-400">{significantDigits}</span>
         </p>
       </div>
-      <motion.div layoutId={layoutId} className="absolute right-4 bottom-4 flex">
+      <div className="absolute right-4 bottom-4 flex">
         <img
           src={imageUrl}
           alt={`${species.name} front default`}
@@ -66,7 +64,7 @@ export default function MonsterHero({
           loading="eager"
           className="object-scale-down"
         />
-      </motion.div>
+      </div>
     </div>
   )
 }

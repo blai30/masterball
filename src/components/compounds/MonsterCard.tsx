@@ -1,4 +1,3 @@
-import { motion } from 'motion/react'
 import { memo } from 'react'
 
 import GlassCard from '@/components/GlassCard'
@@ -16,7 +15,6 @@ export type MonsterCardProps = {
 const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
   const imageId = props.id.toString().padStart(4, '0')
   const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
-  const layoutId = `pokemon-image-${props.id}`
 
   return (
     <GlassCard variant="link" className="h-full rounded-xl">
@@ -27,7 +25,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
         <p aria-hidden="true" className="font-num text-xs text-zinc-400 dark:text-zinc-500">
           {props.id}
         </p>
-        <motion.div layoutId={layoutId} className="min-w-full py-3">
+        <div className="min-w-full py-3">
           <img
             src={imageUrl}
             alt={props.slug}
@@ -36,7 +34,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
             className="object-contain"
             fetchPriority="high"
           />
-        </motion.div>
+        </div>
         <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{props.name}</h3>
       </Link>
     </GlassCard>
