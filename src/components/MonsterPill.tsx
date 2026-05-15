@@ -3,6 +3,7 @@ import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 import Link from '@/components/ui/catalyst/link'
+import { toHref } from '@/lib/utils/path'
 import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 export default function MonsterPill({
@@ -18,7 +19,7 @@ export default function MonsterPill({
 
   return (
     <GlassCard variant="link" className="rounded-lg">
-      <Link href={`${import.meta.env.BASE_URL}${species.name}`} className="group flex w-56 items-center gap-3 px-3 py-2">
+      <Link href={toHref(species.name)} className="group flex w-56 items-center gap-3 px-3 py-2">
         <img
           src={imageUrl}
           alt={species.name}

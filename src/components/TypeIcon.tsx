@@ -45,7 +45,7 @@ export default function TypeIcon({
   className?: string
 }) {
   const name = TypeLabels[variant as TypeKey]
-  const imageUrl = `${import.meta.env.BASE_URL}${variant}.png`
+  const imageUrl = `${variant}.png`
   const dimensions = {
     small: 20,
     medium: 28,

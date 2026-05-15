@@ -85,7 +85,7 @@ export default function MoveCard({ props }: { props: MoveInfo }) {
                 {DamageClassLabels[props.damageClass as DamageClassKey]}
               </span>
               <img
-                src={`${import.meta.env.BASE_URL}${props.damageClass}.png`}
+                src={`${props.damageClass}.png`}
                 alt={DamageClassLabels[props.damageClass as DamageClassKey]}
                 width={128}
                 height={128}

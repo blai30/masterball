@@ -30,7 +30,7 @@ export default function DamageClassIcon({
   className?: string
 }) {
   const name = DamageClassLabels[variant as DamageClassKey]
-  const imageUrl = `${import.meta.env.BASE_URL}${variant}.png`
+  const imageUrl = `${variant}.png`
   const dimensions = {
     small: 20,
     medium: 28,
