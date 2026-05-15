@@ -1,7 +1,6 @@
 import { Radio, RadioGroup } from '@headlessui/react'
 import { navigate } from 'astro:transitions/client'
 import clsx from 'clsx/lite'
-import { useState } from 'react'
 
 import VariantCard from '@/components/compounds/VariantCard'
 import { normalizePathname, resolvePath } from '@/lib/utils/path'
@@ -16,10 +15,10 @@ export default function VariantCardSelector({
   pathname: string
   className?: string
 }) {
-  const [selectedVariant, setSelectedVariant] = useState<string>(normalizePathname(pathname))
+  const selectedVariant = normalizePathname(pathname)
 
   const handleVariantChange = (url: string) => {
-    setSelectedVariant(url)
+    if (url === selectedVariant) return
     navigate(resolvePath(url))
   }
 

@@ -5,13 +5,20 @@ const { BASE_URL } = import.meta.env
 
 export const toHref = (path: string) => path.replace(/^\/+/, '')
 
+const trimTrailingSlash = (path: string) =>
+  path !== '/' && path.endsWith('/') ? path.slice(0, -1) : path
+
 export const normalizePathname = (pathname: string) => {
-  if (BASE_URL === '/') return pathname
+  if (BASE_URL === '/') return trimTrailingSlash(pathname)
   if (pathname === BASE_URL.slice(0, -1)) return '/'
-  if (!pathname.startsWith(BASE_URL)) return pathname
+  if (!pathname.startsWith(BASE_URL)) return trimTrailingSlash(pathname)
 
   const normalizedPathname = pathname.slice(BASE_URL.length - 1)
-  return normalizedPathname.startsWith('/') ? normalizedPathname : `/${normalizedPathname}`
+  const withLeadingSlash = normalizedPathname.startsWith('/')
+    ? normalizedPathname
+    : `/${normalizedPathname}`
+
+  return trimTrailingSlash(withLeadingSlash)
 }
 
 export const resolvePath = (path: string) => {

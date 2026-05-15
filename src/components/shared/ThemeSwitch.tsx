@@ -41,10 +41,17 @@ export default function ThemeSwitch() {
 
   const handleThemeChange = (value: ThemeValue) => {
     setTheme(value)
+
+    const root = document.documentElement
     if (!document.startViewTransition) {
       applyTheme(value)
     } else {
-      document.startViewTransition(() => applyTheme(value))
+      root.dataset.themeTransition = 'true'
+
+      const transition = document.startViewTransition(() => applyTheme(value))
+      transition.finished.finally(() => {
+        delete root.dataset.themeTransition
+      })
     }
   }
 
