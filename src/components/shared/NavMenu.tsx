@@ -15,6 +15,7 @@ import {
   SidebarLabel,
   SidebarSection,
 } from '@/components/ui/catalyst/sidebar'
+import { normalizePathname, toHref } from '@/lib/utils/path'
 
 const ThemeSwitch = lazy(() => import('@/components/shared/ThemeSwitch'))
 
@@ -26,14 +27,16 @@ const navItems = [
 ]
 
 function NavMenu({ variant, pathname }: { variant: 'navbar' | 'sidebar'; pathname: string }) {
+  const currentPathname = normalizePathname(pathname)
+
   const isActiveRoute = (url: string) => {
     if (url === '/') {
       return (
-        pathname === '/' ||
-        !navItems.some((item) => item.url !== '/' && pathname.startsWith(item.url))
+        currentPathname === '/' ||
+        !navItems.some((item) => item.url !== '/' && currentPathname.startsWith(item.url))
       )
     }
-    return pathname.startsWith(url)
+    return currentPathname.startsWith(url)
   }
 
   // Navbar variant for desktop
@@ -44,7 +47,7 @@ function NavMenu({ variant, pathname }: { variant: 'navbar' | 'sidebar'; pathnam
           {navItems.map((item) => {
             const active = isActiveRoute(item.url)
             return (
-              <NavbarItem key={item.url} href={item.url} current={active}>
+              <NavbarItem key={item.url} href={toHref(item.url)} current={active}>
                 <item.icon size={20} />
                 <NavbarLabel>{item.label}</NavbarLabel>
               </NavbarItem>
@@ -69,7 +72,7 @@ function NavMenu({ variant, pathname }: { variant: 'navbar' | 'sidebar'; pathnam
         {navItems.map((item) => {
           const active = isActiveRoute(item.url)
           return (
-            <SidebarItem key={item.url} href={item.url} current={active}>
+            <SidebarItem key={item.url} href={toHref(item.url)} current={active}>
               <item.icon size={20} />
               <SidebarLabel>{item.label}</SidebarLabel>
             </SidebarItem>

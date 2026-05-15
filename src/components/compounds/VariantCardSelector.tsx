@@ -1,8 +1,10 @@
 import { Radio, RadioGroup } from '@headlessui/react'
+import { navigate } from 'astro:transitions/client'
 import clsx from 'clsx/lite'
 import { useState } from 'react'
 
 import VariantCard from '@/components/compounds/VariantCard'
+import { normalizePathname, resolvePath } from '@/lib/utils/path'
 import type { Monster } from '@/lib/utils/pokeapi-helpers'
 
 export default function VariantCardSelector({
@@ -14,17 +16,15 @@ export default function VariantCardSelector({
   pathname: string
   className?: string
 }) {
-  const [selectedVariant, setSelectedVariant] = useState<string>(pathname)
+  const [selectedVariant, setSelectedVariant] = useState<string>(normalizePathname(pathname))
 
   const handleVariantChange = (url: string) => {
     setSelectedVariant(url)
-    window.location.href = url
+    navigate(resolvePath(url))
   }
 
   const getUrl = (monster: Monster) =>
-    monster.formSlug
-      ? `${import.meta.env.BASE_URL}${monster.speciesSlug}/${monster.formSlug}`
-      : `${import.meta.env.BASE_URL}${monster.speciesSlug}`
+    monster.formSlug ? `/${monster.speciesSlug}/${monster.formSlug}` : `/${monster.speciesSlug}`
 
   return (
     <RadioGroup
