@@ -6,20 +6,19 @@ const BASE_URL = 'https://pokeapi.co/api/v2/'
 // Stores Promises (not resolved values) so concurrent requests for the same URL share a single in-flight fetch.
 const cache = new Map<string, Promise<unknown>>()
 
-function cachedFetch<T>(url: string): Promise<T> {
-  if (!cache.has(url)) {
-    cache.set(
-      url,
-      fetch(url).then((res) => {
-        if (!res.ok) {
-          console.log(res)
-          throw new Error(`Failed to fetch ${url}: ${res.statusText}`)
-        }
-        return res.json()
-      })
-    )
+const cachedFetch = async <T>(url: string): Promise<T> => {
+  if (cache.has(url)) {
+    return cache.get(url) as Promise<T>
   }
-  return cache.get(url) as Promise<T>
+
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.statusText}`)
+  }
+
+  const data = await response.json()
+  cache.set(url, data)
+  return data
 }
 
 const pokeapi = {
@@ -31,9 +30,10 @@ const pokeapi = {
       limit: limit.toString(),
       offset: offset.toString(),
     })
+
     const url = new URL(endpoint, BASE_URL)
     url.search = params.toString()
-    return cachedFetch<NamedAPIResourceList>(url.toString())
+    return await cachedFetch<NamedAPIResourceList>(url.toString())
   },
 
   /**
@@ -44,14 +44,14 @@ const pokeapi = {
     if (nameOrId) {
       url.pathname += `/${nameOrId}`
     }
-    return cachedFetch<T>(url.toString())
+    return await cachedFetch<T>(url.toString())
   },
 
   /**
    * Gets a resource from a full URL
    */
   getResource: async <T>(url: string): Promise<T> => {
-    return cachedFetch<T>(url)
+    return await cachedFetch<T>(url)
   },
 }
 

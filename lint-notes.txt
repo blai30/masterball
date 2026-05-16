@@ -1,5 +1,2 @@
 // I set this to off for pokeapi stuff because I know the data.
 "noNonNullAssertion": "off",
-
-// SVG is used all the time and having to include a title every single time is annoying, who cares.
-"noSvgWithoutTitle": "off"

@@ -5,7 +5,8 @@
     "correctness": "error"
   },
   "rules": {
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
+    "typescript/no-non-null-assertion": "off"
   },
   "env": {
     "builtin": true
