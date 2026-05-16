@@ -1,32 +1,10 @@
+import { motion } from 'motion/react'
 import type { Pokemon } from 'pokedex-promise-v2'
-import { useEffect, useState } from 'react'
 
 import { StatLabels, type StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
 
 export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
-  // Animate each stat bar fill
-  const [fillPercentages, setFillPercentages] = useState<number[]>(() => pokemon.stats.map(() => 0))
-
-  useEffect(() => {
-    // Animate to actual fill after mount
-    const timeouts = pokemon.stats.map((stat, i) =>
-      setTimeout(
-        () => {
-          setFillPercentages((prev) => {
-            const next = [...prev]
-            next[i] = Number(((stat.base_stat / 255) * 100).toFixed(4))
-            return next
-          })
-        },
-        // Stagger the animations
-        100 + i * 80
-      )
-    )
-    return () => {
-      timeouts.forEach(clearTimeout)
-    }
-  }, [pokemon.stats])
 
   return (
     <div className="w-full">
@@ -34,6 +12,7 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
       <ul className="flex flex-col">
         {pokemon.stats.map((stat, i) => {
           const fullLabel = StatLabelsFull[stat.stat.name as StatKey]
+          const fillPercentage = (stat.base_stat / 255) * 100
           return (
             <li key={stat.stat.name} className="flex flex-row items-center gap-3">
               <p className="flex flex-row items-center justify-between">
@@ -59,11 +38,18 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
                     ))}
                   </div>
                   {/* Fill bar */}
-                  <div
+                  <motion.div
                     className={
-                      'absolute h-full rounded-l-sm bg-black/60 inset-ring-1 inset-ring-black transition-all duration-700 dark:bg-white/60 dark:inset-ring-white'
+                      'absolute h-full rounded-l-sm bg-black/60 inset-ring-1 inset-ring-black dark:bg-white/60 dark:inset-ring-white'
                     }
-                    style={{ width: `${fillPercentages[i]}%` }}
+                    initial={{ width: '0%' }}
+                    whileInView={{ width: `${fillPercentage}%` }}
+                    viewport={{ once: true }}
+                    transition={{
+                      ease: 'easeInOut',
+                      duration: 0.5,
+                      delay: 0.1 + i * 0.08,
+                    }}
                   />
                 </div>
               </div>

@@ -4,7 +4,6 @@ import { Polygon } from '@visx/shape'
 import clsx from 'clsx/lite'
 import { motion } from 'motion/react'
 import type { Pokemon } from 'pokedex-promise-v2'
-import { useEffect, useState } from 'react'
 
 import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
 
@@ -49,16 +48,6 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
     range: [0, RADAR_RADIUS],
   })
 
-  // Animation state for each stat
-  const [animatedStats, setAnimatedStats] = useState<Record<StatKey, number>>({
-    [StatKey.Hp]: 0,
-    [StatKey.Attack]: 0,
-    [StatKey.Defense]: 0,
-    [StatKey.SpecialAttack]: 0,
-    [StatKey.SpecialDefense]: 0,
-    [StatKey.Speed]: 0,
-  })
-
   // Final stat values
   const finalStats: Record<StatKey, number> = {
     [StatKey.Hp]: statData.find((s) => s.key === StatKey.Hp)?.value ?? 0,
@@ -69,42 +58,15 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
     [StatKey.Speed]: statData.find((s) => s.key === StatKey.Speed)?.value ?? 0,
   }
 
-  // Animate stats on mount with staggered timing
-  useEffect(() => {
-    // Reset all stats to 0 first
-    setAnimatedStats({
-      [StatKey.Hp]: 0,
-      [StatKey.Attack]: 0,
-      [StatKey.Defense]: 0,
-      [StatKey.SpecialAttack]: 0,
-      [StatKey.SpecialDefense]: 0,
-      [StatKey.Speed]: 0,
-    })
-
-    // Animate each stat with staggered timing
-    const timeouts = statOrder.map((key) =>
-      setTimeout(
-        () => {
-          setAnimatedStats((prev) => ({
-            ...prev,
-            [key]: finalStats[key],
-          }))
-        },
-        // Stagger the animations
-        // 200 + i * 100
-        200
-      )
-    )
-
-    return () => timeouts.forEach(clearTimeout)
-  }, [
-    finalStats[StatKey.Hp],
-    finalStats[StatKey.Attack],
-    finalStats[StatKey.Defense],
-    finalStats[StatKey.SpecialAttack],
-    finalStats[StatKey.SpecialDefense],
-    finalStats[StatKey.Speed],
-  ])
+  const getPoints = (stats: Record<StatKey, number>) =>
+    statOrder
+      .map((key, i) => {
+        const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
+        const r = scale(stats[key])
+        return [RADAR_CENTER + r * Math.cos(angle), RADAR_CENTER + r * Math.sin(angle)]
+      })
+      .map(([x, y]) => `${x},${y}`)
+      .join(' ')
 
   const getLabelPosition = (i: number) => {
     const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
@@ -153,27 +115,21 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
           })}
           {/* Radar polygon */}
           <motion.polygon
-            points={statOrder
-              .map((key, i) => {
-                const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
-                const r = scale(animatedStats[key])
-                return [RADAR_CENTER + r * Math.cos(angle), RADAR_CENTER + r * Math.sin(angle)]
-              })
-              .map(([x, y]) => `${x},${y}`)
-              .join(' ')}
             fill="rgba(0,0,0,0.6)"
             className="fill-black/60 stroke-black stroke-2 dark:fill-white/60 dark:stroke-white"
-            animate={{
-              points: statOrder
-                .map((key, i) => {
-                  const angle = (Math.PI * 2 * i) / statOrder.length - Math.PI / 2
-                  const r = scale(animatedStats[key])
-                  return [RADAR_CENTER + r * Math.cos(angle), RADAR_CENTER + r * Math.sin(angle)]
-                })
-                .map(([x, y]) => `${x},${y}`)
-                .join(' '),
+            initial={{
+              points: getPoints({
+                hp: 0,
+                attack: 0,
+                defense: 0,
+                'special-attack': 0,
+                'special-defense': 0,
+                speed: 0,
+              }),
             }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            whileInView={{ points: getPoints(finalStats) }}
+            viewport={{ once: true }}
+            transition={{ ease: 'easeInOut', duration: 0.6, delay: 0.2 }}
           />
         </Group>
         {/* Stat labels and values */}

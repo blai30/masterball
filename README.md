@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/favicon.png" alt="Masterball Logo" width="96" />
   <h1>Masterball</h1>
-  <p>A modern, fast, and beautiful Pokedex web app built with Next.js, React, and Tailwind CSS.</p>
+  <p>A modern, fast, and beautiful Pokedex web app built with Astro, React, and Tailwind CSS.</p>
 </div>
 
 ---
@@ -17,19 +17,19 @@
 
 ## Tech Stack
 
-- **Framework**: Next.js 16 (SSG only, SSR for development)
-- **Language**: TypeScript 5
+- **Framework**: Astro 6.3 (SSG)
+- **Language**: TypeScript 6
 - **Styling**: Tailwind CSS v4
 - **Package Manager**: pnpm
-- **UI**: React, lucide-react
+- **UI**: React, lucide-react, motion
 - **Tables**: TanStack Table
-- **Utils**: pMap, clsx/lite
+- **Utils**: pMap, clsx/lite, oxlint, oxfmt
 
 ## Project Structure
 
-- `app/` — Next.js pages and layouts
-- `components/` — UI and compound components (cards, pills, icons, tables, etc.)
-- `lib/` — Providers, API helpers, stores, and utilities
+- `src/pages/` — Astro pages and routes
+- `src/components/` — UI and compound components (cards, pills, icons, tables, etc.)
+- `src/lib/` — Providers, API helpers, stores, and utilities
 - `public/` — Static assets (icons, images)
 
 ## Getting Started
@@ -45,7 +45,7 @@ pnpm install
 pnpm dev
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) to view the app.
+Visit [http://localhost:4321](http://localhost:4321) to view the app.
 
 ### Build Static Site
 
@@ -53,7 +53,7 @@ Visit [http://localhost:3000](http://localhost:3000) to view the app.
 pnpm build
 ```
 
-Static files will be generated in the `out/` directory.
+Static files will be generated in the `dist/` directory.
 
 ## Contributing
 
