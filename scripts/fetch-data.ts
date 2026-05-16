@@ -1,7 +1,8 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 
-import fs from 'node:fs'
+import fs, { statSync, existsSync } from 'node:fs'
+import path from 'node:path'
 
 import pMap from 'p-map'
 import type {
@@ -63,7 +64,20 @@ async function getResource<T>(url: string): Promise<T> {
   return cachedFetch<T>(url)
 }
 
-async function main() {
+export function shouldFetchData(): boolean {
+  const dataPath = path.resolve('build/data.json')
+  if (import.meta.env.DEV) return false
+  if (!existsSync(dataPath)) return true
+  const mtime = statSync(dataPath).mtimeMs
+  const ageHours = (Date.now() - mtime) / (1000 * 60 * 60)
+  if (ageHours > 24) {
+    return true
+  }
+  console.log('Using cached data')
+  return false
+}
+
+export async function fetchAndExportData() {
   console.log('Fetching species list...')
   const speciesList = await getList('pokemon-species', 1025)
 
@@ -252,5 +266,3 @@ async function main() {
     `Done! Wrote ${Object.keys(output).length} resources (${(size / 1024 / 1024).toFixed(1)} MB) to ${DATA_PATH}`
   )
 }
-
-export default main
