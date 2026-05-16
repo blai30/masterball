@@ -24,7 +24,7 @@ import type {
   NamedAPIResourceList,
 } from 'pokedex-promise-v2'
 
-import { excludedItems, excludedVariants, excludedForms } from '@/lib/utils/excluded-slugs'
+import { excludedItems, excludedVariants, excludedForms } from '../src/lib/utils/excluded-slugs'
 
 const BASE_URL = 'https://pokeapi.co/api/v2/'
 const DATA_PATH = 'build/data.json'
@@ -253,7 +253,4 @@ async function main() {
   )
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+export default main
