@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "fetch:api": "tsx scripts/fetch-data.ts",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "oxlint",
@@ -45,6 +46,7 @@
     "oxlint": "^1.64.0",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.3.0",
+    "tsx": "^4.22.0",
     "typescript": "^6.0.3"
   },
   "packageManager": "pnpm@11.1.0",
