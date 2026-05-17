@@ -284,7 +284,8 @@ async function buildLocationRows(
 
 function createMoveRows(
   moves: MoveElement[],
-  movesMap: Record<string, Move & { machineItems: Machine[] }>,
+  movesMap: Record<string, Move>,
+  machinesMap: Map<string, Machine[]>,
   variant: LearnMethodKey
 ): MoveRow[] {
   const moveRows: MoveRow[] = []
@@ -302,10 +303,10 @@ function createMoveRows(
             resource.level_learned_at === 0
               ? 'Evolve'
               : resource.level_learned_at.toString()
-        } else if (variant === LearnMethodKey.Machine && move.machineItems) {
-          const machine = move.machineItems.find(
-            (mac: Machine) =>
-              mac.version_group.name === resource.version_group.name
+        } else if (variant === LearnMethodKey.Machine) {
+          const machineList = machinesMap.get(m.move.name)
+          const machine = machineList?.find(
+            (mac) => mac.version_group.name === resource.version_group.name
           )
           if (machine?.item) {
             id = machine.item.name.toUpperCase()
@@ -357,13 +358,10 @@ async function buildMoveRowsByMethod(
     { concurrency: 20 }
   )
 
-  const movesWithMachines = movesData.filter(
-    (move) => move.machines?.length > 0
-  )
   const uniqueMachineUrls = [
     ...new Set(
-      movesWithMachines.flatMap((move) =>
-        move.machines.map((machine) => machine.machine.url)
+      movesData.flatMap(
+        (move) => move.machines?.map((machine) => machine.machine.url) ?? []
       )
     ),
   ]
@@ -371,24 +369,20 @@ async function buildMoveRowsByMethod(
     uniqueMachineUrls,
     (url) => pokeapi.getResource<Machine>(url),
     {
-      concurrency: 5,
+      concurrency: 20,
     }
   )
 
   const machinesMap = new Map<string, Machine[]>()
-  movesWithMachines.forEach((move) => {
-    machinesMap.set(
-      move.name,
-      machinesData.filter((m) => m.move.name === move.name)
-    )
-  })
+  for (const machine of machinesData) {
+    const existing = machinesMap.get(machine.move.name) ?? []
+    existing.push(machine)
+    machinesMap.set(machine.move.name, existing)
+  }
 
   const movesMap = Object.fromEntries(
-    movesData.map((move) => [
-      move.name,
-      { ...move, machineItems: machinesMap.get(move.name) || [] },
-    ])
-  ) as Record<string, Move & { machineItems: Machine[] }>
+    movesData.map((move) => [move.name, move])
+  ) as Record<string, Move>
 
   Object.keys(moveRowsByMethod).forEach((method) => {
     const methodKey = method as LearnMethodKey
@@ -400,6 +394,7 @@ async function buildMoveRowsByMethod(
     moveRowsByMethod[methodKey] = createMoveRows(
       methodMoves,
       movesMap,
+      machinesMap,
       methodKey
     )
   })
