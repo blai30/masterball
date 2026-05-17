@@ -1,32 +1,22 @@
-import fs from 'node:fs'
-import path from 'node:path'
-
 import type { NamedAPIResourceList } from 'pokedex-promise-v2'
 
 const BASE_URL = 'https://pokeapi.co/api/v2/'
 
 // Module-level cache for build-time request deduplication.
-// Lazily seeded from build/data.json (populated by the pre-build script).
+// Seed with pre-fetched data using `seedCache()` (see init.ts).
 const cache = new Map<string, unknown>()
-let fileCacheLoaded = false
 
-const loadFileCache = () => {
-  if (fileCacheLoaded) return
-
-  const fileCachePath = path.resolve('build/data.json')
-  if (!fs.existsSync(fileCachePath)) return
-
-  const raw = fs.readFileSync(fileCachePath, 'utf-8')
-  const data = JSON.parse(raw) as Record<string, unknown>
+/**
+ * Seed the cache with pre-fetched API data.
+ * Call once per build via `import '@/lib/api/init'` in Astro pages.
+ */
+export function seedCache(data: Record<string, unknown>): void {
   for (const [url, value] of Object.entries(data)) {
     cache.set(url, value)
   }
-  fileCacheLoaded = true
 }
 
 const cachedFetch = async <T>(url: string): Promise<T> => {
-  loadFileCache()
-
   if (cache.has(url)) {
     return cache.get(url) as T
   }
