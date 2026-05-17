@@ -88,6 +88,23 @@ export const getMonstersBySpecies = async (species: PokemonSpecies): Promise<Mon
   return monsters
 }
 
+export type MoveInfo = {
+  id: string
+  slug: string
+  name: string
+  defaultDescription: string
+  flavorTextEntries: FlavorText[]
+  type: string
+  damageClass: string
+  power?: number
+  accuracy?: number
+  pp?: number
+}
+
+export type MoveRow = MoveInfo & {
+  versionGroup: string
+}
+
 export enum LearnMethodKey {
   FormChange = 'form-change',
   LevelUp = 'level-up',
@@ -477,19 +494,44 @@ export function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
   return effectiveness
 }
 
-export type MoveInfo = {
-  id: string
-  slug: string
-  name: string
-  defaultDescription: string
-  flavorTextEntries: FlavorText[]
-  type: string
-  damageClass: string
-  power?: number
-  accuracy?: number
-  pp?: number
+// Pre-computed effectiveness for each single type and cached type resources.
+// Fetched and computed once, reused across all ~1000+ detail pages.
+const typeEffectiveness: Record<TypeKey, TypeEffectiveness> = {} as Record<
+  TypeKey,
+  TypeEffectiveness
+>
+let typesInitPromise: Promise<Record<TypeKey, Type>> | undefined
+
+export const initTypes = async (): Promise<Record<TypeKey, Type>> => {
+  if (typesInitPromise) return typesInitPromise
+
+  typesInitPromise = (async () => {
+    const types = {} as Record<TypeKey, Type>
+    await Promise.all(
+      Object.values(TypeKey).map(async (typeName) => {
+        types[typeName] = await pokeapi.getByName<Type>('type', typeName)
+      })
+    )
+    for (const [typeKey, typeResource] of Object.entries(types)) {
+      typeEffectiveness[typeKey as TypeKey] = getEffectiveness(typeResource)
+    }
+    return types
+  })()
+
+  return typesInitPromise
 }
 
-export type MoveRow = MoveInfo & {
-  versionGroup: string
+export function getCombinedEffectiveness(typeKeys: TypeKey[]): TypeEffectiveness {
+  const base = Object.fromEntries(Object.values(TypeKey).map((k) => [k, 1])) as TypeEffectiveness
+
+  for (const typeKey of typeKeys) {
+    const single = typeEffectiveness[typeKey]
+    if (!single) continue
+    for (const attackingType of Object.values(TypeKey)) {
+      if (base[attackingType] !== 0) {
+        base[attackingType] *= single[attackingType]
+      }
+    }
+  }
+  return base
 }
