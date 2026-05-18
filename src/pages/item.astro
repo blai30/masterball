@@ -15,18 +15,18 @@ import {
 } from '@/lib/utils/pokeapi-helpers'
 import { excludedItems } from '@/lib/utils/excluded-slugs'
 
-const filteredItems = itemResourceList.results.filter(
+const itemList = import.meta.env.DEV
+  ? itemResourceList
+  : await pokeapi.getList('item', 2500, 0)
+
+const filteredItems = itemList.results.filter(
   (result) =>
     !excludedItems.includes(result.name) &&
     !result.name.startsWith('dynamax-crystal-')
 )
 
-const devSlice = import.meta.env.DEV
-  ? filteredItems.slice(300, 340)
-  : filteredItems
-
 const items = await pMap(
-  devSlice,
+  filteredItems,
   (result) => pokeapi.getResource<Item>(result.url),
   { concurrency: 20 }
 )
