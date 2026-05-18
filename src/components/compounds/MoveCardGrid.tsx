@@ -1,6 +1,5 @@
 import Fuse from 'fuse.js'
 import { useState, useMemo, useEffect } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard from '@/components/compounds/MoveCard'
@@ -8,6 +7,7 @@ import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import type { FilterOption } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
+import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapi-helpers'
 
@@ -76,43 +76,19 @@ export default function MoveCardGrid({
     return Number(new URLSearchParams(window.location.search).get('p')) || DEFAULT_PAGE
   })
 
-  // Debounced URL sync
-  const syncUrlParams = useDebouncedCallback(
-    (state: {
-      search: string
-      sortKey: string
-      sortDirection: SortDirection
-      typeFilter: string[]
-      damageClassFilter: string[]
-      currentPage: number
-    }) => {
-      const params = new URLSearchParams()
-      if (state.search) params.set('q', state.search)
-      if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
-      if (state.sortDirection !== DEFAULT_SORT_DIRECTION) params.set('dir', state.sortDirection)
-      if (state.typeFilter.length > 0) params.set('type', state.typeFilter.join(','))
-      if (state.damageClassFilter.length > 0) params.set('class', state.damageClassFilter.join(','))
-      if (state.currentPage !== DEFAULT_PAGE) params.set('p', String(state.currentPage))
-      window.history.replaceState(
-        null,
-        '',
-        params.toString() ? `?${params}` : window.location.pathname
-      )
-    },
-    500
-  )
-
   // Sync all state to URL on change
-  useEffect(() => {
-    syncUrlParams({
-      search,
-      sortKey,
-      sortDirection,
-      typeFilter,
-      damageClassFilter,
-      currentPage,
-    })
-  }, [search, sortKey, sortDirection, typeFilter, damageClassFilter, currentPage, syncUrlParams])
+  useUrlSync(
+    () => ({ search, sortKey, sortDirection, typeFilter, damageClassFilter, currentPage }),
+    {
+      search: { key: 'q', defaultValue: '' },
+      sortKey: { key: 'sort', defaultValue: DEFAULT_SORT_KEY },
+      sortDirection: { key: 'dir', defaultValue: DEFAULT_SORT_DIRECTION },
+      typeFilter: { key: 'type', defaultValue: [] },
+      damageClassFilter: { key: 'class', defaultValue: [] },
+      currentPage: { key: 'p', defaultValue: DEFAULT_PAGE },
+    },
+    [search, sortKey, sortDirection, typeFilter, damageClassFilter, currentPage]
+  )
 
   const handleSearchChange = (value: string) => {
     setSearch(value)

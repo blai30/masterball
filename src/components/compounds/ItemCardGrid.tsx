@@ -1,11 +1,11 @@
 import Fuse from 'fuse.js'
-import { useEffect, useMemo, useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
+import { useMemo, useState } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
+import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import {
   type ItemPocketKey,
@@ -54,33 +54,17 @@ export default function ItemCardGrid({
     return Number(new URLSearchParams(window.location.search).get('p')) || DEFAULT_PAGE
   })
 
-  // Debounced URL sync
-  const syncUrlParams = useDebouncedCallback(
-    (state: {
-      search: string
-      pocketFilters: string[]
-      categoryFilters: string[]
-      currentPage: number
-    }) => {
-      const params = new URLSearchParams()
-      if (state.search) params.set('q', state.search)
-      if (state.pocketFilters.length > 0) params.set('pockets', state.pocketFilters.join(','))
-      if (state.categoryFilters.length > 0)
-        params.set('categories', state.categoryFilters.join(','))
-      if (state.currentPage !== DEFAULT_PAGE) params.set('p', String(state.currentPage))
-      window.history.replaceState(
-        null,
-        '',
-        params.toString() ? `?${params}` : window.location.pathname
-      )
-    },
-    500
-  )
-
   // Sync all state to URL
-  useEffect(() => {
-    syncUrlParams({ search, pocketFilters, categoryFilters, currentPage })
-  }, [search, pocketFilters, categoryFilters, currentPage, syncUrlParams])
+  useUrlSync(
+    () => ({ search, pocketFilters, categoryFilters, currentPage }),
+    {
+      search: { key: 'q', defaultValue: '' },
+      pocketFilters: { key: 'pockets', defaultValue: [] },
+      categoryFilters: { key: 'categories', defaultValue: [] },
+      currentPage: { key: 'p', defaultValue: DEFAULT_PAGE },
+    },
+    [search, pocketFilters, categoryFilters, currentPage]
+  )
 
   const handleSearchChange = (value: string) => {
     setSearch(value)

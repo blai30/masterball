@@ -1,10 +1,10 @@
 import Fuse from 'fuse.js'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
+import { useCallback, useMemo, useState } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import InfoCard, { type InfoCardProps } from '@/components/compounds/InfoCard'
 import SearchBar from '@/components/shared/SearchBar'
+import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { useVersionGroup } from '@/lib/stores/version-group'
 
 const DEFAULT_PAGE = 1
@@ -32,22 +32,15 @@ export default function InfoCardGrid({
     return Number(new URLSearchParams(window.location.search).get('p')) || DEFAULT_PAGE
   })
 
-  // Debounced URL sync (UI is source of truth)
-  const syncUrlParams = useDebouncedCallback((query: string, page: number) => {
-    const params = new URLSearchParams()
-    if (query) params.set('q', query)
-    if (page !== DEFAULT_PAGE) params.set('p', String(page))
-    window.history.replaceState(
-      null,
-      '',
-      params.toString() ? `?${params}` : window.location.pathname
-    )
-  }, 500)
-
   // Sync all state to URL on change
-  useEffect(() => {
-    syncUrlParams(search, currentPage)
-  }, [search, currentPage, syncUrlParams])
+  useUrlSync(
+    () => ({ search, currentPage }),
+    {
+      search: { key: 'q', defaultValue: '' },
+      currentPage: { key: 'p', defaultValue: DEFAULT_PAGE },
+    },
+    [search, currentPage]
+  )
 
   // Handlers
   const handleSearchChange = useCallback((value: string) => {

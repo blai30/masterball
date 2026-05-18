@@ -1,12 +1,12 @@
 import Fuse from 'fuse.js'
-import { useState, useMemo, useEffect } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
+import { useState, useMemo } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import MonsterCard, { type MonsterCardProps } from '@/components/compounds/MonsterCard'
 import FilterBar, { type FilterOption, type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
+import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 const DEFAULT_SORT_KEY = 'id'
@@ -48,34 +48,18 @@ export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) 
     return Number(new URLSearchParams(window.location.search).get('p')) || DEFAULT_PAGE
   })
 
-  // Debounced URL sync
-  const syncUrl = useDebouncedCallback(
-    (state: {
-      search: string
-      sortKey: string
-      sortDirection: SortDirection
-      typeFilter: string[]
-      currentPage: number
-    }) => {
-      const params = new URLSearchParams()
-      if (state.search) params.set('q', state.search)
-      if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
-      if (state.sortDirection !== DEFAULT_SORT_DIRECTION) params.set('dir', state.sortDirection)
-      if (state.typeFilter.length > 0) params.set('type', state.typeFilter.join(','))
-      if (state.currentPage !== DEFAULT_PAGE) params.set('p', String(state.currentPage))
-      window.history.replaceState(
-        null,
-        '',
-        params.toString() ? `?${params}` : window.location.pathname
-      )
-    },
-    500
-  )
-
   // Sync all state to URL on change
-  useEffect(() => {
-    syncUrl({ search, sortKey, sortDirection, typeFilter, currentPage })
-  }, [search, sortKey, sortDirection, typeFilter, currentPage, syncUrl])
+  useUrlSync(
+    () => ({ search, sortKey, sortDirection, typeFilter, currentPage }),
+    {
+      search: { key: 'q', defaultValue: '' },
+      sortKey: { key: 'sort', defaultValue: DEFAULT_SORT_KEY },
+      sortDirection: { key: 'dir', defaultValue: DEFAULT_SORT_DIRECTION },
+      typeFilter: { key: 'type', defaultValue: [] },
+      currentPage: { key: 'p', defaultValue: DEFAULT_PAGE },
+    },
+    [search, sortKey, sortDirection, typeFilter, currentPage]
+  )
 
   const handleSearchChange = (value: string) => {
     setSearch(value)
