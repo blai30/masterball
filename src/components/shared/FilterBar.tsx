@@ -1,5 +1,4 @@
 import clsx from 'clsx/lite'
-import { useMemo } from 'react'
 
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
@@ -23,10 +22,10 @@ type FilterBarProps = {
   className?: string
 }
 
-export default function FilterBar({ filters, className }: FilterBarProps) {
-  const typeKeySet = useMemo(() => new Set<string>(Object.values(TypeKey)), [])
-  const damageClassKeySet = useMemo(() => new Set<string>(Object.values(DamageClassKey)), [])
+const typeKeySet = new Set<string>(Object.values(TypeKey))
+const damageClassKeySet = new Set<string>(Object.values(DamageClassKey))
 
+export default function FilterBar({ filters, className }: FilterBarProps) {
   const optionPill = (option: FilterOption) => {
     return typeKeySet.has(option.value) ? (
       <>

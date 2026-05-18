@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 import CardGrid from '@/components/compounds/CardGrid'
@@ -82,24 +82,24 @@ export default function ItemCardGrid({
     syncUrlParams({ search, pocketFilters, categoryFilters, currentPage })
   }, [search, pocketFilters, categoryFilters, currentPage, syncUrlParams])
 
-  const handleSearchChange = useCallback((value: string) => {
+  const handleSearchChange = (value: string) => {
     setSearch(value)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
+  }
 
-  const handleCategoryFilterChange = useCallback((values: string | string[]) => {
+  const handleCategoryFilterChange = (values: string | string[]) => {
     setCategoryFilters(Array.isArray(values) ? values : [values])
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
+  }
 
-  const handlePocketFilterChange = useCallback((values: string | string[]) => {
+  const handlePocketFilterChange = (values: string | string[]) => {
     setPocketFilters(Array.isArray(values) ? values : [values])
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
+  }
 
-  const handlePageChange = useCallback((page: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
-  }, [])
+  }
 
   // Create filter options from available item categories and pockets in the data
   const availableFilters = useMemo(() => {
@@ -142,7 +142,7 @@ export default function ItemCardGrid({
     }
 
     return filters
-  }, [data, pocketFilters, categoryFilters, handleCategoryFilterChange, handlePocketFilterChange])
+  }, [data, pocketFilters, categoryFilters])
 
   /**
    * Returns filtered data for grid display.

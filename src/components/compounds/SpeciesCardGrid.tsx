@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 import CardGrid from '@/components/compounds/CardGrid'
@@ -14,19 +14,16 @@ const DEFAULT_SORT_DIRECTION = SortDirection.ASC
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 60
 
-export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) {
-  const sortOptions: SortOption<string>[] = useMemo(
-    () => [
-      { label: 'Dex No.', value: 'id' },
-      { label: 'Name', value: 'name' },
-    ],
-    []
-  )
-  const typeFilters: FilterOption[] = useMemo(
-    () => Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
-    []
-  )
+const sortOptions: SortOption<string>[] = [
+  { label: 'Dex No.', value: 'id' },
+  { label: 'Name', value: 'name' },
+]
+const typeFilters: FilterOption[] = Object.entries(TypeKey).map(([key, value]) => ({
+  label: key,
+  value,
+}))
 
+export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) {
   const [search, setSearch] = useState<string>(() => {
     if (typeof window === 'undefined') return ''
     return new URLSearchParams(window.location.search).get('q') ?? ''
@@ -80,38 +77,35 @@ export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) 
     syncUrl({ search, sortKey, sortDirection, typeFilter, currentPage })
   }, [search, sortKey, sortDirection, typeFilter, currentPage, syncUrl])
 
-  const handleSearchChange = useCallback((value: string) => {
+  const handleSearchChange = (value: string) => {
     setSearch(value)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleSortKeyChange = useCallback((key: string) => {
+  }
+  const handleSortKeyChange = (key: string) => {
     setSortKey(key)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleSortDirectionChange = useCallback((dir: SortDirection) => {
+  }
+  const handleSortDirectionChange = (dir: SortDirection) => {
     setSortDirection(dir)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleTypeFilterChange = useCallback((values: string | string[]) => {
+  }
+  const handleTypeFilterChange = (values: string | string[]) => {
     const nextValues = Array.isArray(values) ? values : [values]
     setTypeFilter(nextValues)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handlePageChange = useCallback((page: number) => {
+  }
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
-  }, [])
+  }
 
-  const filters: FilterConfig[] = useMemo(
-    () => [
-      {
-        label: 'Type',
-        options: typeFilters,
-        values: typeFilter,
-        onChange: handleTypeFilterChange,
-      },
-    ],
-    [typeFilter, typeFilters, handleTypeFilterChange]
-  )
+  const filters: FilterConfig[] = [
+    {
+      label: 'Type',
+      options: typeFilters,
+      values: typeFilter,
+      onChange: handleTypeFilterChange,
+    },
+  ]
 
   /**
    * Returns filtered and sorted data for grid display.

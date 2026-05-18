@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 import CardGrid from '@/components/compounds/CardGrid'
@@ -16,6 +16,23 @@ const DEFAULT_SORT_DIRECTION = SortDirection.ASC
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 36
 
+const sortOptions: SortOption<string>[] = [
+  { label: 'Name', value: 'name' },
+  { label: 'Type', value: 'type' },
+  { label: 'Class', value: 'damageClass' },
+  { label: 'Power', value: 'power' },
+  { label: 'Accuracy', value: 'accuracy' },
+  { label: 'PP', value: 'pp' },
+]
+const typeFilters: FilterOption[] = Object.entries(TypeKey).map(([key, value]) => ({
+  label: key,
+  value,
+}))
+const damageClassFilters: FilterOption[] = Object.entries(DamageClassKey).map(([key, value]) => ({
+  label: key,
+  value,
+}))
+
 export default function MoveCardGrid({
   data,
   filterByVersionGroup = false,
@@ -28,30 +45,6 @@ export default function MoveCardGrid({
   className?: string
 }) {
   const { versionGroup } = useVersionGroup()
-
-  const sortOptions: SortOption<string>[] = useMemo(
-    () => [
-      { label: 'Name', value: 'name' },
-      { label: 'Type', value: 'type' },
-      { label: 'Class', value: 'damageClass' },
-      { label: 'Power', value: 'power' },
-      { label: 'Accuracy', value: 'accuracy' },
-      { label: 'PP', value: 'pp' },
-    ],
-    []
-  )
-  const typeFilters: FilterOption[] = useMemo(
-    () => Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
-    []
-  )
-  const damageClassFilters: FilterOption[] = useMemo(
-    () =>
-      Object.entries(DamageClassKey).map(([key, value]) => ({
-        label: key,
-        value,
-      })),
-    []
-  )
 
   const [search, setSearch] = useState<string>(() => {
     if (typeof window === 'undefined') return ''
@@ -121,57 +114,46 @@ export default function MoveCardGrid({
     })
   }, [search, sortKey, sortDirection, typeFilter, damageClassFilter, currentPage, syncUrlParams])
 
-  // Handlers
-  const handleSearchChange = useCallback((value: string) => {
+  const handleSearchChange = (value: string) => {
     setSearch(value)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleSortKeyChange = useCallback((key: string) => {
+  }
+  const handleSortKeyChange = (key: string) => {
     setSortKey(key)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleSortDirectionChange = useCallback((dir: SortDirection) => {
+  }
+  const handleSortDirectionChange = (dir: SortDirection) => {
     setSortDirection(dir)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleTypeFilterChange = useCallback((values: string[]) => {
+  }
+  const handleTypeFilterChange = (values: string[]) => {
     setTypeFilter(values)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleDamageClassFilterChange = useCallback((values: string[]) => {
+  }
+  const handleDamageClassFilterChange = (values: string[]) => {
     setDamageClassFilter(values)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handlePageChange = useCallback((page: number) => {
+  }
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
-  }, [])
+  }
 
-  const filters: FilterConfig[] = useMemo(
-    () => [
-      {
-        label: 'Type',
-        options: typeFilters,
-        values: typeFilter,
-        onChange: (values: string | string[]) =>
-          handleTypeFilterChange(Array.isArray(values) ? values : [values]),
-      },
-      {
-        label: 'Class',
-        options: damageClassFilters,
-        values: damageClassFilter,
-        onChange: (values: string | string[]) =>
-          handleDamageClassFilterChange(Array.isArray(values) ? values : [values]),
-      },
-    ],
-    [
-      typeFilter,
-      typeFilters,
-      handleTypeFilterChange,
-      damageClassFilter,
-      damageClassFilters,
-      handleDamageClassFilterChange,
-    ]
-  )
+  const filters: FilterConfig[] = [
+    {
+      label: 'Type',
+      options: typeFilters,
+      values: typeFilter,
+      onChange: (values: string | string[]) =>
+        handleTypeFilterChange(Array.isArray(values) ? values : [values]),
+    },
+    {
+      label: 'Class',
+      options: damageClassFilters,
+      values: damageClassFilter,
+      onChange: (values: string | string[]) =>
+        handleDamageClassFilterChange(Array.isArray(values) ? values : [values]),
+    },
+  ]
 
   /**
    * Returns filtered and sorted data for grid display.
