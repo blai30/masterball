@@ -22,7 +22,10 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
         href={toHref(props.slug)}
         className="group flex flex-col items-center justify-between px-2 py-3"
       >
-        <p aria-hidden="true" className="font-num text-xs text-zinc-400 dark:text-zinc-500">
+        <p
+          aria-hidden="true"
+          className="font-num h-3 text-sm text-zinc-600 opacity-0 transition-opacity group-hover:opacity-100 group-hover:transition-none dark:text-zinc-400"
+        >
           {props.id}
         </p>
         <div className="min-w-full py-3">
