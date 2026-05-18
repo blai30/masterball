@@ -155,36 +155,38 @@ export default function MoveCardGrid({
     },
   ]
 
+  const fuse = useMemo(
+    () =>
+      new Fuse(data, {
+        keys: ['name'],
+        threshold: 0.4,
+        ignoreLocation: false,
+      }),
+    [data]
+  )
+
   /**
    * Returns filtered and sorted data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = data
+    // Search first (Fuse is stable across filter changes)
+    let results = search ? fuse.search(search).map((r: { item: MoveInfo }) => r.item) : data
 
     if (filterByVersionGroup) {
-      filtered = filtered.filter((resource) =>
+      results = results.filter((resource) =>
         resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
       )
     }
 
-    filtered = filtered.filter((resource) => {
+    results = results.filter((resource) => {
       const typeMatch = typeFilter.length === 0 || typeFilter.includes(resource.type)
       const classMatch =
         damageClassFilter.length === 0 || damageClassFilter.includes(resource.damageClass)
       return typeMatch && classMatch
     })
 
-    if (search) {
-      const fuse = new Fuse(filtered, {
-        keys: ['name'],
-        threshold: 0.4,
-        ignoreLocation: false,
-      })
-      filtered = fuse.search(search).map((r: { item: MoveInfo }) => r.item)
-    }
-
     if (sortKey) {
-      filtered = [...filtered].sort((a, b) => {
+      results = [...results].sort((a, b) => {
         const aValue = a[sortKey as keyof MoveInfo]
         const bValue = b[sortKey as keyof MoveInfo]
         if (aValue == null && bValue == null) return 0
@@ -201,9 +203,10 @@ export default function MoveCardGrid({
       })
     }
 
-    return filtered
+    return results
   }, [
     data,
+    fuse,
     typeFilter,
     damageClassFilter,
     search,

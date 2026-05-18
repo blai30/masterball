@@ -58,23 +58,30 @@ export default function InfoCardGrid({
     setCurrentPage(page)
   }, [])
 
+  const fuse = useMemo(
+    () =>
+      new Fuse(data, {
+        keys: ['name'],
+        threshold: 0.4,
+      }),
+    [data]
+  )
+
   /**
    * Returns filtered data for grid display.
    */
   const filteredData = useMemo(() => {
-    const filtered = filterByVersionGroup
-      ? data.filter((resource) =>
-          resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
-        )
-      : data
+    // Search first (Fuse is stable across filter changes)
+    let results = search ? fuse.search(search).map((result) => result.item) : data
 
-    if (!search) return filtered
-    const fuse = new Fuse(filtered, {
-      keys: ['name'],
-      threshold: 0.4,
-    })
-    return fuse.search(search).map((result) => result.item)
-  }, [data, filterByVersionGroup, search, versionGroup])
+    if (filterByVersionGroup) {
+      results = results.filter((resource) =>
+        resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
+      )
+    }
+
+    return results
+  }, [data, fuse, filterByVersionGroup, search, versionGroup])
 
   return (
     <div className="flex flex-col gap-8">

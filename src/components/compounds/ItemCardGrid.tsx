@@ -144,34 +144,38 @@ export default function ItemCardGrid({
     return filters
   }, [data, pocketFilters, categoryFilters])
 
+  const fuse = useMemo(
+    () =>
+      new Fuse(data, {
+        keys: ['name'],
+        threshold: 0.4,
+      }),
+    [data]
+  )
+
   /**
    * Returns filtered data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = filterByVersionGroup
-      ? data.filter((resource) =>
-          resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
-        )
-      : data
+    // Search first (Fuse is stable across filter changes)
+    let results = search ? fuse.search(search).map((result) => result.item) : data
+
+    if (filterByVersionGroup) {
+      results = results.filter((resource) =>
+        resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
+      )
+    }
 
     if (pocketFilters.length > 0) {
-      filtered = filtered.filter((item) => pocketFilters.includes(item.pocket))
+      results = results.filter((item) => pocketFilters.includes(item.pocket))
     }
 
     if (categoryFilters.length > 0) {
-      filtered = filtered.filter((item) => categoryFilters.includes(item.category))
+      results = results.filter((item) => categoryFilters.includes(item.category))
     }
 
-    if (search) {
-      const fuse = new Fuse(filtered, {
-        keys: ['name'],
-        threshold: 0.4,
-      })
-      filtered = fuse.search(search).map((result) => result.item)
-    }
-
-    return filtered
-  }, [data, filterByVersionGroup, search, versionGroup, pocketFilters, categoryFilters])
+    return results
+  }, [data, fuse, filterByVersionGroup, search, versionGroup, pocketFilters, categoryFilters])
 
   return (
     <div className="flex flex-col gap-8">

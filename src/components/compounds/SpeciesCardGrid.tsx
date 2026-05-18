@@ -107,25 +107,30 @@ export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) 
     },
   ]
 
+  const fuse = useMemo(
+    () =>
+      new Fuse(data, {
+        keys: ['id', 'name'],
+        threshold: 0.4,
+        ignoreLocation: false,
+      }),
+    [data]
+  )
+
   /**
    * Returns filtered and sorted data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = data.filter((monster) =>
+    // Search first (Fuse is stable across filter changes)
+    let results = search ? fuse.search(search).map((r: { item: MonsterCardProps }) => r.item) : data
+
+    // Apply type filter
+    results = results.filter((monster) =>
       typeFilter.every((t) => monster.types.includes(t as TypeKey))
     )
 
-    if (search) {
-      const fuse = new Fuse(filtered, {
-        keys: ['id', 'name'],
-        threshold: 0.4,
-        ignoreLocation: false,
-      })
-      filtered = fuse.search(search).map((r: { item: MonsterCardProps }) => r.item)
-    }
-
     if (sortKey) {
-      filtered = [...filtered].sort((a, b) => {
+      results = [...results].sort((a, b) => {
         const aValue = a[sortKey as keyof MonsterCardProps]
         const bValue = b[sortKey as keyof MonsterCardProps]
         if (aValue == null && bValue == null) return 0
@@ -137,8 +142,8 @@ export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) 
       })
     }
 
-    return filtered
-  }, [data, typeFilter, search, sortKey, sortDirection])
+    return results
+  }, [data, fuse, typeFilter, search, sortKey, sortDirection])
 
   return (
     <div className="flex flex-col gap-8">
