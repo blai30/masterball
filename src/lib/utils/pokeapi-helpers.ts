@@ -387,7 +387,6 @@ export const ItemCategoryToPocket: Record<ItemCategoryKey, ItemPocketKey> = {
   [ItemCategoryKey.Picnic]: ItemPocketKey.Misc,
 }
 
-// prettier-ignore
 export enum VersionGroupKey {
   RedBlue = 'red-blue',
   Yellow = 'yellow',
@@ -411,7 +410,6 @@ export enum VersionGroupKey {
   ScarletViolet = 'scarlet-violet',
 }
 
-// prettoer-ignore
 export const VersionGroupLabels: Record<VersionGroupKey, string> = {
   [VersionGroupKey.RedBlue]: 'Red & Blue',
   [VersionGroupKey.Yellow]: 'Yellow',
