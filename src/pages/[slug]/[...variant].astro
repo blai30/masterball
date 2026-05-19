@@ -350,12 +350,12 @@ async function buildMoveRowsByMethod(
 
   if (pokemon.moves.length === 0) return moveRowsByMethod
 
-  const uniqueMoveNames = [
-    ...new Set(pokemon.moves.map((move) => move.move.name)),
+  const uniqueMoveUrls = [
+    ...new Set(pokemon.moves.map((move) => move.move.url)),
   ]
   const movesData = await pMap(
-    uniqueMoveNames,
-    async (name) => pokeapi.getByName<Move>('move', name),
+    uniqueMoveUrls,
+    async (url) => pokeapi.getResource<Move>(url),
     { concurrency: 20 }
   )
 
