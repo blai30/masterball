@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react'
-import { useMemo, useCallback, type ReactNode } from 'react'
+import { useMemo, type ReactNode } from 'react'
 
 import Pagination from '@/components/compounds/Pagination'
 
@@ -31,9 +31,6 @@ export default function CardGrid<T>({
   const totalPages = useMemo(() => {
     return Math.ceil(data.length / itemsPerPage)
   }, [data, itemsPerPage])
-
-  const getKey = useCallback(getKeyAction, [])
-  const renderCard = useCallback(renderCardAction, [])
 
   return (
     <div className="xs:gap-8 flex flex-col gap-4">
@@ -77,8 +74,8 @@ export default function CardGrid<T>({
                 >
                   {paginatedItems.map((item) => (
                     <motion.li
-                      key={getKey(item)}
-                      layoutId={`card-${getKey(item)}`}
+                      key={getKeyAction(item)}
+                      layoutId={`card-${getKeyAction(item)}`}
                       layout
                       className="col-span-1"
                       variants={{
@@ -101,7 +98,7 @@ export default function CardGrid<T>({
                         },
                       }}
                     >
-                      {renderCard(item)}
+                      {renderCardAction(item)}
                     </motion.li>
                   ))}
                 </motion.ul>

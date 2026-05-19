@@ -8,7 +8,6 @@ export default defineConfig({
   site: process.env.PUBLIC_SITE_URL,
   base: process.env.PUBLIC_BASEPATH,
   vite: {
-    // @ts-ignore
     plugins: [tailwindcss()],
     optimizeDeps: {
       include: ['react', 'react-dom', 'react-dom/client'],

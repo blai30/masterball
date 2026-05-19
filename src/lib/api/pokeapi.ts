@@ -33,6 +33,13 @@ const cachedFetch = async <T>(url: string): Promise<T> => {
 
 const pokeapi = {
   /**
+   * Gets the cache as read-only for dumping to disk
+   */
+  getCache: (): ReadonlyMap<string, unknown> => {
+    return cache
+  },
+
+  /**
    * Gets a list of resources with pagination
    */
   getList: async (endpoint: string, limit = 1025, offset = 0): Promise<NamedAPIResourceList> => {

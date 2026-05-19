@@ -70,7 +70,6 @@ export default function Pagination({
                   type="number"
                   min={1}
                   max={totalPages}
-                  // biome-ignore lint/a11y/noAutofocus: Clicking the ellipsis should focus the input for immediate typing
                   autoFocus
                   onKeyDown={(e) => handleInputChange(e)}
                   onBlur={() => setShowInput(null)}

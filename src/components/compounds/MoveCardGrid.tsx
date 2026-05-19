@@ -1,6 +1,5 @@
 import Fuse from 'fuse.js'
-import { useState, useMemo, useCallback, useEffect } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
+import { useState, useMemo, useEffect } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard from '@/components/compounds/MoveCard'
@@ -8,6 +7,7 @@ import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import type { FilterOption } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
 import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
+import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapi-helpers'
 
@@ -15,6 +15,23 @@ const DEFAULT_SORT_KEY = 'name'
 const DEFAULT_SORT_DIRECTION = SortDirection.ASC
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 36
+
+const sortOptions: SortOption<string>[] = [
+  { label: 'Name', value: 'name' },
+  { label: 'Type', value: 'type' },
+  { label: 'Class', value: 'damageClass' },
+  { label: 'Power', value: 'power' },
+  { label: 'Accuracy', value: 'accuracy' },
+  { label: 'PP', value: 'pp' },
+]
+const typeFilters: FilterOption[] = Object.entries(TypeKey).map(([key, value]) => ({
+  label: key,
+  value,
+}))
+const damageClassFilters: FilterOption[] = Object.entries(DamageClassKey).map(([key, value]) => ({
+  label: key,
+  value,
+}))
 
 export default function MoveCardGrid({
   data,
@@ -28,30 +45,6 @@ export default function MoveCardGrid({
   className?: string
 }) {
   const { versionGroup } = useVersionGroup()
-
-  const sortOptions: SortOption<string>[] = useMemo(
-    () => [
-      { label: 'Name', value: 'name' },
-      { label: 'Type', value: 'type' },
-      { label: 'Class', value: 'damageClass' },
-      { label: 'Power', value: 'power' },
-      { label: 'Accuracy', value: 'accuracy' },
-      { label: 'PP', value: 'pp' },
-    ],
-    []
-  )
-  const typeFilters: FilterOption[] = useMemo(
-    () => Object.entries(TypeKey).map(([key, value]) => ({ label: key, value })),
-    []
-  )
-  const damageClassFilters: FilterOption[] = useMemo(
-    () =>
-      Object.entries(DamageClassKey).map(([key, value]) => ({
-        label: key,
-        value,
-      })),
-    []
-  )
 
   const [search, setSearch] = useState<string>(() => {
     if (typeof window === 'undefined') return ''
@@ -83,126 +76,93 @@ export default function MoveCardGrid({
     return Number(new URLSearchParams(window.location.search).get('p')) || DEFAULT_PAGE
   })
 
-  // Debounced URL sync
-  const syncUrlParams = useDebouncedCallback(
-    (state: {
-      search: string
-      sortKey: string
-      sortDirection: SortDirection
-      typeFilter: string[]
-      damageClassFilter: string[]
-      currentPage: number
-    }) => {
-      const params = new URLSearchParams()
-      if (state.search) params.set('q', state.search)
-      if (state.sortKey !== DEFAULT_SORT_KEY) params.set('sort', state.sortKey)
-      if (state.sortDirection !== DEFAULT_SORT_DIRECTION) params.set('dir', state.sortDirection)
-      if (state.typeFilter.length > 0) params.set('type', state.typeFilter.join(','))
-      if (state.damageClassFilter.length > 0) params.set('class', state.damageClassFilter.join(','))
-      if (state.currentPage !== DEFAULT_PAGE) params.set('p', String(state.currentPage))
-      window.history.replaceState(
-        null,
-        '',
-        params.toString() ? `?${params}` : window.location.pathname
-      )
+  // Sync all state to URL on change
+  useUrlSync(
+    () => ({ search, sortKey, sortDirection, typeFilter, damageClassFilter, currentPage }),
+    {
+      search: { key: 'q', defaultValue: '' },
+      sortKey: { key: 'sort', defaultValue: DEFAULT_SORT_KEY },
+      sortDirection: { key: 'dir', defaultValue: DEFAULT_SORT_DIRECTION },
+      typeFilter: { key: 'type', defaultValue: [] },
+      damageClassFilter: { key: 'class', defaultValue: [] },
+      currentPage: { key: 'p', defaultValue: DEFAULT_PAGE },
     },
-    500
+    [search, sortKey, sortDirection, typeFilter, damageClassFilter, currentPage]
   )
 
-  // Sync all state to URL on change
-  useEffect(() => {
-    syncUrlParams({
-      search,
-      sortKey,
-      sortDirection,
-      typeFilter,
-      damageClassFilter,
-      currentPage,
-    })
-  }, [search, sortKey, sortDirection, typeFilter, damageClassFilter, currentPage, syncUrlParams])
-
-  // Handlers
-  const handleSearchChange = useCallback((value: string) => {
+  const handleSearchChange = (value: string) => {
     setSearch(value)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleSortKeyChange = useCallback((key: string) => {
+  }
+  const handleSortKeyChange = (key: string) => {
     setSortKey(key)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleSortDirectionChange = useCallback((dir: SortDirection) => {
+  }
+  const handleSortDirectionChange = (dir: SortDirection) => {
     setSortDirection(dir)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleTypeFilterChange = useCallback((values: string[]) => {
+  }
+  const handleTypeFilterChange = (values: string[]) => {
     setTypeFilter(values)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handleDamageClassFilterChange = useCallback((values: string[]) => {
+  }
+  const handleDamageClassFilterChange = (values: string[]) => {
     setDamageClassFilter(values)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handlePageChange = useCallback((page: number) => {
+  }
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
-  }, [])
+  }
 
-  const filters: FilterConfig[] = useMemo(
-    () => [
-      {
-        label: 'Type',
-        options: typeFilters,
-        values: typeFilter,
-        onChange: (values: string | string[]) =>
-          handleTypeFilterChange(Array.isArray(values) ? values : [values]),
-      },
-      {
-        label: 'Class',
-        options: damageClassFilters,
-        values: damageClassFilter,
-        onChange: (values: string | string[]) =>
-          handleDamageClassFilterChange(Array.isArray(values) ? values : [values]),
-      },
-    ],
-    [
-      typeFilter,
-      typeFilters,
-      handleTypeFilterChange,
-      damageClassFilter,
-      damageClassFilters,
-      handleDamageClassFilterChange,
-    ]
+  const filters: FilterConfig[] = [
+    {
+      label: 'Type',
+      options: typeFilters,
+      values: typeFilter,
+      onChange: (values: string | string[]) =>
+        handleTypeFilterChange(Array.isArray(values) ? values : [values]),
+    },
+    {
+      label: 'Class',
+      options: damageClassFilters,
+      values: damageClassFilter,
+      onChange: (values: string | string[]) =>
+        handleDamageClassFilterChange(Array.isArray(values) ? values : [values]),
+    },
+  ]
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(data, {
+        keys: ['name'],
+        threshold: 0.4,
+        ignoreLocation: false,
+      }),
+    [data]
   )
 
   /**
    * Returns filtered and sorted data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = data
+    // Search first (Fuse is stable across filter changes)
+    let results = search ? fuse.search(search).map((r: { item: MoveInfo }) => r.item) : data
 
     if (filterByVersionGroup) {
-      filtered = filtered.filter((resource) =>
+      results = results.filter((resource) =>
         resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
       )
     }
 
-    filtered = filtered.filter((resource) => {
+    results = results.filter((resource) => {
       const typeMatch = typeFilter.length === 0 || typeFilter.includes(resource.type)
       const classMatch =
         damageClassFilter.length === 0 || damageClassFilter.includes(resource.damageClass)
       return typeMatch && classMatch
     })
 
-    if (search) {
-      const fuse = new Fuse(filtered, {
-        keys: ['name'],
-        threshold: 0.4,
-        ignoreLocation: false,
-      })
-      filtered = fuse.search(search).map((r: { item: MoveInfo }) => r.item)
-    }
-
     if (sortKey) {
-      filtered = [...filtered].sort((a, b) => {
+      results = [...results].sort((a, b) => {
         const aValue = a[sortKey as keyof MoveInfo]
         const bValue = b[sortKey as keyof MoveInfo]
         if (aValue == null && bValue == null) return 0
@@ -219,9 +179,10 @@ export default function MoveCardGrid({
       })
     }
 
-    return filtered
+    return results
   }, [
     data,
+    fuse,
     typeFilter,
     damageClassFilter,
     search,

@@ -175,22 +175,6 @@ async function buildLocationRows(
     locationAreas.map((area) => [area.name, area])
   )
 
-  const areasNeedingParent = locationAreas.filter(
-    (area) => !getTranslation(area.names, 'name')
-  )
-  const uniqueLocationUrls = [
-    ...new Set(areasNeedingParent.map((area) => area.location.url)),
-  ]
-  const locations = await pMap(
-    uniqueLocationUrls,
-    (url) => pokeapi.getResource<Location>(url),
-    {
-      concurrency: 20,
-    }
-  )
-  const locationMap: Record<string, Location> = Object.fromEntries(
-    locations.map((loc) => [loc.name, loc])
-  )
 
   const uniqueVersionUrls = [
     ...new Set(
@@ -230,10 +214,7 @@ async function buildLocationRows(
 
   for (const encounter of encounters) {
     const area = areaMap[encounter.location_area.name]
-    const locationName =
-      getTranslation(area.names, 'name') ||
-      getTranslation(locationMap[area.location.name]?.names, 'name') ||
-      area.name
+    const locationName = getTranslation(area.names, 'name') || area.name
 
     for (const versionDetail of encounter.version_details) {
       const version = versionMap[versionDetail.version.name]
@@ -350,12 +331,12 @@ async function buildMoveRowsByMethod(
 
   if (pokemon.moves.length === 0) return moveRowsByMethod
 
-  const uniqueMoveNames = [
-    ...new Set(pokemon.moves.map((move) => move.move.name)),
+  const uniqueMoveUrls = [
+    ...new Set(pokemon.moves.map((move) => move.move.url)),
   ]
   const movesData = await pMap(
-    uniqueMoveNames,
-    async (name) => pokeapi.getByName<Move>('move', name),
+    uniqueMoveUrls,
+    async (url) => pokeapi.getResource<Move>(url),
     { concurrency: 20 }
   )
 

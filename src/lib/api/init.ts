@@ -15,6 +15,7 @@ export function init(): void {
   const raw = fs.readFileSync(fileCachePath, 'utf-8')
   const data = JSON.parse(raw) as Record<string, unknown>
   seedCache(data)
+  console.log('Cache seeded with pre-fetched data')
 }
 
 // Auto-initialize on import

@@ -1,11 +1,11 @@
 import Fuse from 'fuse.js'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce'
+import { useMemo, useState } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
+import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import {
   type ItemPocketKey,
@@ -54,52 +54,36 @@ export default function ItemCardGrid({
     return Number(new URLSearchParams(window.location.search).get('p')) || DEFAULT_PAGE
   })
 
-  // Debounced URL sync
-  const syncUrlParams = useDebouncedCallback(
-    (state: {
-      search: string
-      pocketFilters: string[]
-      categoryFilters: string[]
-      currentPage: number
-    }) => {
-      const params = new URLSearchParams()
-      if (state.search) params.set('q', state.search)
-      if (state.pocketFilters.length > 0) params.set('pockets', state.pocketFilters.join(','))
-      if (state.categoryFilters.length > 0)
-        params.set('categories', state.categoryFilters.join(','))
-      if (state.currentPage !== DEFAULT_PAGE) params.set('p', String(state.currentPage))
-      window.history.replaceState(
-        null,
-        '',
-        params.toString() ? `?${params}` : window.location.pathname
-      )
+  // Sync all state to URL
+  useUrlSync(
+    () => ({ search, pocketFilters, categoryFilters, currentPage }),
+    {
+      search: { key: 'q', defaultValue: '' },
+      pocketFilters: { key: 'pockets', defaultValue: [] },
+      categoryFilters: { key: 'categories', defaultValue: [] },
+      currentPage: { key: 'p', defaultValue: DEFAULT_PAGE },
     },
-    500
+    [search, pocketFilters, categoryFilters, currentPage]
   )
 
-  // Sync all state to URL
-  useEffect(() => {
-    syncUrlParams({ search, pocketFilters, categoryFilters, currentPage })
-  }, [search, pocketFilters, categoryFilters, currentPage, syncUrlParams])
-
-  const handleSearchChange = useCallback((value: string) => {
+  const handleSearchChange = (value: string) => {
     setSearch(value)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
+  }
 
-  const handleCategoryFilterChange = useCallback((values: string | string[]) => {
+  const handleCategoryFilterChange = (values: string | string[]) => {
     setCategoryFilters(Array.isArray(values) ? values : [values])
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
+  }
 
-  const handlePocketFilterChange = useCallback((values: string | string[]) => {
+  const handlePocketFilterChange = (values: string | string[]) => {
     setPocketFilters(Array.isArray(values) ? values : [values])
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
+  }
 
-  const handlePageChange = useCallback((page: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
-  }, [])
+  }
 
   // Create filter options from available item categories and pockets in the data
   const availableFilters = useMemo(() => {
@@ -142,36 +126,40 @@ export default function ItemCardGrid({
     }
 
     return filters
-  }, [data, pocketFilters, categoryFilters, handleCategoryFilterChange, handlePocketFilterChange])
+  }, [data, pocketFilters, categoryFilters])
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(data, {
+        keys: ['name'],
+        threshold: 0.4,
+      }),
+    [data]
+  )
 
   /**
    * Returns filtered data for grid display.
    */
   const filteredData = useMemo(() => {
-    let filtered = filterByVersionGroup
-      ? data.filter((resource) =>
-          resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
-        )
-      : data
+    // Search first (Fuse is stable across filter changes)
+    let results = search ? fuse.search(search).map((result) => result.item) : data
+
+    if (filterByVersionGroup) {
+      results = results.filter((resource) =>
+        resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
+      )
+    }
 
     if (pocketFilters.length > 0) {
-      filtered = filtered.filter((item) => pocketFilters.includes(item.pocket))
+      results = results.filter((item) => pocketFilters.includes(item.pocket))
     }
 
     if (categoryFilters.length > 0) {
-      filtered = filtered.filter((item) => categoryFilters.includes(item.category))
+      results = results.filter((item) => categoryFilters.includes(item.category))
     }
 
-    if (search) {
-      const fuse = new Fuse(filtered, {
-        keys: ['name'],
-        threshold: 0.4,
-      })
-      filtered = fuse.search(search).map((result) => result.item)
-    }
-
-    return filtered
-  }, [data, filterByVersionGroup, search, versionGroup, pocketFilters, categoryFilters])
+    return results
+  }, [data, fuse, filterByVersionGroup, search, versionGroup, pocketFilters, categoryFilters])
 
   return (
     <div className="flex flex-col gap-8">
