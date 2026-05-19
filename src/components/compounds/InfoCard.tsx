@@ -1,4 +1,5 @@
 import type { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
+import { memo } from 'react'
 
 import GlassCard from '@/components/GlassCard'
 import { Badge } from '@/components/ui/catalyst/badge'
@@ -19,7 +20,7 @@ export type InfoCardProps = {
   tags?: Tag[]
 }
 
-export default function InfoCard({ props }: { props: InfoCardProps }) {
+const InfoCard = ({ props }: { props: InfoCardProps }) => {
   const { versionGroup, hasMounted } = useVersionGroup()
   if (!hasMounted) return null
 
@@ -66,3 +67,5 @@ export default function InfoCard({ props }: { props: InfoCardProps }) {
     </GlassCard>
   )
 }
+
+export default memo(InfoCard)

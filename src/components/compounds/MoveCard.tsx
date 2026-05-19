@@ -1,4 +1,5 @@
 import clsx from 'clsx/lite'
+import { memo } from 'react'
 
 import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
@@ -49,7 +50,7 @@ const typeClasses: Record<TypeKey, string> = {
     'bg-gradient-to-br from-transparent to-fairy/10 inset-ring-1 inset-ring-fairy/10 dark:inset-ring-fairy/10 dark:to-fairy/10',
 }
 
-export default function MoveCard({ props }: { props: MoveInfo }) {
+const MoveCard = ({ props }: { props: MoveInfo }) => {
   const { versionGroup, hasMounted } = useVersionGroup()
   if (!hasMounted) return null
 
@@ -122,3 +123,5 @@ export default function MoveCard({ props }: { props: MoveInfo }) {
     </GlassCard>
   )
 }
+
+export default memo(MoveCard)
