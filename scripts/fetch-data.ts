@@ -203,14 +203,9 @@ export async function fetchAndExportData() {
 
   // Build and write output
   console.log('Exporting cache...')
-  const output: Record<string, unknown> = {}
-  for (const [url, promise] of pokeapi.getCache()) {
-    output[url] = await promise
-  }
-
+  const output = pokeapi.getCache()
   fs.mkdirSync('build', { recursive: true })
   fs.writeFileSync(DATA_PATH, JSON.stringify(output))
-
   const size = fs.statSync(DATA_PATH).size
   console.log(
     `Done! Wrote ${Object.keys(output).length} resources (${(size / 1024 / 1024).toFixed(1)} MB) to ${DATA_PATH}`

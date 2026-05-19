@@ -4,21 +4,20 @@ const BASE_URL = 'https://pokeapi.co/api/v2/'
 
 // Module-level cache for build-time request deduplication.
 // Seed with pre-fetched data using `seedCache()` (see init.ts).
-const cache = new Map<string, unknown>()
+let cache: Record<string, unknown> = {}
 
 /**
  * Seed the cache with pre-fetched API data.
  * Call once per build via `import '@/lib/api/init'` in Astro pages.
  */
 export function seedCache(data: Record<string, unknown>): void {
-  for (const [url, value] of Object.entries(data)) {
-    cache.set(url, value)
-  }
+  cache = data
+  Object.freeze(cache)
 }
 
 const cachedFetch = async <T>(url: string): Promise<T> => {
-  if (cache.has(url)) {
-    return cache.get(url) as T
+  if (url in cache) {
+    return cache[url] as T
   }
 
   const response = await fetch(url)
@@ -27,7 +26,7 @@ const cachedFetch = async <T>(url: string): Promise<T> => {
   }
 
   const data = await response.json()
-  cache.set(url, data)
+  cache[url] = data
   return data
 }
 
@@ -35,7 +34,7 @@ const pokeapi = {
   /**
    * Gets the cache as read-only for dumping to disk
    */
-  getCache: (): ReadonlyMap<string, unknown> => {
+  getCache: (): Readonly<Record<string, unknown>> => {
     return cache
   },
 
