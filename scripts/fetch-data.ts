@@ -19,6 +19,7 @@ import type {
   EggGroup,
   GrowthRate,
   EvolutionChain,
+  Chain,
 } from 'pokedex-promise-v2'
 
 import pokeapi from '../src/lib/api/pokeapi'
@@ -119,11 +120,11 @@ export async function fetchAndExportData() {
         })
       }
       if (specie.evolution_chain.url) {
-        const chain = await pokeapi.getResource<EvolutionChain>(specie.evolution_chain.url)
+        const evolutionChain = await pokeapi.getResource<EvolutionChain>(specie.evolution_chain.url)
         // Recursively collect species in evolution chains and fetch them
-        const chainNode = (chain as any).chain
+        const chainNode = evolutionChain.chain
         if (chainNode) {
-          const walk = (node: any): Promise<PokemonSpecies>[] => {
+          const walk = (node: Chain): Promise<PokemonSpecies>[] => {
             const promises = [pokeapi.getResource<PokemonSpecies>(node.species.url)]
             for (const child of node.evolves_to || []) {
               promises.push(...walk(child))
