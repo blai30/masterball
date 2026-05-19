@@ -1,6 +1,3 @@
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
-
 import fs, { statSync, existsSync } from 'node:fs'
 import path from 'node:path'
 
@@ -22,47 +19,12 @@ import type {
   EggGroup,
   GrowthRate,
   EvolutionChain,
-  NamedAPIResourceList,
 } from 'pokedex-promise-v2'
 
+import pokeapi from '../src/lib/api/pokeapi'
 import { excludedItems, excludedVariants, excludedForms } from '../src/lib/utils/excluded-slugs'
 
-const BASE_URL = 'https://pokeapi.co/api/v2/'
 const DATA_PATH = 'build/data.json'
-
-const cache = new Map<string, Promise<unknown>>()
-
-async function cachedFetch<T>(url: string): Promise<T> {
-  if (!cache.has(url)) {
-    cache.set(
-      url,
-      fetch(url).then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`Failed to fetch ${url}: ${res.statusText}`)
-        }
-        return (await res.json()) as T
-      })
-    )
-  }
-  return cache.get(url) as Promise<T>
-}
-
-async function getList(endpoint: string, limit: number): Promise<NamedAPIResourceList> {
-  const params = new URLSearchParams({ limit: String(limit), offset: '0' })
-  const url = new URL(endpoint, BASE_URL)
-  url.search = params.toString()
-  return cachedFetch<NamedAPIResourceList>(url.toString())
-}
-
-async function getByName<T>(endpoint: string, nameOrId: string | number): Promise<T> {
-  const url = new URL(endpoint, BASE_URL)
-  url.pathname += `/${nameOrId}`
-  return cachedFetch<T>(url.toString())
-}
-
-async function getResource<T>(url: string): Promise<T> {
-  return cachedFetch<T>(url)
-}
 
 export function shouldFetchData(): boolean {
   const dataPath = path.resolve('build/data.json')
@@ -78,97 +40,91 @@ export function shouldFetchData(): boolean {
 }
 
 export async function fetchAndExportData() {
-  console.log('Fetching species list...')
-  const speciesList = await getList('pokemon-species', 1025)
-
+  const speciesList = await pokeapi.getList('pokemon-species', 1025)
   console.log(`Fetching ${speciesList.results.length} species details...`)
-  const speciesArr = await pMap(speciesList.results, (r) => getResource<PokemonSpecies>(r.url), {
-    concurrency: 20,
-  })
+  const species = await pMap(
+    speciesList.results,
+    (specie) => pokeapi.getByName<PokemonSpecies>('pokemon-species', specie.name),
+    {
+      concurrency: 20,
+    }
+  )
 
-  console.log('Collecting all Pokemon variant URLs...')
   const pokemonUrls = new Set<string>()
-  for (const specie of speciesArr) {
+  for (const specie of species) {
     const filtered = specie.varieties.filter((v) => !excludedVariants.includes(v.pokemon.name))
-    for (const v of filtered) {
-      pokemonUrls.add(v.pokemon.url)
+    for (const variant of filtered) {
+      pokemonUrls.add(variant.pokemon.url)
     }
   }
 
   console.log(`Fetching ${pokemonUrls.size} Pokemon details...`)
-  const pokemonArr = await pMap([...pokemonUrls], (url) => getResource<Pokemon>(url), {
+  const pokemons = await pMap([...pokemonUrls], (url) => pokeapi.getResource<Pokemon>(url), {
     concurrency: 20,
   })
 
-  console.log('Fetching all types...')
-  await pMap(
-    [
-      'normal',
-      'fighting',
-      'flying',
-      'poison',
-      'ground',
-      'rock',
-      'bug',
-      'ghost',
-      'steel',
-      'fire',
-      'water',
-      'grass',
-      'electric',
-      'psychic',
-      'ice',
-      'dragon',
-      'dark',
-      'fairy',
-    ],
-    (name) => getByName<Type>('type', name),
-    { concurrency: 20 }
+  const typeList = await pokeapi.getList('type', 30)
+  console.log(`Fetching ${typeList.count} types...`)
+  await pMap(typeList.results, (type) => pokeapi.getByName<Type>('type', type.name), {
+    concurrency: 20,
+  })
+
+  const abilityList = await pokeapi.getList('ability', 600)
+  console.log(`Fetching ${abilityList.count} abilities...`)
+  await pMap(abilityList.results, (resource) => pokeapi.getResource<Ability>(resource.url), {
+    concurrency: 20,
+  })
+
+  const moveList = await pokeapi.getList('move', 1200)
+  console.log(`Fetching ${moveList.count} moves...`)
+  const moveArr = await pMap(
+    moveList.results,
+    (resource) => pokeapi.getResource<Move>(resource.url),
+    {
+      concurrency: 20,
+    }
   )
 
-  console.log('Fetching all abilities...')
-  const abilityList = await getList('ability', 600)
-  await pMap(abilityList.results, (r) => getResource<Ability>(r.url), { concurrency: 20 })
-
-  console.log('Fetching all moves...')
-  const moveList = await getList('move', 1200)
-  const moveArr = await pMap(moveList.results, (r) => getResource<Move>(r.url), { concurrency: 20 })
-
-  console.log('Fetching all items...')
-  const itemList = await getList('item', 10000)
+  const itemList = await pokeapi.getList('item', 10000)
   const filteredItems = itemList.results.filter(
-    (r) => !excludedItems.includes(r.name) && !r.name.startsWith('dynamax-crystal-')
+    (resource) =>
+      !excludedItems.includes(resource.name) && !resource.name.startsWith('dynamax-crystal-')
   )
-  await pMap(filteredItems, (r) => getResource<Item>(r.url), { concurrency: 20 })
+  console.log(`Fetching ${filteredItems.length} items...`)
+  await pMap(filteredItems, (resource) => pokeapi.getResource<Item>(resource.url), {
+    concurrency: 20,
+  })
 
   console.log('Fetching location encounters for all Pokemon...')
   await pMap(
-    pokemonArr,
-    async (pkm) => {
-      if (pkm.location_area_encounters) {
-        await getResource(pkm.location_area_encounters)
+    pokemons,
+    async (pokemon) => {
+      if (pokemon.location_area_encounters) {
+        await pokeapi.getResource(pokemon.location_area_encounters)
       }
     },
     { concurrency: 20 }
   )
 
-  console.log('Fetching species reference data...')
+  console.log('Fetching species metadata...')
   await pMap(
-    speciesArr,
+    species,
     async (specie) => {
       if (specie.growth_rate.url) {
-        await getResource<GrowthRate>(specie.growth_rate.url)
+        await pokeapi.getResource<GrowthRate>(specie.growth_rate.url)
       }
       if (specie.egg_groups?.length) {
-        await pMap(specie.egg_groups, (eg) => getResource<EggGroup>(eg.url), { concurrency: 4 })
+        await pMap(specie.egg_groups, (eggGroup) => pokeapi.getResource<EggGroup>(eggGroup.url), {
+          concurrency: 4,
+        })
       }
       if (specie.evolution_chain.url) {
-        const chain = await getResource<EvolutionChain>(specie.evolution_chain.url)
+        const chain = await pokeapi.getResource<EvolutionChain>(specie.evolution_chain.url)
         // Recursively collect species in evolution chains and fetch them
         const chainNode = (chain as any).chain
         if (chainNode) {
           const walk = (node: any): Promise<PokemonSpecies>[] => {
-            const promises = [getResource<PokemonSpecies>(node.species.url)]
+            const promises = [pokeapi.getResource<PokemonSpecies>(node.species.url)]
             for (const child of node.evolves_to || []) {
               promises.push(...walk(child))
             }
@@ -183,11 +139,13 @@ export async function fetchAndExportData() {
 
   console.log('Fetching referenced Pokemon forms...')
   await pMap(
-    pokemonArr,
-    async (pkm) => {
-      if (pkm.forms?.length) {
-        const filtered = pkm.forms.filter((f) => !excludedForms.includes(f.name))
-        await pMap(filtered, (form) => getResource<PokemonForm>(form.url), { concurrency: 20 })
+    pokemons,
+    async (pokemon) => {
+      if (pokemon.forms?.length) {
+        const filtered = pokemon.forms.filter((form) => !excludedForms.includes(form.name))
+        await pMap(filtered, (form) => pokeapi.getByName<PokemonForm>('pokemon-form', form.name), {
+          concurrency: 20,
+        })
       }
     },
     { concurrency: 20 }
@@ -203,26 +161,28 @@ export async function fetchAndExportData() {
     }
   }
   if (machineUrls.size > 0) {
-    await pMap([...machineUrls], (url) => getResource<Machine>(url), { concurrency: 20 })
+    await pMap([...machineUrls], (url) => pokeapi.getResource<Machine>(url), { concurrency: 20 })
   }
 
   console.log('Fetching encounter location/area/version data...')
   await pMap(
-    pokemonArr,
-    async (pkm) => {
-      if (!pkm.location_area_encounters) return
-      const encounters = await getResource<PokemonEncounter[]>(pkm.location_area_encounters)
+    pokemons,
+    async (pokemon) => {
+      if (!pokemon.location_area_encounters) return
+      const encounters = await pokeapi.getResource<PokemonEncounter[]>(
+        pokemon.location_area_encounters
+      )
       if (encounters.length === 0) return
 
       // Fetch location areas
       const areaUrls = [...new Set(encounters.map((e) => e.location_area.url))]
-      await pMap(areaUrls, (u) => getResource<LocationArea>(u), { concurrency: 20 })
+      await pMap(areaUrls, (u) => pokeapi.getResource<LocationArea>(u), { concurrency: 20 })
 
       // Fetch versions
       const versionUrls = [
         ...new Set(encounters.flatMap((e) => e.version_details?.map((v) => v.version.url) || [])),
       ]
-      await pMap(versionUrls, (u) => getResource<Version>(u), { concurrency: 20 })
+      await pMap(versionUrls, (u) => pokeapi.getResource<Version>(u), { concurrency: 20 })
 
       // Fetch encounter methods
       const methodUrls = [
@@ -235,18 +195,7 @@ export async function fetchAndExportData() {
           )
         ),
       ]
-      await pMap(methodUrls, (u) => getResource<EncounterMethod>(u), { concurrency: 20 })
-
-      // Fetch locations for areas that lack English names
-      const areaData = await Promise.all(areaUrls.map((u) => getResource<LocationArea>(u)))
-      const areasNeedingLocations = areaData.filter((a) => {
-        const enName = a.names?.find((n) => n.language.name === 'en')
-        return !enName
-      })
-      if (areasNeedingLocations.length > 0) {
-        const locUrls = [...new Set(areasNeedingLocations.map((a) => a.location.url))]
-        await pMap(locUrls, (u) => getResource<Location>(u), { concurrency: 20 })
-      }
+      await pMap(methodUrls, (u) => pokeapi.getResource<EncounterMethod>(u), { concurrency: 20 })
     },
     { concurrency: 6 }
   )
@@ -254,7 +203,7 @@ export async function fetchAndExportData() {
   // Build and write output
   console.log('Exporting cache...')
   const output: Record<string, unknown> = {}
-  for (const [url, promise] of cache) {
+  for (const [url, promise] of pokeapi.getCache()) {
     output[url] = await promise
   }
 
