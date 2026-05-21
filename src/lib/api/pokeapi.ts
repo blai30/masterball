@@ -5,6 +5,7 @@ const BASE_URL = 'https://pokeapi.co/api/v2/'
 // Module-level cache for build-time request deduplication.
 // Seed with pre-fetched data using `seedCache()` (see init.ts).
 let cache: Record<string, unknown> = {}
+let cacheFrozen = false
 
 /**
  * Seed the cache with pre-fetched API data.
@@ -12,6 +13,7 @@ let cache: Record<string, unknown> = {}
  */
 export function seedCache(data: Record<string, unknown>): void {
   cache = data
+  cacheFrozen = true
   Object.freeze(cache)
 }
 
@@ -26,7 +28,9 @@ const cachedFetch = async <T>(url: string): Promise<T> => {
   }
 
   const data = await response.json()
-  cache[url] = data
+  if (!cacheFrozen) {
+    cache[url] = data
+  }
   return data
 }
 
