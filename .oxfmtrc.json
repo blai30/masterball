@@ -1,11 +1,17 @@
 {
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "sortTailwindcss": {
     "functions": ["tw", "clsx", "cva"]
   },
-  "ignorePatterns": ["**/public/**", "**/dist/**", "**/node_modules/**"],
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+  "ignorePatterns": ["**/dist/**", "**/node_modules/**", "**/out/**", "**/public/**"],
+  "jsxSingleQuote": false,
   "semi": false,
   "singleQuote": true,
   "sortImports": true,
   "tabWidth": 2,
-  "trailingComma": "es5"
+  "trailingComma": "es5",
+  "useTabs": false
 }

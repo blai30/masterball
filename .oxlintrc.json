@@ -1,11 +1,15 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn", "oxc"],
+  "plugins": ["eslint", "typescript", "unicorn", "oxc"],
+  "ignorePatterns": ["**/dist/**", "**/node_modules/**", "**/out/**", "**/public/**"],
   "categories": {
     "correctness": "error"
   },
   "rules": {
+    "prefer-const": "warn",
+    "no-var": "error",
     "no-unused-vars": "off",
+    "typescript/no-explicit-any": "warn",
     "typescript/no-non-null-assertion": "off"
   },
   "env": {

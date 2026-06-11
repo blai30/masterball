@@ -1,5 +1,5 @@
 import { Moon, Sun } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 type ThemeValue = 'light' | 'dark'
 
@@ -17,18 +17,18 @@ function applyTheme(theme: ThemeValue) {
 }
 
 export default function ThemeSwitch() {
-  const [theme, setTheme] = useState<ThemeValue | undefined>(undefined)
+  // Drives the directional label only. Undefined until mounted so the first client
+  // render matches the SSR markup; the visible icon is handled purely by CSS off the
+  // `dark` class that the inline script in Layout.astro applies before paint.
+  const [isDark, setIsDark] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
-    const stored = localStorage.getItem('theme')
-    setTheme(stored === 'light' || stored === 'dark' ? stored : getSystemTheme())
+    setIsDark(document.documentElement.classList.contains('dark'))
   }, [])
 
-  if (theme === undefined) return null
-
   const handleToggle = () => {
-    const next: ThemeValue = theme === 'dark' ? 'light' : 'dark'
-    setTheme(next)
+    const next: ThemeValue = document.documentElement.classList.contains('dark') ? 'light' : 'dark'
+    setIsDark(next === 'dark')
 
     const root = document.documentElement
     if (!document.startViewTransition) {
@@ -42,14 +42,22 @@ export default function ThemeSwitch() {
     }
   }
 
+  const label =
+    isDark === undefined
+      ? 'Toggle theme'
+      : isDark
+        ? 'Switch to light theme'
+        : 'Switch to dark theme'
+
   return (
     <button
       onClick={handleToggle}
-      title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-      aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+      title={label}
+      aria-label={label}
       className="flex cursor-default items-center justify-center rounded-lg p-2 text-black transition-colors hover:bg-zinc-950/10 hover:duration-0 dark:text-white dark:hover:bg-white/10"
     >
-      {theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
+      <Moon size={20} className="hidden dark:block" />
+      <Sun size={20} className="block dark:hidden" />
     </button>
   )
 }

@@ -1,27 +1,13 @@
 ## Project specific
 
-- Framework: Astro 6.3
-- Language: TypeScript 5
+- Framework: Astro 7
+- Language: TypeScript 6
 - Core packages: Tailwind CSS 4.3, React 19, pnpm, TanStack Table, pMap, clsx, lucide-react
 - This project is a Statically Generated Site (SSG) that fetches data at build time and generates static pages during build. It does not use Server-Side Rendering (SSR). We do not need to worry about hydration or client-side data fetching when building for production as that will all be done at build time.
-- Favor using `type` over `interface` unless necessary.
 - Import just the type from a package when possible, e.g., `import type { MyType } from 'my-package'`.
 - Never use require, always use import.
-- Do not `import React from 'react'`.
 - Do not suggest to cast variables to 'any' type.
 - Avoid using `any`, `unknown`, or `object` types. Use specific types or generics instead.
 - Avoid if-else chains, use Record or Map for faster lookups.
 - Avoid adding redundant comments for self-documenting code, or comments that state the obvious.
-- Use `const` for variables that are not reassigned, and `let` only when necessary.
-- Use Tailwind CSS for styling, and avoid inline styles.
-- Use `useMemo` and `useCallback` to optimize performance when necessary.
-- Use `clsx/lite` package for conditional class names, or the full `clsx` for more complex className resolution. Avoid using string interpolation for class names.
 - Use `pMap` for parallel processing of arrays.
-- Ensure best practices.
-- Ensure the best robust, clean, readable code style and architecture.
-- Ensure the solution is scalable.
-- Try to suggest/find better approaches than what is already given or existing when asked to do something, see if there is a better way to do it instead of just doing it the way it was asked.
-- Ensure the user experience and developer experience is kept at a high quality.
-- Favor the official/correct/proper way to do things over hacky ways.
-- Offer ways to improve the code or architecture whenever possible, even if it means changing existing code.
-- Offer ways to improve performance whenever possible.

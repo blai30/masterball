@@ -143,7 +143,7 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
               y={y - 18}
               width={56}
               height={36}
-              style={{ overflow: 'visible' }}
+              className="overflow-visible"
             >
               <div className={clsx('flex w-14 flex-col', align)}>
                 <abbr

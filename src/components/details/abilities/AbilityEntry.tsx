@@ -13,9 +13,8 @@ export type AbilityEntryProps = {
 }
 
 export default function AbilityEntry({ props }: { props: AbilityEntryProps }) {
-  const { versionGroup, hasMounted } = useVersionGroup()
+  const { versionGroup } = useVersionGroup()
   const name = getTranslation(props.resource.names, 'name')!
-  if (!hasMounted) return null
 
   const description = (() => {
     const defaultDescription = getTranslation(props.resource.effect_entries, 'short_effect') ?? ''

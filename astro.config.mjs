@@ -2,7 +2,18 @@ import react from '@astrojs/react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 
-import { fetchAndExportData, shouldFetchData } from './scripts/fetch-data'
+import { loadCache, saveCache } from './src/lib/api/cache'
+
+// Persist pokeapi responses across builds so we only hit the network for resources
+// that are not already cached on disk.
+const pokeapiCache = {
+  name: 'pokeapi-cache',
+  hooks: {
+    'astro:build:start': () => loadCache(),
+    'astro:build:done': () => saveCache(),
+    'astro:server:start': () => loadCache(),
+  },
+}
 
 export default defineConfig({
   site: process.env.PUBLIC_SITE_URL,
@@ -18,19 +29,5 @@ export default defineConfig({
       },
     },
   },
-  integrations: [
-    react(),
-    {
-      // Custom integration to run pre-build script for fetching data
-      name: 'fetch-data',
-      hooks: {
-        'astro:build:start': async ({ logger }) => {
-          if (shouldFetchData()) {
-            logger.info('Running pre-build script to fetch data...')
-            await fetchAndExportData()
-          }
-        },
-      },
-    },
-  ],
+  integrations: [react(), pokeapiCache],
 })

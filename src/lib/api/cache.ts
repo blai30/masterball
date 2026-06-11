@@ -1,0 +1,31 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+
+import pokeapi, { seedCache } from './pokeapi'
+
+// Persisted pokeapi responses live in a top-level, git-ignored cache directory so
+// they survive between builds locally and can be cached by CI independently of how
+// the package manager manages node_modules.
+const CACHE_FILE = resolve('.pokeapi-cache/pokeapi.json')
+
+// Load the persisted responses into the in-memory cache so a build (or dev server)
+// can reuse them instead of refetching every resource from the network.
+export function loadCache(): void {
+  if (!existsSync(CACHE_FILE)) return
+
+  const raw = readFileSync(CACHE_FILE, 'utf-8')
+  const data = JSON.parse(raw) as Record<string, unknown>
+  seedCache(data)
+  console.log(`[pokeapi-cache] loaded ${Object.keys(data).length} responses from disk`)
+}
+
+// Persist everything fetched during the build so the next build can reuse it.
+export function saveCache(): void {
+  const cache = pokeapi.getCache()
+  if (cache.size === 0) return
+
+  const data = Object.fromEntries(cache)
+  mkdirSync(dirname(CACHE_FILE), { recursive: true })
+  writeFileSync(CACHE_FILE, JSON.stringify(data))
+  console.log(`[pokeapi-cache] saved ${cache.size} responses to disk`)
+}

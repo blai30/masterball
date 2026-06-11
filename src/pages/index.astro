@@ -4,7 +4,6 @@ import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import Layout from '@/layouts/Layout.astro'
 import AppShell from '@/components/AppShell'
 import SpeciesCardGrid from '@/components/compounds/SpeciesCardGrid'
-import '@/lib/api/init'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
@@ -17,7 +16,7 @@ const speciesList = import.meta.env.DEV
 const species = await pMap(
   speciesList.results,
   (result) => pokeapi.getResource<PokemonSpecies>(result.url),
-  { concurrency: 20 }
+  { concurrency: 10 }
 )
 
 const speciesPokemon: Record<string, Pokemon> = Object.fromEntries(
@@ -31,7 +30,7 @@ const speciesPokemon: Record<string, Pokemon> = Object.fromEntries(
       )
       return [specie.name, pokemon] as const
     },
-    { concurrency: 20 }
+    { concurrency: 10 }
   )
 )
 

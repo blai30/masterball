@@ -1,4 +1,5 @@
 import type { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
+import { memo } from 'react'
 
 import GlassCard from '@/components/GlassCard'
 import { Badge } from '@/components/ui/catalyst/badge'
@@ -21,9 +22,8 @@ export type ItemCardProps = {
   category: ItemCategoryKey
 }
 
-export default function ItemCard({ props }: { props: ItemCardProps }) {
-  const { versionGroup, hasMounted } = useVersionGroup()
-  if (!hasMounted) return null
+const ItemCard = ({ props }: { props: ItemCardProps }) => {
+  const { versionGroup } = useVersionGroup()
 
   const description = (() => {
     const entry = props.flavorTextEntries.find(
@@ -67,3 +67,5 @@ export default function ItemCard({ props }: { props: ItemCardProps }) {
     </GlassCard>
   )
 }
+
+export default memo(ItemCard)
