@@ -11,7 +11,12 @@ const CACHE_FILE = resolve('.pokeapi-cache/pokeapi.json')
 // Load the persisted responses into the in-memory cache so a build (or dev server)
 // can reuse them instead of refetching every resource from the network.
 export function loadCache(): void {
-  if (!existsSync(CACHE_FILE)) return
+  if (!existsSync(CACHE_FILE)) {
+    // No file means the CI cache step did not restore anything (or this is the first
+    // build), so every request will go to the network. Surface it loudly.
+    console.log(`[pokeapi-cache] no cache file at ${CACHE_FILE}, fetching from network`)
+    return
+  }
 
   const raw = readFileSync(CACHE_FILE, 'utf-8')
   const data = JSON.parse(raw) as Record<string, unknown>
@@ -21,6 +26,13 @@ export function loadCache(): void {
 
 // Persist everything fetched during the build so the next build can reuse it.
 export function saveCache(): void {
+  // Report how the build actually used the cache. High misses on a build that
+  // claimed to load responses means the cache is stale or not covering everything.
+  const stats = pokeapi.getStats()
+  console.log(
+    `[pokeapi-cache] ${stats.hits} cache hits, ${stats.misses} network fetches this build`
+  )
+
   const cache = pokeapi.getCache()
   if (cache.size === 0) return
 
