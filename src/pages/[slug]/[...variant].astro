@@ -175,7 +175,6 @@ async function buildLocationRows(
     locationAreas.map((area) => [area.name, area])
   )
 
-
   const uniqueVersionUrls = [
     ...new Set(
       encounters.flatMap((e) => e.version_details.map((vd) => vd.version.url))
@@ -302,11 +301,14 @@ function createMoveRows(
           type: move.type.name as TypeKey,
           damageClass: move.damage_class.name as DamageClassKey,
           name: getTranslation(move.names, 'name')!,
-          defaultDescription:
-            getTranslation(move.effect_entries, 'short_effect') ?? '',
-          flavorTextEntries: move.flavor_text_entries.filter(
-            (entry) => entry.language.name === 'en'
-          ),
+          description:
+            move.flavor_text_entries.find(
+              (entry) =>
+                entry.language.name === 'en' &&
+                entry.version_group?.name === resource.version_group.name
+            )?.flavor_text ??
+            getTranslation(move.effect_entries, 'short_effect') ??
+            '',
           power: move.power || undefined,
           accuracy: move.accuracy || undefined,
           pp: move.pp!,
@@ -466,7 +468,10 @@ const title = `${name} #${imageId}`
         <section class="mx-auto w-full max-w-384">
           <div class="flex w-full flex-col gap-4 xl:flex-row">
             <div class="flex w-full flex-col gap-4">
-              <StatsSection pokemon={pokemon} client:visible={{ rootMargin: '200px' }} />
+              <StatsSection
+                pokemon={pokemon}
+                client:visible={{ rootMargin: '200px' }}
+              />
               <TypeEffectivenessSection
                 typeRelations={typeRelations}
                 client:visible={{ rootMargin: '200px' }}
@@ -475,7 +480,10 @@ const title = `${name} #${imageId}`
                 abilitiesMap={abilitiesMap}
                 client:visible={{ rootMargin: '200px' }}
               />
-              <LocationsSection rows={locationRows} client:visible={{ rootMargin: '200px' }} />
+              <LocationsSection
+                rows={locationRows}
+                client:visible={{ rootMargin: '200px' }}
+              />
               <EvolutionSection
                 evolutionRoot={evolutionRoot}
                 client:visible={{ rootMargin: '200px' }}
@@ -489,7 +497,10 @@ const title = `${name} #${imageId}`
                   />
                 )
               }
-              <LocalizationSection species={species} client:visible={{ rootMargin: '200px' }} />
+              <LocalizationSection
+                species={species}
+                client:visible={{ rootMargin: '200px' }}
+              />
             </div>
             <div class="flex w-full flex-col gap-6">
               <MovesSection

@@ -262,11 +262,7 @@ function MovesTable({
                                   className="overflow-hidden"
                                 >
                                   <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                                    {row.original.flavorTextEntries?.find(
-                                      (entry) =>
-                                        entry.language.name === 'en' &&
-                                        entry.version_group?.name === versionGroup
-                                    )?.flavor_text ?? row.original.defaultDescription}
+                                    {row.original.description}
                                   </span>
                                 </motion.div>
                               </div>

@@ -101,8 +101,17 @@ export type MoveInfo = {
   pp?: number
 }
 
-export type MoveRow = MoveInfo & {
+export type MoveRow = {
+  id: string
+  slug: string
+  name: string
+  type: string
+  damageClass: string
+  power?: number
+  accuracy?: number
+  pp?: number
   versionGroup: string
+  description: string
 }
 
 export enum LearnMethodKey {
