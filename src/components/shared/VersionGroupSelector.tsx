@@ -5,9 +5,7 @@ import { useVersionGroup } from '@/lib/stores/version-group'
 import { type VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapi-helpers'
 
 function VersionGroupSelector() {
-  const { versionGroup, setVersionGroup, hasMounted } = useVersionGroup()
-
-  if (!hasMounted) return null
+  const { versionGroup, setVersionGroup } = useVersionGroup()
 
   const options = Object.entries(VersionGroupLabels).map(([key, label]) => ({
     value: key as VersionGroupKey,

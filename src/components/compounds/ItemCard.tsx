@@ -23,8 +23,7 @@ export type ItemCardProps = {
 }
 
 const ItemCard = ({ props }: { props: ItemCardProps }) => {
-  const { versionGroup, hasMounted } = useVersionGroup()
-  if (!hasMounted) return null
+  const { versionGroup } = useVersionGroup()
 
   const description = (() => {
     const entry = props.flavorTextEntries.find(

@@ -51,8 +51,7 @@ const typeClasses: Record<TypeKey, string> = {
 }
 
 const MoveCard = ({ props }: { props: MoveInfo }) => {
-  const { versionGroup, hasMounted } = useVersionGroup()
-  if (!hasMounted) return null
+  const { versionGroup } = useVersionGroup()
 
   const description =
     props.flavorTextEntries.find(

@@ -21,8 +21,7 @@ export type InfoCardProps = {
 }
 
 const InfoCard = ({ props }: { props: InfoCardProps }) => {
-  const { versionGroup, hasMounted } = useVersionGroup()
-  if (!hasMounted) return null
+  const { versionGroup } = useVersionGroup()
 
   const description = (() => {
     const entry = props.flavorTextEntries.find(

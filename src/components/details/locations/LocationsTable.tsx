@@ -10,7 +10,7 @@ import { useVersionGroup } from '@/lib/stores/version-group'
 import { VersionGroupLabels, type LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
 
 export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] }) {
-  const { versionGroup, hasMounted } = useVersionGroup()
+  const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<LocationEncounterRow>()
 
   const filteredRows = useMemo(
@@ -63,8 +63,6 @@ export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] 
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
-
-  if (!hasMounted) return null
 
   if (filteredRows.length === 0) {
     return (

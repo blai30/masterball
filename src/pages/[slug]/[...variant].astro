@@ -466,27 +466,36 @@ const title = `${name} #${imageId}`
         <section class="mx-auto w-full max-w-384">
           <div class="flex w-full flex-col gap-4 xl:flex-row">
             <div class="flex w-full flex-col gap-4">
-              <StatsSection pokemon={pokemon} client:load />
+              <StatsSection pokemon={pokemon} client:visible={{ rootMargin: '200px' }} />
               <TypeEffectivenessSection
                 typeRelations={typeRelations}
-                client:load
+                client:visible={{ rootMargin: '200px' }}
               />
-              <AbilitiesSection abilitiesMap={abilitiesMap} client:load />
-              <LocationsSection rows={locationRows} client:load />
-              <EvolutionSection evolutionRoot={evolutionRoot} client:load />
+              <AbilitiesSection
+                abilitiesMap={abilitiesMap}
+                client:visible={{ rootMargin: '200px' }}
+              />
+              <LocationsSection rows={locationRows} client:visible={{ rootMargin: '200px' }} />
+              <EvolutionSection
+                evolutionRoot={evolutionRoot}
+                client:visible={{ rootMargin: '200px' }}
+              />
               {
                 forms.length > 1 && (
                   <CosmeticsSection
                     pokemon={pokemon}
                     forms={forms}
-                    client:load
+                    client:visible={{ rootMargin: '200px' }}
                   />
                 )
               }
-              <LocalizationSection species={species} client:load />
+              <LocalizationSection species={species} client:visible={{ rootMargin: '200px' }} />
             </div>
             <div class="flex w-full flex-col gap-6">
-              <MovesSection moveRowsByMethod={moveRowsByMethod} client:load />
+              <MovesSection
+                moveRowsByMethod={moveRowsByMethod}
+                client:visible={{ rootMargin: '200px' }}
+              />
             </div>
           </div>
         </section>

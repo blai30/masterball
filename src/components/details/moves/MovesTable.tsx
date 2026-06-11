@@ -52,7 +52,7 @@ function MovesTable({
   className?: string
 }) {
   const [activeMove, setActiveMove] = useState<string | null>(null)
-  const { versionGroup, hasMounted } = useVersionGroup()
+  const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
   const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: false }])
   const tableRef = useRef<HTMLDivElement>(null)
@@ -146,8 +146,6 @@ function MovesTable({
   const handleRowClick = useCallback((key: string) => {
     setActiveMove((prev) => (prev === key ? null : key))
   }, [])
-
-  if (!hasMounted) return null
 
   if (filteredMoveRows.length === 0) {
     return (
