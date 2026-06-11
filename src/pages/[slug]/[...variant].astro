@@ -71,13 +71,20 @@ export async function getStaticPaths() {
           slug: specie.name,
           variant: variant.is_default ? undefined : variant.pokemon.name,
         },
+        props: { species: specie },
       }))
   )
 }
 
-const { slug, variant: variantKey } = Astro.params
+export interface Props {
+  species: PokemonSpecies
+}
 
-const species = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
+const { variant: variantKey } = Astro.params
+
+// Reuse the species already fetched in getStaticPaths instead of re-fetching it by name.
+// This avoids a redundant request and sidesteps PokeAPI's flaky by-name species route.
+const { species } = Astro.props
 const pokemonUrl = species.varieties
   .filter((v) => !excludedVariants.includes(v.pokemon.name))
   .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
@@ -121,10 +128,7 @@ async function buildAbilitiesMap(
 async function buildEvolutionNode(
   chain: EvolutionChain['chain']
 ): Promise<EvolutionNodeData> {
-  const species = await pokeapi.getByName<PokemonSpecies>(
-    'pokemon-species',
-    chain.species.name
-  )
+  const species = await pokeapi.getResource<PokemonSpecies>(chain.species.url)
   const defaultVariant = species.varieties
     .filter((v) => !excludedVariants.includes(v.pokemon.name))
     .find((v) => v.is_default)
