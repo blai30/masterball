@@ -1,5 +1,12 @@
 import pMap from 'p-map'
-import type { FlavorText, Pokemon, PokemonForm, PokemonSpecies, Type } from 'pokedex-promise-v2'
+import type {
+  FlavorText,
+  Move,
+  Pokemon,
+  PokemonForm,
+  PokemonSpecies,
+  Type,
+} from 'pokedex-promise-v2'
 
 import pokeapi from '@/lib/api/pokeapi'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
@@ -111,8 +118,24 @@ export type MoveRow = {
   accuracy?: number
   pp?: number
   versionGroup: string
-  description: string
+  // Resolved at build for the default version group; loaded lazily otherwise.
+  description?: string
 }
+
+// Version-invariant move data, shared across every Pokemon that learns it.
+export type MoveData = {
+  name: string
+  type: string
+  damageClass: string
+  power?: number
+  accuracy?: number
+  pp?: number
+}
+
+export type MovesDataMap = Record<string, MoveData>
+
+// slug -> versionGroup -> description. The '_default' key holds the short-effect fallback.
+export type MovesDescriptionsMap = Record<string, Record<string, string>>
 
 export enum LearnMethodKey {
   FormChange = 'form-change',
@@ -120,6 +143,51 @@ export enum LearnMethodKey {
   Machine = 'machine',
   Tutor = 'tutor',
   Egg = 'egg',
+}
+
+// Pokemon-specific learn data: which move, in which version group, by what method, at what id (level/TM).
+export type LearnsetEntry = {
+  slug: string
+  versionGroup: string
+  method: LearnMethodKey
+  id: string
+}
+
+export function buildMoveData(move: Move): MoveData {
+  return {
+    name: getTranslation(move.names, 'name')!,
+    type: move.type.name,
+    damageClass: move.damage_class.name,
+    power: move.power || undefined,
+    accuracy: move.accuracy || undefined,
+    pp: move.pp ?? undefined,
+  }
+}
+
+export function resolveMoveDescription(move: Move, versionGroup: string): string {
+  return (
+    move.flavor_text_entries.find(
+      (entry) => entry.language.name === 'en' && entry.version_group?.name === versionGroup
+    )?.flavor_text ??
+    getTranslation(move.effect_entries, 'short_effect') ??
+    ''
+  )
+}
+
+// Map of versionGroup -> description for a single move, with a '_default' short-effect fallback.
+export function buildMoveDescriptions(move: Move): Record<string, string> {
+  const descriptions: Record<string, string> = {
+    _default: getTranslation(move.effect_entries, 'short_effect') ?? '',
+  }
+  for (const entry of move.flavor_text_entries) {
+    const versionGroup = entry.version_group?.name
+    if (entry.language.name !== 'en' || !versionGroup) continue
+    // First entry wins, matching resolveMoveDescription's find().
+    if (!(versionGroup in descriptions)) {
+      descriptions[versionGroup] = entry.flavor_text
+    }
+  }
+  return descriptions
 }
 
 export enum StatKey {
