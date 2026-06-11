@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 
-import pokeapi, { seedCache } from './pokeapi'
+import { getCache, getStats, seedCache } from './pokeapi'
 
 // Persisted pokeapi responses live in a top-level, git-ignored cache directory so
 // they survive between builds locally and can be cached by CI independently of how
@@ -28,12 +28,12 @@ export function loadCache(): void {
 export function saveCache(): void {
   // Report how the build actually used the cache. High misses on a build that
   // claimed to load responses means the cache is stale or not covering everything.
-  const stats = pokeapi.getStats()
+  const stats = getStats()
   console.log(
     `[pokeapi-cache] ${stats.hits} cache hits, ${stats.misses} network fetches this build`
   )
 
-  const cache = pokeapi.getCache()
+  const cache = getCache()
   if (cache.size === 0) return
 
   const data = Object.fromEntries(cache)

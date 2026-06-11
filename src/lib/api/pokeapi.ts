@@ -17,6 +17,20 @@ const cache = (globalCache.__pokeapiCache__ ??= new Map<string, unknown>())
 const stats = (globalCache.__pokeapiStats__ ??= { hits: 0, misses: 0 })
 
 /**
+ * Gets the cache as read-only for dumping to disk.
+ */
+export const getCache = (): ReadonlyMap<string, unknown> => {
+  return cache
+}
+
+/**
+ * Gets per-build cache hit/miss counters for logging.
+ */
+export const getStats = (): { hits: number; misses: number; size: number } => {
+  return { hits: stats.hits, misses: stats.misses, size: cache.size }
+}
+
+/**
  * Seed the cache with persisted API data. Used by the disk-cache loader.
  */
 export function seedCache(data: Record<string, unknown>): void {
