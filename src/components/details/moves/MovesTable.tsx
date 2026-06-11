@@ -13,6 +13,7 @@ import { Fragment, memo, useCallback, useMemo, useState, useRef, useEffect } fro
 
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
+import { useVersionGroup } from '@/lib/stores/version-group'
 import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapi-helpers'
 
 const tableNames: Record<LearnMethodKey, string> = {
@@ -44,17 +45,14 @@ const columnClasses: Record<string, string> = {
 function MovesTable({
   variant,
   moveRows,
-  versionGroup,
-  onExpand,
   className,
 }: {
   variant: LearnMethodKey
   moveRows: MoveRow[]
-  versionGroup: string
-  onExpand?: () => void
   className?: string
 }) {
   const [activeMove, setActiveMove] = useState<string | null>(null)
+  const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<MoveRow>()
   const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: false }])
   const tableRef = useRef<HTMLDivElement>(null)
@@ -131,8 +129,13 @@ function MovesTable({
     [columnHelper, variant]
   )
 
+  const filteredMoveRows = useMemo(
+    () => moveRows.filter((row) => row.versionGroup === versionGroup),
+    [moveRows, versionGroup]
+  )
+
   const table = useReactTable({
-    data: moveRows,
+    data: filteredMoveRows,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
@@ -140,18 +143,20 @@ function MovesTable({
     getSortedRowModel: getSortedRowModel(),
   })
 
-  const handleRowClick = useCallback(
-    (key: string) => {
-      setActiveMove((prev) => {
-        const next = prev === key ? null : key
-        if (next) onExpand?.()
-        return next
-      })
-    },
-    [onExpand]
-  )
+  const handleRowClick = useCallback((key: string) => {
+    setActiveMove((prev) => (prev === key ? null : key))
+  }, [])
 
-  if (moveRows.length === 0) return null
+  if (filteredMoveRows.length === 0) {
+    return (
+      <div className={clsx('flex flex-col gap-2', className)}>
+        <h3 className="text-lg">{tableNames[variant]}</h3>
+        <p className="text-zinc-500 dark:text-zinc-400">
+          No {tableNames[variant].toLocaleLowerCase()} moves available for this version group.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div ref={tableRef} className={clsx('max-w-2xl', className)}>
@@ -257,11 +262,11 @@ function MovesTable({
                                   className="overflow-hidden"
                                 >
                                   <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                                    {row.original.description ?? (
-                                      <span className="text-zinc-400 dark:text-zinc-500">
-                                        Loading description...
-                                      </span>
-                                    )}
+                                    {row.original.flavorTextEntries?.find(
+                                      (entry) =>
+                                        entry.language.name === 'en' &&
+                                        entry.version_group?.name === versionGroup
+                                    )?.flavor_text ?? row.original.defaultDescription}
                                   </span>
                                 </motion.div>
                               </div>

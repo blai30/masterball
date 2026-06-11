@@ -21,17 +21,15 @@ import AppShell from '@/components/AppShell'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import {
-  buildMoveData,
+  DamageClassKey,
   getCombinedEffectiveness,
   getMonstersBySpecies,
   getTranslation,
   initTypes,
   LearnMethodKey,
-  resolveMoveDescription,
   TypeKey,
   TypeLabels,
   VersionGroupKey,
-  type LearnsetEntry,
   type LocationEncounterRow,
   type MoveRow,
   type TypeRelation,
@@ -71,20 +69,13 @@ export async function getStaticPaths() {
           slug: specie.name,
           variant: variant.is_default ? undefined : variant.pokemon.name,
         },
-        props: { species: specie },
       }))
   )
 }
 
-export interface Props {
-  species: PokemonSpecies
-}
+const { slug, variant: variantKey } = Astro.params
 
-const { variant: variantKey } = Astro.params
-
-// Reuse the species already fetched in getStaticPaths instead of re-fetching it by name.
-// This avoids a redundant request and sidesteps PokeAPI's flaky by-name species route.
-const { species } = Astro.props
+const species = await pokeapi.getByName<PokemonSpecies>('pokemon-species', slug)
 const pokemonUrl = species.varieties
   .filter((v) => !excludedVariants.includes(v.pokemon.name))
   .find((v) => (variantKey ? v.pokemon.name === variantKey : v.is_default))!
@@ -128,7 +119,10 @@ async function buildAbilitiesMap(
 async function buildEvolutionNode(
   chain: EvolutionChain['chain']
 ): Promise<EvolutionNodeData> {
-  const species = await pokeapi.getResource<PokemonSpecies>(chain.species.url)
+  const species = await pokeapi.getByName<PokemonSpecies>(
+    'pokemon-species',
+    chain.species.name
+  )
   const defaultVariant = species.varieties
     .filter((v) => !excludedVariants.includes(v.pokemon.name))
     .find((v) => v.is_default)
@@ -267,54 +261,80 @@ async function buildLocationRows(
   return [...rowMap.values()]
 }
 
-function resolveLearnId(
-  move: Move,
-  detail: MoveElement['version_group_details'][number],
-  machinesMap: Map<string, Machine[]>
-): string {
-  const method = detail.move_learn_method.name
-  if (method === LearnMethodKey.LevelUp) {
-    return detail.level_learned_at === 0
-      ? 'Evolve'
-      : detail.level_learned_at.toString()
-  }
-  if (method === LearnMethodKey.Machine) {
-    const machine = machinesMap
-      .get(move.name)
-      ?.find((mac) => mac.version_group.name === detail.version_group.name)
-    if (machine?.item) return machine.item.name.toUpperCase()
-  }
-  return move.id.toString()
+function createMoveRows(
+  moves: MoveElement[],
+  movesMap: Record<string, Move>,
+  machinesMap: Map<string, Machine[]>,
+  variant: LearnMethodKey
+): MoveRow[] {
+  const moveRows: MoveRow[] = []
+
+  moves.forEach((m) => {
+    const move = movesMap[m.move.name]
+    if (!move) return
+
+    m.version_group_details.forEach((resource) => {
+      if (resource.move_learn_method.name === variant) {
+        let id = move.id.toString()
+
+        if (variant === LearnMethodKey.LevelUp) {
+          id =
+            resource.level_learned_at === 0
+              ? 'Evolve'
+              : resource.level_learned_at.toString()
+        } else if (variant === LearnMethodKey.Machine) {
+          const machineList = machinesMap.get(m.move.name)
+          const machine = machineList?.find(
+            (mac) => mac.version_group.name === resource.version_group.name
+          )
+          if (machine?.item) {
+            id = machine.item.name.toUpperCase()
+          }
+        }
+
+        moveRows.push({
+          id,
+          slug: m.move.name,
+          versionGroup: resource.version_group.name,
+          type: move.type.name as TypeKey,
+          damageClass: move.damage_class.name as DamageClassKey,
+          name: getTranslation(move.names, 'name')!,
+          defaultDescription:
+            getTranslation(move.effect_entries, 'short_effect') ?? '',
+          flavorTextEntries: move.flavor_text_entries.filter(
+            (entry) => entry.language.name === 'en'
+          ),
+          power: move.power || undefined,
+          accuracy: move.accuracy || undefined,
+          pp: move.pp!,
+        })
+      }
+    })
+  })
+
+  return moveRows
 }
 
-async function buildMovesData(
-  pokemon: Pokemon,
-  defaultVersionGroup: string
-): Promise<{
-  learnset: LearnsetEntry[]
-  defaultRows: Record<LearnMethodKey, MoveRow[]>
-}> {
-  const emptyByMethod = (): Record<LearnMethodKey, MoveRow[]> => ({
+async function buildMoveRowsByMethod(
+  pokemon: Pokemon
+): Promise<Record<LearnMethodKey, MoveRow[]>> {
+  const moveRowsByMethod: Record<LearnMethodKey, MoveRow[]> = {
     [LearnMethodKey.FormChange]: [],
     [LearnMethodKey.LevelUp]: [],
     [LearnMethodKey.Machine]: [],
     [LearnMethodKey.Tutor]: [],
     [LearnMethodKey.Egg]: [],
-  })
-
-  if (pokemon.moves.length === 0) {
-    return { learnset: [], defaultRows: emptyByMethod() }
   }
+
+  if (pokemon.moves.length === 0) return moveRowsByMethod
 
   const uniqueMoveUrls = [
     ...new Set(pokemon.moves.map((move) => move.move.url)),
   ]
   const movesData = await pMap(
     uniqueMoveUrls,
-    (url) => pokeapi.getResource<Move>(url),
-    {
-      concurrency: 20,
-    }
+    async (url) => pokeapi.getResource<Move>(url),
+    { concurrency: 20 }
   )
 
   const uniqueMachineUrls = [
@@ -343,42 +363,22 @@ async function buildMovesData(
     movesData.map((move) => [move.name, move])
   ) as Record<string, Move>
 
-  const knownMethods = new Set<string>(Object.values(LearnMethodKey))
-  const learnset: LearnsetEntry[] = []
-  const defaultRows = emptyByMethod()
+  Object.keys(moveRowsByMethod).forEach((method) => {
+    const methodKey = method as LearnMethodKey
+    const methodMoves = pokemon.moves.filter((move) =>
+      move.version_group_details.some(
+        (vgd) => vgd.move_learn_method.name === methodKey
+      )
+    )
+    moveRowsByMethod[methodKey] = createMoveRows(
+      methodMoves,
+      movesMap,
+      machinesMap,
+      methodKey
+    )
+  })
 
-  for (const entry of pokemon.moves) {
-    const move = movesMap[entry.move.name]
-    if (!move) continue
-
-    for (const detail of entry.version_group_details) {
-      const method = detail.move_learn_method.name
-      if (!knownMethods.has(method)) continue
-
-      const methodKey = method as LearnMethodKey
-      const versionGroup = detail.version_group.name
-      const id = resolveLearnId(move, detail, machinesMap)
-
-      learnset.push({
-        slug: entry.move.name,
-        versionGroup,
-        method: methodKey,
-        id,
-      })
-
-      if (versionGroup === defaultVersionGroup) {
-        defaultRows[methodKey].push({
-          ...buildMoveData(move),
-          id,
-          slug: entry.move.name,
-          versionGroup,
-          description: resolveMoveDescription(move, versionGroup),
-        })
-      }
-    }
-  }
-
-  return { learnset, defaultRows }
+  return moveRowsByMethod
 }
 
 // Fetch all 18 types once (cached across the entire build) and pre-compute effectiveness.
@@ -398,7 +398,7 @@ const [
   growthRate,
   evolutionRoot,
   locationRows,
-  movesData,
+  moveRowsByMethod,
 ] = await Promise.all([
   buildAbilitiesMap(pokemon),
   pMap(species.egg_groups, (eg) => pokeapi.getResource<EggGroup>(eg.url), {
@@ -407,9 +407,10 @@ const [
   pokeapi.getResource<GrowthRate>(species.growth_rate.url),
   buildEvolutionTree(species),
   buildLocationRows(pokemon),
-  buildMovesData(pokemon, VersionGroupKey.ScarletViolet),
+  buildMoveRowsByMethod(pokemon),
 ])
 
+// Metadata
 const imageId = species.id.toString().padStart(4, '0')
 const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
 const name = getTranslation(species.names, 'name')!
@@ -462,47 +463,27 @@ const title = `${name} #${imageId}`
         <section class="mx-auto w-full max-w-384">
           <div class="flex w-full flex-col gap-4 xl:flex-row">
             <div class="flex w-full flex-col gap-4">
-              <StatsSection
-                pokemon={pokemon}
-                client:visible={{ rootMargin: '200px' }}
-              />
+              <StatsSection pokemon={pokemon} client:load />
               <TypeEffectivenessSection
                 typeRelations={typeRelations}
-                client:visible={{ rootMargin: '200px' }}
+                client:load
               />
-              <AbilitiesSection
-                abilitiesMap={abilitiesMap}
-                client:visible={{ rootMargin: '200px' }}
-              />
-              <LocationsSection
-                rows={locationRows}
-                client:visible={{ rootMargin: '200px' }}
-              />
-              <EvolutionSection
-                evolutionRoot={evolutionRoot}
-                client:visible={{ rootMargin: '200px' }}
-              />
+              <AbilitiesSection abilitiesMap={abilitiesMap} client:load />
+              <LocationsSection rows={locationRows} client:load />
+              <EvolutionSection evolutionRoot={evolutionRoot} client:load />
               {
                 forms.length > 1 && (
                   <CosmeticsSection
                     pokemon={pokemon}
                     forms={forms}
-                    client:visible={{ rootMargin: '200px' }}
+                    client:load
                   />
                 )
               }
-              <LocalizationSection
-                species={species}
-                client:visible={{ rootMargin: '200px' }}
-              />
+              <LocalizationSection species={species} client:load />
             </div>
             <div class="flex w-full flex-col gap-6">
-              <MovesSection
-                learnset={movesData.learnset}
-                defaultRows={movesData.defaultRows}
-                defaultVersionGroup={VersionGroupKey.ScarletViolet}
-                client:visible={{ rootMargin: '200px' }}
-              />
+              <MovesSection moveRowsByMethod={moveRowsByMethod} client:load />
             </div>
           </div>
         </section>
