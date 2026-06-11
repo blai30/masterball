@@ -2,13 +2,17 @@ import type { NamedAPIResourceList } from 'pokedex-promise-v2'
 
 const BASE_URL = 'https://pokeapi.co/api/v2/'
 
-// Module-level cache for build-time request deduplication.
-// Seed with pre-fetched data using `seedCache()` (see init.ts).
-const cache = new Map<string, unknown>()
+// Process-global cache for build-time request deduplication and cross-build
+// persistence. Backed by globalThis so the single in-memory Map is shared between
+// the build integration (which loads/saves it to disk) and the page/SSR modules
+// that read and populate it, even though they are separate module instances.
+const globalCache = globalThis as typeof globalThis & {
+  __pokeapiCache__?: Map<string, unknown>
+}
+const cache = (globalCache.__pokeapiCache__ ??= new Map<string, unknown>())
 
 /**
- * Seed the cache with pre-fetched API data.
- * Call once per build via `import '@/lib/api/init'` in Astro pages.
+ * Seed the cache with persisted API data. Used by the disk-cache loader.
  */
 export function seedCache(data: Record<string, unknown>): void {
   for (const [url, value] of Object.entries(data)) {
