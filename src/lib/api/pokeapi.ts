@@ -74,7 +74,7 @@ const cachedFetch = async <T>(url: string): Promise<T> => {
 
 const pokeapi = {
   /**
-   * Gets a list of resources with pagination
+   * Gets a list of resources with pagination.
    */
   getList: async (endpoint: string, limit = 1025, offset = 0): Promise<NamedAPIResourceList> => {
     const params = new URLSearchParams({
@@ -88,7 +88,7 @@ const pokeapi = {
   },
 
   /**
-   * Gets a resource by name or ID
+   * Gets a resource by name or id.
    */
   getByName: async <T>(endpoint: string, nameOrId?: string | number): Promise<T> => {
     const url = new URL(endpoint, BASE_URL)
@@ -99,7 +99,7 @@ const pokeapi = {
   },
 
   /**
-   * Gets a resource from a full URL
+   * Gets a resource from a full url.
    */
   getResource: async <T>(url: string): Promise<T> => {
     return await cachedFetch<T>(url)
