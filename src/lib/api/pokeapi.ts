@@ -8,8 +8,13 @@ const BASE_URL = 'https://pokeapi.co/api/v2/'
 // that read and populate it, even though they are separate module instances.
 const globalCache = globalThis as typeof globalThis & {
   __pokeapiCache__?: Map<string, unknown>
+  __pokeapiStats__?: { hits: number; misses: number }
 }
 const cache = (globalCache.__pokeapiCache__ ??= new Map<string, unknown>())
+// Hit/miss counters share globalThis with the cache for the same reason: the build
+// integration and the page modules are separate module instances, so module-local
+// counters would split the tally and report zero where the work actually happened.
+const stats = (globalCache.__pokeapiStats__ ??= { hits: 0, misses: 0 })
 
 /**
  * Seed the cache with persisted API data. Used by the disk-cache loader.
@@ -23,42 +28,51 @@ export function seedCache(data: Record<string, unknown>): void {
 // A build-time crawl makes thousands of requests to pokeapi, so each request is
 // bounded by a timeout and retried with exponential backoff to ride out transient
 // network failures and rate limits instead of aborting the whole build.
-const MAX_RETRIES = 5
+const MAX_RETRIES = 7
 const REQUEST_TIMEOUT_MS = 30_000
+const MAX_BACKOFF_MS = 30_000
+
+// pokeapi sits behind Cloudflare, which serves transient 5xx and 429 under load,
+// especially to shared CI egress IPs. Those (and status-less network/timeout errors)
+// are worth retrying; a genuine 4xx like 404 is not and should fail fast.
+const isRetryable = (status: number | undefined): boolean =>
+  status === undefined || status === 408 || status === 429 || status >= 500
 
 const fetchJson = async <T>(url: string): Promise<T> => {
   const response = await fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) })
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
+    throw Object.assign(
+      new Error(`Failed to fetch ${url} - ${response.status} ${response.statusText}`),
+      { status: response.status }
+    )
   }
   return response.json()
 }
 
 const cachedFetch = async <T>(url: string): Promise<T> => {
   if (cache.has(url)) {
+    stats.hits++
     return cache.get(url) as T
   }
 
+  stats.misses++
   for (let attempt = 0; ; attempt++) {
     try {
       const data = await fetchJson<T>(url)
       cache.set(url, data)
       return data
     } catch (error) {
-      if (attempt >= MAX_RETRIES) throw error
-      await new Promise((resolve) => setTimeout(resolve, 2 ** attempt * 1000))
+      const status = (error as { status?: number }).status
+      if (!isRetryable(status) || attempt >= MAX_RETRIES) throw error
+      // Exponential backoff capped at MAX_BACKOFF_MS, plus random jitter so a burst of
+      // concurrent requests does not retry in lockstep and re-trip the rate limit.
+      const backoff = Math.min(2 ** attempt * 1000, MAX_BACKOFF_MS)
+      await new Promise((resolve) => setTimeout(resolve, backoff + Math.random() * 1000))
     }
   }
 }
 
 const pokeapi = {
-  /**
-   * Gets the cache as read-only for dumping to disk.
-   */
-  getCache: (): ReadonlyMap<string, unknown> => {
-    return cache
-  },
-
   /**
    * Gets a list of resources with pagination.
    */
