@@ -43,7 +43,11 @@ export default function ThemeSwitch() {
   }
 
   const label =
-    isDark === undefined ? 'Toggle theme' : isDark ? 'Switch to light theme' : 'Switch to dark theme'
+    isDark === undefined
+      ? 'Toggle theme'
+      : isDark
+        ? 'Switch to light theme'
+        : 'Switch to dark theme'
 
   return (
     <button

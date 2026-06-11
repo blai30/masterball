@@ -2,7 +2,6 @@ import type { APIRoute } from 'astro'
 import pMap from 'p-map'
 import type { Move } from 'pokedex-promise-v2'
 
-import '@/lib/api/init'
 import pokeapi from '@/lib/api/pokeapi'
 import { buildMoveData, type MovesDataMap } from '@/lib/utils/pokeapi-helpers'
 
