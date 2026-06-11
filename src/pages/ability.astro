@@ -14,7 +14,7 @@ const abilityList = import.meta.env.DEV
 const abilities = await pMap(
   abilityList.results,
   (result) => pokeapi.getResource<Ability>(result.url),
-  { concurrency: 20 }
+  { concurrency: 10 }
 )
 
 const abilitiesData = abilities

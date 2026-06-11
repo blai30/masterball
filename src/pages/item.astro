@@ -27,7 +27,7 @@ const filteredItems = itemList.results.filter(
 const items = await pMap(
   filteredItems,
   (result) => pokeapi.getResource<Item>(result.url),
-  { concurrency: 20 }
+  { concurrency: 10 }
 )
 
 const itemsData = items

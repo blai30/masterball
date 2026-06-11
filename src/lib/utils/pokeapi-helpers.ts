@@ -81,7 +81,7 @@ export const getMonstersBySpecies = async (species: PokemonSpecies): Promise<Mon
       const resource = await pokeapi.getResource<Pokemon>(url)
       return resource
     },
-    { concurrency: 20 }
+    { concurrency: 10 }
   )
 
   const monsters = await pMap(
@@ -90,7 +90,7 @@ export const getMonstersBySpecies = async (species: PokemonSpecies): Promise<Mon
       const resource = createMonster(variant, species)
       return resource
     },
-    { concurrency: 20 }
+    { concurrency: 10 }
   )
   return monsters
 }

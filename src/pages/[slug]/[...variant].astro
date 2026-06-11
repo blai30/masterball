@@ -60,7 +60,7 @@ export async function getStaticPaths() {
   const species = await pMap(
     speciesList.results,
     (result) => pokeapi.getResource<PokemonSpecies>(result.url),
-    { concurrency: 20 }
+    { concurrency: 10 }
   )
 
   return species.flatMap((specie) =>
@@ -95,7 +95,7 @@ const monsters = await getMonstersBySpecies(species)
 const forms = await pMap(
   pokemon.forms.filter((form) => !excludedForms.includes(form.name)),
   (form) => pokeapi.getByName<PokemonForm>('pokemon-form', form.name),
-  { concurrency: 20 }
+  { concurrency: 10 }
 )
 
 const form =
@@ -169,7 +169,7 @@ async function buildLocationRows(
     uniqueAreaUrls,
     (url) => pokeapi.getResource<LocationArea>(url),
     {
-      concurrency: 20,
+      concurrency: 10,
     }
   )
   const areaMap: Record<string, LocationArea> = Object.fromEntries(
@@ -185,7 +185,7 @@ async function buildLocationRows(
     uniqueVersionUrls,
     (url) => pokeapi.getResource<Version>(url),
     {
-      concurrency: 20,
+      concurrency: 10,
     }
   )
   const versionMap: Record<string, Version> = Object.fromEntries(
@@ -204,7 +204,7 @@ async function buildLocationRows(
   const encounterMethods = await pMap(
     uniqueMethodUrls,
     (url) => pokeapi.getResource<EncounterMethod>(url),
-    { concurrency: 20 }
+    { concurrency: 10 }
   )
   const methodMap: Record<string, EncounterMethod> = Object.fromEntries(
     encounterMethods.map((m) => [m.name, m])
@@ -303,7 +303,7 @@ async function buildMovesData(
 
   const uniqueMoveUrls = [...new Set(pokemon.moves.map((move) => move.move.url))]
   const movesData = await pMap(uniqueMoveUrls, (url) => pokeapi.getResource<Move>(url), {
-    concurrency: 20,
+    concurrency: 10,
   })
 
   const uniqueMachineUrls = [
@@ -312,7 +312,7 @@ async function buildMovesData(
     ),
   ]
   const machinesData = await pMap(uniqueMachineUrls, (url) => pokeapi.getResource<Machine>(url), {
-    concurrency: 20,
+    concurrency: 10,
   })
 
   const machinesMap = new Map<string, Machine[]>()

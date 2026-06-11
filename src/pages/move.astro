@@ -14,7 +14,7 @@ const moveList = import.meta.env.DEV
 const moves = await pMap(
   moveList.results,
   (result) => pokeapi.getResource<Move>(result.url),
-  { concurrency: 20 }
+  { concurrency: 10 }
 )
 
 const movesData = moves

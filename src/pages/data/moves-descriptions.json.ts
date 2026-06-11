@@ -11,7 +11,7 @@ import { buildMoveDescriptions, type MovesDescriptionsMap } from '@/lib/utils/po
 export const GET: APIRoute = async () => {
   const list = await pokeapi.getList('move', 1200)
   const moves = await pMap(list.results, (result) => pokeapi.getResource<Move>(result.url), {
-    concurrency: 20,
+    concurrency: 10,
   })
 
   const descriptions: MovesDescriptionsMap = {}

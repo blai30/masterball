@@ -16,7 +16,7 @@ const speciesList = import.meta.env.DEV
 const species = await pMap(
   speciesList.results,
   (result) => pokeapi.getResource<PokemonSpecies>(result.url),
-  { concurrency: 20 }
+  { concurrency: 10 }
 )
 
 const speciesPokemon: Record<string, Pokemon> = Object.fromEntries(
@@ -30,7 +30,7 @@ const speciesPokemon: Record<string, Pokemon> = Object.fromEntries(
       )
       return [specie.name, pokemon] as const
     },
-    { concurrency: 20 }
+    { concurrency: 10 }
   )
 )
 
