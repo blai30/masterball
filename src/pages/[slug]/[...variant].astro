@@ -82,8 +82,8 @@ const { variant } = Astro.params
 const { species } = Astro.props
 const pokemonUrl = species.varieties
   .filter((v) => !excludedVariants.includes(v.pokemon.name))
-  .find((v) => (variant ? v.pokemon.name === variant : v.is_default))!
-  .pokemon.url
+  .find((v) => (variant ? v.pokemon.name === variant : v.is_default))!.pokemon
+  .url
 const pokemon = await pokeapi.getResource<Pokemon>(pokemonUrl)
 
 // Get all variants for selector
@@ -123,10 +123,7 @@ async function buildAbilitiesMap(
 async function buildEvolutionNode(
   chain: EvolutionChain['chain']
 ): Promise<EvolutionNodeData> {
-  const species = await pokeapi.getByName<PokemonSpecies>(
-    'pokemon-species',
-    chain.species.name
-  )
+  const species = await pokeapi.getResource<PokemonSpecies>(chain.species.url)
   const defaultVariant = species.varieties
     .filter((v) => !excludedVariants.includes(v.pokemon.name))
     .find((v) => v.is_default)
