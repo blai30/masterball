@@ -20,19 +20,35 @@ export function seedCache(data: Record<string, unknown>): void {
   }
 }
 
+// A build-time crawl makes thousands of requests to pokeapi, so each request is
+// bounded by a timeout and retried with exponential backoff to ride out transient
+// network failures and rate limits instead of aborting the whole build.
+const MAX_RETRIES = 5
+const REQUEST_TIMEOUT_MS = 30_000
+
+const fetchJson = async <T>(url: string): Promise<T> => {
+  const response = await fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) })
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
+  }
+  return response.json()
+}
+
 const cachedFetch = async <T>(url: string): Promise<T> => {
   if (cache.has(url)) {
     return cache.get(url) as T
   }
 
-  const response = await fetch(url)
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.statusText}`)
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const data = await fetchJson<T>(url)
+      cache.set(url, data)
+      return data
+    } catch (error) {
+      if (attempt >= MAX_RETRIES) throw error
+      await new Promise((resolve) => setTimeout(resolve, 2 ** attempt * 1000))
+    }
   }
-
-  const data = await response.json()
-  cache.set(url, data)
-  return data
 }
 
 const pokeapi = {
