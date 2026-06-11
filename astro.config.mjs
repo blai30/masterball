@@ -19,11 +19,7 @@ export default defineConfig({
     },
   },
   integrations: [
-    react({
-      babel: {
-        plugins: ['babel-plugin-react-compiler'],
-      },
-    }),
+    react(),
     {
       // Custom integration to run pre-build script for fetching data
       name: 'fetch-data',
