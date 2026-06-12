@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 
 import LoadingSection from '@/components/details/LoadingSection'
 import { loadMovesData, loadMovesDescriptions } from '@/lib/api/moves-client'
@@ -84,13 +84,13 @@ export default function MovesSection({
 
   // Ensures descriptions are loaded when a user expands a row, in case the idle
   // prefetch has not run yet.
-  const ensureDescriptions = useCallback(() => {
+  const ensureDescriptions = () => {
     loadMovesDescriptions()
       .then(setDescriptions)
       .catch(() => {})
-  }, [])
+  }
 
-  const rowsByMethod = useMemo(() => {
+  const rowsByMethod = (() => {
     if (isDefault) return defaultRows
     if (!movesData) return emptyByMethod()
 
@@ -110,7 +110,7 @@ export default function MovesSection({
       })
     }
     return result
-  }, [isDefault, defaultRows, movesData, descriptions, learnset, versionGroup])
+  })()
 
   const sectionClass =
     'flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800'

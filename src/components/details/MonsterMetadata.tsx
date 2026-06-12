@@ -100,13 +100,23 @@ function SizeMetadata({ height, weight }: { height: number; weight: number }) {
           <span className="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
             Height
           </span>
-          <ValueUnit value={meters} unit="m" />
+          <span className="sr-only">
+            {feet} feet {inches} inches, or {meters} meters
+          </span>
+          <div aria-hidden="true">
+            <ValueUnit value={meters} unit="m" />
+          </div>
         </div>
         <div>
           <span className="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
             Weight
           </span>
-          <ValueUnit value={kilograms} unit="kg" />
+          <span className="sr-only">
+            {pounds} pounds, or {kilograms} kilograms
+          </span>
+          <div aria-hidden="true">
+            <ValueUnit value={kilograms} unit="kg" />
+          </div>
         </div>
       </div>
     </MetadataCard>

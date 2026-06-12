@@ -29,5 +29,12 @@ export default defineConfig({
       },
     },
   },
-  integrations: [react(), pokeapiCache],
+  integrations: [
+    react({
+      babel: {
+        plugins: [['babel-plugin-react-compiler', {}]],
+      },
+    }),
+    pokeapiCache,
+  ],
 })

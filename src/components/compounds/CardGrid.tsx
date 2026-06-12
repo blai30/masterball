@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react'
-import { useMemo, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 
 import Pagination from '@/components/compounds/Pagination'
 
@@ -22,15 +22,11 @@ export default function CardGrid<T>({
   currentPage,
   onPageChangeAction,
 }: CardGridProps<T>) {
-  const paginatedItems = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
-    return data.slice(startIndex, endIndex)
-  }, [data, currentPage, itemsPerPage])
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedItems = data.slice(startIndex, endIndex)
 
-  const totalPages = useMemo(() => {
-    return Math.ceil(data.length / itemsPerPage)
-  }, [data, itemsPerPage])
+  const totalPages = Math.ceil(data.length / itemsPerPage)
 
   return (
     <div className="xs:gap-8 flex flex-col gap-4">

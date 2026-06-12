@@ -1,6 +1,6 @@
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 
 const getPageNumbers = (current: number, total: number) => {
   if (total <= 7) {
@@ -26,7 +26,7 @@ export default function Pagination({
 }) {
   const [showInput, setShowInput] = useState<number | null>(null)
 
-  const pages = useMemo(() => getPageNumbers(currentPage, totalPages), [currentPage, totalPages])
+  const pages = getPageNumbers(currentPage, totalPages)
 
   const handleInputChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

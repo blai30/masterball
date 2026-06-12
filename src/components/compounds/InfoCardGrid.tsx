@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { useCallback, useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import InfoCard, { type InfoCardProps } from '@/components/compounds/InfoCard'
@@ -43,27 +43,23 @@ export default function InfoCardGrid({
   )
 
   // Handlers
-  const handleSearchChange = useCallback((value: string) => {
+  const handleSearchChange = (value: string) => {
     setSearch(value)
     setCurrentPage(DEFAULT_PAGE)
-  }, [])
-  const handlePageChange = useCallback((page: number) => {
+  }
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
-  }, [])
+  }
 
-  const fuse = useMemo(
-    () =>
-      new Fuse(data, {
-        keys: ['name'],
-        threshold: 0.4,
-      }),
-    [data]
-  )
+  const fuse = new Fuse(data, {
+    keys: ['name'],
+    threshold: 0.4,
+  })
 
   /**
    * Returns filtered data for grid display.
    */
-  const filteredData = useMemo(() => {
+  const filteredData = (() => {
     // Search first (Fuse is stable across filter changes)
     let results = search ? fuse.search(search).map((result) => result.item) : data
 
@@ -74,7 +70,7 @@ export default function InfoCardGrid({
     }
 
     return results
-  }, [data, fuse, filterByVersionGroup, search, versionGroup])
+  })()
 
   return (
     <div className="flex flex-col gap-8">

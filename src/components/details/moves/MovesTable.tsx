@@ -9,7 +9,7 @@ import {
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { motion } from 'motion/react'
-import { Fragment, memo, useCallback, useMemo, useState, useRef, useEffect } from 'react'
+import { Fragment, memo, useState, useRef, useEffect } from 'react'
 
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
@@ -73,63 +73,60 @@ function MovesTable({
     }
   }, [activeMove])
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('id', {
-        header: idColumnLabels[variant] ?? '',
-        cell: (info) => (
-          <p
-            className={clsx(
-              'font-num w-full text-right text-zinc-700 dark:text-zinc-300',
-              idColumnLabels[variant] ? 'visible' : 'invisible'
-            )}
-          >
-            {info.getValue()}
-          </p>
-        ),
-      }),
-      columnHelper.accessor('type', {
-        header: '',
-        cell: (info) => (
-          <div className="flex items-center justify-center gap-1">
-            <TypeIcon variant={info.getValue()} size="medium" />
-          </div>
-        ),
-      }),
-      columnHelper.accessor('name', {
-        header: 'Move',
-        cell: (info) => (
-          <span className="font-medium text-zinc-900 dark:text-zinc-100">{info.getValue()}</span>
-        ),
-      }),
-      columnHelper.accessor('damageClass', {
-        header: '',
-        cell: (info) => (
-          <div className="flex items-center justify-center gap-1">
-            <DamageClassIcon variant={info.row.original.damageClass} size="medium" />
-          </div>
-        ),
-      }),
-      columnHelper.accessor('power', {
-        header: 'Power',
-        cell: (info) => <p className="font-num w-full text-right">{info.getValue() ?? '—'}</p>,
-      }),
-      columnHelper.accessor('accuracy', {
-        header: 'Accuracy',
-        cell: (info) => (
-          <p className="font-num w-full text-right">
-            {info.getValue() ?? '—'}
-            <span className="ml-0.5 text-zinc-600 dark:text-zinc-400">%</span>
-          </p>
-        ),
-      }),
-      columnHelper.accessor('pp', {
-        header: 'PP',
-        cell: (info) => <p className="font-num w-full text-right">{info.getValue()}</p>,
-      }),
-    ],
-    [columnHelper, variant]
-  )
+  const columns = [
+    columnHelper.accessor('id', {
+      header: idColumnLabels[variant] ?? '',
+      cell: (info) => (
+        <p
+          className={clsx(
+            'font-num w-full text-right text-zinc-700 dark:text-zinc-300',
+            idColumnLabels[variant] ? 'visible' : 'invisible'
+          )}
+        >
+          {info.getValue()}
+        </p>
+      ),
+    }),
+    columnHelper.accessor('type', {
+      header: '',
+      cell: (info) => (
+        <div className="flex items-center justify-center gap-1">
+          <TypeIcon variant={info.getValue()} size="medium" />
+        </div>
+      ),
+    }),
+    columnHelper.accessor('name', {
+      header: 'Move',
+      cell: (info) => (
+        <span className="font-medium text-zinc-900 dark:text-zinc-100">{info.getValue()}</span>
+      ),
+    }),
+    columnHelper.accessor('damageClass', {
+      header: '',
+      cell: (info) => (
+        <div className="flex items-center justify-center gap-1">
+          <DamageClassIcon variant={info.row.original.damageClass} size="medium" />
+        </div>
+      ),
+    }),
+    columnHelper.accessor('power', {
+      header: 'Power',
+      cell: (info) => <p className="font-num w-full text-right">{info.getValue() ?? '—'}</p>,
+    }),
+    columnHelper.accessor('accuracy', {
+      header: 'Accuracy',
+      cell: (info) => (
+        <p className="font-num w-full text-right">
+          {info.getValue() ?? '—'}
+          <span className="ml-0.5 text-zinc-600 dark:text-zinc-400">%</span>
+        </p>
+      ),
+    }),
+    columnHelper.accessor('pp', {
+      header: 'PP',
+      cell: (info) => <p className="font-num w-full text-right">{info.getValue()}</p>,
+    }),
+  ]
 
   const table = useReactTable({
     data: moveRows,
@@ -140,16 +137,13 @@ function MovesTable({
     getSortedRowModel: getSortedRowModel(),
   })
 
-  const handleRowClick = useCallback(
-    (key: string) => {
-      setActiveMove((prev) => {
-        const next = prev === key ? null : key
-        if (next) onExpand?.()
-        return next
-      })
-    },
-    [onExpand]
-  )
+  const handleRowClick = (key: string) => {
+    setActiveMove((prev) => {
+      const next = prev === key ? null : key
+      if (next) onExpand?.()
+      return next
+    })
+  }
 
   if (moveRows.length === 0) return null
 
