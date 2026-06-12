@@ -1,30 +1,29 @@
 import { motion } from 'motion/react'
-import type { Pokemon } from 'pokedex-promise-v2'
 
-import { STATS, type StatKey } from '@/lib/domain/stats'
+import { STATS, type BaseStat } from '@/lib/domain/stats'
 
-export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
-  const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
+export default function StatsBarChart({ stats }: { stats: BaseStat[] }) {
+  const statTotal = stats.reduce((acc, stat) => acc + stat.base, 0)
 
   return (
     <div className="w-full">
       {/* Bar chart */}
       <ul className="flex flex-col">
-        {pokemon.stats.map((stat, i) => {
-          const fullLabel = STATS[stat.stat.name as StatKey].full
-          const fillPercentage = (stat.base_stat / 255) * 100
+        {stats.map((stat, i) => {
+          const fullLabel = STATS[stat.key].full
+          const fillPercentage = (stat.base / 255) * 100
           return (
-            <li key={stat.stat.name} className="flex flex-row items-center gap-3">
+            <li key={stat.key} className="flex flex-row items-center gap-3">
               <p className="flex flex-row items-center justify-between">
                 <abbr
                   title={fullLabel}
                   aria-label={fullLabel}
                   className="min-w-16 font-normal text-zinc-700 no-underline sm:min-w-20 lg:min-w-16 xl:min-w-20 dark:text-zinc-300"
                 >
-                  {STATS[stat.stat.name as StatKey].short}
+                  {STATS[stat.key].short}
                 </abbr>
                 <span className="font-num min-w-10 text-right text-black tabular-nums sm:min-w-12 lg:min-w-10 xl:min-w-12 dark:text-white">
-                  {stat.base_stat.toLocaleString()}
+                  {stat.base.toLocaleString()}
                 </span>
               </p>
 
@@ -34,7 +33,7 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
                   {/* Tick marks */}
                   <div className="absolute top-0 bottom-0 grid w-full grid-cols-5 divide-x divide-zinc-300 dark:divide-zinc-700">
                     {[...Array(5)].map((_, index) => (
-                      <div key={`${stat.stat.name}-tick-${index}`} />
+                      <div key={`${stat.key}-tick-${index}`} />
                     ))}
                   </div>
                   {/* Fill bar */}

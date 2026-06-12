@@ -16,6 +16,7 @@ import { getCombinedEffectiveness, initTypes, type TypeRelation } from '@/lib/do
 import { buildEvolutionTree } from '@/lib/domain/evolution'
 import { buildLocationRows } from '@/lib/domain/locations'
 import { buildMovesData } from '@/lib/domain/moves'
+import { buildBaseStats } from '@/lib/domain/stats'
 import { TYPES, TYPE_KEYS, type TypeKey } from '@/lib/domain/types'
 import { getMonstersBySpecies, getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
@@ -160,7 +161,7 @@ const title = `${name} #${imageId}`
         <section class="mx-auto w-full max-w-384">
           <div class="flex w-full flex-col gap-4 xl:flex-row">
             <div class="flex w-full flex-col gap-4">
-              <StatsSection pokemon={pokemon} client:visible />
+              <StatsSection stats={buildBaseStats(pokemon)} client:visible />
               <TypeEffectivenessSection typeRelations={typeRelations} />
               <AbilitiesSection abilitiesMap={abilitiesMap} client:visible />
               <LocationsSection rows={locationRows} client:visible />
