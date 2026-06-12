@@ -1,0 +1,59 @@
+---
+import ArrowLeftRight from '@lucide/astro/icons/arrow-left-right'
+import ArrowUp from '@lucide/astro/icons/arrow-up'
+import CloudRain from '@lucide/astro/icons/cloud-rain'
+import Gem from '@lucide/astro/icons/gem'
+import Heart from '@lucide/astro/icons/heart'
+import Mars from '@lucide/astro/icons/mars'
+import MapPin from '@lucide/astro/icons/map-pin'
+import Moon from '@lucide/astro/icons/moon'
+import RotateCcw from '@lucide/astro/icons/rotate-ccw'
+import Sparkles from '@lucide/astro/icons/sparkles'
+import Sun from '@lucide/astro/icons/sun'
+import Sunset from '@lucide/astro/icons/sunset'
+import Swords from '@lucide/astro/icons/swords'
+import Users from '@lucide/astro/icons/users'
+import Venus from '@lucide/astro/icons/venus'
+
+import TypeIcon from '@/components/TypeIcon.astro'
+import type { Chip, ChipIconName } from '@/lib/utils/evolution-conditions'
+
+interface Props {
+  chip: Chip
+}
+
+const { chip } = Astro.props
+
+const lucideIcons: Record<ChipIconName, typeof ArrowUp> = {
+  'arrow-up': ArrowUp,
+  'arrow-left-right': ArrowLeftRight,
+  sun: Sun,
+  moon: Moon,
+  sunset: Sunset,
+  heart: Heart,
+  sparkles: Sparkles,
+  'map-pin': MapPin,
+  'cloud-rain': CloudRain,
+  venus: Venus,
+  mars: Mars,
+  'rotate-ccw': RotateCcw,
+  swords: Swords,
+  users: Users,
+  gem: Gem,
+}
+
+const LucideIcon = chip.icon.type === 'lucide' ? lucideIcons[chip.icon.name] : null
+---
+
+<span
+  class="flex w-full items-center gap-1.5 px-2.5 py-1 text-sm font-medium"
+>
+  {LucideIcon && <LucideIcon class="size-4 shrink-0" />}
+  {
+    chip.icon.type === 'item' && (
+      <img src={chip.icon.url} alt="" width={20} height={20} class="size-5 shrink-0 object-contain" />
+    )
+  }
+  {chip.icon.type === 'pokemon-type' && <TypeIcon variant={chip.icon.key} size="medium" />}
+  <span class="min-w-0 truncate">{chip.label}</span>
+</span>

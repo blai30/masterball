@@ -37,6 +37,7 @@ import {
   type MoveRow,
   type TypeRelation,
 } from '@/lib/utils/pokeapi-helpers'
+import { describeEvolution } from '@/lib/utils/evolution-conditions'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
 import MonsterHero from '@/components/details/MonsterHero.astro'
 import MonsterMetadata from '@/components/details/MonsterMetadata.astro'
@@ -132,6 +133,11 @@ async function buildEvolutionNode(
   const pokemon = await pokeapi.getResource<Pokemon>(
     defaultVariant!.pokemon.url
   )
+  const conditions = await pMap(
+    chain.evolution_details,
+    (detail) => describeEvolution(detail),
+    { concurrency: 4 }
+  )
   const evolvesTo = await pMap(
     chain.evolves_to,
     (child) => buildEvolutionNode(child),
@@ -140,7 +146,7 @@ async function buildEvolutionNode(
     }
   )
 
-  return { species, pokemon, evolvesTo }
+  return { species, pokemon, conditions, evolvesTo }
 }
 
 async function buildEvolutionTree(
@@ -461,7 +467,10 @@ const title = `${name} #${imageId}`
               <TypeEffectivenessSection typeRelations={typeRelations} />
               <AbilitiesSection abilitiesMap={abilitiesMap} client:visible />
               <LocationsSection rows={locationRows} client:visible />
-              <EvolutionSection evolutionRoot={evolutionRoot} />
+              <EvolutionSection
+                evolutionRoot={evolutionRoot}
+                currentSpeciesId={species.id}
+              />
               {
                 forms.length > 1 && (
                   <CosmeticsSection pokemon={pokemon} forms={forms} />
