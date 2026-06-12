@@ -17,9 +17,9 @@
 
 ## Tech Stack
 
-- **Framework**: Astro 6.3 (SSG)
-- **Language**: TypeScript 6
-- **Styling**: Tailwind CSS v4
+- **Framework**: Astro (SSG)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
 - **Package Manager**: pnpm
 - **UI**: React, lucide-react, motion
 - **Tables**: TanStack Table
@@ -54,15 +54,3 @@ pnpm build
 ```
 
 Static files will be generated in the `dist/` directory.
-
-## Contributing
-
-Contributions are welcome! Please follow the code style and architecture guidelines:
-
-- Use `type` over `interface` unless necessary.
-- Import types with `import type { ... }`.
-- Use Tailwind CSS for styling.
-- Avoid `any`, `unknown`, or `object` types.
-- Use `pMap` for parallel array processing.
-- Use `clsx/lite` for conditional class names.
-- Optimize with `useMemo` and `useCallback` when needed.
