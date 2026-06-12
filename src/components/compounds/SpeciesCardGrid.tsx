@@ -5,12 +5,12 @@ import CardGrid from '@/components/compounds/CardGrid'
 import MonsterCard, { type MonsterCardProps } from '@/components/compounds/MonsterCard'
 import FilterBar, { type FilterOption, type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
-import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
+import SortBar, { type SortDirection, type SortOption } from '@/components/shared/SortBar'
+import { TYPES, type TypeKey } from '@/lib/domain/types'
 import { useUrlSync } from '@/lib/hooks/useUrlSync'
-import { TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 const DEFAULT_SORT_KEY = 'id'
-const DEFAULT_SORT_DIRECTION = SortDirection.ASC
+const DEFAULT_SORT_DIRECTION: SortDirection = 'asc'
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 60
 
@@ -18,8 +18,8 @@ const sortOptions: SortOption<string>[] = [
   { label: 'Dex No.', value: 'id' },
   { label: 'Name', value: 'name' },
 ]
-const typeFilters: FilterOption[] = Object.entries(TypeKey).map(([key, value]) => ({
-  label: key,
+const typeFilters: FilterOption[] = Object.entries(TYPES).map(([value, label]) => ({
+  label,
   value,
 }))
 

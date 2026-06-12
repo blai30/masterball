@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&display=swap');
 @import 'tailwindcss';
 
+/* Type colors are applied dynamically: bg-<slug>. */
+/* Classes are built at runtime so Tailwind so we safelist the full sets here. */
+@source inline(
+  'bg-{normal,fighting,flying,poison,ground,rock,bug,ghost,steel,fire,water,grass,electric,psychic,ice,dragon,dark,fairy}'
+);
+
 @view-transition {
   navigation: auto;
 }

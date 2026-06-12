@@ -1,13 +1,13 @@
 import { memo } from 'react'
 
 import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
+import { VERSION_GROUPS, type VersionGroupKey } from '@/lib/domain/version-groups'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { type VersionGroupKey, VersionGroupLabels } from '@/lib/utils/pokeapi-helpers'
 
 function VersionGroupSelector() {
   const { versionGroup, setVersionGroup } = useVersionGroup()
 
-  const options = Object.entries(VersionGroupLabels).map(([key, label]) => ({
+  const options = Object.entries(VERSION_GROUPS).map(([key, label]) => ({
     value: key as VersionGroupKey,
     label,
   }))

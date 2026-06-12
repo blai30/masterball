@@ -1,31 +1,11 @@
 import clsx from 'clsx/lite'
 import { cva } from 'cva'
 
-import { TypeLabels, TypeKey } from '@/lib/utils/pokeapi-helpers'
+import { TYPES, type TypeKey } from '@/lib/domain/types'
 
 const variants = cva({
   base: 'flex flex-row items-center justify-center',
   variants: {
-    variant: {
-      [TypeKey.Normal]: 'bg-normal',
-      [TypeKey.Fighting]: 'bg-fighting',
-      [TypeKey.Flying]: 'bg-flying',
-      [TypeKey.Poison]: 'bg-poison',
-      [TypeKey.Ground]: 'bg-ground',
-      [TypeKey.Rock]: 'bg-rock',
-      [TypeKey.Bug]: 'bg-bug',
-      [TypeKey.Ghost]: 'bg-ghost',
-      [TypeKey.Steel]: 'bg-steel',
-      [TypeKey.Fire]: 'bg-fire',
-      [TypeKey.Water]: 'bg-water',
-      [TypeKey.Grass]: 'bg-grass',
-      [TypeKey.Electric]: 'bg-electric',
-      [TypeKey.Psychic]: 'bg-psychic',
-      [TypeKey.Ice]: 'bg-ice',
-      [TypeKey.Dragon]: 'bg-dragon',
-      [TypeKey.Dark]: 'bg-dark',
-      [TypeKey.Fairy]: 'bg-fairy',
-    },
     size: {
       small: 'size-5 rounded-xs',
       medium: 'size-6 rounded-sm',
@@ -44,7 +24,7 @@ export default function TypeIcon({
   size?: 'small' | 'medium' | 'large'
   className?: string
 }) {
-  const name = TypeLabels[variant as TypeKey]
+  const name = TYPES[variant as TypeKey]
   const imageUrl = `${variant}.png`
   const dimensions = {
     small: 20,
@@ -56,7 +36,7 @@ export default function TypeIcon({
     <div
       {...props}
       title={name}
-      className={clsx('relative', variants({ variant: variant as TypeKey, size }), className)}
+      className={clsx('relative', `bg-${variant}`, variants({ size }), className)}
     >
       <img
         src={imageUrl}

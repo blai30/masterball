@@ -4,6 +4,7 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "strict": true,
+    "erasableSyntaxOnly": true,
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"]

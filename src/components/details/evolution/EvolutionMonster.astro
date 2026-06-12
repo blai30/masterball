@@ -3,7 +3,8 @@ import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 
 import TypeIcon from '@/components/TypeIcon.astro'
 import { toHref } from '@/lib/utils/path'
-import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
+import type { TypeKey } from '@/lib/domain/types'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 
 interface Props {
   species: PokemonSpecies

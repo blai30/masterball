@@ -6,12 +6,8 @@ import Shell from '@/components/Shell.astro'
 import ItemCardGrid from '@/components/compounds/ItemCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
 import { itemResourceList } from '@/lib/providers'
-import {
-  getTranslation,
-  type ItemCategoryKey,
-  ItemCategoryToPocket,
-  type ItemPocketKey,
-} from '@/lib/utils/pokeapi-helpers'
+import { ITEM_CATEGORIES, type ItemCategoryKey, type ItemPocketKey } from '@/lib/domain/items'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { excludedItems } from '@/lib/utils/excluded-slugs'
 
 const itemList = import.meta.env.DEV
@@ -37,7 +33,7 @@ const itemsData = items
   .map((resource) => {
     const { id, name, category } = resource
     const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/items/item_${name}.webp`
-    const pocket = ItemCategoryToPocket[category.name as ItemCategoryKey]
+    const pocket = ITEM_CATEGORIES[category.name as ItemCategoryKey].pocket
     return {
       id,
       slug: name,

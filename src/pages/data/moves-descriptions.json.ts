@@ -3,7 +3,7 @@ import pMap from 'p-map'
 import type { Move } from 'pokedex-promise-v2'
 
 import pokeapi from '@/lib/api/pokeapi'
-import { buildMoveDescriptions, type MovesDescriptionsMap } from '@/lib/utils/pokeapi-helpers'
+import { buildMoveDescriptions, type MovesDescriptionsMap } from '@/lib/domain/moves'
 
 // Shared per-version move descriptions, keyed by slug then version group.
 // Prerendered to a static /data/moves-descriptions.json file, fetched lazily

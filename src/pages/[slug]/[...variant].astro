@@ -20,22 +20,21 @@ import Layout from '@/layouts/Layout.astro'
 import Shell from '@/components/Shell.astro'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
+import { getCombinedEffectiveness, initTypes, type TypeRelation } from '@/lib/domain/effectiveness'
 import {
   buildMoveData,
-  getCombinedEffectiveness,
-  getMonstersBySpecies,
-  getTranslation,
-  initTypes,
   LearnMethodKey,
   resolveMoveDescription,
-  TypeKey,
-  TypeLabels,
-  VersionGroupKey,
-  type EvolutionNodeData,
   type LearnsetEntry,
-  type LocationEncounterRow,
   type MoveRow,
-  type TypeRelation,
+} from '@/lib/domain/moves'
+import { TYPES, TYPE_KEYS, type TypeKey } from '@/lib/domain/types'
+import type { VersionGroupKey } from '@/lib/domain/version-groups'
+import {
+  getMonstersBySpecies,
+  getTranslation,
+  type EvolutionNodeData,
+  type LocationEncounterRow,
 } from '@/lib/utils/pokeapi-helpers'
 import { describeEvolution } from '@/lib/utils/evolution-conditions'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
@@ -388,7 +387,7 @@ const allTypes = await initTypes()
 // Compute type relations from pre-fetched types and pre-computed effectiveness.
 const typeKeys = pokemon.types.map((t) => t.type.name as TypeKey)
 const effectiveness = getCombinedEffectiveness(typeKeys)
-const typeRelations: TypeRelation[] = Object.values(TypeKey).map((typeKey) => ({
+const typeRelations: TypeRelation[] = TYPE_KEYS.map((typeKey) => ({
   type: allTypes[typeKey],
   effectiveness: effectiveness[typeKey],
 }))
@@ -409,7 +408,7 @@ const [
   pokeapi.getResource<GrowthRate>(species.growth_rate.url),
   buildEvolutionTree(species),
   buildLocationRows(pokemon),
-  buildMovesData(pokemon, VersionGroupKey.ScarletViolet),
+  buildMovesData(pokemon, 'scarlet-violet'),
 ])
 
 // Metadata
@@ -417,7 +416,7 @@ const imageId = species.id.toString().padStart(4, '0')
 const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
 const name = getTranslation(species.names, 'name')!
 const description = pokemon.types
-  .map((t) => TypeLabels[t.type.name as TypeKey])
+  .map((t) => TYPES[t.type.name as TypeKey])
   .join('/')
 const title = `${name} #${imageId}`
 ---
@@ -482,7 +481,7 @@ const title = `${name} #${imageId}`
               <MovesSection
                 learnset={movesData.learnset}
                 defaultRows={movesData.defaultRows}
-                defaultVersionGroup={VersionGroupKey.ScarletViolet}
+                defaultVersionGroup="scarlet-violet"
                 client:visible
               />
             </div>

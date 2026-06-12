@@ -2,15 +2,15 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 
 import LoadingSection from '@/components/details/LoadingSection'
 import { loadMovesData, loadMovesDescriptions } from '@/lib/api/moves-client'
-import { useVersionGroup } from '@/lib/stores/version-group'
 import {
   LearnMethodKey,
-  VersionGroupLabels,
   type LearnsetEntry,
   type MoveRow,
   type MovesDataMap,
   type MovesDescriptionsMap,
-} from '@/lib/utils/pokeapi-helpers'
+} from '@/lib/domain/moves'
+import { VERSION_GROUPS, type VersionGroupKey } from '@/lib/domain/version-groups'
+import { useVersionGroup } from '@/lib/stores/version-group'
 
 const MovesTable = lazy(() => import('@/components/details/moves/MovesTable'))
 
@@ -147,7 +147,7 @@ export default function MovesSection({
         {heading}
         <p className="flex items-baseline gap-2">
           <span className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
-            Not learnable in {VersionGroupLabels[versionGroup as keyof typeof VersionGroupLabels]}.
+            Not learnable in {VERSION_GROUPS[versionGroup as VersionGroupKey]}.
           </span>
         </p>
       </section>

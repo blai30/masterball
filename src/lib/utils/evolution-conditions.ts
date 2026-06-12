@@ -10,7 +10,8 @@ import type {
 } from 'pokedex-promise-v2'
 
 import pokeapi from '@/lib/api/pokeapi'
-import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
+import type { TypeKey } from '@/lib/domain/types'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 
 export type ChipIconName =
   | 'arrow-up'

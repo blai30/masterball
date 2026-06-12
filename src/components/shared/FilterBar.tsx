@@ -3,7 +3,8 @@ import clsx from 'clsx/lite'
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
 import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
-import { DamageClassKey, TypeKey } from '@/lib/utils/pokeapi-helpers'
+import { DAMAGE_CLASSES, type DamageClassKey } from '@/lib/domain/damage-class'
+import { TYPE_KEYS, type TypeKey } from '@/lib/domain/types'
 
 export type FilterOption = {
   label: string
@@ -22,8 +23,8 @@ type FilterBarProps = {
   className?: string
 }
 
-const typeKeySet = new Set<string>(Object.values(TypeKey))
-const damageClassKeySet = new Set<string>(Object.values(DamageClassKey))
+const typeKeySet = new Set<string>(TYPE_KEYS)
+const damageClassKeySet = new Set<string>(Object.keys(DAMAGE_CLASSES))
 
 export default function FilterBar({ filters, className }: FilterBarProps) {
   const optionPill = (option: FilterOption) => {

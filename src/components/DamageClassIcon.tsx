@@ -1,15 +1,15 @@
 import { clsx } from 'clsx/lite'
 import { cva } from 'cva'
 
-import { DamageClassLabels, DamageClassKey } from '@/lib/utils/pokeapi-helpers'
+import { DAMAGE_CLASSES, type DamageClassKey } from '@/lib/domain/damage-class'
 
 const variants = cva({
   base: 'flex flex-row items-center justify-center',
   variants: {
     variant: {
-      [DamageClassKey.Physical]: 'bg-physical',
-      [DamageClassKey.Special]: 'bg-special',
-      [DamageClassKey.Status]: 'bg-status',
+      physical: 'bg-physical',
+      special: 'bg-special',
+      status: 'bg-status',
     },
     size: {
       small: 'size-5 rounded-xs',
@@ -29,7 +29,7 @@ export default function DamageClassIcon({
   size?: 'small' | 'medium' | 'large'
   className?: string
 }) {
-  const name = DamageClassLabels[variant as DamageClassKey]
+  const name = DAMAGE_CLASSES[variant as DamageClassKey]
   const imageUrl = `${variant}.png`
   const dimensions = {
     small: 20,

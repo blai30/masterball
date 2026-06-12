@@ -13,7 +13,7 @@ import { Fragment, memo, useState, useRef, useEffect } from 'react'
 
 import DamageClassIcon from '@/components/DamageClassIcon'
 import TypeIcon from '@/components/TypeIcon'
-import { LearnMethodKey, type MoveRow } from '@/lib/utils/pokeapi-helpers'
+import { LearnMethodKey, type MoveRow } from '@/lib/domain/moves'
 
 const tableNames: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level-Up',

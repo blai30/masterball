@@ -5,14 +5,14 @@ import CardGrid from '@/components/compounds/CardGrid'
 import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
+import {
+  ITEM_CATEGORIES,
+  type ItemCategoryKey,
+  ITEM_POCKETS,
+  type ItemPocketKey,
+} from '@/lib/domain/items'
 import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import {
-  type ItemPocketKey,
-  ItemPocketLabels,
-  type ItemCategoryKey,
-  ItemCategoryLabels,
-} from '@/lib/utils/pokeapi-helpers'
 
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 48
@@ -93,7 +93,7 @@ export default function ItemCardGrid({
 
     if (uniquePockets.length > 0) {
       const pocketOptions = uniquePockets.map((pocket) => ({
-        label: ItemPocketLabels[pocket as ItemPocketKey] || pocket,
+        label: ITEM_POCKETS[pocket as ItemPocketKey] || pocket,
         value: pocket,
       }))
 
@@ -113,7 +113,7 @@ export default function ItemCardGrid({
 
     if (uniqueCategories.length > 0) {
       const categoryOptions = uniqueCategories.map((category) => ({
-        label: ItemCategoryLabels[category as ItemCategoryKey] || category,
+        label: ITEM_CATEGORIES[category as ItemCategoryKey]?.label || category,
         value: category,
       }))
 

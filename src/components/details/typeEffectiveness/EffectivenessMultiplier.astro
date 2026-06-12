@@ -1,28 +1,26 @@
 ---
-import { cva } from 'cva'
+import clsx from 'clsx/lite'
 
-import { Effectiveness } from '@/lib/utils/pokeapi-helpers'
-
-const variants = cva({
-  base: 'font-nums w-12 rounded-md text-right text-sm font-semibold tabular-nums',
-  variants: {
-    variant: {
-      [Effectiveness.Immune]: 'text-purple-700 dark:text-purple-300',
-      [Effectiveness.Quarter]: 'text-red-800 dark:text-red-400',
-      [Effectiveness.Half]: 'text-red-700 dark:text-red-300',
-      [Effectiveness.Neutral]: 'text-zinc-700 dark:text-zinc-300',
-      [Effectiveness.Double]: 'text-green-700 dark:text-green-300',
-      [Effectiveness.Quadruple]: 'text-green-800 dark:text-green-400',
-    },
-  },
-})
+import { EFFECTIVENESS } from '@/lib/domain/effectiveness'
 
 interface Props {
-  variant: Effectiveness
+  variant: number
+}
+
+const colors: Record<number, string> = {
+  [EFFECTIVENESS.immune]: 'text-purple-700 dark:text-purple-300',
+  [EFFECTIVENESS.quarter]: 'text-red-800 dark:text-red-400',
+  [EFFECTIVENESS.half]: 'text-red-700 dark:text-red-300',
+  [EFFECTIVENESS.neutral]: 'text-zinc-700 dark:text-zinc-300',
+  [EFFECTIVENESS.double]: 'text-green-700 dark:text-green-300',
+  [EFFECTIVENESS.quadruple]: 'text-green-800 dark:text-green-400',
 }
 
 const { variant } = Astro.props
+const colorClass = colors[variant] ?? colors[EFFECTIVENESS.neutral]
 const label = `${variant.toFixed(2)} ×`
 ---
 
-<span class={variants({ variant })}>{label}</span>
+<span
+  class={clsx('font-nums w-12 rounded-md text-right text-sm font-semibold tabular-nums', colorClass)}
+>{label}</span>

@@ -6,13 +6,15 @@ import MoveCard from '@/components/compounds/MoveCard'
 import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
 import type { FilterOption } from '@/components/shared/FilterBar'
 import SearchBar from '@/components/shared/SearchBar'
-import SortBar, { SortDirection, type SortOption } from '@/components/shared/SortBar'
+import SortBar, { type SortDirection, type SortOption } from '@/components/shared/SortBar'
+import { DAMAGE_CLASSES } from '@/lib/domain/damage-class'
+import type { MoveInfo } from '@/lib/domain/moves'
+import { TYPES } from '@/lib/domain/types'
 import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { DamageClassKey, type MoveInfo, TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 const DEFAULT_SORT_KEY = 'name'
-const DEFAULT_SORT_DIRECTION = SortDirection.ASC
+const DEFAULT_SORT_DIRECTION: SortDirection = 'asc'
 const DEFAULT_PAGE = 1
 const ITEMS_PER_PAGE = 36
 
@@ -24,12 +26,12 @@ const sortOptions: SortOption<string>[] = [
   { label: 'Accuracy', value: 'accuracy' },
   { label: 'PP', value: 'pp' },
 ]
-const typeFilters: FilterOption[] = Object.entries(TypeKey).map(([key, value]) => ({
-  label: key,
+const typeFilters: FilterOption[] = Object.entries(TYPES).map(([value, label]) => ({
+  label,
   value,
 }))
-const damageClassFilters: FilterOption[] = Object.entries(DamageClassKey).map(([key, value]) => ({
-  label: key,
+const damageClassFilters: FilterOption[] = Object.entries(DAMAGE_CLASSES).map(([value, label]) => ({
+  label,
   value,
 }))
 

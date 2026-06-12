@@ -5,8 +5,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
+import { VERSION_GROUPS } from '@/lib/domain/version-groups'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { VersionGroupLabels, type LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
+import type { LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
 
 export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] }) {
   const { versionGroup } = useVersionGroup()
@@ -58,7 +59,7 @@ export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] 
   if (filteredRows.length === 0) {
     return (
       <p className="text-lg text-pretty text-zinc-700 dark:text-zinc-300">
-        Not encountered in {VersionGroupLabels[versionGroup]}.
+        Not encountered in {VERSION_GROUPS[versionGroup]}.
       </p>
     )
   }
