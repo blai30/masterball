@@ -1,43 +1,23 @@
 ---
 import pMap from 'p-map'
 import type {
-  Ability,
   EggGroup,
-  EncounterMethod,
-  EvolutionChain,
   GrowthRate,
-  LocationArea,
-  Machine,
-  Move,
-  MoveElement,
   Pokemon,
-  PokemonEncounter,
   PokemonForm,
   PokemonSpecies,
-  Version,
 } from 'pokedex-promise-v2'
 import Layout from '@/layouts/Layout.astro'
 import Shell from '@/components/Shell.astro'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTestSpeciesList } from '@/lib/providers'
-import {
-  buildMoveData,
-  getCombinedEffectiveness,
-  getMonstersBySpecies,
-  getTranslation,
-  initTypes,
-  LearnMethodKey,
-  resolveMoveDescription,
-  TypeKey,
-  TypeLabels,
-  VersionGroupKey,
-  type EvolutionNodeData,
-  type LearnsetEntry,
-  type LocationEncounterRow,
-  type MoveRow,
-  type TypeRelation,
-} from '@/lib/utils/pokeapi-helpers'
-import { describeEvolution } from '@/lib/utils/evolution-conditions'
+import { getSpeciesList } from '@/lib/providers'
+import { buildAbilitiesMap } from '@/lib/domain/abilities'
+import { getCombinedEffectiveness, initTypes, type TypeRelation } from '@/lib/domain/effectiveness'
+import { buildEvolutionTree } from '@/lib/domain/evolution'
+import { buildLocationRows } from '@/lib/domain/locations'
+import { buildMovesData } from '@/lib/domain/moves'
+import { TYPES, TYPE_KEYS, type TypeKey } from '@/lib/domain/types'
+import { getMonstersBySpecies, getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
 import MonsterHero from '@/components/details/MonsterHero.astro'
 import MonsterMetadata from '@/components/details/MonsterMetadata.astro'
@@ -50,12 +30,9 @@ import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection.as
 import LocalizationSection from '@/components/details/localization/LocalizationSection.astro'
 import MovesSection from '@/components/details/moves/MovesSection'
 import VariantCardSelector from '@/components/compounds/VariantCardSelector'
-import type { AbilityEntryProps } from '@/components/details/abilities/AbilityEntry'
 
 export async function getStaticPaths() {
-  const speciesList = import.meta.env.DEV
-    ? await getTestSpeciesList()
-    : await pokeapi.getList('pokemon-species', 1025, 0)
+  const speciesList = await getSpeciesList()
 
   const species = await pMap(
     speciesList.results,
@@ -103,292 +80,12 @@ const form =
     ? undefined
     : forms.find((f) => f.name === variant || f.name === pokemon.name)
 
-async function buildAbilitiesMap(
-  pokemon: Pokemon
-): Promise<AbilityEntryProps[]> {
-  return pMap(
-    pokemon.abilities,
-    async (entry) => {
-      const resource = await pokeapi.getResource<Ability>(entry.ability.url)
-      return {
-        id: resource.id,
-        name: resource.name,
-        slot: entry.slot,
-        hidden: entry.is_hidden,
-        resource,
-      } satisfies AbilityEntryProps
-    },
-    { concurrency: 6 }
-  )
-}
-
-async function buildEvolutionNode(
-  chain: EvolutionChain['chain']
-): Promise<EvolutionNodeData> {
-  const species = await pokeapi.getResource<PokemonSpecies>(chain.species.url)
-  const defaultVariant = species.varieties
-    .filter((v) => !excludedVariants.includes(v.pokemon.name))
-    .find((v) => v.is_default)
-
-  const pokemon = await pokeapi.getResource<Pokemon>(
-    defaultVariant!.pokemon.url
-  )
-  const conditions = await pMap(
-    chain.evolution_details,
-    (detail) => describeEvolution(detail),
-    { concurrency: 4 }
-  )
-  const evolvesTo = await pMap(
-    chain.evolves_to,
-    (child) => buildEvolutionNode(child),
-    {
-      concurrency: 4,
-    }
-  )
-
-  return { species, pokemon, conditions, evolvesTo }
-}
-
-async function buildEvolutionTree(
-  species: PokemonSpecies
-): Promise<EvolutionNodeData> {
-  const evolutionChain = await pokeapi.getResource<EvolutionChain>(
-    species.evolution_chain.url
-  )
-  return buildEvolutionNode(evolutionChain.chain)
-}
-
-async function buildLocationRows(
-  pokemon: Pokemon
-): Promise<LocationEncounterRow[]> {
-  const encounters = await pokeapi.getResource<PokemonEncounter[]>(
-    pokemon.location_area_encounters
-  )
-
-  if (encounters.length === 0) return []
-
-  const uniqueAreaUrls = [
-    ...new Set(encounters.map((e) => e.location_area.url)),
-  ]
-  const locationAreas = await pMap(
-    uniqueAreaUrls,
-    (url) => pokeapi.getResource<LocationArea>(url),
-    {
-      concurrency: 10,
-    }
-  )
-  const areaMap: Record<string, LocationArea> = Object.fromEntries(
-    locationAreas.map((area) => [area.name, area])
-  )
-
-  const uniqueVersionUrls = [
-    ...new Set(
-      encounters.flatMap((e) => e.version_details.map((vd) => vd.version.url))
-    ),
-  ]
-  const versions = await pMap(
-    uniqueVersionUrls,
-    (url) => pokeapi.getResource<Version>(url),
-    {
-      concurrency: 10,
-    }
-  )
-  const versionMap: Record<string, Version> = Object.fromEntries(
-    versions.map((v) => [v.name, v])
-  )
-
-  const uniqueMethodUrls = [
-    ...new Set(
-      encounters.flatMap((e) =>
-        e.version_details.flatMap((vd) =>
-          vd.encounter_details.map((ed) => ed.method.url)
-        )
-      )
-    ),
-  ]
-  const encounterMethods = await pMap(
-    uniqueMethodUrls,
-    (url) => pokeapi.getResource<EncounterMethod>(url),
-    { concurrency: 10 }
-  )
-  const methodMap: Record<string, EncounterMethod> = Object.fromEntries(
-    encounterMethods.map((m) => [m.name, m])
-  )
-
-  const rowMap = new Map<string, LocationEncounterRow>()
-
-  for (const encounter of encounters) {
-    const area = areaMap[encounter.location_area.name]
-    const locationName = getTranslation(area.names, 'name') || area.name
-
-    for (const versionDetail of encounter.version_details) {
-      const version = versionMap[versionDetail.version.name]
-      const versionGroup = version.version_group.name as VersionGroupKey
-      const versionName =
-        getTranslation(version?.names, 'name') ?? versionDetail.version.name
-      const key = `${area.name}__${versionGroup}__${versionDetail.version.name}`
-      const methods = [
-        ...new Set(
-          versionDetail.encounter_details.map((ed) => {
-            const method = methodMap[ed.method.name]
-            return getTranslation(method?.names, 'name') ?? ed.method.name
-          })
-        ),
-      ]
-      const minLevel = Math.min(
-        ...versionDetail.encounter_details.map((ed) => ed.min_level)
-      )
-      const maxLevel = Math.max(
-        ...versionDetail.encounter_details.map((ed) => ed.max_level)
-      )
-
-      const existing = rowMap.get(key)
-      if (existing) {
-        existing.methods = [...new Set([...existing.methods, ...methods])]
-        existing.minLevel = Math.min(existing.minLevel, minLevel)
-        existing.maxLevel = Math.max(existing.maxLevel, maxLevel)
-        existing.maxChance = Math.max(
-          existing.maxChance,
-          versionDetail.max_chance
-        )
-      } else {
-        rowMap.set(key, {
-          locationAreaSlug: area.name,
-          locationName,
-          versionName,
-          versionGroup,
-          maxChance: versionDetail.max_chance,
-          minLevel,
-          maxLevel,
-          methods,
-        })
-      }
-    }
-  }
-
-  return [...rowMap.values()]
-}
-
-function resolveLearnId(
-  move: Move,
-  detail: MoveElement['version_group_details'][number],
-  machinesMap: Map<string, Machine[]>
-): string {
-  const method = detail.move_learn_method.name
-  if (method === LearnMethodKey.LevelUp) {
-    return detail.level_learned_at === 0
-      ? 'Evolve'
-      : detail.level_learned_at.toString()
-  }
-  if (method === LearnMethodKey.Machine) {
-    const machine = machinesMap
-      .get(move.name)
-      ?.find((mac) => mac.version_group.name === detail.version_group.name)
-    if (machine?.item) return machine.item.name.toUpperCase()
-  }
-  return move.id.toString()
-}
-
-async function buildMovesData(
-  pokemon: Pokemon,
-  defaultVersionGroup: string
-): Promise<{
-  learnset: LearnsetEntry[]
-  defaultRows: Record<LearnMethodKey, MoveRow[]>
-}> {
-  const emptyByMethod = (): Record<LearnMethodKey, MoveRow[]> => ({
-    [LearnMethodKey.FormChange]: [],
-    [LearnMethodKey.LevelUp]: [],
-    [LearnMethodKey.Machine]: [],
-    [LearnMethodKey.Tutor]: [],
-    [LearnMethodKey.Egg]: [],
-  })
-
-  if (pokemon.moves.length === 0) {
-    return { learnset: [], defaultRows: emptyByMethod() }
-  }
-
-  const uniqueMoveUrls = [
-    ...new Set(pokemon.moves.map((move) => move.move.url)),
-  ]
-  const movesData = await pMap(
-    uniqueMoveUrls,
-    (url) => pokeapi.getResource<Move>(url),
-    {
-      concurrency: 10,
-    }
-  )
-
-  const uniqueMachineUrls = [
-    ...new Set(
-      movesData.flatMap(
-        (move) => move.machines?.map((machine) => machine.machine.url) ?? []
-      )
-    ),
-  ]
-  const machinesData = await pMap(
-    uniqueMachineUrls,
-    (url) => pokeapi.getResource<Machine>(url),
-    {
-      concurrency: 10,
-    }
-  )
-
-  const machinesMap = new Map<string, Machine[]>()
-  for (const machine of machinesData) {
-    const existing = machinesMap.get(machine.move.name) ?? []
-    existing.push(machine)
-    machinesMap.set(machine.move.name, existing)
-  }
-
-  const movesMap = Object.fromEntries(
-    movesData.map((move) => [move.name, move])
-  ) as Record<string, Move>
-
-  const knownMethods = new Set<string>(Object.values(LearnMethodKey))
-  const learnset: LearnsetEntry[] = []
-  const defaultRows = emptyByMethod()
-
-  for (const entry of pokemon.moves) {
-    const move = movesMap[entry.move.name]
-    if (!move) continue
-
-    for (const detail of entry.version_group_details) {
-      const method = detail.move_learn_method.name
-      if (!knownMethods.has(method)) continue
-
-      const methodKey = method as LearnMethodKey
-      const versionGroup = detail.version_group.name
-      const id = resolveLearnId(move, detail, machinesMap)
-
-      learnset.push({
-        slug: entry.move.name,
-        versionGroup,
-        method: methodKey,
-        id,
-      })
-
-      if (versionGroup === defaultVersionGroup) {
-        defaultRows[methodKey].push({
-          ...buildMoveData(move),
-          id,
-          slug: entry.move.name,
-          versionGroup,
-          description: resolveMoveDescription(move, versionGroup),
-        })
-      }
-    }
-  }
-
-  return { learnset, defaultRows }
-}
-
 // Fetch all 18 types once (cached across the entire build) and pre-compute effectiveness.
 const allTypes = await initTypes()
 // Compute type relations from pre-fetched types and pre-computed effectiveness.
 const typeKeys = pokemon.types.map((t) => t.type.name as TypeKey)
 const effectiveness = getCombinedEffectiveness(typeKeys)
-const typeRelations: TypeRelation[] = Object.values(TypeKey).map((typeKey) => ({
+const typeRelations: TypeRelation[] = TYPE_KEYS.map((typeKey) => ({
   type: allTypes[typeKey],
   effectiveness: effectiveness[typeKey],
 }))
@@ -409,7 +106,7 @@ const [
   pokeapi.getResource<GrowthRate>(species.growth_rate.url),
   buildEvolutionTree(species),
   buildLocationRows(pokemon),
-  buildMovesData(pokemon, VersionGroupKey.ScarletViolet),
+  buildMovesData(pokemon, 'scarlet-violet'),
 ])
 
 // Metadata
@@ -417,7 +114,7 @@ const imageId = species.id.toString().padStart(4, '0')
 const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
 const name = getTranslation(species.names, 'name')!
 const description = pokemon.types
-  .map((t) => TypeLabels[t.type.name as TypeKey])
+  .map((t) => TYPES[t.type.name as TypeKey])
   .join('/')
 const title = `${name} #${imageId}`
 ---
@@ -482,7 +179,7 @@ const title = `${name} #${imageId}`
               <MovesSection
                 learnset={movesData.learnset}
                 defaultRows={movesData.defaultRows}
-                defaultVersionGroup={VersionGroupKey.ScarletViolet}
+                defaultVersionGroup="scarlet-violet"
                 client:visible
               />
             </div>

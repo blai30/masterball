@@ -2,13 +2,13 @@ import type { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
 import { memo } from 'react'
 
 import { Badge } from '@/components/ui/catalyst/badge'
-import { useVersionGroup } from '@/lib/stores/version-group'
 import {
+  ITEM_CATEGORIES,
   type ItemCategoryKey,
-  ItemCategoryLabels,
+  ITEM_POCKETS,
   type ItemPocketKey,
-  ItemPocketLabels,
-} from '@/lib/utils/pokeapi-helpers'
+} from '@/lib/domain/items'
+import { useVersionGroup } from '@/lib/stores/version-group'
 
 export type ItemCardProps = {
   id: number
@@ -54,10 +54,10 @@ const ItemCard = ({ props }: { props: ItemCardProps }) => {
           <h3 className="text-lg font-medium text-black dark:text-white">{props.name}</h3>
           <div className="flex flex-wrap gap-1">
             <Badge key={props.pocket} color="zinc">
-              {ItemPocketLabels[props.pocket]}
+              {ITEM_POCKETS[props.pocket]}
             </Badge>
             <Badge key={props.category} color="zinc">
-              {ItemCategoryLabels[props.category]}
+              {ITEM_CATEGORIES[props.category].label}
             </Badge>
           </div>
           <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">{description}</p>

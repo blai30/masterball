@@ -1,7 +1,7 @@
 import { motion } from 'motion/react'
 import type { Pokemon } from 'pokedex-promise-v2'
 
-import { StatLabels, type StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
+import { STATS, type StatKey } from '@/lib/domain/stats'
 
 export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
   const statTotal = pokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)
@@ -11,7 +11,7 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
       {/* Bar chart */}
       <ul className="flex flex-col">
         {pokemon.stats.map((stat, i) => {
-          const fullLabel = StatLabelsFull[stat.stat.name as StatKey]
+          const fullLabel = STATS[stat.stat.name as StatKey].full
           const fillPercentage = (stat.base_stat / 255) * 100
           return (
             <li key={stat.stat.name} className="flex flex-row items-center gap-3">
@@ -21,7 +21,7 @@ export default function StatsBarChart({ pokemon }: { pokemon: Pokemon }) {
                   aria-label={fullLabel}
                   className="min-w-16 font-normal text-zinc-700 no-underline sm:min-w-20 lg:min-w-16 xl:min-w-20 dark:text-zinc-300"
                 >
-                  {StatLabels[stat.stat.name as StatKey]}
+                  {STATS[stat.stat.name as StatKey].short}
                 </abbr>
                 <span className="font-num min-w-10 text-right text-black tabular-nums sm:min-w-12 lg:min-w-10 xl:min-w-12 dark:text-white">
                   {stat.base_stat.toLocaleString()}

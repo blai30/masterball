@@ -5,24 +5,24 @@ import clsx from 'clsx/lite'
 import { motion } from 'motion/react'
 import type { Pokemon } from 'pokedex-promise-v2'
 
-import { StatLabels, StatKey, StatLabelsFull } from '@/lib/utils/pokeapi-helpers'
+import { STATS, type StatKey } from '@/lib/domain/stats'
 
 const statOrder: StatKey[] = [
-  StatKey.Hp,
-  StatKey.Attack,
-  StatKey.Defense,
-  StatKey.Speed,
-  StatKey.SpecialDefense,
-  StatKey.SpecialAttack,
+  'hp',
+  'attack',
+  'defense',
+  'speed',
+  'special-defense',
+  'special-attack',
 ]
 
 const labelClasses: Record<StatKey, string> = {
-  [StatKey.Hp]: 'text-center',
-  [StatKey.Attack]: 'text-left',
-  [StatKey.Defense]: 'text-left',
-  [StatKey.SpecialAttack]: 'text-right',
-  [StatKey.SpecialDefense]: 'text-right',
-  [StatKey.Speed]: 'text-center',
+  hp: 'text-center',
+  attack: 'text-left',
+  defense: 'text-left',
+  'special-attack': 'text-right',
+  'special-defense': 'text-right',
+  speed: 'text-center',
 }
 
 type StatDatum = {
@@ -50,12 +50,12 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
 
   // Final stat values
   const finalStats: Record<StatKey, number> = {
-    [StatKey.Hp]: statData.find((s) => s.key === StatKey.Hp)?.value ?? 0,
-    [StatKey.Attack]: statData.find((s) => s.key === StatKey.Attack)?.value ?? 0,
-    [StatKey.Defense]: statData.find((s) => s.key === StatKey.Defense)?.value ?? 0,
-    [StatKey.SpecialAttack]: statData.find((s) => s.key === StatKey.SpecialAttack)?.value ?? 0,
-    [StatKey.SpecialDefense]: statData.find((s) => s.key === StatKey.SpecialDefense)?.value ?? 0,
-    [StatKey.Speed]: statData.find((s) => s.key === StatKey.Speed)?.value ?? 0,
+    hp: statData.find((s) => s.key === 'hp')?.value ?? 0,
+    attack: statData.find((s) => s.key === 'attack')?.value ?? 0,
+    defense: statData.find((s) => s.key === 'defense')?.value ?? 0,
+    'special-attack': statData.find((s) => s.key === 'special-attack')?.value ?? 0,
+    'special-defense': statData.find((s) => s.key === 'special-defense')?.value ?? 0,
+    speed: statData.find((s) => s.key === 'speed')?.value ?? 0,
   }
 
   const getPoints = (stats: Record<StatKey, number>) =>
@@ -147,14 +147,14 @@ export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
             >
               <div className={clsx('flex w-14 flex-col', align)}>
                 <abbr
-                  title={StatLabelsFull[key]}
-                  aria-label={StatLabelsFull[key]}
+                  title={STATS[key].full}
+                  aria-label={STATS[key].full}
                   className={clsx(
                     'text-xs font-normal text-zinc-700 no-underline dark:text-zinc-300',
                     align
                   )}
                 >
-                  {StatLabels[key]}
+                  {STATS[key].short}
                 </abbr>
                 <p
                   className={clsx(

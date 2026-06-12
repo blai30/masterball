@@ -1,13 +1,13 @@
 import { Store, useSelector } from '@tanstack/react-store'
 import { useEffect, useState } from 'react'
 
-import { VersionGroupKey } from '@/lib/utils/pokeapi-helpers'
+import { VERSION_GROUPS, type VersionGroupKey } from '@/lib/domain/version-groups'
 
 const STORAGE_KEY = 'version_group'
-const DEFAULT_VERSION_GROUP = VersionGroupKey.ScarletViolet
+const DEFAULT_VERSION_GROUP: VersionGroupKey = 'scarlet-violet'
 
 const isValidVersionGroupKey = (value: unknown): value is VersionGroupKey => {
-  return Object.values(VersionGroupKey).includes(value as VersionGroupKey)
+  return Object.keys(VERSION_GROUPS).includes(value as VersionGroupKey)
 }
 
 // The store initializes with default (the server cannot read localStorage).

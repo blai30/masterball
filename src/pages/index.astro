@@ -5,13 +5,12 @@ import Layout from '@/layouts/Layout.astro'
 import Shell from '@/components/Shell.astro'
 import SpeciesCardGrid from '@/components/compounds/SpeciesCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTestSpeciesList } from '@/lib/providers'
+import { getSpeciesList } from '@/lib/providers'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
-import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
+import type { TypeKey } from '@/lib/domain/types'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 
-const speciesList = import.meta.env.DEV
-  ? await getTestSpeciesList()
-  : await pokeapi.getList('pokemon-species', 1025, 0)
+const speciesList = await getSpeciesList()
 
 const species = await pMap(
   speciesList.results,

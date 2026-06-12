@@ -1,5 +1,5 @@
+import type { MovesDataMap, MovesDescriptionsMap } from '@/lib/domain/moves'
 import { resolvePath } from '@/lib/utils/path'
-import type { MovesDataMap, MovesDescriptionsMap } from '@/lib/utils/pokeapi-helpers'
 
 // Shared move datasets are static JSON files generated at build time. Each is
 // fetched at most once per session; the in-flight promise is memoized so multiple

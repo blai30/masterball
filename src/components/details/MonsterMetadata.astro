@@ -1,7 +1,14 @@
 ---
 import type { EggGroup, GrowthRate, Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 
-import { getTranslation, StatLabels, type StatKey } from '@/lib/utils/pokeapi-helpers'
+import {
+  calculateCatchProbability,
+  calculateGenderRates,
+  convertHeight,
+  convertWeight,
+} from '@/lib/domain/species'
+import { STATS, type StatKey } from '@/lib/domain/stats'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { Mars, Venus } from 'lucide-react'
 
 interface Props {
@@ -12,26 +19,6 @@ interface Props {
 }
 
 const { species, pokemon, eggGroups, growthRate } = Astro.props
-
-const calculateCatchProbability = (captureRate: number) => {
-  const base = captureRate / 3
-  const captureValue = 65535 / Math.pow(255 / base, 0.1875)
-  const captureProbability = Math.pow(captureValue / 65535, 4)
-  return Math.fround(captureProbability) * 100
-}
-
-const convertHeight = (heightInDecimeters: number) => ({
-  meters: Math.fround(heightInDecimeters / 10).toFixed(1),
-})
-
-const convertWeight = (weightInHectograms: number) => ({
-  kilograms: (weightInHectograms / 10).toFixed(1),
-})
-
-const calculateGenderRates = (genderRate: number) => ({
-  maleRate: Math.fround((1 - genderRate / 8) * 100).toFixed(1),
-  femaleRate: Math.fround((genderRate / 8) * 100).toFixed(1),
-})
 
 const cardClass =
   'flex flex-col gap-2 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800 rounded-xl p-4'
@@ -234,7 +221,7 @@ const femaleDashArray = `${femaleArc} ${Number((circumference - femaleArc).toFix
             <p class="flex gap-x-1">
               <span class="text-base font-light">{stat.effort}</span>
               <span class="text-base text-zinc-600 dark:text-zinc-400">
-                {StatLabels[stat.stat.name as StatKey]}
+                {STATS[stat.stat.name as StatKey].short}
               </span>
             </p>
           </li>

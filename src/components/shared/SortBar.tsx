@@ -8,10 +8,12 @@ export type SortOption<T extends string> = {
   value: T
 }
 
-export enum SortDirection {
-  ASC = 'asc',
-  DESC = 'desc',
-}
+export const SortDirection = {
+  ASC: 'asc',
+  DESC: 'desc',
+} as const
+
+export type SortDirection = (typeof SortDirection)[keyof typeof SortDirection]
 
 type SortBarProps<T extends string> = {
   sortKey: T | ''

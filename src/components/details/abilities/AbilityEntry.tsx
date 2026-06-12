@@ -1,16 +1,8 @@
 import { Sparkles } from 'lucide-react'
-import type { Ability } from 'pokedex-promise-v2'
 
+import type { AbilityEntryProps } from '@/lib/domain/abilities'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
-
-export type AbilityEntryProps = {
-  id: number
-  name: string
-  slot: number
-  hidden: boolean
-  resource: Ability
-}
 
 export default function AbilityEntry({ props }: { props: AbilityEntryProps }) {
   const { versionGroup } = useVersionGroup()

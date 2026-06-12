@@ -1,8 +1,8 @@
 import { memo } from 'react'
 
 import Link from '@/components/ui/catalyst/link'
+import type { TypeKey } from '@/lib/domain/types'
 import { toHref } from '@/lib/utils/path'
-import type { TypeKey } from '@/lib/utils/pokeapi-helpers'
 
 export type MonsterCardProps = {
   id: number
