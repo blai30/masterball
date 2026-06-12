@@ -1,7 +1,6 @@
 import clsx from 'clsx/lite'
 import { memo } from 'react'
 
-import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import {
@@ -59,7 +58,7 @@ const MoveCard = ({ props }: { props: MoveInfo }) => {
     )?.flavor_text ?? props.defaultDescription
 
   return (
-    <GlassCard variant="default" className="relative h-full rounded-xl">
+    <div className="relative h-full rounded-xl bg-zinc-100/50 inset-ring-1 inset-ring-zinc-200/50 backdrop-blur-xl dark:bg-zinc-900/50 dark:inset-ring-zinc-800/50">
       <div
         className={clsx('absolute -z-10 size-full rounded-xl', typeClasses[props.type as TypeKey])}
       >
@@ -119,7 +118,7 @@ const MoveCard = ({ props }: { props: MoveInfo }) => {
           </div>
         </div>
       </div>
-    </GlassCard>
+    </div>
   )
 }
 

@@ -39,6 +39,12 @@ export type Monster = {
   imageUrl?: string | undefined
 }
 
+export type EvolutionNodeData = {
+  species: PokemonSpecies
+  pokemon: Pokemon
+  evolvesTo: EvolutionNodeData[]
+}
+
 export const createMonster = async (
   variant: Pokemon,
   species: PokemonSpecies

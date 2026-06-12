@@ -2,7 +2,7 @@ import { Tab, TabGroup, TabList, TabPanels } from '@headlessui/react'
 import { ChartBar, Hexagon } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import type { Pokemon } from 'pokedex-promise-v2'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 
 import StatsBarChart from '@/components/details/stats/StatsBarChart'
 import StatsRadarChart from '@/components/details/stats/StatsRadarChart'
@@ -21,10 +21,10 @@ export default function StatsTabs({ title, pokemon }: { title: string; pokemon: 
   }, [])
 
   // Save tab index to localStorage on change
-  const handleChange = useCallback((index: number) => {
+  const handleChange = (index: number) => {
     setSelectedIndex(index)
     localStorage.setItem(LOCAL_STORAGE_KEY, String(index))
-  }, [])
+  }
 
   return (
     <section className="@container/stats flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800">

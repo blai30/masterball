@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import MonsterCard, { type MonsterCardProps } from '@/components/compounds/MonsterCard'
@@ -91,20 +91,16 @@ export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) 
     },
   ]
 
-  const fuse = useMemo(
-    () =>
-      new Fuse(data, {
-        keys: ['id', 'name'],
-        threshold: 0.4,
-        ignoreLocation: false,
-      }),
-    [data]
-  )
+  const fuse = new Fuse(data, {
+    keys: ['id', 'name'],
+    threshold: 0.4,
+    ignoreLocation: false,
+  })
 
   /**
    * Returns filtered and sorted data for grid display.
    */
-  const filteredData = useMemo(() => {
+  const filteredData = (() => {
     // Search first (Fuse is stable across filter changes)
     let results = search ? fuse.search(search).map((r: { item: MonsterCardProps }) => r.item) : data
 
@@ -127,7 +123,7 @@ export default function SpeciesCardGrid({ data }: { data: MonsterCardProps[] }) 
     }
 
     return results
-  }, [data, fuse, typeFilter, search, sortKey, sortDirection])
+  })()
 
   return (
     <div className="flex flex-col gap-8">

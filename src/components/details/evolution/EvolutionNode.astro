@@ -1,0 +1,45 @@
+---
+import type { EvolutionNodeData } from '@/lib/utils/pokeapi-helpers'
+import MonsterPill from '@/components/MonsterPill.astro'
+
+interface Props {
+  node: EvolutionNodeData
+  depth?: number
+}
+
+const { node, depth = 0 } = Astro.props
+---
+
+<div class="flex flex-col gap-2">
+  <div class="flex items-center gap-2">
+    {depth > 0 && (
+      <div class:list={['flex items-center', depth > 1 && 'ml-8']}>
+        <svg
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6 text-zinc-700 dark:text-zinc-300"
+          aria-label="Evolves to"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m16.49 12 3.75 3.75m0 0-3.75 3.75m3.75-3.75H3.74V4.499"
+          />
+        </svg>
+      </div>
+    )}
+    <div class="flex flex-col gap-1">
+      <MonsterPill species={node.species} pokemon={node.pokemon} />
+    </div>
+  </div>
+
+  {node.evolvesTo.length > 0 && (
+    <div class="flex flex-col gap-2">
+      {node.evolvesTo.map((child) => (
+        <Astro.self node={child} depth={depth + 1} />
+      ))}
+    </div>
+  )}
+</div>

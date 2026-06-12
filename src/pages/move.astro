@@ -2,7 +2,7 @@
 import pMap from 'p-map'
 import type { Move } from 'pokedex-promise-v2'
 import Layout from '@/layouts/Layout.astro'
-import AppShell from '@/components/AppShell'
+import Shell from '@/components/Shell.astro'
 import MoveCardGrid from '@/components/compounds/MoveCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
@@ -40,9 +40,9 @@ const movesData = moves
 ---
 
 <Layout title="Move List">
-  <AppShell pathname={Astro.url.pathname} client:load>
+  <Shell>
     <div class="mx-auto w-full max-w-384">
       <MoveCardGrid data={movesData} filterByVersionGroup={true} client:load />
     </div>
-  </AppShell>
+  </Shell>
 </Layout>

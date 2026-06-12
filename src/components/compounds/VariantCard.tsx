@@ -1,6 +1,5 @@
 import clsx from 'clsx/lite'
 
-import GlassCard from '@/components/GlassCard'
 import TypeIcon from '@/components/TypeIcon'
 import type { Monster } from '@/lib/utils/pokeapi-helpers'
 
@@ -16,9 +15,14 @@ export default function VariantCard({
   const { name, types, imageUrl } = monster
 
   return (
-    <GlassCard
-      variant={variant}
-      className={clsx('relative flex w-44 flex-col items-center gap-4 rounded-xl p-3', className)}
+    <div
+      className={clsx(
+        'relative flex w-44 flex-col items-center gap-4 rounded-xl p-3',
+        'bg-zinc-100/50 inset-ring-1 inset-ring-zinc-200/50 backdrop-blur-xl dark:bg-zinc-900/50 dark:inset-ring-zinc-800/50',
+        variant === 'link' &&
+          'transition-colors hover:bg-zinc-200/60 hover:inset-ring-zinc-300/60 hover:duration-0 dark:hover:bg-zinc-800/60 dark:hover:inset-ring-zinc-700/60',
+        className
+      )}
     >
       <div className="flex aspect-square size-36 items-center justify-center">
         <img
@@ -42,6 +46,6 @@ export default function VariantCard({
         )}
         <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{name}</h3>
       </div>
-    </GlassCard>
+    </div>
   )
 }

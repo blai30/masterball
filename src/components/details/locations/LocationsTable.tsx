@@ -4,7 +4,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { useMemo } from 'react'
 
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { VersionGroupLabels, type LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
@@ -13,50 +12,42 @@ export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] 
   const { versionGroup } = useVersionGroup()
   const columnHelper = createColumnHelper<LocationEncounterRow>()
 
-  const filteredRows = useMemo(
-    () => rows.filter((row) => row.versionGroup === versionGroup),
-    [rows, versionGroup]
-  )
+  const filteredRows = rows.filter((row) => row.versionGroup === versionGroup)
 
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor('versionName', {
-        header: 'Game',
-        cell: (info) => <span className="text-zinc-700 dark:text-zinc-300">{info.getValue()}</span>,
-      }),
-      columnHelper.accessor('locationName', {
-        header: 'Location',
-        cell: (info) => (
-          <span className="font-medium text-zinc-900 dark:text-zinc-100">{info.getValue()}</span>
-        ),
-      }),
-      columnHelper.accessor('methods', {
-        header: 'Method',
-        cell: (info) => (
-          <span className="text-zinc-700 dark:text-zinc-300">{info.getValue().join(', ')}</span>
-        ),
-      }),
-      columnHelper.accessor((row) => row, {
-        id: 'level',
-        header: 'Level',
-        cell: (info) => {
-          const row = info.getValue()
-          return (
-            <span className="text-zinc-700 dark:text-zinc-300">
-              {row.minLevel === row.maxLevel ? row.minLevel : `${row.minLevel}-${row.maxLevel}`}
-            </span>
-          )
-        },
-      }),
-      columnHelper.accessor('maxChance', {
-        header: 'Chance',
-        cell: (info) => (
-          <span className="text-zinc-700 dark:text-zinc-300">{info.getValue()}%</span>
-        ),
-      }),
-    ],
-    [columnHelper]
-  )
+  const columns = [
+    columnHelper.accessor('versionName', {
+      header: 'Game',
+      cell: (info) => <span className="text-zinc-700 dark:text-zinc-300">{info.getValue()}</span>,
+    }),
+    columnHelper.accessor('locationName', {
+      header: 'Location',
+      cell: (info) => (
+        <span className="font-medium text-zinc-900 dark:text-zinc-100">{info.getValue()}</span>
+      ),
+    }),
+    columnHelper.accessor('methods', {
+      header: 'Method',
+      cell: (info) => (
+        <span className="text-zinc-700 dark:text-zinc-300">{info.getValue().join(', ')}</span>
+      ),
+    }),
+    columnHelper.accessor((row) => row, {
+      id: 'level',
+      header: 'Level',
+      cell: (info) => {
+        const row = info.getValue()
+        return (
+          <span className="text-zinc-700 dark:text-zinc-300">
+            {row.minLevel === row.maxLevel ? row.minLevel : `${row.minLevel}-${row.maxLevel}`}
+          </span>
+        )
+      },
+    }),
+    columnHelper.accessor('maxChance', {
+      header: 'Chance',
+      cell: (info) => <span className="text-zinc-700 dark:text-zinc-300">{info.getValue()}%</span>,
+    }),
+  ]
 
   const table = useReactTable({
     data: filteredRows,

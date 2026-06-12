@@ -1,0 +1,17 @@
+---
+import EvolutionNode from '@/components/details/evolution/EvolutionNode.astro'
+import type { EvolutionNodeData } from '@/lib/utils/pokeapi-helpers'
+
+interface Props {
+  evolutionRoot: EvolutionNodeData
+}
+
+const { evolutionRoot } = Astro.props
+---
+
+<section
+  class="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800"
+>
+  <h2 class="text-xl font-medium text-black dark:text-white">Evolution</h2>
+  <EvolutionNode node={evolutionRoot} />
+</section>

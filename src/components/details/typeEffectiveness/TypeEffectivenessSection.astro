@@ -1,0 +1,29 @@
+---
+import EffectivenessMultiplier from '@/components/details/typeEffectiveness/EffectivenessMultiplier.astro'
+import TypePill from '@/components/TypePill.astro'
+import type { TypeRelation } from '@/lib/utils/pokeapi-helpers'
+
+interface Props {
+  typeRelations: TypeRelation[]
+}
+
+const { typeRelations } = Astro.props
+---
+
+<section
+  class="@container flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800"
+>
+  <h2 class="text-xl font-medium text-black dark:text-white">
+    Type effectiveness
+  </h2>
+  <div
+    class="flex h-full w-full flex-col content-evenly items-center gap-x-6 gap-y-1 @sm:h-72 @sm:flex-wrap @lg:max-w-sm @lg:content-between"
+  >
+    {typeRelations.map((relation) => (
+      <div class="flex flex-row items-center justify-between gap-1">
+        <TypePill variant={relation.type.name} size="medium" />
+        <EffectivenessMultiplier variant={relation.effectiveness} />
+      </div>
+    ))}
+  </div>
+</section>

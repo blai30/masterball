@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
@@ -86,7 +86,7 @@ export default function ItemCardGrid({
   }
 
   // Create filter options from available item categories and pockets in the data
-  const availableFilters = useMemo(() => {
+  const availableFilters = (() => {
     const filters: FilterConfig[] = []
 
     const uniquePockets = Array.from(new Set(data.map((item) => item.pocket)))
@@ -126,21 +126,17 @@ export default function ItemCardGrid({
     }
 
     return filters
-  }, [data, pocketFilters, categoryFilters])
+  })()
 
-  const fuse = useMemo(
-    () =>
-      new Fuse(data, {
-        keys: ['name'],
-        threshold: 0.4,
-      }),
-    [data]
-  )
+  const fuse = new Fuse(data, {
+    keys: ['name'],
+    threshold: 0.4,
+  })
 
   /**
    * Returns filtered data for grid display.
    */
-  const filteredData = useMemo(() => {
+  const filteredData = (() => {
     // Search first (Fuse is stable across filter changes)
     let results = search ? fuse.search(search).map((result) => result.item) : data
 
@@ -159,7 +155,7 @@ export default function ItemCardGrid({
     }
 
     return results
-  }, [data, fuse, filterByVersionGroup, search, versionGroup, pocketFilters, categoryFilters])
+  })()
 
   return (
     <div className="flex flex-col gap-8">

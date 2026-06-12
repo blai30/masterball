@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { useState, useMemo, useEffect } from 'react'
+import { useState } from 'react'
 
 import CardGrid from '@/components/compounds/CardGrid'
 import MoveCard from '@/components/compounds/MoveCard'
@@ -131,20 +131,16 @@ export default function MoveCardGrid({
     },
   ]
 
-  const fuse = useMemo(
-    () =>
-      new Fuse(data, {
-        keys: ['name'],
-        threshold: 0.4,
-        ignoreLocation: false,
-      }),
-    [data]
-  )
+  const fuse = new Fuse(data, {
+    keys: ['name'],
+    threshold: 0.4,
+    ignoreLocation: false,
+  })
 
   /**
    * Returns filtered and sorted data for grid display.
    */
-  const filteredData = useMemo(() => {
+  const filteredData = (() => {
     // Search first (Fuse is stable across filter changes)
     let results = search ? fuse.search(search).map((r: { item: MoveInfo }) => r.item) : data
 
@@ -180,17 +176,7 @@ export default function MoveCardGrid({
     }
 
     return results
-  }, [
-    data,
-    fuse,
-    typeFilter,
-    damageClassFilter,
-    search,
-    sortKey,
-    sortDirection,
-    versionGroup,
-    filterByVersionGroup,
-  ])
+  })()
 
   return (
     <div className="flex flex-col gap-8">

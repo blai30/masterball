@@ -2,7 +2,7 @@
 import pMap from 'p-map'
 import type { Item } from 'pokedex-promise-v2'
 import Layout from '@/layouts/Layout.astro'
-import AppShell from '@/components/AppShell'
+import Shell from '@/components/Shell.astro'
 import ItemCardGrid from '@/components/compounds/ItemCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
 import { itemResourceList } from '@/lib/providers'
@@ -56,9 +56,9 @@ const itemsData = items
 ---
 
 <Layout title="Item List">
-  <AppShell pathname={Astro.url.pathname} client:load>
+  <Shell>
     <div class="mx-auto w-full max-w-384">
       <ItemCardGrid data={itemsData} client:load />
     </div>
-  </AppShell>
+  </Shell>
 </Layout>

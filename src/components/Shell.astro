@@ -1,0 +1,87 @@
+---
+import Backpack from '@lucide/astro/icons/backpack'
+import Cat from '@lucide/astro/icons/cat'
+import Shield from '@lucide/astro/icons/shield'
+import Swords from '@lucide/astro/icons/swords'
+
+import Footer from '@/components/shared/Footer.astro'
+import MobileNav from '@/components/shared/MobileNav'
+import ThemeSwitch from '@/components/shared/ThemeSwitch'
+import VersionGroupSelector from '@/components/shared/VersionGroupSelector'
+import { normalizePathname, toHref } from '@/lib/utils/path'
+
+const navItems = [
+  { label: 'Pokemon', url: '/', icon: Cat },
+  { label: 'Items', url: '/item', icon: Backpack },
+  { label: 'Moves', url: '/move', icon: Swords },
+  { label: 'Abilities', url: '/ability', icon: Shield },
+]
+
+const pathname = Astro.url.pathname
+const currentPathname = normalizePathname(pathname)
+
+const isActiveRoute = (url: string) => {
+  if (url === '/') {
+    return (
+      currentPathname === '/' ||
+      !navItems.some((item) => item.url !== '/' && currentPathname.startsWith(item.url))
+    )
+  }
+  return currentPathname.startsWith(url)
+}
+
+const navItemClass =
+  'relative flex min-w-0 items-center gap-3 rounded-lg p-2 text-left text-base/6 font-medium text-zinc-950 transition-colors hover:bg-zinc-950/10 hover:duration-0 sm:text-sm/5 dark:text-white dark:hover:bg-white/10'
+---
+
+<div
+  class="relative isolate flex min-h-svh w-full flex-col bg-white lg:bg-zinc-100 dark:bg-zinc-950 dark:lg:bg-black"
+>
+  <header class="flex items-center px-4">
+    <MobileNav client:idle pathname={pathname} />
+    <div class="min-w-0 flex-1">
+      <nav class="@container mx-auto flex max-w-384 flex-1 items-center gap-4 py-2.5">
+        <div class="flex items-center gap-3 max-lg:hidden">
+          {
+            navItems.map((item) => {
+              const Icon = item.icon
+              const active = isActiveRoute(item.url)
+              return (
+                <span class="relative">
+                  <a
+                    href={toHref(item.url)}
+                    class={navItemClass}
+                    aria-current={active ? 'page' : undefined}
+                  >
+                    <Icon size={20} />
+                    <span class="truncate">{item.label}</span>
+                  </a>
+                  {active && (
+                    <span
+                      aria-hidden="true"
+                      class="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-zinc-950 dark:bg-white"
+                    />
+                  )}
+                </span>
+              )
+            })
+          }
+        </div>
+        <div aria-hidden="true" class="-ml-4 flex-1"></div>
+        <div class="flex items-center gap-3 max-lg:hidden">
+          <VersionGroupSelector client:idle />
+          <ThemeSwitch client:idle />
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex flex-1 flex-col pb-2 lg:px-2">
+    <div
+      class="grow p-6 lg:rounded-lg lg:bg-white lg:p-10 lg:shadow-xs lg:ring-1 lg:ring-zinc-950/5 dark:lg:bg-zinc-950 dark:lg:ring-white/10"
+    >
+      <div class="mx-auto"><slot /></div>
+    </div>
+  </main>
+</div>
+<Footer />

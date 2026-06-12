@@ -1,7 +1,6 @@
 import type { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
 import { memo } from 'react'
 
-import GlassCard from '@/components/GlassCard'
 import { Badge } from '@/components/ui/catalyst/badge'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import {
@@ -37,7 +36,7 @@ const ItemCard = ({ props }: { props: ItemCardProps }) => {
   })()
 
   return (
-    <GlassCard variant="default" className="h-full rounded-xl">
+    <div className="h-full rounded-xl bg-zinc-100/50 inset-ring-1 inset-ring-zinc-200/50 backdrop-blur-xl dark:bg-zinc-900/50 dark:inset-ring-zinc-800/50">
       <div className="flex flex-row items-start gap-4 p-4">
         {props.imageUrl && (
           <div className="flex aspect-square size-20 items-center justify-center rounded-md bg-linear-to-br from-zinc-100 to-zinc-200 p-2 dark:from-zinc-800 dark:to-zinc-900">
@@ -64,7 +63,7 @@ const ItemCard = ({ props }: { props: ItemCardProps }) => {
           <p className="text-base font-normal text-zinc-600 dark:text-zinc-400">{description}</p>
         </div>
       </div>
-    </GlassCard>
+    </div>
   )
 }
 

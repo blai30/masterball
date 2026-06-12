@@ -1,0 +1,31 @@
+---
+import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+
+import TypeIcon from '@/components/TypeIcon.astro'
+import { toHref } from '@/lib/utils/path'
+import { getTranslation, type TypeKey } from '@/lib/utils/pokeapi-helpers'
+
+interface Props {
+  species: PokemonSpecies
+  pokemon: Pokemon
+}
+
+const { species, pokemon } = Astro.props
+const name = getTranslation(species.names, 'name')
+const imageId = species.id.toString().padStart(4, '0')
+const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+---
+
+<div
+  class="rounded-lg bg-zinc-100/50 inset-ring-1 inset-ring-zinc-200/50 backdrop-blur-xl transition-colors hover:bg-zinc-200/60 hover:inset-ring-zinc-300/60 hover:duration-0 dark:bg-zinc-900/50 dark:inset-ring-zinc-800/50 dark:hover:bg-zinc-800/60 dark:hover:inset-ring-zinc-700/60"
+>
+  <a href={toHref(species.name)} class="group flex w-56 items-center gap-3 px-3 py-2">
+    <img src={imageUrl} alt={species.name} width={64} height={64} class="w-16 object-contain py-1" />
+    <div class="flex h-full w-full flex-col justify-between gap-1">
+      <h3 class="rounded-xs text-lg font-medium text-zinc-700 dark:text-zinc-300">{name}</h3>
+      <div class="flex flex-row gap-1">
+        {pokemon.types.map((type) => <TypeIcon variant={type.type.name as TypeKey} size="small" />)}
+      </div>
+    </div>
+  </a>
+</div>
