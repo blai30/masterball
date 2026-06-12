@@ -1,7 +1,6 @@
 import clsx from 'clsx/lite'
 
-import DamageClassIcon from '@/components/DamageClassIcon'
-import TypeIcon from '@/components/TypeIcon'
+import { DamageClassIcon, TypeIcon } from '@/components/icons'
 import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
 import { DAMAGE_CLASSES, type DamageClassKey } from '@/lib/domain/damage-class'
 import { TYPE_KEYS, type TypeKey } from '@/lib/domain/types'

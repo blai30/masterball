@@ -11,8 +11,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Fragment, memo, useState, useRef, useEffect } from 'react'
 
-import DamageClassIcon from '@/components/DamageClassIcon'
-import TypeIcon from '@/components/TypeIcon'
+import { DamageClassIcon, TypeIcon } from '@/components/icons'
 import { LearnMethodKey, type MoveRow } from '@/lib/domain/moves'
 
 const tableNames: Record<LearnMethodKey, string> = {

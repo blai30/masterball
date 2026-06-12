@@ -1,6 +1,6 @@
 import clsx from 'clsx/lite'
 
-import TypeIcon from '@/components/TypeIcon'
+import { TypeIcon } from '@/components/icons'
 import type { Monster } from '@/lib/utils/pokeapi-helpers'
 
 export default function VariantCard({

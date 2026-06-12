@@ -1,7 +1,7 @@
 import clsx from 'clsx/lite'
 import { memo } from 'react'
 
-import TypeIcon from '@/components/TypeIcon'
+import { TypeIcon } from '@/components/icons'
 import { DAMAGE_CLASSES, type DamageClassKey } from '@/lib/domain/damage-class'
 import type { MoveInfo } from '@/lib/domain/moves'
 import { useVersionGroup } from '@/lib/stores/version-group'
