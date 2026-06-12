@@ -1,0 +1,70 @@
+---
+import EvolutionChip from '@/components/details/evolution/EvolutionChip.astro'
+import type { EvolutionConditionView } from '@/lib/utils/evolution-conditions'
+
+interface Props {
+  conditions: EvolutionConditionView[]
+}
+
+const { conditions } = Astro.props
+
+// pokeapi lists evolution_details oldest to newest and gives no version-group
+// tag, so the last entry is treated as the current/canonical method. Older
+// alternates (e.g. Sylveon's affection method) are tucked into a flyout.
+const primary = conditions.at(-1)
+const others = conditions.slice(0, -1)
+
+// Unique id links the trigger button to its popover. The popovertarget button
+// also becomes the popover's implicit anchor, so anchor() can position the
+// flyout under it with no extra wiring. Built at SSG time; never hydrated.
+const popoverId = `evo-methods-${crypto.randomUUID()}`
+const anchorName = `--${popoverId}`
+---
+
+{
+  primary && (
+    <div class="flex w-full flex-col items-start gap-1.5">
+      <div title={primary.full} class="flex w-full flex-col items-start gap-1.5">
+        {primary.chips.map((chip) => (
+          <EvolutionChip chip={chip} />
+        ))}
+      </div>
+
+      {others.length > 0 && (
+        <Fragment>
+          <button
+            type="button"
+            popovertarget={popoverId}
+            style={`anchor-name: ${anchorName}`}
+            class="text-sm font-medium text-zinc-500 underline decoration-dotted underline-offset-2 transition-colors hover:text-zinc-700 hover:duration-0 dark:text-zinc-400 dark:hover:text-zinc-200"
+          >
+            +{others.length} other
+          </button>
+          <div
+            id={popoverId}
+            popover="auto"
+            style={`position-anchor: ${anchorName}`}
+            class="fixed inset-auto top-[anchor(bottom)] left-[anchor(left)] m-0 mt-2 w-60 rounded-xl bg-white p-4 shadow-lg inset-ring-1 inset-ring-zinc-200 dark:bg-zinc-900 dark:inset-ring-zinc-700"
+          >
+            <div class="flex flex-col items-start gap-2">
+              {others.map((method, index) => (
+                <Fragment>
+                  {index > 0 && (
+                    <span class="text-xs font-medium tracking-wide text-zinc-600 uppercase dark:text-zinc-400">
+                      or
+                    </span>
+                  )}
+                  <div title={method.full} class="flex w-full flex-col items-start gap-1.5">
+                    {method.chips.map((chip) => (
+                      <EvolutionChip chip={chip} />
+                    ))}
+                  </div>
+                </Fragment>
+              ))}
+            </div>
+          </div>
+        </Fragment>
+      )}
+    </div>
+  )
+}

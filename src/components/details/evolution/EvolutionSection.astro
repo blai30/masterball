@@ -1,17 +1,29 @@
 ---
-import EvolutionNode from '@/components/details/evolution/EvolutionNode.astro'
+import EvolutionStage from '@/components/details/evolution/EvolutionStage.astro'
 import type { EvolutionNodeData } from '@/lib/utils/pokeapi-helpers'
 
 interface Props {
   evolutionRoot: EvolutionNodeData
+  currentSpeciesId: number
 }
 
-const { evolutionRoot } = Astro.props
+const { evolutionRoot, currentSpeciesId } = Astro.props
+const hasEvolutions = evolutionRoot.evolvesTo.length > 0
 ---
 
 <section
-  class="flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800"
+  class="@container flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800"
 >
   <h2 class="text-xl font-medium text-black dark:text-white">Evolution</h2>
-  <EvolutionNode node={evolutionRoot} />
+  {
+    hasEvolutions ? (
+      <div class="overflow-x-auto">
+        <EvolutionStage node={evolutionRoot} currentSpeciesId={currentSpeciesId} />
+      </div>
+    ) : (
+      <p class="flex items-baseline gap-2">
+        <span class="text-lg text-pretty text-zinc-700 dark:text-zinc-300">Does not evolve.</span>
+      </p>
+    )
+  }
 </section>

@@ -9,6 +9,7 @@ import type {
 } from 'pokedex-promise-v2'
 
 import pokeapi from '@/lib/api/pokeapi'
+import type { EvolutionConditionView } from '@/lib/utils/evolution-conditions'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
 
 export function getTranslation<
@@ -42,6 +43,7 @@ export type Monster = {
 export type EvolutionNodeData = {
   species: PokemonSpecies
   pokemon: Pokemon
+  conditions: EvolutionConditionView[]
   evolvesTo: EvolutionNodeData[]
 }
 
