@@ -3,10 +3,10 @@ import { dirname, resolve } from 'node:path'
 
 import { getCache, getStats, seedCache } from './pokeapi'
 
-// Persisted pokeapi responses live in a top-level, git-ignored cache directory so
-// they survive between builds locally and can be cached by CI independently of how
-// the package manager manages node_modules.
-const CACHE_FILE = resolve('.pokeapi-cache/pokeapi.json')
+// Persist pokeapi responses inside node_modules/.astro: it is already git-ignored, and
+// crucially it is the one directory Cloudflare Pages restores between builds for Astro
+// projects (GitHub Actions caches the same path explicitly), so the cache survives.
+const CACHE_FILE = resolve('node_modules/.astro/pokeapi-cache.json')
 
 // Load the persisted responses into the in-memory cache so a build (or dev server)
 // can reuse them instead of refetching every resource from the network.

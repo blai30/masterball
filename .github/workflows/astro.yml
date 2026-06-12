@@ -27,7 +27,7 @@ jobs:
       - name: Restore pokeapi build cache
         uses: actions/cache@v5
         with:
-          path: .pokeapi-cache
+          path: node_modules/.astro
           key: pokeapi-cache-${{ github.run_id }}
           restore-keys: |
             pokeapi-cache-
