@@ -5,11 +5,10 @@ import Layout from '@/layouts/Layout.astro'
 import Shell from '@/components/Shell.astro'
 import MoveCardGrid from '@/components/compounds/MoveCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
+import { getMoveList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 
-const moveList = import.meta.env.DEV
-  ? await pokeapi.getList('move', 40, 0)
-  : await pokeapi.getList('move', 1200, 0)
+const moveList = await getMoveList()
 
 const moves = await pMap(
   moveList.results,

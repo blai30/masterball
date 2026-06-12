@@ -5,11 +5,10 @@ import Layout from '@/layouts/Layout.astro'
 import Shell from '@/components/Shell.astro'
 import InfoCardGrid from '@/components/compounds/InfoCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
+import { getAbilityList } from '@/lib/providers'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 
-const abilityList = import.meta.env.DEV
-  ? await pokeapi.getList('ability', 40, 0)
-  : await pokeapi.getList('ability', 600, 0)
+const abilityList = await getAbilityList()
 
 const abilities = await pMap(
   abilityList.results,

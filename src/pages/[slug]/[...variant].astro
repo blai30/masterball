@@ -19,7 +19,7 @@ import type {
 import Layout from '@/layouts/Layout.astro'
 import Shell from '@/components/Shell.astro'
 import pokeapi from '@/lib/api/pokeapi'
-import { getTestSpeciesList } from '@/lib/providers'
+import { getSpeciesList } from '@/lib/providers'
 import { getCombinedEffectiveness, initTypes, type TypeRelation } from '@/lib/domain/effectiveness'
 import {
   buildMoveData,
@@ -52,9 +52,7 @@ import VariantCardSelector from '@/components/compounds/VariantCardSelector'
 import type { AbilityEntryProps } from '@/components/details/abilities/AbilityEntry'
 
 export async function getStaticPaths() {
-  const speciesList = import.meta.env.DEV
-    ? await getTestSpeciesList()
-    : await pokeapi.getList('pokemon-species', 1025, 0)
+  const speciesList = await getSpeciesList()
 
   const species = await pMap(
     speciesList.results,

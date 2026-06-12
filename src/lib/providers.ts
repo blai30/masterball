@@ -1,5 +1,7 @@
 import type { NamedAPIResourceList } from 'pokedex-promise-v2'
 
+import pokeapi from '@/lib/api/pokeapi'
+
 const species: NamedAPIResourceList = {
   count: 1025,
   next: null,
@@ -262,18 +264,6 @@ const species: NamedAPIResourceList = {
       url: 'https://pokeapi.co/api/v2/pokemon-species/1025/',
     },
   ],
-}
-
-// export const pokeapi = new Pokedex({
-//   // 3 months
-//   cacheLimit: 1000 * 60 * 60 * 24 * 30 * 3,
-//   // 5 minutes
-//   timeout: 300000,
-// })
-
-export const getTestSpeciesList = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  return species
 }
 
 const items = [
@@ -798,7 +788,7 @@ const items = [
   'stellar-tera-shard',
 ]
 
-export const itemResourceList: NamedAPIResourceList = {
+const itemResourceList: NamedAPIResourceList = {
   count: items.length,
   next: null,
   previous: null,
@@ -806,4 +796,25 @@ export const itemResourceList: NamedAPIResourceList = {
     name: slug,
     url: `https://pokeapi.co/api/v2/item/${slug}/`,
   })),
+}
+
+// Catalog source: the one place that decides which resources exist in a build.
+// Dev uses small or curated lists to keep builds fast; prod uses full lists.
+
+export function getSpeciesList(): Promise<NamedAPIResourceList> {
+  return import.meta.env.DEV
+    ? Promise.resolve(species)
+    : pokeapi.getList('pokemon-species', 1025, 0)
+}
+
+export function getAbilityList(): Promise<NamedAPIResourceList> {
+  return pokeapi.getList('ability', import.meta.env.DEV ? 40 : 600, 0)
+}
+
+export function getMoveList(): Promise<NamedAPIResourceList> {
+  return pokeapi.getList('move', import.meta.env.DEV ? 40 : 1200, 0)
+}
+
+export function getItemList(): Promise<NamedAPIResourceList> {
+  return import.meta.env.DEV ? Promise.resolve(itemResourceList) : pokeapi.getList('item', 2500, 0)
 }

@@ -5,14 +5,12 @@ import Layout from '@/layouts/Layout.astro'
 import Shell from '@/components/Shell.astro'
 import ItemCardGrid from '@/components/compounds/ItemCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
-import { itemResourceList } from '@/lib/providers'
+import { getItemList } from '@/lib/providers'
 import { ITEM_CATEGORIES, type ItemCategoryKey, type ItemPocketKey } from '@/lib/domain/items'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { excludedItems } from '@/lib/utils/excluded-slugs'
 
-const itemList = import.meta.env.DEV
-  ? itemResourceList
-  : await pokeapi.getList('item', 2500, 0)
+const itemList = await getItemList()
 
 const filteredItems = itemList.results.filter(
   (result) =>
