@@ -1,4 +1,4 @@
-export default async function LoadingSection() {
+export default function LoadingSection() {
   const title = 'Loading section'
 
   return (

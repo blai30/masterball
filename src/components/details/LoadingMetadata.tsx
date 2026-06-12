@@ -1,4 +1,4 @@
-export default async function LoadingSection() {
+export default function LoadingSection() {
   return (
     <section className="flex flex-col gap-4">
       <svg className="animate-spin p-2" viewBox="0 0 64 64" fill="none" width={96} height={96}>
