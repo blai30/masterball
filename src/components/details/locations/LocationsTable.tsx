@@ -5,9 +5,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
+import type { LocationEncounterRow } from '@/lib/domain/locations'
 import { VERSION_GROUPS } from '@/lib/domain/version-groups'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import type { LocationEncounterRow } from '@/lib/utils/pokeapi-helpers'
 
 export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] }) {
   const { versionGroup } = useVersionGroup()

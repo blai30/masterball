@@ -1,9 +1,12 @@
+import pMap from 'p-map'
 import type {
+  EvolutionChain,
   EvolutionDetail,
   Item,
   Location,
   Move,
   Name,
+  Pokemon,
   PokemonSpecies,
   Region,
   Type,
@@ -11,6 +14,7 @@ import type {
 
 import pokeapi from '@/lib/api/pokeapi'
 import type { TypeKey } from '@/lib/domain/types'
+import { excludedVariants } from '@/lib/utils/excluded-slugs'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
 
 export type ChipIconName =
@@ -230,4 +234,33 @@ export const describeEvolution = async (
 
   const full = [head, ...mods].join(' ')
   return { chips, full }
+}
+
+export type EvolutionNodeData = {
+  species: PokemonSpecies
+  pokemon: Pokemon
+  conditions: EvolutionConditionView[]
+  evolvesTo: EvolutionNodeData[]
+}
+
+async function buildEvolutionNode(chain: EvolutionChain['chain']): Promise<EvolutionNodeData> {
+  const species = await pokeapi.getResource<PokemonSpecies>(chain.species.url)
+  const defaultVariant = species.varieties
+    .filter((v) => !excludedVariants.includes(v.pokemon.name))
+    .find((v) => v.is_default)
+
+  const pokemon = await pokeapi.getResource<Pokemon>(defaultVariant!.pokemon.url)
+  const conditions = await pMap(chain.evolution_details, (detail) => describeEvolution(detail), {
+    concurrency: 4,
+  })
+  const evolvesTo = await pMap(chain.evolves_to, (child) => buildEvolutionNode(child), {
+    concurrency: 4,
+  })
+
+  return { species, pokemon, conditions, evolvesTo }
+}
+
+export async function buildEvolutionTree(species: PokemonSpecies): Promise<EvolutionNodeData> {
+  const evolutionChain = await pokeapi.getResource<EvolutionChain>(species.evolution_chain.url)
+  return buildEvolutionNode(evolutionChain.chain)
 }

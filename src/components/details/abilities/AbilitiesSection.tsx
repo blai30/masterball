@@ -1,5 +1,5 @@
-import type { AbilityEntryProps } from '@/components/details/abilities/AbilityEntry'
 import AbilityEntry from '@/components/details/abilities/AbilityEntry'
+import type { AbilityEntryProps } from '@/lib/domain/abilities'
 
 export default function AbilitiesSection({ abilitiesMap }: { abilitiesMap: AbilityEntryProps[] }) {
   const title = 'Abilities'

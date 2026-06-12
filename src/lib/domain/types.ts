@@ -1,6 +1,3 @@
-// Single source of truth for Pokemon type display labels. Type colors are CSS
-// variables (--color-<slug>) defined in src/styles/globals.css and applied via
-// inline style in the type components.
 export const TYPES = {
   normal: 'Normal',
   fighting: 'Fighting',

@@ -3,8 +3,6 @@ import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 
 import pokeapi from '@/lib/api/pokeapi'
 import type { TypeKey } from '@/lib/domain/types'
-import type { VersionGroupKey } from '@/lib/domain/version-groups'
-import type { EvolutionConditionView } from '@/lib/utils/evolution-conditions'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
 
 export function getTranslation<
@@ -33,13 +31,6 @@ export type Monster = {
   formSlug?: string | undefined
   types?: TypeKey[] | undefined
   imageUrl?: string | undefined
-}
-
-export type EvolutionNodeData = {
-  species: PokemonSpecies
-  pokemon: Pokemon
-  conditions: EvolutionConditionView[]
-  evolvesTo: EvolutionNodeData[]
 }
 
 export const createMonster = async (
@@ -96,15 +87,4 @@ export const getMonstersBySpecies = async (species: PokemonSpecies): Promise<Mon
     { concurrency: 10 }
   )
   return monsters
-}
-
-export type LocationEncounterRow = {
-  locationAreaSlug: string
-  locationName: string
-  versionName: string
-  versionGroup: VersionGroupKey
-  maxChance: number
-  minLevel: number
-  maxLevel: number
-  methods: string[]
 }
