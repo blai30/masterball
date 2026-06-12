@@ -2,7 +2,7 @@
 import pMap from 'p-map'
 import type { Ability } from 'pokedex-promise-v2'
 import Layout from '@/layouts/Layout.astro'
-import AppShell from '@/components/AppShell'
+import Shell from '@/components/Shell.astro'
 import InfoCardGrid from '@/components/compounds/InfoCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
@@ -37,7 +37,7 @@ const abilitiesData = abilities
 ---
 
 <Layout title="Ability List">
-  <AppShell pathname={Astro.url.pathname} client:load>
+  <Shell>
     <div class="mx-auto w-full max-w-384">
       <InfoCardGrid
         data={abilitiesData}
@@ -45,5 +45,5 @@ const abilitiesData = abilities
         client:load
       />
     </div>
-  </AppShell>
+  </Shell>
 </Layout>

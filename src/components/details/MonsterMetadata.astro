@@ -1,0 +1,245 @@
+---
+import type { EggGroup, GrowthRate, Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
+
+import { getTranslation, StatLabels, type StatKey } from '@/lib/utils/pokeapi-helpers'
+import { Mars, Venus } from 'lucide-react'
+
+interface Props {
+  species: PokemonSpecies
+  pokemon: Pokemon
+  eggGroups: EggGroup[]
+  growthRate: GrowthRate
+}
+
+const { species, pokemon, eggGroups, growthRate } = Astro.props
+
+const calculateCatchProbability = (captureRate: number) => {
+  const base = captureRate / 3
+  const captureValue = 65535 / Math.pow(255 / base, 0.1875)
+  const captureProbability = Math.pow(captureValue / 65535, 4)
+  return Math.fround(captureProbability) * 100
+}
+
+const convertHeight = (heightInDecimeters: number) => ({
+  meters: Math.fround(heightInDecimeters / 10).toFixed(1),
+})
+
+const convertWeight = (weightInHectograms: number) => ({
+  kilograms: (weightInHectograms / 10).toFixed(1),
+})
+
+const calculateGenderRates = (genderRate: number) => ({
+  maleRate: Math.fround((1 - genderRate / 8) * 100).toFixed(1),
+  femaleRate: Math.fround((genderRate / 8) * 100).toFixed(1),
+})
+
+const cardClass =
+  'flex flex-col gap-2 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800 rounded-xl p-4'
+const titleClass =
+  'mb-1 text-xs font-medium tracking-wide text-zinc-700 uppercase dark:text-zinc-300'
+
+const evStats = pokemon.stats.filter((stat) => stat.effort > 0)
+const { meters } = convertHeight(pokemon.height)
+const { kilograms } = convertWeight(pokemon.weight)
+const catchProbability = calculateCatchProbability(species.capture_rate).toFixed(2)
+const growthDescription = getTranslation(growthRate.descriptions, 'description')!
+const maxExperience = growthRate.levels.find((level) => level.level === 100)!.experience
+
+// Gender donut geometry
+const genderless = species.gender_rate === -1
+const { maleRate, femaleRate } = calculateGenderRates(species.gender_rate)
+const male = parseFloat(maleRate)
+const female = parseFloat(femaleRate)
+const radius = 56
+const strokeWidth = 6
+const circumference = 2 * Math.PI * radius
+const maleArc = Number(((male / 100) * circumference).toFixed(6))
+const femaleArc = Number(((female / 100) * circumference).toFixed(6))
+const maleDashArray = `${maleArc} ${Number((circumference - maleArc).toFixed(6))}`
+const femaleDashArray = `${femaleArc} ${Number((circumference - femaleArc).toFixed(6))}`
+---
+
+<!-- Size -->
+<div class={cardClass}>
+  <h2 class={titleClass}>Size</h2>
+  <div class="flex flex-1 flex-col">
+    <div class="flex flex-col gap-2">
+      <div>
+        <span class="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">Height</span>
+        <p class="flex gap-x-1">
+          <span class="text-base font-light">{meters}</span>
+          <span class="text-base text-zinc-600 dark:text-zinc-400">m</span>
+        </p>
+      </div>
+      <div>
+        <span class="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">Weight</span>
+        <p class="flex gap-x-1">
+          <span class="text-base font-light">{kilograms}</span>
+          <span class="text-base text-zinc-600 dark:text-zinc-400">kg</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Gender ratio -->
+<div class={cardClass}>
+  <h2 class={titleClass}>Gender ratio</h2>
+  <div class="flex flex-1 flex-col">
+    {genderless ? (
+      <p>Genderless</p>
+    ) : (
+      <div class="flex items-center">
+        <div class="relative">
+          <svg width="128" height="128" aria-label="Gender ratio donut chart" role="img">
+            <defs>
+              <linearGradient id="gender-male" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#93c5fd" />
+                <stop offset="100%" stop-color="#2563eb" />
+              </linearGradient>
+              <linearGradient id="gender-female" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#db2777" />
+                <stop offset="100%" stop-color="#f9a8d4" />
+              </linearGradient>
+            </defs>
+            <g transform="translate(64 64) rotate(-90)">
+              {maleArc > 0 && (
+                <circle
+                  r={radius}
+                  cx="0"
+                  cy="0"
+                  fill="none"
+                  stroke-width={strokeWidth}
+                  stroke-dasharray={maleDashArray}
+                  stroke="url(#gender-male)"
+                />
+              )}
+              {femaleArc > 0 && (
+                <circle
+                  r={radius}
+                  cx="0"
+                  cy="0"
+                  fill="none"
+                  stroke-width={strokeWidth}
+                  stroke-dasharray={femaleDashArray}
+                  stroke-dashoffset={-maleArc}
+                  stroke="url(#gender-female)"
+                />
+              )}
+            </g>
+          </svg>
+          <div
+            class="absolute top-1/2 left-1/2 flex size-full -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center"
+          >
+            <div class="flex gap-x-1">
+              <span class="flex flex-row items-center gap-x-1 text-blue-800 dark:text-blue-200">
+                <Mars size={20} />
+                <p class="flex gap-x-1">
+                  <span class="text-base font-light">{male}</span>
+                  <span class="text-base text-zinc-600 dark:text-zinc-400">%</span>
+                </p>
+              </span>
+            </div>
+            <div class="flex gap-x-1">
+              <span
+                class="flex flex-row items-center gap-x-1 text-base font-light text-pink-800 dark:text-pink-200"
+              >
+                <Venus size={20} />
+                <p class="flex gap-x-1">
+                  <span class="text-base font-light">{female}</span>
+                  <span class="text-base text-zinc-600 dark:text-zinc-400">%</span>
+                </p>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
+<!-- Catch rate -->
+<div class={cardClass}>
+  <h2 class={titleClass}>Catch rate</h2>
+  <div class="flex flex-1 flex-col">
+    <p class="flex gap-x-1">
+      <span class="text-base font-light">{species.capture_rate}</span>
+      <span class="text-base text-zinc-600 dark:text-zinc-400">/ 255</span>
+    </p>
+    <p class="flex gap-x-1">
+      <span class="text-base font-light">{catchProbability}</span>
+      <span class="text-base text-zinc-600 dark:text-zinc-400">%</span>
+    </p>
+  </div>
+</div>
+
+<!-- Breeding -->
+<div class={cardClass}>
+  <h2 class={titleClass}>Breeding</h2>
+  <div class="flex flex-1 flex-col">
+    <div class="flex flex-col gap-2">
+      <div>
+        <span class="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+          Egg Groups
+        </span>
+        <div class="flex flex-wrap gap-1">
+          {eggGroups.length > 0 ? (
+            eggGroups.map((group, index) => (
+              <span class="font-medium">
+                {getTranslation(group.names, 'name')}
+                {index < eggGroups.length - 1 && ','}
+              </span>
+            ))
+          ) : (
+            <span>&mdash;</span>
+          )}
+        </div>
+      </div>
+      <div>
+        <span class="mb-1 block text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+          Hatch Cycles
+        </span>
+        <div>
+          <span>{species.hatch_counter ? species.hatch_counter.toLocaleString() : '\u2014'}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Growth rate -->
+<div class={cardClass}>
+  <h2 class={titleClass}>Growth rate</h2>
+  <div class="flex flex-1 flex-col">
+    <p class="flex gap-x-1">
+      <span class="text-base font-light">{maxExperience.toLocaleString()}</span>
+      <span class="text-base text-zinc-600 dark:text-zinc-400">exp</span>
+    </p>
+    <p class="flex gap-x-1">
+      <span class="text-base font-light">{growthDescription}</span>
+    </p>
+  </div>
+</div>
+
+<!-- EV yield -->
+<div class={cardClass}>
+  <h2 class={titleClass}>EV yield</h2>
+  <div class="flex flex-1 flex-col">
+    {evStats.length === 0 ? (
+      <p>None</p>
+    ) : (
+      <ul class="flex flex-col">
+        {evStats.map((stat) => (
+          <li class="flex gap-x-1">
+            <p class="flex gap-x-1">
+              <span class="text-base font-light">{stat.effort}</span>
+              <span class="text-base text-zinc-600 dark:text-zinc-400">
+                {StatLabels[stat.stat.name as StatKey]}
+              </span>
+            </p>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</div>

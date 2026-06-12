@@ -2,7 +2,7 @@
 import pMap from 'p-map'
 import type { Pokemon, PokemonSpecies } from 'pokedex-promise-v2'
 import Layout from '@/layouts/Layout.astro'
-import AppShell from '@/components/AppShell'
+import Shell from '@/components/Shell.astro'
 import SpeciesCardGrid from '@/components/compounds/SpeciesCardGrid'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
@@ -46,9 +46,9 @@ const speciesData = species.map((specie) => {
 ---
 
 <Layout title="Pokemon List">
-  <AppShell pathname={Astro.url.pathname} client:load>
+  <Shell>
     <div class="mx-auto max-w-384">
       <SpeciesCardGrid data={speciesData} client:load />
     </div>
-  </AppShell>
+  </Shell>
 </Layout>

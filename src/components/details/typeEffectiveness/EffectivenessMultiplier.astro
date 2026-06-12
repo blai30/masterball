@@ -1,3 +1,4 @@
+---
 import { cva } from 'cva'
 
 import { Effectiveness } from '@/lib/utils/pokeapi-helpers'
@@ -16,7 +17,12 @@ const variants = cva({
   },
 })
 
-export default function EffectivenessMultiplier({ variant }: { variant: Effectiveness }) {
-  const label = `${variant.toFixed(2)} ×`
-  return <span className={variants({ variant })}>{label}</span>
+interface Props {
+  variant: Effectiveness
 }
+
+const { variant } = Astro.props
+const label = `${variant.toFixed(2)} ×`
+---
+
+<span class={variants({ variant })}>{label}</span>

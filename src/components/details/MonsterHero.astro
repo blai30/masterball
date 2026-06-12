@@ -1,0 +1,64 @@
+---
+import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
+
+import TypePill from '@/components/TypePill.astro'
+import { getTranslation } from '@/lib/utils/pokeapi-helpers'
+
+interface Props {
+  species: PokemonSpecies
+  pokemon: Pokemon
+  form?: PokemonForm | undefined
+  class?: string
+}
+
+const { species, pokemon, form, class: className } = Astro.props
+const name =
+  getTranslation(form?.form_names, 'name') ??
+  getTranslation(form?.names, 'name') ??
+  getTranslation(species.names, 'name')!
+
+const imageId = species.id.toString().padStart(4, '0')
+const imageUrl = pokemon.is_default
+  ? `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+  : `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_${pokemon.name}_s0.webp`
+
+const leadingZeros = imageId.match(/^0+/)?.[0] || ''
+const significantDigits = imageId.slice(leadingZeros.length)
+---
+
+<div
+  class:list={[
+    'relative h-50 w-full flex-row items-end gap-12',
+    'inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800',
+    'rounded-xl p-4',
+    className,
+  ]}
+>
+  <div class="flex flex-col items-start gap-4">
+    <div class="flex flex-col gap-2">
+      <h1 class="text-3xl font-semibold tracking-tight text-black dark:text-white">{name}</h1>
+      <ul class="flex flex-row gap-2">
+        {pokemon.types.map((type) => (
+          <li>
+            <TypePill variant={type.type.name} size="medium" />
+          </li>
+        ))}
+      </ul>
+    </div>
+    <p class="font-num text-5xl font-extrabold">
+      <span class="text-zinc-400 dark:text-zinc-800">{leadingZeros}</span>
+      <span class="text-zinc-800 dark:text-zinc-400">{significantDigits}</span>
+    </p>
+  </div>
+  <div class="absolute right-4 bottom-4 flex">
+    <img
+      src={imageUrl}
+      alt={`${species.name} sprite`}
+      width={128}
+      height={128}
+      loading="eager"
+      class="object-scale-down"
+      style={`view-transition-name: pokemon-sprite-${species.name}`}
+    />
+  </div>
+</div>

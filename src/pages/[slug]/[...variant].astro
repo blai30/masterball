@@ -17,7 +17,7 @@ import type {
   Version,
 } from 'pokedex-promise-v2'
 import Layout from '@/layouts/Layout.astro'
-import AppShell from '@/components/AppShell'
+import Shell from '@/components/Shell.astro'
 import pokeapi from '@/lib/api/pokeapi'
 import { getTestSpeciesList } from '@/lib/providers'
 import {
@@ -31,23 +31,22 @@ import {
   TypeKey,
   TypeLabels,
   VersionGroupKey,
+  type EvolutionNodeData,
   type LearnsetEntry,
   type LocationEncounterRow,
   type MoveRow,
   type TypeRelation,
 } from '@/lib/utils/pokeapi-helpers'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
-import MonsterHero from '@/components/details/MonsterHero'
-import MonsterMetadata from '@/components/details/MonsterMetadata'
+import MonsterHero from '@/components/details/MonsterHero.astro'
+import MonsterMetadata from '@/components/details/MonsterMetadata.astro'
 import StatsSection from '@/components/details/stats/StatsSection'
-import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection'
+import TypeEffectivenessSection from '@/components/details/typeEffectiveness/TypeEffectivenessSection.astro'
 import AbilitiesSection from '@/components/details/abilities/AbilitiesSection'
 import LocationsSection from '@/components/details/locations/LocationsSection'
-import EvolutionSection, {
-  type EvolutionNodeData,
-} from '@/components/details/evolution/EvolutionSection'
-import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection'
-import LocalizationSection from '@/components/details/localization/LocalizationSection'
+import EvolutionSection from '@/components/details/evolution/EvolutionSection.astro'
+import CosmeticsSection from '@/components/details/cosmetics/CosmeticsSection.astro'
+import LocalizationSection from '@/components/details/localization/LocalizationSection.astro'
 import MovesSection from '@/components/details/moves/MovesSection'
 import VariantCardSelector from '@/components/compounds/VariantCardSelector'
 import type { AbilityEntryProps } from '@/components/details/abilities/AbilityEntry'
@@ -271,7 +270,9 @@ function resolveLearnId(
 ): string {
   const method = detail.move_learn_method.name
   if (method === LearnMethodKey.LevelUp) {
-    return detail.level_learned_at === 0 ? 'Evolve' : detail.level_learned_at.toString()
+    return detail.level_learned_at === 0
+      ? 'Evolve'
+      : detail.level_learned_at.toString()
   }
   if (method === LearnMethodKey.Machine) {
     const machine = machinesMap
@@ -301,19 +302,31 @@ async function buildMovesData(
     return { learnset: [], defaultRows: emptyByMethod() }
   }
 
-  const uniqueMoveUrls = [...new Set(pokemon.moves.map((move) => move.move.url))]
-  const movesData = await pMap(uniqueMoveUrls, (url) => pokeapi.getResource<Move>(url), {
-    concurrency: 10,
-  })
+  const uniqueMoveUrls = [
+    ...new Set(pokemon.moves.map((move) => move.move.url)),
+  ]
+  const movesData = await pMap(
+    uniqueMoveUrls,
+    (url) => pokeapi.getResource<Move>(url),
+    {
+      concurrency: 10,
+    }
+  )
 
   const uniqueMachineUrls = [
     ...new Set(
-      movesData.flatMap((move) => move.machines?.map((machine) => machine.machine.url) ?? [])
+      movesData.flatMap(
+        (move) => move.machines?.map((machine) => machine.machine.url) ?? []
+      )
     ),
   ]
-  const machinesData = await pMap(uniqueMachineUrls, (url) => pokeapi.getResource<Machine>(url), {
-    concurrency: 10,
-  })
+  const machinesData = await pMap(
+    uniqueMachineUrls,
+    (url) => pokeapi.getResource<Machine>(url),
+    {
+      concurrency: 10,
+    }
+  )
 
   const machinesMap = new Map<string, Machine[]>()
   for (const machine of machinesData) {
@@ -322,10 +335,9 @@ async function buildMovesData(
     machinesMap.set(machine.move.name, existing)
   }
 
-  const movesMap = Object.fromEntries(movesData.map((move) => [move.name, move])) as Record<
-    string,
-    Move
-  >
+  const movesMap = Object.fromEntries(
+    movesData.map((move) => [move.name, move])
+  ) as Record<string, Move>
 
   const knownMethods = new Set<string>(Object.values(LearnMethodKey))
   const learnset: LearnsetEntry[] = []
@@ -343,7 +355,12 @@ async function buildMovesData(
       const versionGroup = detail.version_group.name
       const id = resolveLearnId(move, detail, machinesMap)
 
-      learnset.push({ slug: entry.move.name, versionGroup, method: methodKey, id })
+      learnset.push({
+        slug: entry.move.name,
+        versionGroup,
+        method: methodKey,
+        id,
+      })
 
       if (versionGroup === defaultVersionGroup) {
         defaultRows[methodKey].push({
@@ -400,7 +417,7 @@ const title = `${name} #${imageId}`
 ---
 
 <Layout {title} description={description} imageUrl={imageUrl}>
-  <AppShell pathname={Astro.url.pathname} client:load>
+  <Shell>
     <div class="flex w-full flex-1 flex-col gap-6">
       <div class="grow">
         <div class="mx-auto max-w-384">
@@ -410,7 +427,7 @@ const title = `${name} #${imageId}`
                 pathname={Astro.url.pathname}
                 monsters={monsters}
                 className="min-w-full justify-center-safe whitespace-nowrap"
-                client:load
+                client:visible
               />
             </div>
           </div>
@@ -426,15 +443,13 @@ const title = `${name} #${imageId}`
               species={species}
               pokemon={pokemon}
               form={form}
-              className="col-span-2"
-              client:load
+              class="col-span-2"
             />
             <MonsterMetadata
               species={species}
               pokemon={pokemon}
               eggGroups={eggGroups}
               growthRate={growthRate}
-              client:load
             />
           </div>
         </section>
@@ -442,36 +457,29 @@ const title = `${name} #${imageId}`
         <section class="mx-auto w-full max-w-384">
           <div class="flex w-full flex-col gap-4 xl:flex-row">
             <div class="flex w-full flex-col gap-4">
-              <StatsSection pokemon={pokemon} client:load />
-              <TypeEffectivenessSection
-                typeRelations={typeRelations}
-                client:load
-              />
-              <AbilitiesSection abilitiesMap={abilitiesMap} client:load />
-              <LocationsSection rows={locationRows} client:load />
-              <EvolutionSection evolutionRoot={evolutionRoot} client:load />
+              <StatsSection pokemon={pokemon} client:visible />
+              <TypeEffectivenessSection typeRelations={typeRelations} />
+              <AbilitiesSection abilitiesMap={abilitiesMap} client:visible />
+              <LocationsSection rows={locationRows} client:visible />
+              <EvolutionSection evolutionRoot={evolutionRoot} />
               {
                 forms.length > 1 && (
-                  <CosmeticsSection
-                    pokemon={pokemon}
-                    forms={forms}
-                    client:load
-                  />
+                  <CosmeticsSection pokemon={pokemon} forms={forms} />
                 )
               }
-              <LocalizationSection species={species} client:load />
+              <LocalizationSection species={species} />
             </div>
             <div class="flex w-full flex-col gap-6">
               <MovesSection
                 learnset={movesData.learnset}
                 defaultRows={movesData.defaultRows}
                 defaultVersionGroup={VersionGroupKey.ScarletViolet}
-                client:load
+                client:visible
               />
             </div>
           </div>
         </section>
       </div>
     </div>
-  </AppShell>
+  </Shell>
 </Layout>

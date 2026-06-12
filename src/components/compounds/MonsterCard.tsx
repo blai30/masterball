@@ -1,6 +1,5 @@
 import { memo } from 'react'
 
-import GlassCard from '@/components/GlassCard'
 import Link from '@/components/ui/catalyst/link'
 import { toHref } from '@/lib/utils/path'
 import type { TypeKey } from '@/lib/utils/pokeapi-helpers'
@@ -17,7 +16,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
   const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
 
   return (
-    <GlassCard variant="link" className="h-full rounded-xl">
+    <div className="h-full rounded-xl bg-zinc-100/50 inset-ring-1 inset-ring-zinc-200/50 backdrop-blur-xl transition-colors hover:bg-zinc-200/60 hover:inset-ring-zinc-300/60 hover:duration-0 dark:bg-zinc-900/50 dark:inset-ring-zinc-800/50 dark:hover:bg-zinc-800/60 dark:hover:inset-ring-zinc-700/60">
       <Link
         href={toHref(props.slug)}
         className="group flex flex-col items-center justify-between px-2 py-3"
@@ -41,7 +40,7 @@ const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
         </div>
         <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{props.name}</h3>
       </Link>
-    </GlassCard>
+    </div>
   )
 }
 

@@ -25,13 +25,6 @@
 - **Tables**: TanStack Table
 - **Utils**: pMap, clsx/lite, oxlint, oxfmt
 
-## Project Structure
-
-- `src/pages/` — Astro pages and routes
-- `src/components/` — UI and compound components (cards, pills, icons, tables, etc.)
-- `src/lib/` — Providers, API helpers, stores, and utilities
-- `public/` — Static assets (icons, images)
-
 ## Getting Started
 
 ### Prerequisites
