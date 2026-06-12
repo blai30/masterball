@@ -3,9 +3,8 @@ import { scaleLinear } from '@visx/scale'
 import { Polygon } from '@visx/shape'
 import clsx from 'clsx/lite'
 import { motion } from 'motion/react'
-import type { Pokemon } from 'pokedex-promise-v2'
 
-import { STATS, type StatKey } from '@/lib/domain/stats'
+import { STATS, type BaseStat, type StatKey } from '@/lib/domain/stats'
 
 const statOrder: StatKey[] = [
   'hp',
@@ -36,11 +35,11 @@ const RADAR_CENTER = RADAR_SIZE / 2
 const MAX_STAT = 255
 const LEVELS = 5
 
-export default function StatsRadarChart({ pokemon }: { pokemon: Pokemon }) {
+export default function StatsRadarChart({ stats }: { stats: BaseStat[] }) {
   // Map stats to statOrder
   const statData: StatDatum[] = statOrder.map((key) => {
-    const stat = pokemon.stats.find((s) => s.stat.name === key)!
-    return { key, value: stat.base_stat }
+    const stat = stats.find((s) => s.key === key)!
+    return { key, value: stat.base }
   })
 
   const scale = scaleLinear({

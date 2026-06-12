@@ -3,6 +3,8 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import LoadingSection from '@/components/details/LoadingSection'
 import { loadMovesData, loadMovesDescriptions } from '@/lib/api/moves-client'
 import {
+  assembleRowsByMethod,
+  emptyByMethod,
   LearnMethodKey,
   type LearnsetEntry,
   type MoveRow,
@@ -15,16 +17,6 @@ import { useVersionGroup } from '@/lib/stores/version-group'
 const MovesTable = lazy(() => import('@/components/details/moves/MovesTable'))
 
 const methodOrder = Object.values(LearnMethodKey)
-
-function emptyByMethod(): Record<LearnMethodKey, MoveRow[]> {
-  return {
-    [LearnMethodKey.FormChange]: [],
-    [LearnMethodKey.LevelUp]: [],
-    [LearnMethodKey.Machine]: [],
-    [LearnMethodKey.Tutor]: [],
-    [LearnMethodKey.Egg]: [],
-  }
-}
 
 export default function MovesSection({
   learnset,
@@ -90,27 +82,11 @@ export default function MovesSection({
       .catch(() => {})
   }
 
-  const rowsByMethod = (() => {
-    if (isDefault) return defaultRows
-    if (!movesData) return emptyByMethod()
-
-    const result = emptyByMethod()
-    for (const entry of learnset) {
-      if (entry.versionGroup !== versionGroup) continue
-      const moveData = movesData[entry.slug]
-      if (!moveData) continue
-      result[entry.method].push({
-        ...moveData,
-        id: entry.id,
-        slug: entry.slug,
-        versionGroup: entry.versionGroup,
-        description: descriptions
-          ? (descriptions[entry.slug]?.[versionGroup] ?? descriptions[entry.slug]?._default ?? '')
-          : undefined,
-      })
-    }
-    return result
-  })()
+  const rowsByMethod = isDefault
+    ? defaultRows
+    : movesData
+      ? assembleRowsByMethod(learnset, movesData, descriptions, versionGroup)
+      : emptyByMethod()
 
   const sectionClass =
     'flex flex-col gap-4 rounded-xl p-4 inset-ring-1 inset-ring-zinc-200 dark:inset-ring-zinc-800'

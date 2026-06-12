@@ -1,4 +1,5 @@
-// Single source of truth for base stats: short and full display labels.
+import type { Pokemon } from 'pokedex-promise-v2'
+
 export const STATS = {
   hp: {
     short: 'HP',
@@ -27,3 +28,15 @@ export const STATS = {
 } as const
 
 export type StatKey = keyof typeof STATS
+
+export type BaseStat = {
+  key: StatKey
+  base: number
+}
+
+export function buildBaseStats(pokemon: Pokemon): BaseStat[] {
+  return pokemon.stats.map((stat) => ({
+    key: stat.stat.name as StatKey,
+    base: stat.base_stat,
+  }))
+}

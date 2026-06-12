@@ -100,6 +100,70 @@ export function buildMoveDescriptions(move: Move): Record<string, string> {
   return descriptions
 }
 
+export function emptyByMethod(): Record<LearnMethodKey, MoveRow[]> {
+  return {
+    [LearnMethodKey.FormChange]: [],
+    [LearnMethodKey.LevelUp]: [],
+    [LearnMethodKey.Machine]: [],
+    [LearnMethodKey.Tutor]: [],
+    [LearnMethodKey.Egg]: [],
+  }
+}
+
+// Always the full move list: the static JSON must cover every move a monster
+// can reference, even in dev where the move catalog page is truncated.
+async function fetchAllMoves(): Promise<Move[]> {
+  const list = await pokeapi.getList('move', 1200)
+  return pMap(list.results, (result) => pokeapi.getResource<Move>(result.url), {
+    concurrency: 10,
+  })
+}
+
+export async function buildMovesDataMap(): Promise<MovesDataMap> {
+  const moves = await fetchAllMoves()
+  const data: MovesDataMap = {}
+  for (const move of moves) {
+    data[move.name] = buildMoveData(move)
+  }
+  return data
+}
+
+export async function buildMovesDescriptionsMap(): Promise<MovesDescriptionsMap> {
+  const moves = await fetchAllMoves()
+  const descriptions: MovesDescriptionsMap = {}
+  for (const move of moves) {
+    descriptions[move.name] = buildMoveDescriptions(move)
+  }
+  return descriptions
+}
+
+// The one join that turns a learnset plus shared move data into renderable rows.
+// Used by the MovesSection for non-default version groups, and by
+// buildMovesData at build time for the default version group.
+export function assembleRowsByMethod(
+  learnset: LearnsetEntry[],
+  movesData: MovesDataMap,
+  descriptions: MovesDescriptionsMap | null,
+  versionGroup: string
+): Record<LearnMethodKey, MoveRow[]> {
+  const result = emptyByMethod()
+  for (const entry of learnset) {
+    if (entry.versionGroup !== versionGroup) continue
+    const moveData = movesData[entry.slug]
+    if (!moveData) continue
+    result[entry.method].push({
+      ...moveData,
+      id: entry.id,
+      slug: entry.slug,
+      versionGroup: entry.versionGroup,
+      description: descriptions
+        ? (descriptions[entry.slug]?.[versionGroup] ?? descriptions[entry.slug]?._default ?? '')
+        : undefined,
+    })
+  }
+  return result
+}
+
 function resolveLearnId(
   move: Move,
   detail: MoveElement['version_group_details'][number],
@@ -125,14 +189,6 @@ export async function buildMovesData(
   learnset: LearnsetEntry[]
   defaultRows: Record<LearnMethodKey, MoveRow[]>
 }> {
-  const emptyByMethod = (): Record<LearnMethodKey, MoveRow[]> => ({
-    [LearnMethodKey.FormChange]: [],
-    [LearnMethodKey.LevelUp]: [],
-    [LearnMethodKey.Machine]: [],
-    [LearnMethodKey.Tutor]: [],
-    [LearnMethodKey.Egg]: [],
-  })
-
   if (pokemon.moves.length === 0) {
     return { learnset: [], defaultRows: emptyByMethod() }
   }
@@ -165,7 +221,6 @@ export async function buildMovesData(
 
   const knownMethods = new Set<string>(Object.values(LearnMethodKey))
   const learnset: LearnsetEntry[] = []
-  const defaultRows = emptyByMethod()
 
   for (const entry of pokemon.moves) {
     const move = movesMap[entry.move.name]
@@ -175,28 +230,24 @@ export async function buildMovesData(
       const method = detail.move_learn_method.name
       if (!knownMethods.has(method)) continue
 
-      const methodKey = method as LearnMethodKey
-      const versionGroup = detail.version_group.name
-      const id = resolveLearnId(move, detail, machinesMap)
-
       learnset.push({
         slug: entry.move.name,
-        versionGroup,
-        method: methodKey,
-        id,
+        versionGroup: detail.version_group.name,
+        method: method as LearnMethodKey,
+        id: resolveLearnId(move, detail, machinesMap),
       })
-
-      if (versionGroup === defaultVersionGroup) {
-        defaultRows[methodKey].push({
-          ...buildMoveData(move),
-          id,
-          slug: entry.move.name,
-          versionGroup,
-          description: resolveMoveDescription(move, versionGroup),
-        })
-      }
     }
   }
+
+  const dataMap: MovesDataMap = {}
+  const descriptionsMap: MovesDescriptionsMap = {}
+  for (const move of movesData) {
+    dataMap[move.name] = buildMoveData(move)
+    descriptionsMap[move.name] = {
+      [defaultVersionGroup]: resolveMoveDescription(move, defaultVersionGroup),
+    }
+  }
+  const defaultRows = assembleRowsByMethod(learnset, dataMap, descriptionsMap, defaultVersionGroup)
 
   return { learnset, defaultRows }
 }
