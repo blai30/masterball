@@ -71,8 +71,8 @@ export async function buildLocationRows(pokemon: Pokemon): Promise<LocationEncou
 
     for (const versionDetail of encounter.version_details) {
       const version = versionMap[versionDetail.version.name]
-      const versionGroup = version.version_group.name as VersionGroupKey
       const versionName = getTranslation(version?.names, 'name') ?? versionDetail.version.name
+      const versionGroup = version.version_group.name as VersionGroupKey
       const key = `${area.name}__${versionGroup}__${versionDetail.version.name}`
       const methods = [
         ...new Set(

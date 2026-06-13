@@ -14,7 +14,7 @@ import {
   type RowData,
 } from '@tanstack/react-table'
 import { AnimatePresence, motion } from 'motion/react'
-import { type ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 
 import Pagination from '@/components/compounds/Pagination'
 import FilterBar, { type FilterOption } from '@/components/shared/FilterBar'
@@ -151,6 +151,14 @@ export default function CardGrid<T extends RowData>({
     [globalFilter, sorting, columnFilters, pagination]
   )
 
+  // Clamp page index to valid range when data or filters change, to avoid showing empty page.
+  const pageCount = table.getPageCount()
+  useEffect(() => {
+    if (pageCount > 0 && pagination.pageIndex > pageCount - 1) {
+      table.setPageIndex(pageCount - 1)
+    }
+  }, [pageCount, pagination.pageIndex, table])
+
   const handleSearchChange = (value: string) => {
     table.setGlobalFilter(value)
     table.firstPage()
@@ -187,7 +195,7 @@ export default function CardGrid<T extends RowData>({
 
   const pageRows = table.getRowModel().rows
   const hasResults = table.getFilteredRowModel().rows.length > 0
-  const totalPages = table.getPageCount()
+  const totalPages = pageCount
   const currentPage = pagination.pageIndex + 1
 
   return (
