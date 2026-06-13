@@ -22,6 +22,23 @@ export function getTranslation<
   return String(resource[field])
 }
 
+export type FlavorTextEntry = {
+  language: { name: string }
+  version_group?: { name: string } | null
+  flavor_text?: string
+  text?: string
+}
+
+export function resolveFlavorText(
+  entries: FlavorTextEntry[],
+  versionGroup: string
+): string | undefined {
+  const entry = entries.find(
+    (e) => e.language.name === 'en' && e.version_group?.name === versionGroup
+  )
+  return entry?.text ?? entry?.flavor_text
+}
+
 export type Monster = {
   id: number
   key: string

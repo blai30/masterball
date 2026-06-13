@@ -2,23 +2,16 @@ import { Sparkles } from 'lucide-react'
 
 import type { AbilityEntryProps } from '@/lib/domain/abilities'
 import { useVersionGroup } from '@/lib/stores/version-group'
-import { getTranslation } from '@/lib/utils/pokeapi-helpers'
+import { getTranslation, resolveFlavorText } from '@/lib/utils/pokeapi-helpers'
 
 export default function AbilityEntry({ props }: { props: AbilityEntryProps }) {
   const { versionGroup } = useVersionGroup()
   const name = getTranslation(props.resource.names, 'name')!
 
-  const description = (() => {
-    const defaultDescription = getTranslation(props.resource.effect_entries, 'short_effect') ?? ''
-    const entry = props.resource.flavor_text_entries.find(
-      (entry) => entry.language.name === 'en' && entry.version_group?.name === versionGroup
-    )
-    if (!entry) return defaultDescription
-    if ('text' in entry) return entry.text
-    if ('flavor_text' in entry) return entry.flavor_text
-
-    return defaultDescription
-  })()
+  const description =
+    resolveFlavorText(props.resource.flavor_text_entries, versionGroup) ??
+    getTranslation(props.resource.effect_entries, 'short_effect') ??
+    ''
 
   return (
     <div className="flex flex-col gap-1">

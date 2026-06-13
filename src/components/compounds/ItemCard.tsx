@@ -9,6 +9,7 @@ import {
   type ItemPocketKey,
 } from '@/lib/domain/items'
 import { useVersionGroup } from '@/lib/stores/version-group'
+import { resolveFlavorText } from '@/lib/utils/pokeapi-helpers'
 
 export type ItemCardProps = {
   id: number
@@ -24,16 +25,8 @@ export type ItemCardProps = {
 const ItemCard = ({ props }: { props: ItemCardProps }) => {
   const { versionGroup } = useVersionGroup()
 
-  const description = (() => {
-    const entry = props.flavorTextEntries.find(
-      (entry) => entry.language.name === 'en' && entry.version_group?.name === versionGroup
-    )
-    if (!entry) return props.defaultDescription
-    if ('text' in entry) return entry.text
-    if ('flavor_text' in entry) return entry.flavor_text
-
-    return props.defaultDescription
-  })()
+  const description =
+    resolveFlavorText(props.flavorTextEntries, versionGroup) ?? props.defaultDescription
 
   return (
     <div className="h-full rounded-xl bg-zinc-100/50 inset-ring-1 inset-ring-zinc-200/50 backdrop-blur-xl dark:bg-zinc-900/50 dark:inset-ring-zinc-800/50">
