@@ -8,6 +8,7 @@ import pokeapi from '@/lib/api/pokeapi'
 import { getItemList } from '@/lib/providers'
 import { ITEM_CATEGORIES, type ItemCategoryKey, type ItemPocketKey } from '@/lib/domain/items'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
+import { itemSpriteUrl } from '@/lib/utils/sprites'
 import { excludedItems } from '@/lib/utils/excluded-slugs'
 
 const itemList = await getItemList()
@@ -30,7 +31,7 @@ const itemsData = items
   )
   .map((resource) => {
     const { id, name, category } = resource
-    const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/items/item_${name}.webp`
+    const imageUrl = itemSpriteUrl(name)
     const pocket = ITEM_CATEGORIES[category.name as ItemCategoryKey].pocket
     return {
       id,

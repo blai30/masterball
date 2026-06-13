@@ -1,22 +1,17 @@
 ---
-import { cva } from 'cva'
-
 import { TYPES, type TypeKey } from '@/lib/domain/types'
 
-const variants = cva({
-  base: 'flex flex-row items-center',
-  variants: {
-    size: {
-      small: 'w-24 gap-1.5 rounded-xs text-xs font-normal tracking-tight',
-      medium: 'w-28 gap-2 rounded-sm p-0.5 text-xs font-semibold tracking-wide',
-      large: 'w-32 gap-2.5 rounded-md p-1 text-sm font-semibold tracking-wider',
-    },
-  },
-})
+type PillSize = 'small' | 'medium' | 'large'
+
+const sizeClasses: Record<PillSize, string> = {
+  small: 'w-24 gap-1.5 rounded-xs text-xs font-normal tracking-tight',
+  medium: 'w-28 gap-2 rounded-sm p-0.5 text-xs font-semibold tracking-wide',
+  large: 'w-32 gap-2.5 rounded-md p-1 text-sm font-semibold tracking-wider',
+}
 
 interface Props {
   variant: string
-  size?: 'small' | 'medium' | 'large'
+  size?: PillSize
   class?: string
 }
 
@@ -26,7 +21,7 @@ const imageUrl = `${variant}.png`
 const dimensions = { small: 20, medium: 24, large: 28 }
 ---
 
-<div class:list={[variants({ size }), 'bg-zinc-200 dark:bg-zinc-800', className]}>
+<div class:list={['flex flex-row items-center', sizeClasses[size], 'bg-zinc-200 dark:bg-zinc-800', className]}>
   <img
     src={imageUrl}
     alt={name}

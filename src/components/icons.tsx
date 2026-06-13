@@ -1,5 +1,4 @@
 import clsx from 'clsx/lite'
-import { cva } from 'cva'
 
 import { DAMAGE_CLASSES, type DamageClassKey } from '@/lib/domain/damage-class'
 import { TYPES, type TypeKey } from '@/lib/domain/types'
@@ -12,16 +11,11 @@ type IconProps = {
   className?: string
 }
 
-const variants = cva({
-  base: 'relative flex flex-row items-center justify-center',
-  variants: {
-    size: {
-      small: 'size-5 rounded-xs',
-      medium: 'size-6 rounded-sm',
-      large: 'size-8 rounded-md',
-    },
-  },
-})
+const sizeClasses: Record<IconSize, string> = {
+  small: 'size-5 rounded-xs',
+  medium: 'size-6 rounded-sm',
+  large: 'size-8 rounded-md',
+}
 
 const dimensions: Record<IconSize, number> = {
   small: 20,
@@ -38,7 +32,16 @@ function IconBadge({
   ...props
 }: IconProps & { name: string; imgClassName?: string }) {
   return (
-    <div {...props} title={name} className={clsx(`bg-${variant}`, variants({ size }), className)}>
+    <div
+      {...props}
+      title={name}
+      className={clsx(
+        'relative flex flex-row items-center justify-center',
+        `bg-${variant}`,
+        sizeClasses[size],
+        className
+      )}
+    >
       <img
         src={`${variant}.png`}
         alt={name}

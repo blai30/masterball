@@ -3,6 +3,7 @@ import { memo } from 'react'
 import Link from '@/components/ui/catalyst/link'
 import type { TypeKey } from '@/lib/domain/types'
 import { toHref } from '@/lib/utils/path'
+import { monsterSpriteUrl } from '@/lib/utils/sprites'
 
 export type MonsterCardProps = {
   id: number
@@ -12,8 +13,7 @@ export type MonsterCardProps = {
 }
 
 const MonsterCard = ({ props }: { props: MonsterCardProps }) => {
-  const imageId = props.id.toString().padStart(4, '0')
-  const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+  const imageUrl = monsterSpriteUrl(props.id)
 
   return (
     <div className="h-full rounded-xl bg-zinc-100/50 inset-ring-1 inset-ring-zinc-200/50 backdrop-blur-xl transition-colors hover:bg-zinc-200/60 hover:inset-ring-zinc-300/60 hover:duration-0 dark:bg-zinc-900/50 dark:inset-ring-zinc-800/50 dark:hover:bg-zinc-800/60 dark:hover:inset-ring-zinc-700/60">

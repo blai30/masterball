@@ -2,7 +2,7 @@ import pMap from 'p-map'
 import type { FlavorText, Machine, Move, MoveElement, Pokemon } from 'pokedex-promise-v2'
 
 import pokeapi from '@/lib/api/pokeapi'
-import { getTranslation } from '@/lib/utils/pokeapi-helpers'
+import { getTranslation, resolveFlavorText } from '@/lib/utils/pokeapi-helpers'
 
 export type MoveInfo = {
   id: string
@@ -76,9 +76,7 @@ export function buildMoveData(move: Move): MoveData {
 
 export function resolveMoveDescription(move: Move, versionGroup: string): string {
   return (
-    move.flavor_text_entries.find(
-      (entry) => entry.language.name === 'en' && entry.version_group?.name === versionGroup
-    )?.flavor_text ??
+    resolveFlavorText(move.flavor_text_entries, versionGroup) ??
     getTranslation(move.effect_entries, 'short_effect') ??
     ''
   )

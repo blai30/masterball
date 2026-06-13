@@ -3,13 +3,9 @@ import type {
   EvolutionChain,
   EvolutionDetail,
   Item,
-  Location,
-  Move,
   Name,
   Pokemon,
   PokemonSpecies,
-  Region,
-  Type,
 } from 'pokedex-promise-v2'
 
 import pokeapi from '@/lib/api/pokeapi'
@@ -55,6 +51,12 @@ const itemChip = (item: Item, label: string): Chip =>
     ? { label, icon: { type: 'item', url: item.sprites.default } }
     : { label, icon: { type: 'lucide', name: 'gem' } }
 
+// Fetch a referenced resource and return its localized display name, falling back to the slug.
+const resolveName = async (ref: { name: string; url: string }): Promise<string> => {
+  const resource = await pokeapi.getResource<{ names: Name[] }>(ref.url)
+  return getTranslation(resource.names, 'name') ?? ref.name
+}
+
 // Maps one pokeapi EvolutionDetail to localized chips plus a full-sentence
 // tooltip. Async because most conditions reference another resource whose
 // localized display name must be fetched (deduped by the build-time cache).
@@ -66,7 +68,7 @@ export const describeEvolution = async (
   let head = 'Level up'
   const mods: string[] = []
 
-  const trigger = detail.trigger?.name ?? 'level-up'
+  const trigger = detail.trigger.name ?? 'level-up'
 
   // Base trigger and its primary chip.
   if (trigger === 'use-item' && detail.item) {
@@ -76,8 +78,7 @@ export const describeEvolution = async (
     head = `Use ${name}`
   } else if (trigger === 'trade') {
     if (detail.trade_species) {
-      const species = await pokeapi.getResource<PokemonSpecies>(detail.trade_species.url)
-      const name = getTranslation(species.names, 'name') ?? detail.trade_species.name
+      const name = await resolveName(detail.trade_species)
       chips.push({ label: `Trade for ${name}`, icon: { type: 'lucide', name: 'arrow-left-right' } })
       head = `Trade for ${name}`
     } else {
@@ -96,8 +97,7 @@ export const describeEvolution = async (
   } else {
     // spin, tower-of-darkness/water, three-critical-hits, take-damage,
     // recoil-damage, agile/strong-style-move, other, and any future trigger.
-    const trig = await pokeapi.getResource<{ names: Name[] }>(detail.trigger.url)
-    const name = getTranslation(trig.names, 'name') ?? detail.trigger.name
+    const name = await resolveName(detail.trigger)
     chips.push({ label: name, icon: { type: 'lucide', name: 'arrow-up' } })
     head = name
   }
@@ -141,14 +141,12 @@ export const describeEvolution = async (
 
   // Known move and known move type.
   if (detail.known_move) {
-    const move = await pokeapi.getResource<Move>(detail.known_move.url)
-    const name = getTranslation(move.names, 'name') ?? detail.known_move.name
+    const name = await resolveName(detail.known_move)
     chips.push({ label: `Knows ${name}`, icon: { type: 'lucide', name: 'swords' } })
     mods.push(`knowing ${name}`)
   }
   if (detail.known_move_type) {
-    const type = await pokeapi.getResource<Type>(detail.known_move_type.url)
-    const name = getTranslation(type.names, 'name') ?? detail.known_move_type.name
+    const name = await resolveName(detail.known_move_type)
     chips.push({
       label: `${name} move`,
       icon: { type: 'pokemon-type', key: detail.known_move_type.name as TypeKey },
@@ -158,28 +156,24 @@ export const describeEvolution = async (
 
   // Location and region.
   if (detail.location) {
-    const location = await pokeapi.getResource<Location>(detail.location.url)
-    const name = getTranslation(location.names, 'name') ?? detail.location.name
+    const name = await resolveName(detail.location)
     chips.push({ label: name, icon: { type: 'lucide', name: 'map-pin' } })
     mods.push(`at ${name}`)
   }
   if (detail.region) {
-    const region = await pokeapi.getResource<Region>(detail.region.url)
-    const name = getTranslation(region.names, 'name') ?? detail.region.name
+    const name = await resolveName(detail.region)
     chips.push({ label: name, icon: { type: 'lucide', name: 'map-pin' } })
     mods.push(`in ${name}`)
   }
 
   // Party requirements.
   if (detail.party_species) {
-    const species = await pokeapi.getResource<PokemonSpecies>(detail.party_species.url)
-    const name = getTranslation(species.names, 'name') ?? detail.party_species.name
+    const name = await resolveName(detail.party_species)
     chips.push({ label: `${name} in party`, icon: { type: 'lucide', name: 'users' } })
     mods.push(`with ${name} in the party`)
   }
   if (detail.party_type) {
-    const type = await pokeapi.getResource<Type>(detail.party_type.url)
-    const name = getTranslation(type.names, 'name') ?? detail.party_type.name
+    const name = await resolveName(detail.party_type)
     chips.push({
       label: `${name} in party`,
       icon: { type: 'pokemon-type', key: detail.party_type.name as TypeKey },

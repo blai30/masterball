@@ -5,14 +5,13 @@ import { TypeIcon } from '@/components/icons'
 import { DAMAGE_CLASSES, type DamageClassKey } from '@/lib/domain/damage-class'
 import type { MoveInfo } from '@/lib/domain/moves'
 import { useVersionGroup } from '@/lib/stores/version-group'
+import { resolveFlavorText } from '@/lib/utils/pokeapi-helpers'
 
 const MoveCard = ({ props }: { props: MoveInfo }) => {
   const { versionGroup } = useVersionGroup()
 
   const description =
-    props.flavorTextEntries.find(
-      (entry) => entry.language.name === 'en' && entry.version_group?.name === versionGroup
-    )?.flavor_text ?? props.defaultDescription
+    resolveFlavorText(props.flavorTextEntries, versionGroup) ?? props.defaultDescription
 
   return (
     <div className="relative h-full rounded-xl bg-white inset-ring-1 inset-ring-zinc-100 backdrop-blur-xl dark:bg-black dark:inset-ring-zinc-900">

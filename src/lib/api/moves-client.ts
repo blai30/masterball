@@ -11,20 +11,30 @@ let descriptionsPromise: Promise<MovesDescriptionsMap> | null = null
 
 export function loadMovesData(): Promise<MovesDataMap> {
   if (!movesDataPromise) {
-    movesDataPromise = fetch(resolvePath('/data/moves-data.json')).then((response) => {
-      if (!response.ok) throw new Error(`Failed to load moves data: ${response.status}`)
-      return response.json() as Promise<MovesDataMap>
-    })
+    movesDataPromise = fetch(resolvePath('/data/moves-data.json'))
+      .then((response) => {
+        if (!response.ok) throw new Error(`Failed to load moves data: ${response.status}`)
+        return response.json() as Promise<MovesDataMap>
+      })
+      .catch((error) => {
+        movesDataPromise = null
+        throw error
+      })
   }
   return movesDataPromise
 }
 
 export function loadMovesDescriptions(): Promise<MovesDescriptionsMap> {
   if (!descriptionsPromise) {
-    descriptionsPromise = fetch(resolvePath('/data/moves-descriptions.json')).then((response) => {
-      if (!response.ok) throw new Error(`Failed to load move descriptions: ${response.status}`)
-      return response.json() as Promise<MovesDescriptionsMap>
-    })
+    descriptionsPromise = fetch(resolvePath('/data/moves-descriptions.json'))
+      .then((response) => {
+        if (!response.ok) throw new Error(`Failed to load move descriptions: ${response.status}`)
+        return response.json() as Promise<MovesDescriptionsMap>
+      })
+      .catch((error) => {
+        descriptionsPromise = null
+        throw error
+      })
   }
   return descriptionsPromise
 }

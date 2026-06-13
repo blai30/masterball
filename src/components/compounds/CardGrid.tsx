@@ -14,7 +14,7 @@ import {
   type RowData,
 } from '@tanstack/react-table'
 import { AnimatePresence, motion } from 'motion/react'
-import { type ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
 
 import Pagination from '@/components/compounds/Pagination'
 import FilterBar, { type FilterOption } from '@/components/shared/FilterBar'
@@ -89,31 +89,41 @@ export default function CardGrid<T extends RowData>({
     features: cardGridFeatures,
     columns,
     data: rows,
+    // Defaults only; the URL is applied after mount (see effect) to match the
+    // param-less server render and avoid a hydration mismatch.
     initialState: {
-      globalFilter: readParam('q') ?? '',
-      sorting: sort
-        ? [
-            {
-              id: readParam('sort') ?? sort.defaultKey,
-              desc: (readParam('dir') as SortDirection) === 'desc',
-            },
-          ]
-        : [],
-      columnFilters: filters
-        .map((filter) => ({
-          id: filter.id,
-          value: readParam(filter.param)?.split(',').filter(Boolean) ?? [],
-        }))
-        .filter((entry) => entry.value.length > 0),
-      pagination: {
-        pageIndex: (Number(readParam('p')) || DEFAULT_PAGE) - 1,
-        pageSize: itemsPerPage,
-      },
+      globalFilter: '',
+      sorting: sort ? [{ id: sort.defaultKey, desc: false }] : [],
+      columnFilters: [],
+      pagination: { pageIndex: 0, pageSize: itemsPerPage },
     },
     autoResetPageIndex: false,
   })
 
   const { globalFilter, sorting, columnFilters, pagination } = table.state
+
+  // Two-pass seeding: restore q/sort/dir/filters/page from the URL once, after hydration.
+  useEffect(() => {
+    const search = readParam('q')
+    if (search) table.setGlobalFilter(search)
+
+    if (sort) {
+      const key = readParam('sort')
+      const dir = readParam('dir')
+      if (key || dir) table.setSorting([{ id: key ?? sort.defaultKey, desc: dir === 'desc' }])
+    }
+
+    const seededFilters = filters
+      .map((filter) => ({
+        id: filter.id,
+        value: readParam(filter.param)?.split(',').filter(Boolean) ?? [],
+      }))
+      .filter((entry) => entry.value.length > 0)
+    if (seededFilters.length > 0) table.setColumnFilters(seededFilters)
+
+    const page = Number(readParam('p'))
+    if (page > DEFAULT_PAGE) table.setPageIndex(page - 1)
+  }, [])
 
   const activeFilterValues: Record<string, string[]> = Object.fromEntries(
     filters.map((filter) => [
@@ -151,6 +161,14 @@ export default function CardGrid<T extends RowData>({
     [globalFilter, sorting, columnFilters, pagination]
   )
 
+  // Clamp page index to valid range when data or filters change, to avoid showing empty page.
+  const pageCount = table.getPageCount()
+  useEffect(() => {
+    if (pageCount > 0 && pagination.pageIndex > pageCount - 1) {
+      table.setPageIndex(pageCount - 1)
+    }
+  }, [pageCount, pagination.pageIndex, table])
+
   const handleSearchChange = (value: string) => {
     table.setGlobalFilter(value)
     table.firstPage()
@@ -187,7 +205,7 @@ export default function CardGrid<T extends RowData>({
 
   const pageRows = table.getRowModel().rows
   const hasResults = table.getFilteredRowModel().rows.length > 0
-  const totalPages = table.getPageCount()
+  const totalPages = pageCount
   const currentPage = pagination.pageIndex + 1
 
   return (

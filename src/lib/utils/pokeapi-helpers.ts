@@ -4,6 +4,7 @@ import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import type { TypeKey } from '@/lib/domain/types'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
+import { monsterSpriteUrl } from '@/lib/utils/sprites'
 
 export function getTranslation<
   T extends {
@@ -20,6 +21,23 @@ export function getTranslation<
 
   if (!resource) return undefined
   return String(resource[field])
+}
+
+export type FlavorTextEntry = {
+  language: { name: string }
+  version_group?: { name: string } | null
+  flavor_text?: string
+  text?: string
+}
+
+export function resolveFlavorText(
+  entries: FlavorTextEntry[],
+  versionGroup: string
+): string | undefined {
+  const entry = entries.find(
+    (e) => e.language.name === 'en' && e.version_group?.name === versionGroup
+  )
+  return entry?.text ?? entry?.flavor_text
 }
 
 export type Monster = {
@@ -47,8 +65,6 @@ export const createMonster = async (
     getTranslation(form?.names, 'name') ??
     getTranslation(species.names, 'name')!
 
-  const imageId = species.id.toString().padStart(4, '0')
-
   return {
     id: species.id,
     key: variant.name,
@@ -57,9 +73,7 @@ export const createMonster = async (
     pokemonSlug: variant.name ?? undefined,
     formSlug: form?.name ?? undefined,
     types: variant.types.map((t) => t.type.name as TypeKey) ?? undefined,
-    imageUrl: variant.is_default
-      ? `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
-      : `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_${variant.name}_s0.webp`,
+    imageUrl: monsterSpriteUrl(species.id, variant.is_default ? undefined : variant.name),
   } as Monster
 }
 

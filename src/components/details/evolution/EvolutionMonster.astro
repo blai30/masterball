@@ -5,6 +5,7 @@ import { TypeIcon } from '@/components/icons'
 import { toHref } from '@/lib/utils/path'
 import type { TypeKey } from '@/lib/domain/types'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
+import { monsterSpriteUrl } from '@/lib/utils/sprites'
 
 interface Props {
   species: PokemonSpecies
@@ -14,8 +15,7 @@ interface Props {
 
 const { species, pokemon, current = false } = Astro.props
 const name = getTranslation(species.names, 'name')
-const imageId = species.id.toString().padStart(4, '0')
-const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+const imageUrl = monsterSpriteUrl(species.id)
 ---
 
 <div
