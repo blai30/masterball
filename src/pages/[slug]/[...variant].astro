@@ -19,6 +19,7 @@ import { buildMovesData } from '@/lib/domain/moves'
 import { buildBaseStats } from '@/lib/domain/stats'
 import { TYPES, type TypeKey } from '@/lib/domain/types'
 import { getMonstersBySpecies, getTranslation } from '@/lib/utils/pokeapi-helpers'
+import { monsterSpriteUrl } from '@/lib/utils/sprites'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
 import MonsterHero from '@/components/details/MonsterHero.astro'
 import MonsterMetadata from '@/components/details/MonsterMetadata.astro'
@@ -106,7 +107,7 @@ const [
 
 // Metadata
 const imageId = species.id.toString().padStart(4, '0')
-const imageUrl = `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
+const imageUrl = monsterSpriteUrl(species.id)
 const name = getTranslation(species.names, 'name')!
 const description = pokemon.types
   .map((t) => TYPES[t.type.name as TypeKey])

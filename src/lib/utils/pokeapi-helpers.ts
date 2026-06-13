@@ -4,6 +4,7 @@ import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 import pokeapi from '@/lib/api/pokeapi'
 import type { TypeKey } from '@/lib/domain/types'
 import { excludedVariants } from '@/lib/utils/excluded-slugs'
+import { monsterSpriteUrl } from '@/lib/utils/sprites'
 
 export function getTranslation<
   T extends {
@@ -64,8 +65,6 @@ export const createMonster = async (
     getTranslation(form?.names, 'name') ??
     getTranslation(species.names, 'name')!
 
-  const imageId = species.id.toString().padStart(4, '0')
-
   return {
     id: species.id,
     key: variant.name,
@@ -74,9 +73,7 @@ export const createMonster = async (
     pokemonSlug: variant.name ?? undefined,
     formSlug: form?.name ?? undefined,
     types: variant.types.map((t) => t.type.name as TypeKey) ?? undefined,
-    imageUrl: variant.is_default
-      ? `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
-      : `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_${variant.name}_s0.webp`,
+    imageUrl: monsterSpriteUrl(species.id, variant.is_default ? undefined : variant.name),
   } as Monster
 }
 

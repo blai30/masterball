@@ -3,6 +3,7 @@ import type { Pokemon, PokemonForm, PokemonSpecies } from 'pokedex-promise-v2'
 
 import TypePill from '@/components/TypePill.astro'
 import { getTranslation } from '@/lib/utils/pokeapi-helpers'
+import { monsterSpriteUrl } from '@/lib/utils/sprites'
 
 interface Props {
   species: PokemonSpecies
@@ -18,9 +19,7 @@ const name =
   getTranslation(species.names, 'name')!
 
 const imageId = species.id.toString().padStart(4, '0')
-const imageUrl = pokemon.is_default
-  ? `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_s0.webp`
-  : `https://raw.githubusercontent.com/blai30/PokemonSpritesDump/refs/heads/main/sprites/sprite_${imageId}_${pokemon.name}_s0.webp`
+const imageUrl = monsterSpriteUrl(species.id, pokemon.is_default ? undefined : pokemon.name)
 
 const leadingZeros = imageId.match(/^0+/)?.[0] || ''
 const significantDigits = imageId.slice(leadingZeros.length)
