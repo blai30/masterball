@@ -1,179 +1,80 @@
-import Fuse from 'fuse.js'
-import { useState } from 'react'
+import { createColumnHelper } from '@tanstack/react-table'
 
-import CardGrid from '@/components/compounds/CardGrid'
+import CardGrid, { cardGridFeatures, type CardGridFilter } from '@/components/compounds/CardGrid'
 import ItemCard, { type ItemCardProps } from '@/components/compounds/ItemCard'
-import FilterBar, { type FilterConfig } from '@/components/shared/FilterBar'
-import SearchBar from '@/components/shared/SearchBar'
-import {
-  ITEM_CATEGORIES,
-  type ItemCategoryKey,
-  ITEM_POCKETS,
-  type ItemPocketKey,
-} from '@/lib/domain/items'
-import { useUrlSync } from '@/lib/hooks/useUrlSync'
-import { useVersionGroup } from '@/lib/stores/version-group'
+import { ITEM_CATEGORIES, ITEM_POCKETS } from '@/lib/domain/items'
 
-const DEFAULT_PAGE = 1
-const ITEMS_PER_PAGE = 48
+const columnHelper = createColumnHelper<typeof cardGridFeatures, ItemCardProps>()
 
-type ItemCardGridProps = {
-  data: ItemCardProps[]
-  filterByVersionGroup?: boolean
-  itemsPerPage?: number
-  className?: string
-}
+const columns = columnHelper.columns([
+  columnHelper.accessor('name', { enableGlobalFilter: true }),
+  columnHelper.accessor('pocket', {
+    enableGlobalFilter: false,
+    filterFn: (row, columnId, filterValue: string[]) =>
+      filterValue.includes(row.getValue<string>(columnId)),
+  }),
+  columnHelper.accessor('category', {
+    enableGlobalFilter: false,
+    filterFn: (row, columnId, filterValue: string[]) =>
+      filterValue.includes(row.getValue<string>(columnId)),
+  }),
+])
+
+const filters: CardGridFilter<ItemCardProps>[] = [
+  {
+    id: 'pocket',
+    label: 'Pocket',
+    param: 'pockets',
+    options: (data) =>
+      [...new Set(data.map((item) => item.pocket))]
+        .map((pocket) => ({ label: ITEM_POCKETS[pocket], value: pocket }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+  },
+  {
+    id: 'category',
+    label: 'Category',
+    param: 'categories',
+    options: (data, active) => {
+      const pocketFiltered =
+        active.pocket.length > 0 ? data.filter((item) => active.pocket.includes(item.pocket)) : data
+      return [...new Set(pocketFiltered.map((item) => item.category))]
+        .map((category) => ({
+          label: ITEM_CATEGORIES[category].label,
+          value: category,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label))
+    },
+  },
+]
 
 export default function ItemCardGrid({
   data,
   filterByVersionGroup = false,
-  itemsPerPage = ITEMS_PER_PAGE,
+  itemsPerPage = 48,
   className,
-}: ItemCardGridProps) {
-  const { versionGroup } = useVersionGroup()
-
-  const [search, setSearch] = useState<string>(() => {
-    if (typeof window === 'undefined') return ''
-    return new URLSearchParams(window.location.search).get('q') ?? ''
-  })
-  const [pocketFilters, setPocketFilters] = useState<string[]>(() => {
-    if (typeof window === 'undefined') return []
-    return (
-      new URLSearchParams(window.location.search).get('pockets')?.split(',').filter(Boolean) ?? []
-    )
-  })
-  const [categoryFilters, setCategoryFilters] = useState<string[]>(() => {
-    if (typeof window === 'undefined') return []
-    return (
-      new URLSearchParams(window.location.search).get('categories')?.split(',').filter(Boolean) ??
-      []
-    )
-  })
-  const [currentPage, setCurrentPage] = useState<number>(() => {
-    if (typeof window === 'undefined') return DEFAULT_PAGE
-    return Number(new URLSearchParams(window.location.search).get('p')) || DEFAULT_PAGE
-  })
-
-  // Sync all state to URL
-  useUrlSync(
-    () => ({ search, pocketFilters, categoryFilters, currentPage }),
-    {
-      search: { key: 'q', defaultValue: '' },
-      pocketFilters: { key: 'pockets', defaultValue: [] },
-      categoryFilters: { key: 'categories', defaultValue: [] },
-      currentPage: { key: 'p', defaultValue: DEFAULT_PAGE },
-    },
-    [search, pocketFilters, categoryFilters, currentPage]
-  )
-
-  const handleSearchChange = (value: string) => {
-    setSearch(value)
-    setCurrentPage(DEFAULT_PAGE)
-  }
-
-  const handleCategoryFilterChange = (values: string | string[]) => {
-    setCategoryFilters(Array.isArray(values) ? values : [values])
-    setCurrentPage(DEFAULT_PAGE)
-  }
-
-  const handlePocketFilterChange = (values: string | string[]) => {
-    setPocketFilters(Array.isArray(values) ? values : [values])
-    setCurrentPage(DEFAULT_PAGE)
-  }
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
-
-  // Create filter options from available item categories and pockets in the data
-  const availableFilters = (() => {
-    const filters: FilterConfig[] = []
-
-    const uniquePockets = Array.from(new Set(data.map((item) => item.pocket)))
-
-    if (uniquePockets.length > 0) {
-      const pocketOptions = uniquePockets.map((pocket) => ({
-        label: ITEM_POCKETS[pocket as ItemPocketKey] || pocket,
-        value: pocket,
-      }))
-
-      filters.push({
-        label: 'Pocket',
-        options: pocketOptions.sort((a, b) => a.label.localeCompare(b.label)),
-        values: pocketFilters,
-        onChange: handlePocketFilterChange,
-      })
-    }
-
-    // Filter data by pocket filters first, then get available categories
-    const pocketFilteredData =
-      pocketFilters.length > 0 ? data.filter((item) => pocketFilters.includes(item.pocket)) : data
-
-    const uniqueCategories = Array.from(new Set(pocketFilteredData.map((item) => item.category)))
-
-    if (uniqueCategories.length > 0) {
-      const categoryOptions = uniqueCategories.map((category) => ({
-        label: ITEM_CATEGORIES[category as ItemCategoryKey]?.label || category,
-        value: category,
-      }))
-
-      filters.push({
-        label: 'Category',
-        options: categoryOptions.sort((a, b) => a.label.localeCompare(b.label)),
-        values: categoryFilters,
-        onChange: handleCategoryFilterChange,
-      })
-    }
-
-    return filters
-  })()
-
-  const fuse = new Fuse(data, {
-    keys: ['name'],
-    threshold: 0.4,
-  })
-
-  /**
-   * Returns filtered data for grid display.
-   */
-  const filteredData = (() => {
-    // Search first (Fuse is stable across filter changes)
-    let results = search ? fuse.search(search).map((result) => result.item) : data
-
-    if (filterByVersionGroup) {
-      results = results.filter((resource) =>
-        resource.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
-      )
-    }
-
-    if (pocketFilters.length > 0) {
-      results = results.filter((item) => pocketFilters.includes(item.pocket))
-    }
-
-    if (categoryFilters.length > 0) {
-      results = results.filter((item) => categoryFilters.includes(item.category))
-    }
-
-    return results
-  })()
-
+}: {
+  data: ItemCardProps[]
+  filterByVersionGroup?: boolean
+  itemsPerPage?: number
+  className?: string
+}) {
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col items-center gap-4 lg:flex-row">
-        <SearchBar value={search} onChangeAction={handleSearchChange} />
-        {availableFilters.length > 0 && <FilterBar filters={availableFilters} />}
-      </div>
-      <CardGrid
-        data={filteredData}
-        renderCardAction={(props: ItemCardProps) => <ItemCard props={props} />}
-        getKeyAction={(item: ItemCardProps) => `${item.slug}-${item.id}`}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        onPageChangeAction={handlePageChange}
-        className={
-          className ?? 'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-        }
-      />
-    </div>
+    <CardGrid
+      data={data}
+      columns={columns}
+      renderCard={(item) => <ItemCard props={item} />}
+      getKey={(item) => `${item.slug}-${item.id}`}
+      itemsPerPage={itemsPerPage}
+      gridClassName={
+        className ?? 'grid w-full grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+      }
+      filters={filters}
+      versionGroupPredicate={
+        filterByVersionGroup
+          ? (item, versionGroup) =>
+              item.flavorTextEntries.some((entry) => entry.version_group?.name === versionGroup)
+          : undefined
+      }
+    />
   )
 }
