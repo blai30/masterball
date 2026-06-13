@@ -1,7 +1,7 @@
 import type { FlavorText, VersionGroupFlavorText } from 'pokedex-promise-v2'
 import { memo } from 'react'
 
-import { Badge } from '@/components/ui/catalyst/badge'
+import { Badge } from '@/components/ui/Badge'
 import { useVersionGroup } from '@/lib/stores/version-group'
 import { resolveFlavorText } from '@/lib/utils/pokeapi-helpers'
 

@@ -1,6 +1,6 @@
 import { memo } from 'react'
 
-import Link from '@/components/ui/catalyst/link'
+import Link from '@/components/ui/Link'
 import type { TypeKey } from '@/lib/domain/types'
 import { toHref } from '@/lib/utils/path'
 import { monsterSpriteUrl } from '@/lib/utils/sprites'

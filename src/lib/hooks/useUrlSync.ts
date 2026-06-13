@@ -57,10 +57,11 @@ export function useUrlSync(
       urlParams.set(paramKey, String(val))
     }
 
+    const query = urlParams.toString()
     window.history.replaceState(
       null,
       '',
-      urlParams.toString() ? `?${urlParams}` : window.location.pathname
+      query ? `${window.location.pathname}?${query}` : window.location.pathname
     )
   }, debounceMs)
 
