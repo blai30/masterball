@@ -1,10 +1,10 @@
 import {
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
   createColumnHelper,
-  useReactTable,
-  type SortingState,
+  createSortedRowModel,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+  useTable,
 } from '@tanstack/react-table'
 import clsx from 'clsx/lite'
 import { ChevronDown, ChevronUp } from 'lucide-react'
@@ -13,6 +13,12 @@ import { Fragment, memo, useState, useRef, useEffect } from 'react'
 
 import { DamageClassIcon, TypeIcon } from '@/components/icons'
 import { LearnMethodKey, type MoveRow } from '@/lib/domain/moves'
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const tableNames: Record<LearnMethodKey, string> = {
   [LearnMethodKey.LevelUp]: 'Level-Up',
@@ -54,8 +60,7 @@ function MovesTable({
   className?: string
 }) {
   const [activeMove, setActiveMove] = useState<string | null>(null)
-  const columnHelper = createColumnHelper<MoveRow>()
-  const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: false }])
+  const columnHelper = createColumnHelper<typeof features, MoveRow>()
   const tableRef = useRef<HTMLDivElement>(null)
 
   // Collapse active move when clicking outside the table
@@ -72,7 +77,7 @@ function MovesTable({
     }
   }, [activeMove])
 
-  const columns = [
+  const columns = columnHelper.columns([
     columnHelper.accessor('id', {
       header: idColumnLabels[variant] ?? '',
       cell: (info) => (
@@ -125,15 +130,13 @@ function MovesTable({
       header: 'PP',
       cell: (info) => <p className="font-num w-full text-right">{info.getValue()}</p>,
     }),
-  ]
+  ])
 
-  const table = useReactTable({
-    data: moveRows,
+  const table = useTable({
+    features,
     columns,
-    state: { sorting },
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    data: moveRows,
+    initialState: { sorting: [{ id: 'id', desc: false }] },
   })
 
   const handleRowClick = (key: string) => {
@@ -163,9 +166,7 @@ function MovesTable({
                       className="px-2 text-xs font-semibold"
                     >
                       <div className={clsx('flex items-center', columnClasses[header.id])}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.isPlaceholder ? null : <table.FlexRender header={header} />}
                         {{
                           asc: <ChevronUp className="h-3 w-3" />,
                           desc: <ChevronDown className="h-3 w-3" />,
@@ -221,7 +222,7 @@ function MovesTable({
                         },
                       }}
                     >
-                      {row.getVisibleCells().map((cell) => {
+                      {row.getAllCells().map((cell) => {
                         const isNameCell = cell.column.id === 'name'
                         if (isNameCell) {
                           return (
@@ -230,7 +231,7 @@ function MovesTable({
                               className={clsx('px-2 py-1 align-top', columnClasses[cell.column.id])}
                             >
                               <div className="flex flex-col">
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                <table.FlexRender cell={cell} />
                                 <motion.div
                                   initial={false}
                                   animate={
@@ -266,7 +267,7 @@ function MovesTable({
                             key={cell.id}
                             className={clsx('px-2 py-1 align-top', columnClasses[cell.column.id])}
                           >
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            <table.FlexRender cell={cell} />
                           </td>
                         )
                       })}

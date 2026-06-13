@@ -1,21 +1,18 @@
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { createColumnHelper, tableFeatures, useTable } from '@tanstack/react-table'
 
 import type { LocationEncounterRow } from '@/lib/domain/locations'
 import { VERSION_GROUPS } from '@/lib/domain/version-groups'
 import { useVersionGroup } from '@/lib/stores/version-group'
 
+const features = tableFeatures({})
+
 export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] }) {
   const { versionGroup } = useVersionGroup()
-  const columnHelper = createColumnHelper<LocationEncounterRow>()
+  const columnHelper = createColumnHelper<typeof features, LocationEncounterRow>()
 
   const filteredRows = rows.filter((row) => row.versionGroup === versionGroup)
 
-  const columns = [
+  const columns = columnHelper.columns([
     columnHelper.accessor('versionName', {
       header: 'Game',
       cell: (info) => <span className="text-zinc-700 dark:text-zinc-300">{info.getValue()}</span>,
@@ -48,12 +45,12 @@ export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] 
       header: 'Chance',
       cell: (info) => <span className="text-zinc-700 dark:text-zinc-300">{info.getValue()}%</span>,
     }),
-  ]
+  ])
 
-  const table = useReactTable({
-    data: filteredRows,
+  const table = useTable({
+    features,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    data: filteredRows,
   })
 
   if (filteredRows.length === 0) {
@@ -75,9 +72,7 @@ export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] 
                   key={header.id}
                   className="pb-2 text-left font-medium text-zinc-500 dark:text-zinc-400"
                 >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
+                  {header.isPlaceholder ? null : <table.FlexRender header={header} />}
                 </th>
               ))}
             </tr>
@@ -86,9 +81,9 @@ export default function LocationsTable({ rows }: { rows: LocationEncounterRow[] 
         <tbody className="divide-y divide-zinc-100 dark:divide-zinc-900">
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
+              {row.getAllCells().map((cell) => (
                 <td key={cell.id} className="py-2 pr-4 align-top last:pr-0">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <table.FlexRender cell={cell} />
                 </td>
               ))}
             </tr>
