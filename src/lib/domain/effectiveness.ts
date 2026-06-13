@@ -21,7 +21,7 @@ export type TypeRelation = {
   effectiveness: number
 }
 
-export function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
+function getEffectiveness(...typeResources: Type[]): TypeEffectiveness {
   // Initialize all types with neutral effectiveness.
   const effectiveness = Object.fromEntries(TYPE_KEYS.map((type) => [type, 1])) as TypeEffectiveness
 
@@ -59,7 +59,7 @@ const typeEffectiveness: Record<TypeKey, TypeEffectiveness> = {} as Record<
 >
 let typesInitPromise: Promise<Record<TypeKey, Type>> | undefined
 
-export const initTypes = async (): Promise<Record<TypeKey, Type>> => {
+const initTypes = async (): Promise<Record<TypeKey, Type>> => {
   if (typesInitPromise) return typesInitPromise
 
   typesInitPromise = (async () => {
@@ -78,7 +78,7 @@ export const initTypes = async (): Promise<Record<TypeKey, Type>> => {
   return typesInitPromise
 }
 
-export function getCombinedEffectiveness(typeKeys: TypeKey[]): TypeEffectiveness {
+function getCombinedEffectiveness(typeKeys: TypeKey[]): TypeEffectiveness {
   const base = Object.fromEntries(TYPE_KEYS.map((k) => [k, 1])) as TypeEffectiveness
 
   for (const typeKey of typeKeys) {
@@ -91,4 +91,14 @@ export function getCombinedEffectiveness(typeKeys: TypeKey[]): TypeEffectiveness
     }
   }
   return base
+}
+
+// Type matchups for a monster, against every attacking type.
+export async function getTypeRelations(typeKeys: TypeKey[]): Promise<TypeRelation[]> {
+  const allTypes = await initTypes()
+  const effectiveness = getCombinedEffectiveness(typeKeys)
+  return TYPE_KEYS.map((typeKey) => ({
+    type: allTypes[typeKey],
+    effectiveness: effectiveness[typeKey],
+  }))
 }

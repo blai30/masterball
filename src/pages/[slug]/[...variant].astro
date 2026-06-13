@@ -12,12 +12,12 @@ import Shell from '@/components/Shell.astro'
 import pokeapi from '@/lib/api/pokeapi'
 import { getSpeciesList } from '@/lib/providers'
 import { buildAbilitiesMap } from '@/lib/domain/abilities'
-import { getCombinedEffectiveness, initTypes, type TypeRelation } from '@/lib/domain/effectiveness'
+import { getTypeRelations } from '@/lib/domain/effectiveness'
 import { buildEvolutionTree } from '@/lib/domain/evolution'
 import { buildLocationRows } from '@/lib/domain/locations'
 import { buildMovesData } from '@/lib/domain/moves'
 import { buildBaseStats } from '@/lib/domain/stats'
-import { TYPES, TYPE_KEYS, type TypeKey } from '@/lib/domain/types'
+import { TYPES, type TypeKey } from '@/lib/domain/types'
 import { getMonstersBySpecies, getTranslation } from '@/lib/utils/pokeapi-helpers'
 import { excludedForms, excludedVariants } from '@/lib/utils/excluded-slugs'
 import MonsterHero from '@/components/details/MonsterHero.astro'
@@ -81,15 +81,9 @@ const form =
     ? undefined
     : forms.find((f) => f.name === variant || f.name === pokemon.name)
 
-// Fetch all 18 types once (cached across the entire build) and pre-compute effectiveness.
-const allTypes = await initTypes()
-// Compute type relations from pre-fetched types and pre-computed effectiveness.
+// Type matchups for this monster, against every attacking type.
 const typeKeys = pokemon.types.map((t) => t.type.name as TypeKey)
-const effectiveness = getCombinedEffectiveness(typeKeys)
-const typeRelations: TypeRelation[] = TYPE_KEYS.map((typeKey) => ({
-  type: allTypes[typeKey],
-  effectiveness: effectiveness[typeKey],
-}))
+const typeRelations = await getTypeRelations(typeKeys)
 
 // Build section data in parallel
 const [
