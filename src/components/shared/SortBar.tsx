@@ -1,7 +1,7 @@
 import clsx from 'clsx/lite'
 import { ArrowDownWideNarrow, ArrowUpNarrowWide } from 'lucide-react'
 
-import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
+import { Select, type SelectItem } from '@/components/ui/Select'
 
 export type SortOption<T extends string> = {
   label: string
@@ -24,6 +24,11 @@ type SortBarProps<T extends string> = {
   className?: string
 }
 
+const directionItems: SelectItem<SortDirection>[] = [
+  { value: 'asc', icon: <ArrowUpNarrowWide className="size-4" /> },
+  { value: 'desc', icon: <ArrowDownWideNarrow className="size-4" /> },
+]
+
 export default function SortBar<T extends string>({
   sortKey,
   sortDirection,
@@ -32,35 +37,27 @@ export default function SortBar<T extends string>({
   onSortDirectionChangeAction,
   className,
 }: SortBarProps<T>) {
+  const keyItems: SelectItem<T | ''>[] = sortKeys.map((option) => ({
+    value: option.value,
+    label: option.label,
+  }))
+
   return (
     <div className={clsx('flex gap-2', className)}>
-      <Listbox
-        name="sortKey"
-        aria-label="Sort by"
+      <Select
+        ariaLabel="Sort by"
         value={sortKey}
-        onChange={onSortKeyChangeAction}
+        onValueChange={onSortKeyChangeAction}
+        items={keyItems}
         className="max-w-28 min-w-28"
-      >
-        {sortKeys.map((option) => (
-          <ListboxOption key={option.value} value={option.value}>
-            <ListboxLabel>{option.label}</ListboxLabel>
-          </ListboxOption>
-        ))}
-      </Listbox>
-      <Listbox
-        name="sortDirection"
-        aria-label="Sort direction"
+      />
+      <Select
+        ariaLabel="Sort direction"
         value={sortDirection}
-        onChange={onSortDirectionChangeAction}
+        onValueChange={onSortDirectionChangeAction}
+        items={directionItems}
         className="max-w-16 min-w-16"
-      >
-        <ListboxOption value="asc">
-          <ArrowUpNarrowWide className="p-0.5" />
-        </ListboxOption>
-        <ListboxOption value="desc">
-          <ArrowDownWideNarrow className="p-0.5" />
-        </ListboxOption>
-      </Listbox>
+      />
     </div>
   )
 }

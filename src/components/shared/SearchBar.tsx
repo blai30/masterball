@@ -1,7 +1,7 @@
 import clsx from 'clsx/lite'
 import { Search } from 'lucide-react'
 
-import { Input, InputGroup } from '@/components/ui/catalyst/input'
+import { Input, InputGroup } from '@/components/ui/Input'
 
 type SearchBarProps = {
   value: string
@@ -25,7 +25,7 @@ export default function SearchBar({
         type="search"
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChangeAction(e.target.value)}
+        onChange={(event) => onChangeAction(event.target.value)}
         className="max-w-sm"
       />
     </InputGroup>

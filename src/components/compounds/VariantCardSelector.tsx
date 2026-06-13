@@ -1,7 +1,7 @@
 import clsx from 'clsx/lite'
 
 import VariantCard from '@/components/compounds/VariantCard'
-import Link from '@/components/ui/catalyst/link'
+import Link from '@/components/ui/Link'
 import { normalizePathname, resolvePath } from '@/lib/utils/path'
 import type { Monster } from '@/lib/utils/pokeapi-helpers'
 

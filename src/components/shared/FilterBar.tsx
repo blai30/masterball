@@ -1,7 +1,7 @@
 import clsx from 'clsx/lite'
 
 import { DamageClassIcon, TypeIcon } from '@/components/icons'
-import { Listbox, ListboxLabel, ListboxOption } from '@/components/ui/catalyst/listbox'
+import { Combobox, type ComboboxItem } from '@/components/ui/Combobox'
 import { DAMAGE_CLASSES, type DamageClassKey } from '@/lib/domain/damage-class'
 import { TYPE_KEYS, type TypeKey } from '@/lib/domain/types'
 
@@ -25,51 +25,51 @@ type FilterBarProps = {
 const typeKeySet = new Set<string>(TYPE_KEYS)
 const damageClassKeySet = new Set<string>(Object.keys(DAMAGE_CLASSES))
 
-export default function FilterBar({ filters, className }: FilterBarProps) {
-  const optionPill = (option: FilterOption) => {
-    return typeKeySet.has(option.value) ? (
-      <>
-        <TypeIcon
-          variant={option.value as TypeKey}
-          size="small"
-          className="shrink-0"
-          data-slot="icon"
-        />
-        <ListboxLabel>{option.label}</ListboxLabel>
-      </>
-    ) : damageClassKeySet.has(option.value) ? (
-      <>
-        <DamageClassIcon
-          variant={option.value as DamageClassKey}
-          size="small"
-          className="shrink-0"
-          data-slot="icon"
-        />
-        <ListboxLabel>{option.label}</ListboxLabel>
-      </>
-    ) : (
-      <ListboxLabel>{option.label}</ListboxLabel>
-    )
+function optionIcon(item: ComboboxItem) {
+  if (typeKeySet.has(item.value)) {
+    return <TypeIcon variant={item.value as TypeKey} size="small" className="shrink-0" />
   }
+  if (damageClassKeySet.has(item.value)) {
+    return <DamageClassIcon variant={item.value as DamageClassKey} size="small" className="shrink-0" />
+  }
+  return null
+}
 
+function renderOption(item: ComboboxItem) {
   return (
-    <div className={clsx('flex gap-2', className)}>
+    <span className="flex items-center gap-1.5">
+      {optionIcon(item)}
+      {item.label}
+    </span>
+  )
+}
+
+// Compact trigger glyph for icon-backed filters (types, damage classes)
+function renderSummary(item: ComboboxItem) {
+  return optionIcon(item)
+}
+
+function hasIcons(filter: FilterConfig) {
+  return filter.options.some(
+    (option) => typeKeySet.has(option.value) || damageClassKeySet.has(option.value)
+  )
+}
+
+export default function FilterBar({ filters, className }: FilterBarProps) {
+  return (
+    <div className={clsx('flex flex-wrap gap-2', className)}>
       {filters.map((filter) => (
-        <Listbox
+        <Combobox
           key={filter.label}
           name={filter.label}
-          value={filter.values}
           placeholder={filter.label}
-          onChange={filter.onChange}
-          multiple
-          className="max-w-36 min-w-36"
-        >
-          {filter.options.map((option) => (
-            <ListboxOption key={option.value} value={option.value}>
-              {optionPill(option)}
-            </ListboxOption>
-          ))}
-        </Listbox>
+          items={filter.options}
+          value={filter.values}
+          onValueChange={filter.onChange}
+          renderItem={renderOption}
+          renderSummary={hasIcons(filter) ? renderSummary : undefined}
+          className="w-44 shrink-0"
+        />
       ))}
     </div>
   )
